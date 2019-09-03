@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FinanceAccountsMapper">
+	
+	
+	<!-- 列表 -->
+	<select id="datalistJqPage" parameterType="jqPage" resultType="pd">
+		select ${pd.SelectFeild}
+		from ${pd.TableName}
+		where BUSI_DATE = '${pd.SystemDateTime}'
+		${pd.CheckReport}
+		<if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''">
+			${pd.filterWhereResult}
+		</if>
+		${pd.QueryFeild}
+	    group by ${pd.GroupbyFeild}
+		<if test="sidx != null and sidx.trim() != ''" >
+			order by ${sidx} ${sord} 
+    	</if>
+	</select>
+	
+	<select id="dataListDetail" parameterType="jqPage" resultType="pd">
+		select *, USER_CODE USER_CODE__
+		from ${pd.TableName}
+		<if test="pd.whereSql!= null and pd.whereSql != ''">
+			${pd.whereSql}
+		</if>
+		<if test="sidx != null and sidx.trim() != ''" >
+			order by ${sidx} ${sord} 
+    	</if>
+	</select>
+</mapper>

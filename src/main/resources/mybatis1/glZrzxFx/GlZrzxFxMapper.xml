@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="GlZrzxFxMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		tb_gl_zrzx_fx
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		BILL_OFF,	
+		DEPT_CODE,	
+		LINE_NO,	
+		STATE
+	</sql>
+	<sql id="FieldSelected">
+	    ,	
+		BILL_OFF BILL_OFF__,	
+		DEPT_CODE DEPT_CODE__,	
+		LINE_NO LINE_NO__
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{BILL_OFF},	
+		#{DEPT_CODE},	
+		#{LINE_NO},	
+		#{STATE}
+	</sql>
+	
+	<!-- 列表 -->
+	<select id="datalistJqPage" parameterType="jqPage" resultType="pd">
+		select
+        <include refid="Field"></include>
+		<include refid="FieldSelected"></include>
+		from 
+		<include refid="tableName"></include>
+		<where>
+		    <if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''">
+		    	${pd.filterWhereResult}
+		    </if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+		</where>
+		<if test="sidx != null and sidx.trim() != ''" >
+			order by ${sidx} ${sord} 
+    	</if>
+		<if test="currentResult != null and rowNum != null" >           
+              limit #{currentResult}, #{rowNum} 
+        </if>
+	</select>
+	<select id="countJqGridExtend" parameterType="jqPage" resultType="int">
+		select count(*)
+		from 
+		<include refid="tableName"></include>
+		<where>
+		    <if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''">
+		    	${pd.filterWhereResult}
+		    </if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+		</where>
+	</select>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+        <where>
+		<foreach item="item" index="index" collection="list" open=" " separator=" or " close=" ">
+            ((BILL_OFF = #{item.BILL_OFF} and DEPT_CODE = #{item.DEPT_CODE} and LINE_NO = #{item.LINE_NO})
+             and (BILL_OFF != #{item.BILL_OFF__} or DEPT_CODE != #{item.DEPT_CODE__} or LINE_NO != #{item.LINE_NO__}))
+		</foreach>
+		</where>
+	</select>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where BILL_OFF = #{BILL_OFF__}
+		and DEPT_CODE = #{DEPT_CODE__}
+		and LINE_NO = #{LINE_NO__}
+	</delete>
+
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		BILL_OFF = #{BILL_OFF},
+		DEPT_CODE = #{DEPT_CODE},
+		LINE_NO = #{LINE_NO},
+		STATE = #{STATE}
+		where BILL_OFF = #{BILL_OFF__}
+		and DEPT_CODE = #{DEPT_CODE__}
+		and LINE_NO = #{LINE_NO__}
+	</update>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		where state='1'
+	</select>
+</mapper>

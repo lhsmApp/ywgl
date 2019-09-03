@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="KpSheetMapper">
+
+	<!-- 列表 -->
+	<select id="getRptKpList" parameterType="pd" resultType="pd">
+		select *
+		from view_invoice
+		<where>
+		    <if test="BusiDate!= null and BusiDate != ''">
+		        BUSI_DATE = #{BusiDate}
+		    </if>
+		</where>
+	</select>
+</mapper>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AuditEditMapper">
+	
+	<!-- 列表 -->
+	<select id="datalistJqPage" parameterType="jqPage" resultType="pd">
+		select 
+		    * 
+		    <if test="pd.FieldSelectKey!= null and pd.FieldSelectKey != ''">
+		        ${pd.FieldSelectKey}
+		    </if>
+		from ${pd.TableName}
+		where BUSI_DATE = '${pd.SystemDateTime}'
+		<if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			${pd.filterWhereResult}
+		</if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+		<if test="sidx != null and sidx.trim() != ''" >
+			order by ${sidx} ${sord} 
+    	</if>
+		<if test="currentResult != null and rowNum != null" >           
+              limit #{currentResult}, #{rowNum} 
+        </if>
+	</select>
+	<select id="countJqGridExtend" parameterType="jqPage" resultType="int">
+		select count(*) 
+		from ${pd.TableName}
+		where BUSI_DATE = '${pd.SystemDateTime}'
+		<if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			${pd.filterWhereResult}
+		</if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+	</select>
+	<select id="getFooterSummary" parameterType="jqPage" resultType="pd">
+		select ${pd.Userdata} 
+		from ${pd.TableName}
+		where BUSI_DATE = '${pd.SystemDateTime}'
+		<if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			${pd.filterWhereResult}
+		</if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+	</select>
+    
+	<!-- 获取数据 验证数据重复 -->
+	<select id="findByModel" parameterType="pd" resultType="pd">
+		select * 
+		from ${TableName}
+        <where>
+		<foreach item="item" index="index" collection="ListData" open=" " separator=" or " close=" ">
+            (BUSI_DATE = #{item.BUSI_DATE} 
+            <!-- and USER_CODE = #{item.USER_CODE} and USER_CODE != #{item.USER_CODE__} -->
+	        and DEPT_CODE = #{item.DEPT_CODE} and CUST_COL7 = #{item.CUST_COL7} 
+            and USER_CODE = #{item.USER_CODE} and USER_CODE != #{item.USER_CODE__}
+            )
+		</foreach>
+		</where>
+	</select>
+	<select id="exportHaveUserCode" parameterType="pd" resultType="String">
+		select USER_CODE
+		from ${TableName}
+		where BUSI_DATE = '${SystemDateTime}'
+		<!-- and ( 
+		     DEPT_CODE != '${SelectedDepartCode}' 
+		     or CUST_COL7 != '${SelectedCustCol7}' 
+		     <if test="StaffOrNot!= null and StaffOrNot != ''">
+		         or USER_GROP != '${emplGroupType}'
+		     </if>
+		     ) -->
+		and DEPT_CODE = '${SelectedDepartCode}' 
+        and CUST_COL7 = '${SelectedCustCol7}'
+        <choose>
+		     <when test="StaffOrNot!= null and StaffOrNot != ''">
+		         and USER_GROP != '${emplGroupType}'
+		     </when>
+		     <otherwise>
+		         and 1 != 1
+		     </otherwise>
+        </choose>
+	</select>
+	
+	<!-- 新增 -->
+	<insert id="save" parameterType="pd">
+		insert into ${TableName}
+		(${InsertField}) values (${InsertVale})
+	</insert>
+	
+	<!-- 删除 -->
+	<delete id="delete" parameterType="pd">
+		delete from ${TableName}
+		where BUSI_DATE = #{BUSI_DATE__} 
+		and USER_CODE = #{USER_CODE__} 
+	    and DEPT_CODE = #{DEPT_CODE__} 
+	    and CUST_COL7 = #{CUST_COL7__} 
+		<if test="StaffOrNot!= null and StaffOrNot != ''">
+	        and USER_GROP = #{USER_GROP__} 
+		</if>
+	</delete>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="pd">
+		delete from ${TableName}
+		where
+		<foreach item="item" index="index" collection="ListData" open=" (" separator=" or " close=") ">
+            BUSI_DATE = #{item.BUSI_DATE__} and USER_CODE = #{item.USER_CODE__} 
+	        and DEPT_CODE = #{DEPT_CODE__} 
+	        and CUST_COL7 = #{CUST_COL7__} 
+	        <if test="StaffOrNot!= null and StaffOrNot != ''">
+	            and USER_GROP = #{USER_GROP__} 
+		    </if>
+		</foreach>
+	</delete>
+	
+	<!-- 导入删除-->
+	<delete id="importDelete" parameterType="pd">
+		delete from ${TableName}
+		where BUSI_DATE = #{BUSI_DATE}
+	    and DEPT_CODE = #{DEPT_CODE} 
+	    and CUST_COL7 = #{CUST_COL7} 
+		<if test="StaffOrNot!= null and StaffOrNot != ''">
+	        and USER_GROP = #{USER_GROP} 
+		</if>
+	</delete>
+	
+	<!-- 导出列表 -->
+	<select id="exportList" parameterType="jqPage" resultType="pd">
+		select * 
+		from ${pd.TableName}
+		where BUSI_DATE = '${pd.SystemDateTime}'
+		<if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		    ${pd.QueryFeild}
+		</if>
+		<if test="sidx != null" >
+			order by ${sidx} ${sord} 
+    	</if>
+	</select>
+	<!-- 导出模板 -->
+	<select id="exportModel" parameterType="jqPage" resultType="pd">
+		select * 
+		from ${pd.TableName}
+		<where>
+		<if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		    ${pd.QueryFeild}
+		</if>
+		</where>
+		order by BUSI_DATE desc
+		limit 1
+	</select>
+	
+</mapper>

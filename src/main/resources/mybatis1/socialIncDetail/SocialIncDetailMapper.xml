@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SocialIncDetailMapper">
+	
+<!-- 
+ * 说明： 社保明细
+ * 创建人：zhangxiaoliu
+ * 创建时间：2017-06-19
+ * @version
+ -->
+	<!--表名 -->
+	<sql id="tableNameDetail">
+		tb_social_inc_detail
+	</sql>
+	<sql id="tableNameBackup">
+		tb_social_inc_detail_backup
+	</sql>
+	
+	<!-- 获取单号下拉列表数据源 -->
+	<select id="getBillCodeList" parameterType="pd" resultType="String">
+		select distinct BILL_CODE
+		from <include refid="tableNameDetail"></include>
+		where BUSI_DATE = '${SystemDateTime}'
+		and DEPT_CODE = '${SelectedDepartCode}'
+	    and CUST_COL7 = '${SelectedCustCol7}'
+	    ${CanOperate}
+		order by BILL_CODE
+	</select>
+
+	<!-- 列表 -->
+	<select id="datalistJqPage" parameterType="jqPage" resultType="pd">
+		select 
+		    * 
+		    <if test="pd.FieldSelectKey!= null and pd.FieldSelectKey != ''">
+		        ${pd.FieldSelectKey}
+		    </if>
+		from 
+		<include refid="tableNameDetail"></include>
+		where BUSI_DATE = '${pd.SystemDateTime}'
+		<if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			${pd.filterWhereResult}
+		</if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+		<if test="sidx != null and sidx.trim() != ''" >
+			order by ${sidx} ${sord} 
+    	</if>
+		<if test="currentResult != null and rowNum != null" >           
+              limit #{currentResult}, #{rowNum} 
+        </if>
+	</select>
+	<select id="countJqGridExtend" parameterType="jqPage" resultType="int">
+		select count(*) from <include refid="tableNameDetail"></include> 
+		where BUSI_DATE = '${pd.SystemDateTime}'
+		<if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			${pd.filterWhereResult}
+		</if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+	</select>
+	<select id="getFooterSummary" parameterType="jqPage" resultType="pd">
+		select ${pd.Userdata} 
+		from <include refid="tableNameDetail"></include> 
+		where BUSI_DATE = '${pd.SystemDateTime}'
+		<if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			${pd.filterWhereResult}
+		</if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+	</select>
+	
+    <!-- 通过流水号获取流水号，用于判断数据是否变更 -->
+	<select id="getSerialNoBySerialNo" parameterType="pd" resultType="pd">
+		select ${SelectFeildName}
+		from <include refid="tableNameDetail"></include>
+		where BUSI_DATE = '${SystemDateTime}'
+		<if test="QueryFeild!= null and QueryFeild != ''">
+		    ${QueryFeild}
+		</if>
+	</select>
+	
+	<!-- 导出列表 -->
+	<select id="exportList" parameterType="jqPage" resultType="pd">
+		select * 
+		from 
+		<include refid="tableNameDetail"></include>
+		where BUSI_DATE = '${pd.SystemDateTime}'
+		and DEPT_CODE = '${pd.SelectedDepartCode}'
+	    and CUST_COL7 = '${pd.SelectedCustCol7}' 
+		${pd.CheckBillCode}
+		<if test="sidx != null" >
+			order by ${sidx} ${sord} 
+    	</if>
+	</select>
+	<!-- 导出模板 -->
+	<select id="exportModel" parameterType="pd" resultType="pd">
+		select * 
+		from 
+		<include refid="tableNameDetail"></include>
+		where DEPT_CODE = '${SelectedDepartCode}'
+	    and CUST_COL7 = '${SelectedCustCol7}'
+		order by BUSI_DATE desc
+		limit 1
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="pd">
+		delete from
+		<include refid="tableNameDetail"></include>
+		where
+		<foreach item="item" index="index" collection="list" open=" (" separator=" or " close=") ">
+		    SERIAL_NO = #{item.SERIAL_NO__}
+	        ${item.CanOperate}
+		</foreach>
+	</delete>
+	
+	<update id="batchDelAndIns" parameterType="pd">
+		<foreach item="item" index="index" collection="list" open=" " separator=" " close=" ">
+		    delete from ${item.TableName}
+		    where SERIAL_NO = #{item.SERIAL_NO}
+	        ${item.CanOperate};
+	        
+		    insert into ${item.TableName}
+		    (${item.InsertField}) values (${item.InsertVale});
+		</foreach>
+	</update>
+	
+</mapper>

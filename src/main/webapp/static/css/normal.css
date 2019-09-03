@@ -1,0 +1,37 @@
+/* page-header样式 */
+.page-header {
+	padding-top: 9px;
+	padding-bottom: 9px;
+	margin: 0 0 8px;
+}
+
+/* 重写SelectTree Input样式 */
+.selectbox {
+	height: 32px;
+}
+
+/* 重写SelectTree 下拉按钮样式 */
+.selBtn {
+	width: 32px;
+	height: 32px;
+	background-image: url(../plugins/selectZtree/ztree/img/diy/2.png);
+	border: 1px solid rgb(124, 193, 235);
+	background-position: center;
+}
+
+.ui-jqgrid .ui-jqgrid-labels th{
+	text-align:center !important;
+}
+
+/* .ui-jqgrid .ui-jqgrid-htable th div{
+	height:0px !important;
+} */
+
+.ui-jqgrid .ui-jqgrid-pager{
+	height:40px;
+	padding-top: 0px !important;
+}
+
+.ui-jqgrid .ui-pager-control{
+	height:40px;
+}

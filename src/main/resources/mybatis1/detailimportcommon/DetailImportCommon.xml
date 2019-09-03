@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DetailImportCommonMapper">
+	
+<!-- 
+ * 说明： 明细导入共有的
+ * 创建人：zhangxiaoliu
+ * 创建时间：2018-09-05
+ * @version
+ -->
+	
+	
+	
+	<!-- 获取汇总里的明细 -->
+	<select id="getDetailList" parameterType="pd" resultType="pd">
+		select * 
+		from ${TableName}
+		<where>
+	        ${QueryFeild}
+		</where>
+		<if test="OrderbyFeild!= null and OrderbyFeild != ''">
+	        order by ${OrderbyFeild}
+	    </if>
+	</select>
+	
+	<!-- 获取汇总数据 -->
+	<select id="getSum" parameterType="pd" resultType="pd">
+        select 
+            ${SelectFeild}
+		from ${TableName}
+		where BUSI_DATE = '${SystemDateTime}'
+	    ${QueryFeild}
+		<if test="GroupbyFeild!= null and GroupbyFeild != ''">
+	        group by ${GroupbyFeild}
+	    </if>
+    </select>
+	
+</mapper>

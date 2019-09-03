@@ -1,0 +1,775 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TmplConfigMapper">
+
+	<!--表名 -->
+	<sql id="tableName">
+		TB_TMPL_CONFIG_DETAIL
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="Field">
+		RPT_DUR,
+		BILL_OFF,
+		DEPT_CODE,
+		TABLE_CODE,
+		COL_CODE,
+		COL_NAME,
+		DISP_ORDER,
+		DICT_TRANS,
+		COL_HIDE,
+		COL_SUM,
+		COL_AVE,
+		COL_TRANSFER,
+		COL_FORMULA,
+		CAL_ORDER,
+		NUM_DGT,
+		DEC_PRECISION
+	</sql>
+	<!-- 字段 -->
+	<sql id="FieldTmpl">
+		RPT_DUR,
+		BILL_OFF,
+		DEPT_CODE,
+		TABLE_CODE,
+		COL_CODE,
+		COL_NAME,
+		DISP_ORDER,
+		DICT_TRANS,
+		COL_HIDE,
+		COL_SUM,
+		COL_AVE,
+		COL_TRANSFER
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="FieldTmplCopy">
+		RPT_DUR,
+		BILL_OFF,
+		DEPT_CODE,
+		TABLE_CODE,
+		COL_CODE,
+		COL_NAME,
+		DISP_ORDER,
+		DICT_TRANS,
+		COL_HIDE,
+		COL_SUM,
+		COL_AVE,
+		COL_TRANSFER,
+		COL_FORMULA,
+		CAL_ORDER,
+		NUM_DGT,
+		DEC_PRECISION
+	</sql>
+
+	<sql id="FieldColumns">
+		BILL_OFF,
+		RPT_DUR,
+		DEPT_CODE,
+		TABLE_CODE,
+		COL_CODE,
+		COL_NAME,
+		DISP_ORDER,
+		DICT_TRANS,
+		COL_HIDE,
+		COL_SUM,
+		COL_AVE,
+		COL_TRANSFER,
+		COL_FORMULA,
+		CAL_ORDER,
+		NUM_DGT,
+		DEC_PRECISION
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="pd">
+		<!-- insert into <include refid="tableName"></include> ( <include refid="Field"></include> 
+			) values ( <include refid="FieldValue"></include> ) -->
+		insert into
+		<include refid="tableName"></include>
+		(
+		COL_FORMULA,
+		CAL_ORDER,
+		NUM_DGT,
+		DEC_PRECISION
+		) values (
+		#{COL_FORMULA},
+		#{CAL_ORDER},
+		#{NUM_DGT},
+		#{DEC_PRECISION}
+		)
+
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="delete" parameterType="pd">
+		<!-- delete from <include refid="tableName"></include> where TABLE_CODE 
+			= #{TABLE_CODE} -->
+
+		update
+		<include refid="tableName"></include>
+		set
+		<!-- DEPT_CODE = #{DEPT_CODE}, TABLE_CODE = #{TABLE_CODE}, COL_CODE = #{COL_CODE}, -->
+		COL_FORMULA = #{COL_FORMULA},
+		CAL_ORDER = #{CAL_ORDER},
+		NUM_DGT
+		=#{NUM_DGT},
+		COL_HIDE = #{COL_HIDE},
+		DEC_PRECISION = #{DEC_PRECISION}
+		where
+		RPT_DUR = #{RPT_DUR}
+		and
+		DEPT_CODE = #{DEPT_CODE}
+		and
+		TABLE_CODE =
+		#{TABLE_CODE}
+		and
+		BILL_OFF = #{BILL_OFF}
+		and
+		COL_CODE = #{COL_CODE}
+	</delete>
+
+	<!-- 删除 -->
+	<delete id="deleteTable" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		RPT_DUR = #{RPT_DUR}
+		and
+		DEPT_CODE = #{DEPT_CODE}
+		and
+		TABLE_CODE =
+		#{TABLE_CODE}
+		and
+		BILL_OFF = #{BILL_OFF}
+	</delete>
+
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		<!-- update <include refid="tableName"></include> set COL_NAME = #{COL_NAME}, 
+			DISP_ORDER = #{DISP_ORDER}, DICT_TRANS =#{DICT_TRANS}, COL_HIDE = #{COL_HIDE}, 
+			COL_SUM = #{COL_SUM}, COL_AVE =#{COL_AVE}, COL_TRANSFER =#{COL_TRANSFER} 
+			where DEPT_CODE = #{DEPT_CODE} and TABLE_CODE = #{TABLE_CODE} and COL_CODE 
+			= #{COL_CODE} -->
+
+
+		update
+		<include refid="tableName"></include>
+		set
+		COL_FORMULA = #{COL_FORMULA}
+		<if test="CAL_ORDER!= null and CAL_ORDER != ''">
+			,CAL_ORDER = #{CAL_ORDER}
+		</if>
+		<if test="NUM_DGT!= null and NUM_DGT != ''">
+			,NUM_DGT = #{NUM_DGT}
+		</if>
+		<if test="DEC_PRECISION!= null and DEC_PRECISION != ''">
+			,DEC_PRECISION = #{DEC_PRECISION}
+		</if>
+		<!-- CAL_ORDER = #{CAL_ORDER}, NUM_DGT =#{NUM_DGT}, DEC_PRECISION = #{DEC_PRECISION} -->
+		where
+		RPT_DUR = #{RPT_DUR}
+		and
+		DEPT_CODE = #{DEPT_CODE}
+		and
+		TABLE_CODE =
+		#{TABLE_CODE}
+		and
+		BILL_OFF = #{BILL_OFF}
+		and
+		COL_CODE = #{COL_CODE}
+	</update>
+
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		where
+		TABLE_CODE = #{TABLE_CODE}
+	</select>
+
+	<!-- 验证公式是否正确 -->
+	<select id="validateFormula" parameterType="pd" resultType="pd">
+		select
+		${COL_FORMULA}
+		from
+		${TABLE_CODE_ORI}
+		LIMIT 1
+	</select>
+
+	<!-- 通过期间获取数据，判断是否已经生成过模板配置信息 -->
+	<select id="findByRptDur" parameterType="String" resultType="String">
+		select 1
+		from
+		<include refid="tableName"></include>
+		where
+		RPT_DUR = #{RPT_DUR} LIMIT 1
+	</select>
+
+	<!-- 列表 -->
+	<select id="datalistJqPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		<where>
+			<if test="pd.DEPT_BIANMA!= null and pd.DEPT_BIANMA != ''"><!-- 检索 -->
+				and DEPT_CODE = #{pd.DEPT_BIANMA}
+			</if>
+			<if test="pd.TABLE_CODE!= null and pd.TABLE_CODE != ''"><!-- 检索 -->
+				and TABLE_CODE = #{pd.TABLE_CODE}
+			</if>
+			<if test="pd.BILL_OFF!= null and pd.BILL_OFF != ''"><!-- 检索 -->
+				and BILL_OFF = #{pd.BILL_OFF}
+			</if>
+			<if test="pd.RPT_DUR!= null and pd.RPT_DUR != ''"><!-- 检索 -->
+				and RPT_DUR = #{pd.RPT_DUR}
+			</if>
+		</where>
+	</select>
+
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		SELECT
+		a.RPT_DUR,
+		a.BILL_OFF,
+		a.DEPT_CODE,
+		a.TABLE_CODE,
+		a.COL_CODE,
+		a.COL_NAME,
+		a.DISP_ORDER,
+		a.DICT_TRANS,
+		a.COL_HIDE,
+		a.COL_SUM,
+		a.COL_AVE,
+		a.COL_TRANSFER,
+		a.COL_FORMULA,
+		a.CAL_ORDER,
+		a.NUM_DGT,
+		a.DEC_PRECISION,
+		b.NAME DNAME,
+		c.TABLE_NAME,
+		d.DICT_NAME
+		FROM
+		tb_tmpl_config_detail a LEFT
+		JOIN
+		oa_department b
+		on a.DEPT_CODE = b.DEPARTMENT_CODE
+		LEFT JOIN
+		tb_tmpl_config_base c
+		on a.TABLE_CODE = c.TABLE_CODE
+		LEFT JOIN
+		tb_tmpl_config_dict d
+		on a.DICT_TRANS = d.DICT_CODE
+		<where>
+			<if test="DEPARTMENT_CODE!= null and DEPARTMENT_CODE != ''">
+				and a.DEPT_CODE = #{DEPARTMENT_CODE}
+			</if>
+			<if test="TABLE_CODE!= null and TABLE_CODE != ''">
+				and a.TABLE_CODE = #{TABLE_CODE}
+			</if>
+			<if test="BILL_OFF!= null and BILL_OFF != ''">
+				and a.BILL_OFF = #{BILL_OFF}
+			</if>
+			<if test="RPT_DUR!= null and RPT_DUR != ''">
+				and a.RPT_DUR = #{RPT_DUR}
+			</if>
+			<if test="filterWhereResult != null">
+				${filterWhereResult}
+			</if>
+		</where>
+		<if test="sidx != null">
+			order by ${sidx} ${sord}
+		</if>
+	</select>
+
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where
+		TABLE_CODE in
+		<foreach item="item" index="index" collection="array" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<!-- 基本配置表 -->
+	<select id="listBase" parameterType="page" resultType="pd">
+		select *
+		from TB_TMPL_CONFIG_BASE
+		<if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		    <where>
+		        ${pd.QueryFeild}
+		    </where>
+		</if>
+		order by TABLE_NO
+	</select>
+
+	<!-- 根据当前单位编码、表名以及区间获取字段配置信息 -->
+	<!-- 张晓柳 -->
+	<select id="listNeed" parameterType="com.fh.entity.TmplConfigDetail"
+		resultType="com.fh.entity.TmplConfigDetail">
+		select
+		<include refid="FieldColumns"></include>
+		from
+		<include refid="tableName"></include>
+		where DEPT_CODE = #{DEPT_CODE}
+		and BILL_OFF = #{BILL_OFF}
+		and
+		UPPER(TABLE_CODE) = UPPER(#{TABLE_CODE})
+		and RPT_DUR in (select
+		KEY_VALUE from tb_sys_config where KEY_CODE = 'SystemDataTime')
+		order
+		by COL_HIDE desc, DISP_ORDER
+		<!-- COL_HIDE必修倒序排列，关系添加或修改弹出框的显示 -->
+	</select>
+
+	<!-- 根据TABLE_NO获取TABLE_CODE -->
+	<select id="findTableCodeByTableNo" parameterType="String"
+		resultType="pd">
+		select TABLE_CODE
+		from TB_TMPL_CONFIG_BASE
+		where
+		TB_TMPL_CONFIG_BASE.TABLE_NO = #{TABLE_NO}
+	</select>
+
+	<!-- 临时生成的数据表明细 -->
+	<select id="temporaryList" parameterType="page" resultType="pd">
+		SELECT column_name AS COL_CODE, column_comment AS COL_NAME,
+		#{pd.RPT_DUR} as RPT_DUR,
+		#{pd.BILL_OFF} as BILL_OFF,
+		#{pd.DEPARTMENT_CODE} AS DEPT_CODE,#{pd.TABLE_CODE} AS
+		TABLE_CODE,#{pd.DNAME} AS DNAME,#{pd.TABLE_NAME} AS TABLE_NAME,
+		'0' AS
+		DISP_ORDER,'0' AS DICT_TRANS,'1' AS COL_HIDE,'0' AS COL_SUM,'0' AS
+		COL_AVE,'0' AS COL_TRANSFER
+		FROM
+		information_schema.columns
+		WHERE
+		table_schema ='dbgdhs'
+		AND
+		table_name = #{pd.TABLE_CODE}
+	</select>
+	
+    <!-- 修改 -->
+	<insert id="updateItem" parameterType="pd">
+		update <include refid="tableName"></include>
+		set COL_NAME = #{COL_NAME}, 
+		    DISP_ORDER = #{DISP_ORDER}, 
+		    DICT_TRANS =#{DICT_TRANS}, 
+		    COL_HIDE = #{COL_HIDE}, 
+			COL_SUM = #{COL_SUM}, 
+			COL_AVE =#{COL_AVE}, 
+			COL_TRANSFER =#{COL_TRANSFER} 
+		where RPT_DUR = #{RPT_DUR}
+		and DEPT_CODE = #{DEPT_CODE}
+		and TABLE_CODE = #{TABLE_CODE}
+		and BILL_OFF = #{BILL_OFF}
+		and COL_CODE = #{COL_CODE}
+	</insert>
+
+	<!-- 新增 -->
+	<insert id="updateAll" parameterType="pd">
+		<!-- 插入保存 -->
+		insert into
+		<include refid="tableName"></include>
+		(
+		<include refid="FieldTmpl"></include>
+		) values
+		<foreach item="item" index="index" collection="list" open=" "
+			separator=", " close=" ">
+			<if test="item!=null">
+				<trim prefix="(" suffix=")" suffixOverrides=",">
+					#{item.RPT_DUR},#{item.BILL_OFF},#{item.DEPT_CODE},#{item.TABLE_CODE},
+					#{item.COL_CODE},#{item.COL_NAME},#{item.DISP_ORDER},#{item.DICT_TRANS},
+					#{item.COL_HIDE},#{item.COL_SUM},#{item.COL_AVE},#{item.COL_TRANSFER}
+					<!-- <include refid="FieldValue"></include> -->
+				</trim>
+			</if>
+		</foreach>
+	</insert>
+
+	<!-- 复制 -->
+	<insert id="copyAll" parameterType="pd">
+		<foreach item="item" index="index" collection="DEPT_CODES"
+			open=" " separator="; " close=";">
+			<if test="item!=null">
+				delete from
+				<include refid="tableName"></include>
+				where
+				RPT_DUR = #{RPT_DUR}
+				and
+				DEPT_CODE = #{item}
+				and
+				TABLE_CODE =
+				#{TABLE_CODE}
+			</if>
+		</foreach>
+		<!-- 插入保存 -->
+		insert into
+		<include refid="tableName"></include>
+		(
+		<include refid="FieldTmplCopy"></include>
+		)
+		<foreach item="item" index="index" collection="DEPT_CODES"
+			open=" " separator="union all " close=" ">
+			<if test="item!=null">
+				SELECT RPT_DUR,BILL_OFF,#{item} AS 'DEPT_CODE',
+				TABLE_CODE,COL_CODE,COL_NAME,DISP_ORDER,DICT_TRANS,
+				COL_HIDE,COL_SUM,COL_AVE,COL_TRANSFER,COL_FORMULA,
+				CAL_ORDER,NUM_DGT,DEC_PRECISION
+				FROM tb_tmpl_config_detail WHERE DEPT_CODE=#{DEPT_CODE} AND
+				TABLE_CODE=#{TABLE_CODE}
+			</if>
+		</foreach>
+	</insert>
+
+	<!-- 获取数据库中表结构 -->
+	<select id="getTableColumns" parameterType="string"
+		resultType="com.fh.entity.TableColumns">
+		SELECT UPPER(column_name) column_name,
+		column_comment,
+		UPPER(data_type) data_type,
+		UPPER(column_type) column_type,
+		UPPER(column_key) column_key,
+		column_default
+		FROM
+		information_schema.columns
+		WHERE table_schema ='dbgdhs'
+		AND
+		table_name =
+		#{value}
+	</select>
+	
+	<!-- 根据帐套、凭证类型、业务期间、表名称获取tb_sys_stru_mapping的结构信息 -->
+	<!-- jiachao -->
+	<select id="listNeedSpecial" parameterType="pd"
+		resultType="pd">
+		select
+		TYPE_CODE,TABLE_NAME_MAPPING,BILL_OFF,BUSI_DATE,COL_MAPPING_CODE,COL_MAPPING_NAME,DISP_ORDER,COL_DGT,DEC_PRECISION,DICT_TRANS,COL_HIDE,COL_SUM,COL_AVE,COL_TRANSFER
+		from tb_sys_stru_mapping
+		where TYPE_CODE = #{TYPE_CODE}
+		and UPPER(TABLE_NAME_MAPPING) = UPPER(#{TABLE_CODE})
+		and BUSI_DATE = #{BUSI_DATE}
+		and BILL_OFF = #{FMISACC}
+		order
+		by COL_HIDE desc, DISP_ORDER
+		<!-- COL_HIDE必修倒序排列，关系添加或修改弹出框的显示 -->
+	</select>
+	
+	<!-- 通过期间获取数据，判断是否已经生成过特殊模板配置信息 -->
+	<select id="findStruMappingByRptDurSpecial" parameterType="String" resultType="String">
+		select 1
+		from
+		tb_sys_stru_mapping
+		where
+		BUSI_DATE = #{RPT_DUR} LIMIT 1
+	</select>
+	
+	<!-- 通过期间获取数据，判断是否已经生成过特殊模板配置信息 -->
+	<select id="findTableMappingByRptDurSpecial" parameterType="String" resultType="String">
+		select 1
+		from
+		tb_sys_table_mapping
+		where
+		BUSI_DATE = #{RPT_DUR} LIMIT 1
+	</select>
+	
+	<!-- 通过期间获取数据，判断是否已经生成过特殊模板配置信息 -->
+	<select id="findCertParmByRptDurSpecial" parameterType="String" resultType="String">
+		select 1
+		from
+		tb_cert_parm_config
+		where
+		BUSI_DATE = #{RPT_DUR} LIMIT 1
+	</select>
+	
+	<!-- 通过期间获取数据，判断是否已经生成过特殊模板配置信息 -->
+	<select id="findGlItemUser" parameterType="String" resultType="String">
+		select 1
+		from tb_gl_item_user
+		where
+		BUSI_DATE = #{RPT_DUR} LIMIT 1
+	</select>
+	
+	<!-- 通过期间获取数据，判断是否已经生成过特殊模板配置信息 -->
+	<select id="findStaffTds" parameterType="String" resultType="String">
+		select 1
+		from tb_staff_tds_info
+		where
+		BUSI_DATE = #{RPT_DUR} LIMIT 1
+	</select>
+	
+	<!-- 通过期间获取数据，判断是否已经生成过特殊模板配置信息 -->
+	<select id="findStaffRemit" parameterType="String" resultType="String">
+		select 1
+		from tb_staff_remit_info
+		where
+		BUSI_DATE = #{RPT_DUR} LIMIT 1
+	</select>
+	
+	<!-- 更新业务期间 -->
+	<update id="updateBusidate" parameterType="pd">
+		update tb_sys_config
+		set
+		KEY_VALUE = #{KEY_VALUE}
+		where
+		KEY_CODE = "SystemDataTime";
+		
+		<if test="CopyRptDur!= null and CopyRptDur != ''">
+		    <!-- 插入保存 -->
+		    insert into
+		    <include refid="tableName"></include>
+		    (
+		    <include refid="FieldTmplCopy"></include>
+		    )
+		    SELECT #{NEXT_RPT_DUR} as RPT_DUR,BILL_OFF,DEPT_CODE,
+		    TABLE_CODE,COL_CODE,COL_NAME,DISP_ORDER,DICT_TRANS,
+		    COL_HIDE,COL_SUM,COL_AVE,COL_TRANSFER,COL_FORMULA,
+		    CAL_ORDER,NUM_DGT,DEC_PRECISION
+		    FROM tb_tmpl_config_detail WHERE RPT_DUR=#{CUR_RPT_DUR};
+		</if>
+		
+		<if test="CopyStruMapping!= null and CopyStruMapping != ''">
+		<!-- 插入保存 -->
+		insert into
+		tb_sys_stru_mapping
+		(
+			TYPE_CODE,TABLE_NAME,TABLE_NAME_MAPPING,COL_CODE,COL_MAPPING_CODE,COL_MAPPING_NAME,COL_VALUE,COL_MAPPING_VALUE,BILL_OFF,BUSI_DATE,DISP_ORDER,COL_DGT,DEC_PRECISION,DICT_TRANS,COL_HIDE,COL_SUM,COL_AVE,COL_TRANSFER,COL_ENABLE
+		)
+		SELECT 
+		TYPE_CODE,TABLE_NAME,TABLE_NAME_MAPPING,COL_CODE,COL_MAPPING_CODE,COL_MAPPING_NAME,COL_VALUE,COL_MAPPING_VALUE,BILL_OFF,#{NEXT_RPT_DUR} as BUSI_DATE,DISP_ORDER,COL_DGT,DEC_PRECISION,DICT_TRANS,COL_HIDE,COL_SUM,COL_AVE,COL_TRANSFER,COL_ENABLE
+		FROM tb_sys_stru_mapping WHERE BUSI_DATE=#{CUR_RPT_DUR};
+		</if>
+		
+		<if test="CopyTableMapping!= null and CopyTableMapping != ''">
+		<!-- 插入保存 -->
+		insert into
+		tb_sys_table_mapping
+		(
+			TYPE_CODE,BUSI_DATE,TABLE_NAME,TABLE_NAME_MAPPING,STATE,BILL_OFF
+		)
+		SELECT 
+		TYPE_CODE,#{NEXT_RPT_DUR} as BUSI_DATE,TABLE_NAME,TABLE_NAME_MAPPING,STATE,BILL_OFF
+		FROM tb_sys_table_mapping WHERE BUSI_DATE=#{CUR_RPT_DUR};
+		</if>
+		<!-- 插入保存 -->
+		<if test="CopyCertParm!= null and CopyCertParm != ''">
+		    insert into
+		    tb_cert_parm_config
+		    (
+			    TYPE_CODE,BILL_OFF,DEPT_CODE,GROUP_COND,GROUP_COND1,QUERY_COND,CUST_PARM1,CUST_PARM1_DESC,CUST_PARM2,CUST_PARM2_DESC,CUST_PARM3,CUST_PARM3_DESC,BUSI_DATE
+		    )
+		    SELECT 
+		    TYPE_CODE,BILL_OFF,DEPT_CODE,GROUP_COND,GROUP_COND1,QUERY_COND,CUST_PARM1,CUST_PARM1_DESC,CUST_PARM2,CUST_PARM2_DESC,CUST_PARM3,CUST_PARM3_DESC,#{NEXT_RPT_DUR} as BUSI_DATE
+		    FROM tb_cert_parm_config WHERE BUSI_DATE=#{CUR_RPT_DUR};
+		</if>
+		<if test="CopyGlItemUser!= null and CopyGlItemUser != ''">
+		    insert into
+		    tb_gl_item_user
+		    (
+			       USER_CODE,USER_NAME,STAFF_IDENT,DEPT_CODE,UNITS_CODE,BILL_OFF,
+			       ITEM1_CODE,ITEM1_NAME,ITEM1_BUD,ITEM2_CODE,ITEM2_NAME,ITEM2_BUD,
+			       ITEM3_CODE,ITEM3_NAME,ITEM3_BUD,ITEM4_CODE,ITEM4_NAME,ITEM4_BUD,
+			       ITEM5_CODE,ITEM5_NAME,ITEM5_BUD,ITEM6_CODE,ITEM6_NAME,ITEM6_BUD,
+			       ITEM7_CODE,ITEM7_NAME,ITEM7_BUD,ITEM8_CODE,ITEM8_NAME,ITEM8_BUD,
+			       ITEM9_CODE,ITEM9_NAME,ITEM9_BUD,ITEM10_CODE,ITEM10_NAME,ITEM10_BUD,
+			       BUSI_DATE
+		    )
+		    SELECT USER_CODE,USER_NAME,STAFF_IDENT,DEPT_CODE,UNITS_CODE,BILL_OFF,
+			       ITEM1_CODE,ITEM1_NAME,ITEM1_BUD,ITEM2_CODE,ITEM2_NAME,ITEM2_BUD,
+			       ITEM3_CODE,ITEM3_NAME,ITEM3_BUD,ITEM4_CODE,ITEM4_NAME,ITEM4_BUD,
+			       ITEM5_CODE,ITEM5_NAME,ITEM5_BUD,ITEM6_CODE,ITEM6_NAME,ITEM6_BUD,
+			       ITEM7_CODE,ITEM7_NAME,ITEM7_BUD,ITEM8_CODE,ITEM8_NAME,ITEM8_BUD,
+			       ITEM9_CODE,ITEM9_NAME,ITEM9_BUD,ITEM10_CODE,ITEM10_NAME,ITEM10_BUD,
+			       #{NEXT_RPT_DUR} as BUSI_DATE
+		    FROM tb_gl_item_user 
+		    WHERE BUSI_DATE=#{CUR_RPT_DUR};
+		</if>
+		<if test="CopyStaffTds!= null and CopyStaffTds != ''">
+		    insert into
+		    tb_staff_tds_info
+		    (
+			       USER_CODE,USER_NAME,STAFF_IDENT,DEPT_CODE,UNITS_CODE,
+			       CUST_COL1,CUST_COL2,CUST_COL3,CUST_COL4,CUST_COL5,CUST_COL6,
+			       CUST_COL7,CUST_COL8,CUST_COL9,CUST_COL10,CUST_COL11,CUST_COL12,
+			       BUSI_DATE
+		    )
+		    SELECT USER_CODE,USER_NAME,STAFF_IDENT,DEPT_CODE,UNITS_CODE,
+			       CUST_COL1,CUST_COL2,CUST_COL3,CUST_COL4,CUST_COL5,CUST_COL6,
+			       CUST_COL7,CUST_COL8,CUST_COL9,CUST_COL10,CUST_COL11,CUST_COL12,
+			       #{NEXT_RPT_DUR} as BUSI_DATE
+		    FROM tb_staff_tds_info 
+		    WHERE BUSI_DATE=#{CUR_RPT_DUR};
+		</if>
+		<if test="CopyStaffRemit!= null and CopyStaffRemit != ''">
+		    insert into
+		    tb_staff_remit_info
+		    (
+			       USER_CODE,USER_NAME,STAFF_IDENT,DEPT_CODE,UNITS_CODE,
+			       CUST_COL1,BUSI_DATE
+		    )
+		    SELECT USER_CODE,USER_NAME,STAFF_IDENT,DEPT_CODE,UNITS_CODE,
+			       CUST_COL1,#{NEXT_RPT_DUR} as BUSI_DATE
+		    FROM tb_staff_remit_info 
+		    WHERE BUSI_DATE=#{CUR_RPT_DUR};
+		</if>
+	</update>
+	
+
+	<!-- **********************************导入校验**************************************** -->
+	<!--表名 -->
+	<sql id="tableNameConfigDetail">
+		TB_TMPL_CONFIG_DETAIL
+	</sql>
+	<sql id="tableNameTmplInputCond">
+		tb_tmpl_input_condition
+	</sql>
+	<sql id="tableNameTmplTips">
+		tb_tmpl_tips_info
+	</sql>
+	
+	<!-- 列表 -->
+	<select id="datalistJqPageTmplInputTips" parameterType="page" resultType="pd">
+		select t.RPT_DUR,
+		    '${pd.SelectedDepartCode}' DEPT_CODE, b.NAME DEPT_NAME,
+		             t.BILL_OFF,
+		             t.TABLE_CODE, c.TABLE_NAME TABLE_NAME,
+		             t.COL_CODE, t.COL_NAME,
+		             
+		             t.DICT_TRANS DICT_TRANS_DETAIL,
+		             t.COL_HIDE,
+		             t.DISP_ORDER,
+		             
+		             t.RPT_DUR RPT_DUR__,
+		             '${pd.SelectedDepartCode}' DEPT_CODE__,
+		             t.BILL_OFF BILL_OFF__,
+		             t.TABLE_CODE TABLE_CODE__,
+		             t.COL_CODE COL_CODE__,
+		             
+		             IFNULL(input.DICT_TRANS, '0') DICT_TRANS,
+		             IFNULL(input.COL_COND, '') COL_COND,
+		             IFNULL(input.COL_MAPPING, '') COL_MAPPING,
+		             IFNULL(input.COL_NULL, '0') COL_NULL,
+		             IFNULL(input.COL_STATE, '0') COL_STATE,
+		             IFNULL(tip.NULL_VALUE_PREFIX, '') NULL_VALUE_PREFIX,
+		             IFNULL(tip.NULL_VALUE_SUFFIX, '') NULL_VALUE_SUFFIX,
+		             IFNULL(tip.DIC_PREFIX, '') DIC_PREFIX,
+		             IFNULL(tip.DIC_SUFFIX, '') DIC_SUFFIX,
+		             IFNULL(tip.COND_PREFIX, '') COND_PREFIX,
+		             IFNULL(tip.COND_SUFFIX, '') COND_SUFFIX,
+		             IFNULL(tip.MAPPING_PREFIX, '') MAPPING_PREFIX,
+		             IFNULL(tip.MAPPING_SUFFIX, '') MAPPING_SUFFIX
+		    <!-- <if test="pd.FieldSelectKey!= null and pd.FieldSelectKey != ''">
+		        ${pd.FieldSelectKey}
+		    </if> -->
+		from (select *
+		      from <include refid="tableNameConfigDetail"></include>
+		      <where>
+				  and DEPT_CODE = #{pd.ShowStruDepartCode}
+				  and TABLE_CODE = #{pd.ShowStruTableCode}
+				  and BILL_OFF = #{pd.ShowStruBillOff}
+				  and RPT_DUR = #{pd.ShowStruRptDur}
+		      </where>
+		      <if test="sidx != null">
+			      order by ${sidx} ${sord}
+		      </if>) t
+		      
+		left join (select * 
+		           from <include refid="tableNameTmplInputCond"></include> 
+		           where DEPT_CODE = #{pd.SelectedDepartCode}
+				   and TABLE_CODE = #{pd.ShowStruTableCode}
+				   and BILL_OFF = #{pd.ShowStruBillOff}) input
+		on t.COL_CODE = input.COL_CODE
+		
+		left join <include refid="tableNameTmplTips"></include> tip
+		on t.TABLE_CODE = tip.TABLE_CODE and t.COL_CODE = tip.COL_CODE
+		
+		LEFT JOIN oa_department b on '${pd.SelectedDepartCode}' = b.DEPARTMENT_CODE
+		LEFT JOIN tb_tmpl_config_base c on t.TABLE_CODE = c.TABLE_CODE
+		
+        ORDER BY t.DISP_ORDER ASC
+	</select>
+
+	<!-- 修改 -->
+	<update id="saveTmplInputTips" parameterType="pd">
+		<foreach item="item" index="index" collection="list" open=" " separator=" " close=" ">
+	        delete from <include refid="tableNameTmplInputCond"></include>
+		    where DEPT_CODE = #{item.DEPT_CODE__}
+		    and TABLE_CODE = #{item.TABLE_CODE__}
+		    and BILL_OFF = #{item.BILL_OFF__}
+			and COL_CODE = #{item.COL_CODE__};
+			
+	        delete from <include refid="tableNameTmplTips"></include>
+		    where TABLE_CODE = #{item.TABLE_CODE__}
+			and COL_CODE = #{item.COL_CODE__};
+		    
+		    insert into <include refid="tableNameTmplInputCond"></include>
+		    (DEPT_CODE, TABLE_CODE, COL_CODE, BILL_OFF, 
+		     DICT_TRANS, COL_COND, COL_MAPPING, COL_NULL, COL_STATE)
+		    values
+		    (#{item.DEPT_CODE}, #{item.TABLE_CODE}, #{item.COL_CODE}, #{item.BILL_OFF},
+		     #{item.DICT_TRANS}, #{item.COL_COND}, #{item.COL_MAPPING}, #{item.COL_NULL}, #{item.COL_STATE});
+		    
+		    insert into <include refid="tableNameTmplTips"></include>
+		    (DEPT_CODE, TABLE_CODE, COL_CODE, 
+		     NULL_VALUE_PREFIX, NULL_VALUE_SUFFIX, DIC_PREFIX, DIC_SUFFIX, 
+		     COND_PREFIX, COND_SUFFIX, MAPPING_PREFIX, MAPPING_SUFFIX)
+		    values
+		    (#{item.DEPT_CODE}, #{item.TABLE_CODE}, #{item.COL_CODE},
+		     #{item.NULL_VALUE_PREFIX}, #{item.NULL_VALUE_SUFFIX}, #{item.DIC_PREFIX}, #{item.DIC_SUFFIX},
+		     #{item.COND_PREFIX}, #{item.COND_SUFFIX}, #{item.MAPPING_PREFIX}, #{item.MAPPING_SUFFIX});
+		</foreach>
+	</update>
+	
+	<select id="getCheckTmplInputTips" parameterType="pd" resultType="com.fh.entity.TmplInputTips">
+		select 
+		             input.DEPT_CODE,
+		             input.TABLE_CODE,
+		             input.BILL_OFF,
+		             input.COL_CODE,
+		             
+		             input.DICT_TRANS,
+		             input.COL_COND,
+		             input.COL_MAPPING,
+		             input.COL_NULL,
+		             input.COL_STATE,
+		             
+		             IFNULL(t.COL_NAME, '') COL_NAME,
+		             IFNULL(t.DICT_TRANS, '') DICT_TRANS_DETAIL,
+		             IFNULL(t.COL_HIDE, '') COL_HIDE,
+
+		             IFNULL(tip.NULL_VALUE_PREFIX, '') NULL_VALUE_PREFIX,
+		             IFNULL(tip.NULL_VALUE_SUFFIX, '') NULL_VALUE_SUFFIX,
+		             IFNULL(tip.DIC_PREFIX, '') DIC_PREFIX,
+		             IFNULL(tip.DIC_SUFFIX, '') DIC_SUFFIX,
+		             IFNULL(tip.COND_PREFIX, '') COND_PREFIX,
+		             IFNULL(tip.COND_SUFFIX, '') COND_SUFFIX,
+		             IFNULL(tip.MAPPING_PREFIX, '') MAPPING_PREFIX,
+		             IFNULL(tip.MAPPING_SUFFIX, '') MAPPING_SUFFIX
+		from (select *
+		      from <include refid="tableNameTmplInputCond"></include> 
+		      where DEPT_CODE = #{SelectedDepartCode}
+		      and TABLE_CODE = #{ShowStruTableCode}
+		      and BILL_OFF = #{ShowStruBillOff}
+		      and COL_STATE = '1'
+		      ) input
+		
+		left join <include refid="tableNameTmplTips"></include> tip
+		on input.TABLE_CODE = tip.TABLE_CODE and input.COL_CODE = tip.COL_CODE
+		
+		left join (select * from <include refid="tableNameConfigDetail"></include>
+		          <where>
+				      and DEPT_CODE = #{ShowStruDepartCode}
+				      and TABLE_CODE = #{ShowStruTableCode}
+				      and BILL_OFF = #{ShowStruBillOff}
+				      and RPT_DUR = #{ShowStruRptDur}
+		          </where>) t
+		on t.COL_CODE = input.COL_CODE
+	</select>
+	<!-- ********************************************************************************** -->
+</mapper>

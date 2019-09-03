@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FundsConfirmInfoQueryMapper">
+	
+	<!-- 列表 -->
+	<select id="datalistJqPage" parameterType="jqPage" resultType="pd">
+		select 
+		    NAME, DEPARTMENT_CODE, PARENT_CODE, 
+		    IFNULL(gen_bus_summy_bill.TYPE_CODE, ' ') TYPE_CODE,
+		    IFNULL(sys_confirm_info.STATE, '0') STATE,
+		    IFNULL(gen_bus_summy_bill.BILL_STATE, ' ') SUMMY_BILL,
+            IFNULL(sys_sealed_info.STATE, ' ') SEALED_INFO
+		from OA_DEPARTMENT t
+		left join (select distinct RPT_DEPT, STATE
+		           from tb_sys_confirm_info 
+		           where STATE = '1' 
+		           and RPT_DUR = #{pd.RPT_DUR}
+		           and BILL_TYPE = #{pd.BILL_TYPE}
+		           and BILL_OFF = #{pd.BILL_OFF}) sys_confirm_info
+		on t.DEPARTMENT_CODE = sys_confirm_info.RPT_DEPT
+		left join (select distinct DEPT_CODE, BILL_STATE,
+		                           TYPE_CODE
+		           from tb_gen_bus_summy_bill 
+		           where BILL_STATE = '1'
+		           and BUSI_DATE = #{pd.BUSI_DATE}
+		           and BILL_OFF = #{pd.BILL_OFF}) gen_bus_summy_bill
+		on t.DEPARTMENT_CODE = gen_bus_summy_bill.DEPT_CODE 
+		
+        LEFT JOIN (SELECT DISTINCT RPT_DEPT, STATE,
+                                   BILL_TYPE
+                   FROM tb_sys_sealed_info 
+                   WHERE STATE = '1' 
+                   AND RPT_DUR = #{pd.RPT_DUR}
+		           and BILL_OFF = #{pd.BILL_OFF}) sys_sealed_info 
+		ON t.DEPARTMENT_CODE = sys_sealed_info.RPT_DEPT 
+		and IFNULL(gen_bus_summy_bill.TYPE_CODE, ' ') = sys_sealed_info.BILL_TYPE
+		<where>
+		    <if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			    ${pd.filterWhereResult}
+		    </if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+		</where>
+		<if test="sidx != null and sidx.trim() != ''" >
+			order by ${sidx} ${sord} 
+    	</if>
+	</select>
+</mapper>

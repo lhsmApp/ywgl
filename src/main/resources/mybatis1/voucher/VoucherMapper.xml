@@ -1,0 +1,1264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="VoucherMapper">
+
+	<!--表名 -->
+	<sql id="tableNameHouseFund">
+		TB_HOUSE_FUND_SUMMY
+	</sql>
+
+	<sql id="tableNameSocialInc">
+		TB_SOCIAL_INC_SUMMY
+	</sql>
+
+	<sql id="tableNameStaff">
+		TB_STAFF_SUMMY
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="FieldHouseFund">
+		BILL_CODE,
+		BUSI_DATE,
+		ESTB_DEPT,
+		USER_GROP,
+		SOC_INC_BASE,
+		PER_BASIC_FUND,
+		PER_SUPP_FUND,
+		PER_TOTAL,
+		DEPT_BASIC_FUND,
+		DEPT_SUPP_FUND,
+		DEPT_TOTAL,
+		DEPT_CODE,
+		USER_CATG,
+		PMT_PLACE,
+		CUST_COL1,
+		CUST_COL2,
+		CUST_COL3,
+		CUST_COL4,
+		CUST_COL5,
+		CUST_COL6,
+		CUST_COL7,
+		CUST_COL8,
+		CUST_COL9,
+		CUST_COL10,
+		ZRZC_CODE,
+		BILL_STATE,
+		BILL_USER,
+		BILL_DATE
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValueHouseFund">
+		#{BILL_CODE},
+		#{BUSI_DATE},
+		#{ESTB_DEPT},
+		#{USER_GROP},
+		#{SOC_INC_BASE},
+		#{PER_BASIC_FUND},
+		#{PER_SUPP_FUND},
+		#{PER_TOTAL},
+		#{DEPT_BASIC_FUND},
+		#{DEPT_SUPP_FUND},
+		#{DEPT_TOTAL},
+		#{DEPT_CODE},
+		#{USER_CATG},
+		#{PMT_PLACE},
+		#{CUST_COL1},
+		#{CUST_COL2},
+		#{CUST_COL3},
+		#{CUST_COL4},
+		#{CUST_COL5},
+		#{CUST_COL6},
+		#{CUST_COL7},
+		#{CUST_COL8},
+		#{CUST_COL9},
+		#{CUST_COL10},
+		#{ZRZC_CODE},
+		#{BILL_STATE},
+		#{BILL_USER},
+		#{BILL_DATE}
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="FieldSocialInc">
+		BILL_CODE,
+		BUSI_DATE,
+		ESTB_DEPT,
+		USER_GROP,
+		SOC_INC_BASE,
+		PER_ENDW_INS,
+		PER_MED_INS,
+		PER_UNEMPL_INS,
+		PER_TOTAL,
+		DEPT_ENDW_INS,
+		DEPT_MED_INS,
+		DEPT_UNEMPL_INS,
+		EMPT_INJ_INS,
+		MATY_INS,
+		DEPT_TOTAL,
+		DEPT_CODE,
+		USER_CATG,
+		PMT_PLACE,
+		CUST_COL1,
+		CUST_COL2,
+		CUST_COL3,
+		CUST_COL4,
+		CUST_COL5,
+		CUST_COL6,
+		CUST_COL7,
+		CUST_COL8,
+		CUST_COL9,
+		CUST_COL10,
+		ZRZC_CODE,
+		BILL_STATE,
+		BILL_USER,
+		BILL_DATE
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValueSocialInc">
+		#{BILL_CODE},
+		#{BUSI_DATE},
+		#{ESTB_DEPT},
+		#{USER_GROP},
+		#{SOC_INC_BASE},
+		#{PER_ENDW_INS},
+		#{PER_MED_INS},
+		#{PER_UNEMPL_INS},
+		#{PER_TOTAL},
+		#{DEPT_ENDW_INS},
+		#{DEPT_MED_INS},
+		#{DEPT_UNEMPL_INS},
+		#{EMPT_INJ_INS},
+		#{MATY_INS},
+		#{DEPT_TOTAL},
+		#{DEPT_CODE},
+		#{USER_CATG},
+		#{PMT_PLACE},
+		#{CUST_COL1},
+		#{CUST_COL2},
+		#{CUST_COL3},
+		#{CUST_COL4},
+		#{CUST_COL5},
+		#{CUST_COL6},
+		#{CUST_COL7},
+		#{CUST_COL8},
+		#{CUST_COL9},
+		#{CUST_COL10},
+		#{ZRZC_CODE},
+		#{BILL_STATE},
+		#{BILL_USER},
+		#{BILL_DATE}
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="FieldStaff">
+		BILL_CODE,
+		BUSI_DATE,
+		ESTB_DEPT,
+		USER_GROP,
+		USER_CATG,
+		DEPT_CODE,
+		ORG_UNIT,
+		SAL_RANGE,
+		POST_SALY,
+		BONUS,
+		CASH_BONUS,
+		WORK_OT,
+		BACK_SALY,
+		RET_SALY,
+		CHK_CASH,
+		INTR_SGL_AWAD,
+		SENY_ALLE,
+		POST_ALLE,
+		NS_ALLE,
+		AREA_ALLE,
+		EXPT_ALLE,
+		TECH_ALLE,
+		LIVE_EXPE,
+		LIVE_ALLE,
+		LEAVE_DM,
+		HOUSE_ALLE,
+		ITEM_ALLE,
+		MEAL_EXPE,
+		TRF_ALLE,
+		TEL_EXPE,
+		HLDY_ALLE,
+		KID_ALLE,
+		COOL_EXPE,
+		EXT_SGL_AWAD,
+		PRE_TAX_PLUS,
+		GROSS_PAY,
+		ENDW_INS,
+		UNEMPL_INS,
+		MED_INS,
+		CASD_INS,
+		HOUSE_FUND,
+		SUP_PESN,
+		TAX_BASE_ADJ,
+		ACCRD_TAX,
+		AFTER_TAX,
+		ACT_SALY,
+		GUESS_DIFF,
+		CUST_COL1,
+		CUST_COL2,
+		CUST_COL3,
+		CUST_COL4,
+		CUST_COL5,
+		CUST_COL6,
+		CUST_COL7,
+		CUST_COL8,
+		CUST_COL9,
+		CUST_COL10,
+		ZRZC_CODE,
+		BILL_STATE,
+		BILL_USER,
+		BILL_DATE
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValueStaff">
+		#{BILL_CODE},
+		#{BUSI_DATE},
+		#{ESTB_DEPT},
+		#{USER_GROP},
+		#{USER_CATG},
+		#{DEPT_CODE},
+		#{ORG_UNIT},
+		#{SAL_RANGE},
+		#{POST_SALY},
+		#{BONUS},
+		#{CASH_BONUS},
+		#{WORK_OT},
+		#{BACK_SALY},
+		#{RET_SALY},
+		#{CHK_CASH},
+		#{INTR_SGL_AWAD},
+		#{SENY_ALLE},
+		#{POST_ALLE},
+		#{NS_ALLE},
+		#{AREA_ALLE},
+		#{EXPT_ALLE},
+		#{TECH_ALLE},
+		#{LIVE_EXPE},
+		#{LIVE_ALLE},
+		#{LEAVE_DM},
+		#{HOUSE_ALLE},
+		#{ITEM_ALLE},
+		#{MEAL_EXPE},
+		#{TRF_ALLE},
+		#{TEL_EXPE},
+		#{HLDY_ALLE},
+		#{KID_ALLE},
+		#{COOL_EXPE},
+		#{EXT_SGL_AWAD},
+		#{PRE_TAX_PLUS},
+		#{GROSS_PAY},
+		#{ENDW_INS},
+		#{UNEMPL_INS},
+		#{MED_INS},
+		#{CASD_INS},
+		#{HOUSE_FUND},
+		#{SUP_PESN},
+		#{TAX_BASE_ADJ},
+		#{ACCRD_TAX},
+		#{AFTER_TAX},
+		#{ACT_SALY},
+		#{GUESS_DIFF},
+		#{CUST_COL1},
+		#{CUST_COL2},
+		#{CUST_COL3},
+		#{CUST_COL4},
+		#{CUST_COL5},
+		#{CUST_COL6},
+		#{CUST_COL7},
+		#{CUST_COL8},
+		#{CUST_COL9},
+		#{CUST_COL10},
+		#{ZRZC_CODE},
+		#{BILL_STATE},
+		#{BILL_USER},
+		#{BILL_DATE}
+	</sql>
+
+	<!-- 获取单号下拉列表数据源 -->
+	<select id="getBillCodeList" parameterType="pd" resultType="String">
+		select distinct BILL_CODE
+		from ${TABLE_CODE}
+		where BUSI_DATE =
+		'${SystemDateTime}'
+		${CanOperate}
+		order by BILL_CODE
+	</select>
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="pd">
+		insert into
+		<include refid="tableNameHouseFund"></include>
+		(
+		<include refid="FieldHouseFund"></include>
+		) values (
+		<include refid="FieldValueHouseFund"></include>
+		)
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableNameHouseFund"></include>
+		where
+		VOUCHER_ID = #{VOUCHER_ID}
+	</delete>
+
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableNameHouseFund"></include>
+		set
+		BILL_CODE = #{BILL_CODE},
+		BUSI_DATE = #{BUSI_DATE},
+		ESTB_DEPT =
+		#{ESTB_DEPT},
+		USER_GROP = #{USER_GROP},
+		SOC_INC_BASE = #{SOC_INC_BASE},
+		PER_BASIC_FUND = #{PER_BASIC_FUND},
+		PER_SUPP_FUND = #{PER_SUPP_FUND},
+		PER_TOTAL = #{PER_TOTAL},
+		DEPT_BASIC_FUND = #{DEPT_BASIC_FUND},
+		DEPT_SUPP_FUND = #{DEPT_SUPP_FUND},
+		DEPT_TOTAL = #{DEPT_TOTAL},
+		DEPT_CODE = #{DEPT_CODE},
+		USER_CATG = #{USER_CATG},
+		PMT_PLACE =
+		#{PMT_PLACE},
+		CUST_COL1 = #{CUST_COL1},
+		CUST_COL2 = #{CUST_COL2},
+		CUST_COL3 = #{CUST_COL3},
+		CUST_COL4 = #{CUST_COL4},
+		CUST_COL5 =
+		#{CUST_COL5},
+		CUST_COL6 = #{CUST_COL6},
+		CUST_COL7 = #{CUST_COL7},
+		CUST_COL8 = #{CUST_COL8},
+		CUST_COL9 = #{CUST_COL9},
+		CUST_COL10 =
+		#{CUST_COL10},
+		ZRZC_CODE = #{ZRZC_CODE},
+		BILL_STATE = #{BILL_STATE},
+		BILL_USER = #{BILL_USER},
+		BILL_DATE = #{BILL_DATE},
+		VOUCHER_ID =
+		VOUCHER_ID
+		where
+		VOUCHER_ID = #{VOUCHER_ID}
+	</update>
+
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select
+		<include refid="FieldHouseFund"></include>
+		from
+		<include refid="tableNameHouseFund"></include>
+		where
+		VOUCHER_ID = #{VOUCHER_ID}
+	</select>
+
+	<select id="countJqGrid" parameterType="pd" resultType="int">
+		<if test='VOUCHER_TYPE=="1"'>
+			SELECT count(*) FROM ${TABLE_CODE} A
+			<where>
+				A.BILL_STATE='1'
+				and A.BILL_CODE not in (SELECT bill_code FROM
+				tb_sys_sealed_info WHERE state = '1'
+				and
+				bill_type=#{BILL_TYPE_TRANSFER} and RPT_DUR=#{BUSI_DATE} and
+				BILL_OFF=#{FMISACC})
+
+				and A.BILL_CODE not in (SELECT bill_code FROM
+				tb_sys_unlock_info WHERE
+				DEL_STATE = '0'
+				and
+				bill_type=#{BILL_TYPE_TRANSFER} and
+				UNLK_DUR=#{BUSI_DATE} and
+				BILL_OFF=#{FMISACC})
+				<!-- and A.USER_GROP=#{USER_GROP} -->
+				<if test="keywords!= null and keywords != ''"><!-- 关键词检索 -->
+					and
+					(
+					<!-- 根据需求自己加检索条件 字段1 LIKE CONCAT(CONCAT('%', # {pd.keywords}),'%') or 
+						字段2 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') -->
+					)
+				</if>
+				<if test="BILL_CODE!= null and BILL_CODE != ''">
+					and A.BILL_CODE = #{BILL_CODE}
+				</if>
+				<if test="BUSI_DATE!= null and BUSI_DATE != ''">
+					and BUSI_DATE = #{BUSI_DATE}
+				</if>
+				<if test="USER_GROP!= null and USER_GROP != ''">
+					and USER_GROP = #{USER_GROP}
+				</if>
+				<if test="FMISACC!= null and FMISACC != ''">
+					and CUST_COL7 = #{FMISACC}
+				</if>
+				<if test="DEPT_CODES!= null and DEPT_CODES != ''"><!-- 根据单位检索 -->
+					and DEPT_CODE in
+					<foreach item="item" index="index" collection="DEPT_CODES"
+						open="(" separator="," close=")">
+						#{item}
+					</foreach>
+				</if>
+				<if test="filterWhereResult != null">
+					${filterWhereResult}
+				</if>
+			</where>
+		</if>
+
+		<if test='VOUCHER_TYPE=="2"'>
+			select count(*)
+			from ${TABLE_CODE} A
+			JOIN
+			tb_sys_sealed_info B
+			ON
+			A.BILL_CODE=B.BILL_CODE
+			AND
+			A.BUSI_DATE=B.RPT_DUR
+			AND
+			A.DEPT_CODE=B.RPT_DEPT
+			AND
+			A.CUST_COL7=B.BILL_OFF
+			LEFT JOIN tb_gl_cert C
+			ON
+			A.BILL_CODE=C.BILL_CODE
+			WHERE A.BILL_STATE='1' and B.STATE='1'
+			<!-- and A.USER_GROP=#{USER_GROP} -->
+			AND
+			B.BILL_TYPE=#{BILL_TYPE_TRANSFER}
+			<if test="keywords!= null and keywords != ''"><!-- 关键词检索 -->
+				and
+				(
+				<!-- 根据需求自己加检索条件 字段1 LIKE CONCAT(CONCAT('%', # {pd.keywords}),'%') or 
+					字段2 LIKE CONCAT(CONCAT('%', #{keywords}),'%') -->
+				)
+			</if>
+			<if test="BUSI_DATE!= null and BUSI_DATE != ''">
+				and BUSI_DATE = #{BUSI_DATE}
+			</if>
+			<if test="USER_GROP!= null and USER_GROP != ''">
+				and USER_GROP = #{USER_GROP}
+			</if>
+			<if test="FMISACC!= null and FMISACC != ''">
+				and CUST_COL7 = #{FMISACC}
+			</if>
+			<if test="DEPT_CODES!= null and DEPT_CODES != ''"><!-- 根据单位检索 -->
+				and DEPT_CODE in
+				<foreach item="item" index="index" collection="DEPT_CODES"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="filterWhereResult != null">
+				${filterWhereResult}
+			</if>
+		</if>
+	</select>
+
+	<select id="getFooterSummary" parameterType="jqPage" resultType="pd">
+		<if test='pd.VOUCHER_TYPE=="1"'>
+			SELECT ${pd.Userdata} from
+			(SELECT A.*
+			FROM ${pd.TABLE_CODE} A
+			<where>
+				A.BILL_STATE='1'
+				and A.BILL_CODE not in (SELECT bill_code FROM
+				tb_sys_sealed_info WHERE state = '1'
+				and
+				bill_type=#{pd.BILL_TYPE_TRANSFER} and RPT_DUR=#{pd.BUSI_DATE} and
+				BILL_OFF=#{pd.FMISACC})
+
+				and A.BILL_CODE not in (SELECT bill_code FROM
+				tb_sys_unlock_info WHERE
+				DEL_STATE = '0'
+				and
+				bill_type=#{pd.BILL_TYPE_TRANSFER} and
+				UNLK_DUR=#{pd.BUSI_DATE} and
+				BILL_OFF=#{pd.FMISACC})
+				<!-- and A.USER_GROP=#{pd.USER_GROP} -->
+				<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+					and
+					(
+					<!-- 根据需求自己加检索条件 字段1 LIKE CONCAT(CONCAT('%', # {pd.keywords}),'%') or 
+						字段2 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') -->
+					)
+				</if>
+				<if test="pd.BILL_CODE!= null and pd.BILL_CODE != ''">
+					and A.BILL_CODE = #{pd.BILL_CODE}
+				</if>
+				<if test="pd.BUSI_DATE!= null and pd.BUSI_DATE != ''">
+					and BUSI_DATE = #{pd.BUSI_DATE}
+				</if>
+				<if test="pd.USER_GROP!= null and pd.USER_GROP != ''">
+					and USER_GROP = #{pd.USER_GROP}
+				</if>
+				<if test="pd.FMISACC!= null and pd.FMISACC != ''">
+					and CUST_COL7 = #{pd.FMISACC}
+				</if>
+				<if test="pd.USER_CATG!= null and pd.USER_CATG != ''">
+					and USER_CATG = #{pd.USER_CATG}
+				</if>
+				<if test="pd.SAL_RANGE!= null and pd.SAL_RANGE != ''">
+					and SAL_RANGE = #{pd.SAL_RANGE}
+				</if>
+				<if test="pd.DEPT_CODES!= null and pd.DEPT_CODES != ''"><!-- 根据单位检索 -->
+					and DEPT_CODE in
+					<foreach item="item" index="index" collection="pd.DEPT_CODES"
+						open="(" separator="," close=")">
+						#{item}
+					</foreach>
+				</if>
+				<if test="pd.filterWhereResult != null">
+					${pd.filterWhereResult}
+				</if>
+			</where>
+			<if test="sidx != null">
+				order by ${sidx} ${sord}
+			</if>
+			<!-- <if test="currentResult != null and rowNum != null"> limit #{currentResult}, 
+				#{rowNum} </if> -->
+			) T
+		</if>
+
+		<if test='pd.VOUCHER_TYPE=="2"'>
+			SELECT ${pd.Userdata} from
+			(select A.*
+			from ${pd.TABLE_CODE}
+			A
+			JOIN
+			tb_sys_sealed_info B
+			ON
+			A.BILL_CODE=B.BILL_CODE
+			AND
+			A.BUSI_DATE=B.RPT_DUR
+			AND
+			A.DEPT_CODE=B.RPT_DEPT
+			AND
+			A.CUST_COL7=B.BILL_OFF
+			WHERE A.BILL_STATE='1' and B.STATE='1'
+			<!-- and A.USER_GROP=#{pd.USER_GROP} -->
+			AND
+			B.BILL_TYPE=#{pd.BILL_TYPE_TRANSFER}
+			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+				and
+				(
+				<!-- 根据需求自己加检索条件 字段1 LIKE CONCAT(CONCAT('%', # {pd.keywords}),'%') or 
+					字段2 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') -->
+				)
+			</if>
+			<if test="pd.BUSI_DATE!= null and pd.BUSI_DATE != ''">
+				and BUSI_DATE = #{pd.BUSI_DATE}
+			</if>
+			<if test="pd.USER_GROP!= null and pd.USER_GROP != ''">
+				and USER_GROP = #{pd.USER_GROP}
+			</if>
+			<if test="pd.FMISACC!= null and pd.FMISACC != ''">
+				and CUST_COL7 = #{pd.FMISACC}
+			</if>
+			<if test="pd.USER_CATG!= null and pd.USER_CATG != ''">
+				and USER_CATG = #{pd.USER_CATG}
+			</if>
+			<if test="pd.SAL_RANGE!= null and pd.SAL_RANGE != ''">
+				and SAL_RANGE = #{pd.SAL_RANGE}
+			</if>
+			<if test="pd.DEPT_CODES!= null and pd.DEPT_CODES != ''"><!-- 根据单位检索 -->
+				and DEPT_CODE in
+				<foreach item="item" index="index" collection="pd.DEPT_CODES"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="pd.filterWhereResult != null">
+				${pd.filterWhereResult}
+			</if>
+			<if test="sidx != null">
+				order by ${sidx} ${sord}
+			</if>
+			<!-- <if test="currentResult != null and rowNum != null"> limit #{currentResult}, 
+				#{rowNum} </if> -->
+			) T
+		</if>
+
+	</select>
+
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		<!-- <if test='BILL_TYPE=="2" or BILL_TYPE=="4" or BILL_TYPE=="6"'> -->
+		<if test='VOUCHER_TYPE=="1"'>
+			SELECT A.* FROM ${TABLE_CODE} A
+			<where>
+				A.BILL_STATE='1'
+				and A.BILL_CODE not in (SELECT bill_code FROM
+				tb_sys_sealed_info WHERE state = '1'
+				and
+				bill_type=#{BILL_TYPE_TRANSFER} and RPT_DUR=#{BUSI_DATE} and
+				BILL_OFF=#{FMISACC})
+
+				and A.BILL_CODE not in (SELECT bill_code FROM
+				tb_sys_unlock_info WHERE
+				DEL_STATE = '0'
+				and
+				bill_type=#{BILL_TYPE_TRANSFER} and
+				UNLK_DUR=#{BUSI_DATE} and
+				BILL_OFF=#{FMISACC})
+				<!-- and A.USER_GROP=#{USER_GROP} -->
+				<if test="keywords!= null and keywords != ''"><!-- 关键词检索 -->
+					and
+					(
+					<!-- 根据需求自己加检索条件 字段1 LIKE CONCAT(CONCAT('%', # {keywords}),'%') or 字段2 
+						LIKE CONCAT(CONCAT('%', #{keywords}),'%') -->
+					)
+				</if>
+				<if test="BILL_CODE!= null and BILL_CODE != ''">
+					and A.BILL_CODE = #{BILL_CODE}
+				</if>
+				<if test="QueryFeild!= null and QueryFeild != ''">
+					${QueryFeild}
+				</if>
+				<if test="BUSI_DATE!= null and BUSI_DATE != ''">
+					and BUSI_DATE = #{BUSI_DATE}
+				</if>
+				<if test="USER_GROP!= null and USER_GROP != ''">
+					and USER_GROP = #{USER_GROP}
+				</if>
+				<if test="FMISACC!= null and FMISACC != ''">
+					and CUST_COL7 = #{FMISACC}
+				</if>
+				<if test="USER_CATG!= null and USER_CATG != ''">
+					and USER_CATG = #{USER_CATG}
+				</if>
+				<if test="SAL_RANGE!= null and SAL_RANGE != ''">
+					and SAL_RANGE = #{SAL_RANGE}
+				</if>
+				<if test="DEPT_CODES!= null and DEPT_CODES != ''"><!-- 根据单位检索 -->
+					and DEPT_CODE in
+					<foreach item="item" index="index" collection="DEPT_CODES"
+						open="(" separator="," close=")">
+						#{item}
+					</foreach>
+				</if>
+				<if test="filterWhereResult != null">
+					${filterWhereResult}
+				</if>
+			</where>
+		</if>
+
+		<if test='VOUCHER_TYPE=="2"'>
+			select A.*,C.CERT_CODE,C.REVCERT_CODE,C.BILL_USER
+			CERT_BILL_USER,C.VOUCHER_DATE CERT_BILL_DATE
+			from ${TABLE_CODE} A
+			JOIN
+			tb_sys_sealed_info B
+			ON
+			A.BILL_CODE=B.BILL_CODE
+			AND
+			A.BUSI_DATE=B.RPT_DUR
+			AND
+			A.DEPT_CODE=B.RPT_DEPT
+			AND
+			A.CUST_COL7=B.BILL_OFF
+			LEFT JOIN tb_gl_cert C
+			ON
+			A.BILL_CODE=C.BILL_CODE
+			WHERE A.BILL_STATE='1' and B.STATE='1'
+			<!-- and A.USER_GROP=#{USER_GROP} -->
+			AND
+			B.BILL_TYPE=#{BILL_TYPE_TRANSFER}
+			<if test="keywords!= null and keywords != ''"><!-- 关键词检索 -->
+				and
+				(
+				<!-- 根据需求自己加检索条件 字段1 LIKE CONCAT(CONCAT('%', # {pd.keywords}),'%') or 
+					字段2 LIKE CONCAT(CONCAT('%', #{keywords}),'%') -->
+				)
+			</if>
+			<if test="BUSI_DATE!= null and BUSI_DATE != ''">
+				and A.BUSI_DATE = #{BUSI_DATE}
+			</if>
+			<if test="USER_GROP!= null and USER_GROP != ''">
+				and USER_GROP = #{USER_GROP}
+			</if>
+			<if test="FMISACC!= null and FMISACC != ''">
+				and CUST_COL7 = #{FMISACC}
+			</if>
+			<if test="USER_CATG!= null and USER_CATG != ''">
+				and USER_CATG = #{USER_CATG}
+			</if>
+			<if test="SAL_RANGE!= null and SAL_RANGE != ''">
+				and SAL_RANGE = #{SAL_RANGE}
+			</if>
+			<if test="DEPT_CODES!= null and DEPT_CODES != ''"><!-- 根据单位检索 -->
+				and DEPT_CODE in
+				<foreach item="item" index="index" collection="DEPT_CODES"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="filterWhereResult != null">
+				${filterWhereResult}
+			</if>
+		</if>
+
+		<if test="sidx != null">
+			order by ${sidx} ${sord}
+		</if>
+	</select>
+
+	<!-- 列表(同步删除) -->
+	<select id="listSyncDelList" parameterType="pd" resultType="pd">
+		SELECT A.* FROM ${TABLE_CODE} A
+		JOIN TB_SYS_UNLOCK_INFO B
+		ON
+		A.BILL_CODE=B.BILL_CODE
+		AND A.DEPT_CODE=B.UNLK_DEPT
+		AND
+		A.BUSI_DATE=B.UNLK_DUR
+		AND A.CUST_COL7=B.BILL_OFF
+		<where>
+			B.DEL_STATE='0'
+			and B.bill_type=#{BILL_TYPE}
+			<if test="keywords!= null and keywords != ''"><!-- 关键词检索 -->
+				and
+				(
+				<!-- 根据需求自己加检索条件 字段1 LIKE CONCAT(CONCAT('%', # {keywords}),'%') or 字段2 
+					LIKE CONCAT(CONCAT('%', #{keywords}),'%') -->
+				)
+			</if>
+			<if test="BUSI_DATE!= null and BUSI_DATE != ''">
+				and BUSI_DATE = #{BUSI_DATE}
+			</if>
+			<if test="USER_GROP!= null and USER_GROP != ''">
+				and USER_GROP = #{USER_GROP}
+			</if>
+			<if test="FMISACC!= null and FMISACC != ''">
+				and CUST_COL7 = #{FMISACC}
+			</if>
+			<if test="USER_CATG!= null and USER_CATG != ''">
+				and USER_CATG = #{USER_CATG}
+			</if>
+			<if test="SAL_RANGE!= null and SAL_RANGE != ''">
+				and SAL_RANGE = #{SAL_RANGE}
+			</if>
+			<if test="DEPT_CODES!= null and DEPT_CODES != ''"><!-- 根据单位检索 -->
+				and DEPT_CODE in
+				<foreach item="item" index="index" collection="DEPT_CODES"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="filterWhereResult != null">
+				${filterWhereResult}
+			</if>
+		</where>
+		<if test="sidx != null">
+			order by ${sidx} ${sord}
+		</if>
+	</select>
+
+	<!-- 获取明细列表 -->
+	<select id="listDetail" parameterType="pd" resultType="pd">
+		select A.*
+		from ${TABLE_CODE} A
+		<!-- left join sys_dictionaries B on A.USER_GROP=B.BIANMA left join sys_dictionaries 
+			C on A.USER_CATG=C.BIANMA left join sys_dictionaries D on A.PMT_PLACE=D.BIANMA 
+			left join oa_department E on A.DEPT_CODE=E.DEPARTMENT_CODE left join oa_department 
+			F on A.ESTB_DEPT=F.DEPARTMENT_CODE -->
+		<where>
+			A.BILL_CODE=#{BILL_CODE}
+			<if test="QueryFeild!= null and QueryFeild != ''">
+				${QueryFeild}
+			</if>
+
+		</where>
+	</select>
+
+	<select id="findSummyDetailList" parameterType="pd" resultType="pd">
+		select A.*,C.CERT_CODE,C.REVCERT_CODE,C.BILL_USER
+		CERT_BILL_USER,C.VOUCHER_DATE CERT_BILL_DATE
+		from ${TABLE_CODE} A
+		LEFT JOIN
+		tb_gl_cert C
+		ON
+		A.BILL_CODE=C.BILL_CODE
+		where A.BILL_CODE = #{BILL_CODE}
+	</select>
+
+	<select id="findSummyDetailListByBillCodes" parameterType="pd"
+		resultType="pd">
+		select *
+		from ${TABLE_CODE}
+		<where>
+			BILL_CODE in
+			<foreach item="item" index="index" collection="BILL_CODES"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			
+				<if test="QueryFeild!= null and QueryFeild != ''">
+					${QueryFeild}
+				</if>
+		</where>
+	</select>
+
+	<!-- 获取汇总信息还没有进行上报的信息 -->
+	<select id="getTransferValidate" parameterType="pd" resultType="pd">
+		SELECT * FROM (
+		SELECT A.*,B.BILL_TYPE,B.STATE
+		FROM ${TABLE_CODE} A
+		LEFT
+		JOIN (SELECT * FROM tb_sys_sealed_info WHERE bill_type=#{BILL_TYPE}
+		AND state='1') B
+		ON
+		<!-- A.BILL_CODE=B.BILL_CODE AND -->
+		A.BUSI_DATE=B.RPT_DUR
+		AND
+		A.DEPT_CODE=B.RPT_DEPT
+		AND
+		A.CUST_COL7=B.BILL_OFF
+		where B.RPT_DEPT IS
+		NULL) T
+		<where>
+			<if test="FMISACC!= null and FMISACC != ''">
+				and CUST_COL7 = #{FMISACC}
+			</if>
+			<if test="DEPT_CODES!= null and DEPT_CODES != ''"><!-- 根据单位检索 -->
+				and DEPT_CODE in
+				<foreach item="item" index="index" collection="DEPT_CODES"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="filterWhereResult != null">
+				${filterWhereResult}
+			</if>
+		</where>
+
+	</select>
+
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableNameHouseFund"></include>
+		where
+		VOUCHER_ID in
+		<foreach item="item" index="index" collection="array" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<!-- 批量更新凭证号 -->
+	<update id="updateCertCode" parameterType="pd">
+		<foreach item="item" index="index" collection="list" open=" "
+			separator="; " close=" ">
+			<if test="item!=null">
+				delete from
+				TB_GL_CERT
+				where BILL_CODE = #{item.BILL_CODE};
+				insert into TB_GL_CERT(BILL_CODE,CERT_CODE,BILL_USER,BILL_DATE,VOUCHER_DATE,BUSI_DATE)
+				values
+				(#{item.BILL_CODE},#{item.CERT_CODE},#{item.BILL_USER},#{item.BILL_DATE},#{item.VOUCHER_DATE},#{item.BUSI_DATE})
+			</if>
+		</foreach>
+	</update>
+
+	<!-- 批量更新冲销凭证号 -->
+	<update id="updateRevCertCode" parameterType="pd">
+		<foreach item="item" index="index" collection="list" open=" "
+			separator="; " close=" ">
+			<if test="item!=null">
+				<!-- delete from
+				TB_GL_CERT
+				where BILL_CODE = #{item.BILL_CODE};
+				insert into
+				TB_GL_CERT(BILL_CODE,CERT_CODE,REVCERT_CODE,BILL_USER,BILL_DATE,VOUCHER_DATE,BUSI_DATE)
+				values
+				(#{item.BILL_CODE},#{item.CERT_CODE},#{item.REVCERT_CODE},#{item.BILL_USER},#{item.BILL_DATE},#{item.VOUCHER_DATE},#{item.BUSI_DATE}) -->
+				update TB_GL_CERT set REVCERT_CODE=#{item.REVCERT_CODE} where BILL_CODE = #{item.BILL_CODE};
+			</if>
+		</foreach>
+	</update>
+	
+	
+	<!--*******************特殊凭证相关服务*******************************-->
+	<!-- 获取凭证下拉列表数据源 -->
+	<select id="getTypeCodeList" parameterType="pd" resultType="pd">
+		select A.TYPE_CODE as CODE,B.NAME
+		from tb_sys_table_mapping A
+		join sys_dictionaries B
+		on A.TYPE_CODE=B.DICT_CODE
+		where A.BILL_OFF = #{FMISACC}
+		and A.STATE = '1'
+		and B.PARENT_CODE='PZTYPE'
+		and A.BUSI_DATE=#{BUSI_DATE}
+	</select>
+	
+	<!-- 获取单位下拉列表数据源 -->
+	<select id="getDepartCodeList" parameterType="pd" resultType="pd">
+		select distinct A.DEPT_CODE as CODE,B.NAME
+		from tb_sys_dept_mapping A
+		join oa_department B
+		on A.DEPT_CODE=B.DEPARTMENT_CODE
+		
+		where A.BILL_OFF = #{FMISACC}
+		and A.TYPE_CODE = #{TYPE_CODE}
+	</select>
+	
+	<!-- 获取单号下拉列表数据源 -->
+	<select id="getSpecialBillCodeList" parameterType="pd" resultType="String">
+		select BILL_CODE
+		from tb_gen_bus_summy_bill
+		where BILL_OFF = #{FMISACC}
+		and TYPE_CODE = #{TYPE_CODE}
+		and BUSI_DATE = #{BUSI_DATE}
+		and DEPT_CODE = #{DEPT_CODE}
+		and BILL_STATE = '1'
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAllSpecial" parameterType="pd" resultType="pd">
+		<if test='VOUCHER_TYPE=="1"'>
+			SELECT A.* FROM tb_gen_bus_summy_bill A
+			<where>
+				A.BILL_STATE='1'
+				and A.BILL_CODE not in (SELECT bill_code FROM
+				tb_sys_sealed_info WHERE state = '1'
+				and
+				bill_type=#{BILL_TYPE_TRANSFER} and RPT_DUR=#{BUSI_DATE} and
+				BILL_OFF=#{FMISACC})
+
+				and A.BILL_CODE not in (SELECT bill_code FROM
+				tb_sys_unlock_info WHERE
+				DEL_STATE = '0'
+				and
+				bill_type=#{BILL_TYPE_TRANSFER} and
+				UNLK_DUR=#{BUSI_DATE} and
+				BILL_OFF=#{FMISACC})
+				<!-- and A.USER_GROP=#{USER_GROP} -->
+				<if test="keywords!= null and keywords != ''"><!-- 关键词检索 -->
+					and
+					(
+					<!-- 根据需求自己加检索条件 字段1 LIKE CONCAT(CONCAT('%', # {keywords}),'%') or 字段2 
+						LIKE CONCAT(CONCAT('%', #{keywords}),'%') -->
+					)
+				</if>
+				<if test="BILL_CODE!= null and BILL_CODE != ''">
+					and A.BILL_CODE = #{BILL_CODE}
+				</if>
+				 <if test="BUSI_DATE!= null and BUSI_DATE != ''">
+					and A.BUSI_DATE = #{BUSI_DATE}
+				</if>
+				<if test="FMISACC!= null and FMISACC != ''">
+					and A.BILL_OFF = #{FMISACC}
+				</if>
+				<if test="TYPE_CODE!= null and TYPE_CODE != ''">
+					and A.TYPE_CODE = #{TYPE_CODE}
+				</if>
+				<if test="DEPT_CODE!= null and DEPT_CODE != ''">
+					and A.DEPT_CODE = #{DEPT_CODE}
+				</if>
+				<!--
+				<if test="DEPT_CODES!= null and DEPT_CODES != ''">根据单位检索
+					and DEPT_CODE in
+					<foreach item="item" index="index" collection="DEPT_CODES"
+						open="(" separator="," close=")">
+						#{item}
+					</foreach>
+				</if> -->
+				<if test="filterWhereResult != null">
+					${filterWhereResult}
+				</if>
+			</where>
+		</if>
+
+		<if test='VOUCHER_TYPE=="2"'>
+			select A.*,C.CERT_CODE,C.REVCERT_CODE,C.BILL_USER
+			CERT_BILL_USER,C.VOUCHER_DATE CERT_BILL_DATE
+			from tb_gen_bus_summy_bill A
+			JOIN
+			tb_sys_sealed_info B
+			ON
+			A.BILL_CODE=B.BILL_CODE
+			<!-- AND
+			A.BUSI_DATE=B.RPT_DUR
+			AND
+			A.DEPT_CODE=B.RPT_DEPT
+			AND
+			A.CUST_COL7=B.BILL_OFF -->
+			LEFT JOIN tb_gl_cert C
+			ON
+			A.BILL_CODE=C.BILL_CODE
+			WHERE A.BILL_STATE='1' and B.STATE='1'
+			<!-- and A.USER_GROP=#{USER_GROP} -->
+			AND
+			B.BILL_TYPE=#{BILL_TYPE_TRANSFER}
+			<if test="keywords!= null and keywords != ''"><!-- 关键词检索 -->
+				and
+				(
+				<!-- 根据需求自己加检索条件 字段1 LIKE CONCAT(CONCAT('%', # {pd.keywords}),'%') or 
+					字段2 LIKE CONCAT(CONCAT('%', #{keywords}),'%') -->
+				)
+			</if>
+			<if test="BILL_CODE!= null and BILL_CODE != ''">
+				and A.BILL_CODE = #{BILL_CODE}
+			</if>
+			 <if test="BUSI_DATE!= null and BUSI_DATE != ''">
+				and A.BUSI_DATE = #{BUSI_DATE}
+			</if>
+			<if test="FMISACC!= null and FMISACC != ''">
+				and A.BILL_OFF = #{FMISACC}
+			</if>
+			<if test="TYPE_CODE!= null and TYPE_CODE != ''">
+				and A.TYPE_CODE = #{TYPE_CODE}
+			</if>
+			<if test="DEPT_CODE!= null and DEPT_CODE != ''">
+				and A.DEPT_CODE = #{DEPT_CODE}
+			</if>
+			<!--<if test="DEPT_CODES!= null and DEPT_CODES != ''">根据单位检索
+				and DEPT_CODE in
+				<foreach item="item" index="index" collection="DEPT_CODES"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if> -->
+			<if test="filterWhereResult != null">
+				${filterWhereResult}
+			</if>
+		</if>
+
+		<if test="sidx != null">
+			order by ${sidx} ${sord}
+		</if>
+	</select>
+	
+	<select id="getFooterSummarySpecial" parameterType="jqPage" resultType="pd">
+		<if test='pd.VOUCHER_TYPE=="1"'>
+			SELECT ${pd.Userdata} from
+			(SELECT A.*
+			FROM tb_gen_bus_summy_bill A
+			<where>
+				A.BILL_STATE='1'
+				and A.BILL_CODE not in (SELECT bill_code FROM
+				tb_sys_sealed_info WHERE state = '1'
+				and
+				bill_type=#{pd.BILL_TYPE_TRANSFER} and RPT_DUR=#{pd.BUSI_DATE} and
+				BILL_OFF=#{pd.FMISACC})
+
+				and A.BILL_CODE not in (SELECT bill_code FROM
+				tb_sys_unlock_info WHERE
+				DEL_STATE = '0'
+				and
+				bill_type=#{pd.BILL_TYPE_TRANSFER} and
+				UNLK_DUR=#{pd.BUSI_DATE} and
+				BILL_OFF=#{pd.FMISACC})
+				<!-- and A.USER_GROP=#{pd.USER_GROP} -->
+				<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+					and
+					(
+					<!-- 根据需求自己加检索条件 字段1 LIKE CONCAT(CONCAT('%', # {pd.keywords}),'%') or 
+						字段2 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') -->
+					)
+				</if>
+				<if test="pd.BILL_CODE!= null and pd.BILL_CODE != ''">
+					and A.BILL_CODE = #{pd.BILL_CODE}
+				</if>
+				<if test="pd.BUSI_DATE!= null and pd.BUSI_DATE != ''">
+					and A.BUSI_DATE = #{pd.BUSI_DATE}
+				</if>
+				<if test="pd.FMISACC!= null and pd.FMISACC != ''">
+					and A.BILL_OFF = #{pd.FMISACC}
+				</if>
+				<if test="pd.BILL_TYPE_TRANSFER!= null and pd.BILL_TYPE_TRANSFER != ''">
+					and A.TYPE_CODE = #{pd.BILL_TYPE_TRANSFER}
+				</if>
+				<if test="pd.DEPT_CODE!= null and pd.DEPT_CODE != ''">
+					and A.DEPT_CODE = #{pd.DEPT_CODE}
+				</if>
+				<!-- <if test="pd.DEPT_CODES!= null and pd.DEPT_CODES != ''">根据单位检索
+					and DEPT_CODE in
+					<foreach item="item" index="index" collection="pd.DEPT_CODES"
+						open="(" separator="," close=")">
+						#{item}
+					</foreach>
+				</if> -->
+				<if test="pd.filterWhereResult != null">
+					${pd.filterWhereResult}
+				</if>
+			</where>
+			<if test="sidx != null">
+				order by ${sidx} ${sord}
+			</if>
+			<!-- <if test="currentResult != null and rowNum != null"> limit #{currentResult}, 
+				#{rowNum} </if> -->
+			) T
+		</if>
+
+		<if test='pd.VOUCHER_TYPE=="2"'>
+			SELECT ${pd.Userdata} from
+			(select A.*
+			from tb_gen_bus_summy_bill
+			A
+			JOIN
+			tb_sys_sealed_info B
+			ON
+			A.BILL_CODE=B.BILL_CODE
+			AND
+			A.BUSI_DATE=B.RPT_DUR
+			AND
+			A.DEPT_CODE=B.RPT_DEPT
+			AND
+			A.BILL_OFF=B.BILL_OFF
+			WHERE A.BILL_STATE='1' and B.STATE='1'
+			<!-- and A.USER_GROP=#{pd.USER_GROP} -->
+			AND
+			B.BILL_TYPE=#{pd.BILL_TYPE_TRANSFER}
+			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+				and
+				(
+				<!-- 根据需求自己加检索条件 字段1 LIKE CONCAT(CONCAT('%', # {pd.keywords}),'%') or 
+					字段2 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') -->
+				)
+			</if>
+			<if test="pd.BILL_CODE!= null and pd.BILL_CODE != ''">
+				and A.BILL_CODE = #{pd.BILL_CODE}
+			</if>
+			<if test="pd.BUSI_DATE!= null and pd.BUSI_DATE != ''">
+				and A.BUSI_DATE = #{pd.BUSI_DATE}
+			</if>
+			<if test="pd.FMISACC!= null and pd.FMISACC != ''">
+				and A.BILL_OFF = #{pd.FMISACC}
+			</if>
+			<if test="pd.BILL_TYPE_TRANSFER!= null and pd.BILL_TYPE_TRANSFER != ''">
+				and A.TYPE_CODE = #{pd.BILL_TYPE_TRANSFER}
+			</if>
+			<if test="pd.DEPT_CODE!= null and pd.DEPT_CODE != ''">
+				and A.DEPT_CODE = #{pd.DEPT_CODE}
+			</if>
+			<!-- <if test="pd.DEPT_CODES!= null and pd.DEPT_CODES != ''">根据单位检索
+				and DEPT_CODE in
+				<foreach item="item" index="index" collection="pd.DEPT_CODES"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if> -->
+			<if test="pd.filterWhereResult != null">
+				${pd.filterWhereResult}
+			</if>
+			<if test="sidx != null">
+				order by ${sidx} ${sord}
+			</if>
+			<!-- <if test="currentResult != null and rowNum != null"> limit #{currentResult}, 
+				#{rowNum} </if> -->
+			) T
+		</if>
+
+	</select>
+	
+	<!-- 列表(同步删除)特殊表 -->
+	<select id="listSyncDelListSpecial" parameterType="pd" resultType="pd">
+		SELECT A.* FROM tb_gen_bus_summy_bill A
+		JOIN TB_SYS_UNLOCK_INFO B
+		ON
+		A.BILL_CODE=B.BILL_CODE
+		<!-- AND A.DEPT_CODE=B.UNLK_DEPT
+		AND
+		A.BUSI_DATE=B.UNLK_DUR
+		AND A.CUST_COL7=B.BILL_OFF -->
+		<where>
+			B.DEL_STATE='0'
+			and B.bill_type=#{BILL_TYPE}
+			<if test="keywords!= null and keywords != ''"><!-- 关键词检索 -->
+				and
+				(
+				<!-- 根据需求自己加检索条件 字段1 LIKE CONCAT(CONCAT('%', # {keywords}),'%') or 字段2 
+					LIKE CONCAT(CONCAT('%', #{keywords}),'%') -->
+				)
+			</if>
+			<if test="BILL_CODE!= null and BILL_CODE != ''">
+				and A.BILL_CODE = #{BILL_CODE}
+			</if>
+			<if test="BUSI_DATE!= null and BUSI_DATE != ''">
+				and A.BUSI_DATE = #{BUSI_DATE}
+			</if>
+			<if test="FMISACC!= null and FMISACC != ''">
+				and A.BILL_OFF = #{FMISACC}
+			</if>
+			<if test="TYPE_CODE!= null and TYPE_CODE != ''">
+				and A.TYPE_CODE = #{TYPE_CODE}
+			</if>
+			<if test="DEPT_CODE!= null and DEPT_CODE != ''">
+				and A.DEPT_CODE = #{DEPT_CODE}
+			</if>
+			<!--<if test="DEPT_CODES!= null and DEPT_CODES != ''">根据单位检索
+				and DEPT_CODE in
+				<foreach item="item" index="index" collection="DEPT_CODES"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if> -->
+			<if test="filterWhereResult != null">
+				${filterWhereResult}
+			</if>
+		</where>
+		<if test="sidx != null">
+			order by ${sidx} ${sord}
+		</if>
+	</select>
+	
+	<select id="findSummyDetailListSpecial" parameterType="pd" resultType="pd">
+		select A.*,C.CERT_CODE,C.REVCERT_CODE,C.BILL_USER
+		CERT_BILL_USER,C.VOUCHER_DATE CERT_BILL_DATE
+		from tb_gen_summy A
+		LEFT JOIN
+		tb_gl_cert C
+		ON
+		A.BILL_CODE=C.BILL_CODE
+		where A.BILL_CODE = #{BILL_CODE}
+	</select>
+	
+	<!-- 获取明细列表 特殊表-->
+	<select id="listDetailSpecial" parameterType="pd" resultType="pd">
+		select A.*
+		from tb_gen_bus_detail A
+		<where>
+			A.BILL_CODE=#{BILL_CODE}
+			<!-- <if test="QueryFeild!= null and QueryFeild != ''">
+				${QueryFeild}
+			</if> -->
+
+		</where>
+	</select>
+	
+	<!-- 根据单号获取汇总列表 特殊表-->
+	<select id="findSummyDetailListByBillCodesSpecial" parameterType="pd"
+		resultType="pd">
+		select *
+		from tb_gen_summy
+		<where>
+			BILL_CODE in
+			<foreach item="item" index="index" collection="BILL_CODES"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</where>
+	</select>
+	
+	<!-- 根据凭证类型、账套获取tb_sys_bill_off_mapping帐套映射-->
+	<select id="findBilloffMapping" parameterType="pd"
+		resultType="pd">
+		select *
+		from tb_sys_bill_off_mapping
+		<where>
+			TYPE_CODE=#{TYPE_CODE}
+			and BILL_OFF=#{BILL_OFF}
+		</where>
+	</select>
+	<!-- ************************************************************-->
+</mapper>

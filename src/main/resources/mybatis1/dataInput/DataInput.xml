@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DataInputMapper">
+	
+<!-- 
+ * 说明： 社保明细
+ * 创建人：zhangxiaoliu
+ * 创建时间：2017-06-19
+ * @version
+ -->
+	<!--表名 -->
+	<sql id="tableDataInputName">
+		tb_data_input
+	</sql>
+	<sql id="tableChangeValueMapName">
+		tb_sys_changevalue_mapping
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="FieldSelectedCol">
+		t.TYPE_CODE TYPE_CODE,
+		t.BILL_OFF BILL_OFF,
+		t.DEPT_CODE DEPT_CODE,
+		'${pd.SystemDateTime}' BUSI_DATE,
+		t.MAPPING_CODE CHANGE_COL,
+		IFNULL(c.DATA_VALUE, ' ') DATA_VALUE
+	</sql>
+	<sql id="FieldSelectedKey">
+	    ,	
+		IFNULL(c.TYPE_CODE, ' ') TYPE_CODE__,	
+		IFNULL(c.BILL_OFF, ' ') BILL_OFF__,	
+		IFNULL(c.BUSI_DATE, ' ') BUSI_DATE__,
+		IFNULL(c.DEPT_CODE, ' ') DEPT_CODE__,
+		IFNULL(c.CHANGE_COL, ' ') CHANGE_COL__
+	</sql>
+	<sql id="Field">
+	    TYPE_CODE,
+		BILL_OFF,
+		BUSI_DATE,
+		DEPT_CODE,	
+		CHANGE_COL,	
+		DATA_VALUE
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+	    #{TYPE_CODE},
+		#{BILL_OFF},
+		#{BUSI_DATE},
+		#{DEPT_CODE},	
+		#{CHANGE_COL},	
+		#{DATA_VALUE}
+	</sql>
+	<sql id="FieldValueItem">
+	    #{item.TYPE_CODE},
+		#{item.BILL_OFF},
+		#{item.BUSI_DATE},
+		#{item.DEPT_CODE},	
+		#{item.CHANGE_COL},	
+		#{item.DATA_VALUE}
+	</sql>
+
+	<!-- 列表 -->
+	<select id="datalistJqPage" parameterType="jqPage" resultType="pd">
+		SELECT *
+		FROM (select <include refid="FieldSelectedCol"></include>
+		             <include refid="FieldSelectedKey"></include>
+		      from <include refid="tableChangeValueMapName"></include> t
+		      LEFT JOIN (SELECT * 
+		                 FROM <include refid="tableDataInputName"></include>
+		                 where BUSI_DATE = '${pd.SystemDateTime}'
+		                 <if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			                 ${pd.filterWhereResult}
+		                 </if>
+		                 <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		                     ${pd.QueryFeild}
+		                 </if>) C
+		      ON t.TYPE_CODE = C.TYPE_CODE AND t.BILL_OFF = C.BILL_OFF AND t.DEPT_CODE = C.DEPT_CODE AND t.MAPPING_CODE = C.CHANGE_COL
+		      ) Z 
+		<where>
+		    <if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			   ${pd.filterWhereResult}
+		    </if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+		</where>
+		<if test="sidx != null and sidx.trim() != ''" >
+			order by ${sidx} ${sord} 
+    	</if>
+	</select>
+	<select id="countJqGridExtend" parameterType="jqPage" resultType="int">
+		select count(*) 
+		from (select <include refid="FieldSelectedCol"></include>
+		             <include refid="FieldSelectedKey"></include>
+		      from <include refid="tableChangeValueMapName"></include> t
+		      LEFT JOIN (SELECT * 
+		                 FROM <include refid="tableDataInputName"></include>
+		                 where BUSI_DATE = '${pd.SystemDateTime}'
+		                 <if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			                 ${pd.filterWhereResult}
+		                 </if>
+		                 <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		                     ${pd.QueryFeild}
+		                 </if>) C
+		      ON t.TYPE_CODE = C.TYPE_CODE AND t.BILL_OFF = C.BILL_OFF AND t.DEPT_CODE = C.DEPT_CODE AND t.MAPPING_CODE = C.CHANGE_COL
+		      ) Z 
+		<where>
+		    <if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			   ${pd.filterWhereResult}
+		    </if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+		</where>
+	</select>
+	<select id="exportList" parameterType="jqPage" resultType="pd">
+		SELECT *
+		FROM (select <include refid="FieldSelectedCol"></include>
+		             <include refid="FieldSelectedKey"></include>
+		      from <include refid="tableChangeValueMapName"></include> t
+		      LEFT JOIN (SELECT * 
+		                 FROM <include refid="tableDataInputName"></include>
+		                 where BUSI_DATE = '${pd.SystemDateTime}'
+		                 <if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			                 ${pd.filterWhereResult}
+		                 </if>
+		                 <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		                     ${pd.QueryFeild}
+		                 </if>) C
+		      ON t.TYPE_CODE = C.TYPE_CODE AND t.BILL_OFF = C.BILL_OFF AND t.DEPT_CODE = C.DEPT_CODE AND t.MAPPING_CODE = C.CHANGE_COL
+		      ) Z 
+		<where>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+		</where>
+		<if test="sidx != null and sidx.trim() != ''" >
+			order by ${sidx} ${sord} 
+    	</if>
+	</select>
+	
+	<!-- 复制 -->
+	<select id="getHaveCopyRecord" parameterType="pd" resultType="pd">
+		select *
+		from 
+		<include refid="tableChangeValueMapName"></include>
+		where TYPE_CODE = #{SelectedTypeCode}
+		and BILL_OFF = #{SelectedCustCol7}
+		and DEPT_CODE = #{SelectedDepartCode}
+	</select>
+	
+	<!-- 获取重复数据 -->
+	<select id="getRepeatRecord" parameterType="pd" resultType="pd">
+		select *
+		from 
+		<include refid="tableDataInputName"></include>
+        <where>
+		<foreach item="item" index="index" collection="list" open=" " separator=" or " close=" ">
+            ((TYPE_CODE = #{item.TYPE_CODE} and BILL_OFF = #{item.BILL_OFF} and BUSI_DATE = #{item.BUSI_DATE} and DEPT_CODE = #{item.DEPT_CODE} and CHANGE_COL = #{item.CHANGE_COL})
+             and (TYPE_CODE != #{item.TYPE_CODE__} or BILL_OFF != #{item.BILL_OFF__} or BUSI_DATE != #{item.BUSI_DATE__} or DEPT_CODE != #{item.DEPT_CODE__} or CHANGE_COL != #{item.CHANGE_COL__}))
+		</foreach>
+		</where>
+	</select>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableDataInputName"></include>
+		(
+	<include refid="Field"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="pd">
+		delete from
+		<include refid="tableDataInputName"></include>
+		where
+		<foreach item="item" index="index" collection="list" open=" (" separator=" or " close=") ">
+		    TYPE_CODE = #{item.TYPE_CODE__} and BILL_OFF = #{item.BILL_OFF__} and BUSI_DATE = #{item.BUSI_DATE__} and DEPT_CODE = #{item.DEPT_CODE__} and CHANGE_COL = #{item.CHANGE_COL__}
+		</foreach>
+	</delete>
+	
+	<!-- 批量修改 -->
+	<update id="batchDelAndIns" parameterType="pd">
+		<foreach item="item" index="index" collection="list" open=" " separator=" " close=" ">
+		    delete from <include refid="tableDataInputName"></include>
+		    where TYPE_CODE = #{item.TYPE_CODE__}
+		    and BILL_OFF = #{item.BILL_OFF__}
+		    and BUSI_DATE = #{item.BUSI_DATE__}
+		    and DEPT_CODE = #{item.DEPT_CODE__}
+		    and CHANGE_COL = #{item.CHANGE_COL__};
+	        
+		    insert into <include refid="tableDataInputName"></include>
+		    (
+		    <include refid="Field"></include>
+		    ) values (
+	        <include refid="FieldValueItem"></include>
+		    );
+		</foreach>
+	</update>
+	<update id="batchDelAndInsHorizontal" parameterType="pd">
+		<foreach item="item" index="index" collection="list" open=" " separator=" " close=" ">
+		    delete from <include refid="tableDataInputName"></include>
+		    where TYPE_CODE = #{item.TYPE_CODE}
+		    and BILL_OFF = #{item.BILL_OFF}
+		    and BUSI_DATE = #{item.BUSI_DATE}
+		    and DEPT_CODE = #{item.DEPT_CODE};
+		</foreach>
+		<foreach item="item" index="index" collection="list" open=" " separator=" " close=" ">
+		    insert into <include refid="tableDataInputName"></include>
+		    (
+		    <include refid="Field"></include>
+		    ) values (
+	        <include refid="FieldValueItem"></include>
+		    );
+		</foreach>
+	</update>
+	
+	<!-- 复制 -->
+	<update id="batchCopyAll" parameterType="pd">
+		<!-- <foreach item="itemDept" index="index" collection="DEPT_CODES" open=" " separator="  " close=" ">
+			<if test="itemDept!=null">
+		        <foreach item="itemDate" index="index" collection="BUSI_DATES" open=" " separator="  " close=" ">
+			        <if test="itemDate!=null">
+				        delete from <include refid="tableDataInputName"></include>
+				        where TYPE_CODE = #{SelectedTypeCode}
+				        and BILL_OFF = #{SelectedCustCol7}
+				        and BUSI_DATE = #{itemDate}
+				        and DEPT_CODE = #{itemDept}
+			            <if test="SelectedChangeCol!=null and SelectedChangeCol!=''">
+				            and CHANGE_COL = #{SelectedChangeCol}
+			            </if>;
+			        </if>
+		        </foreach>
+			</if>
+		</foreach> -->
+		<!-- 插入保存 -->
+		<!-- <foreach item="itemDept" index="index" collection="DEPT_CODES" open=" " separator="  " close=" ">
+			<if test="itemDept!=null">
+		        <foreach item="itemDate" index="index" collection="BUSI_DATES" open=" " separator=" " close=" ">
+			        <if test="itemDate!=null">
+		                insert into <include refid="tableDataInputName"></include>
+		                (<include refid="Field"></include>)
+		                (SELECT TYPE_CODE, BILL_OFF,	#{itemDate} as BUSI_DATE, #{itemDept} as DEPT_CODE, CHANGE_COL, DATA_VALUE
+				         FROM <include refid="tableDataInputName"></include>
+				         where TYPE_CODE = #{SelectedTypeCode}
+				         and BILL_OFF = #{SelectedCustCol7}
+				         and BUSI_DATE = #{SystemDateTime}
+				         and DEPT_CODE = #{SelectedDepartCode}
+			             <if test="SelectedChangeCol!=null and SelectedChangeCol!=''">
+				            and CHANGE_COL = #{SelectedChangeCol}
+			             </if>);
+			        </if>
+		        </foreach>
+			</if>
+		</foreach> -->
+		
+		<!-- <if test="DEPT_CODES_SELF!=null">
+		  <foreach item="itemDept" index="index" collection="DEPT_CODES_SELF" open=" " separator="  " close=" ">
+			<if test="itemDept!=null">
+		        <foreach item="itemDate" index="index" collection="BUSI_DATES_SELF" open=" " separator="  " close=" ">
+			        <if test="itemDate!=null">
+				        delete from <include refid="tableDataInputName"></include>
+				        where TYPE_CODE = #{SelectedTypeCode}
+				        and BILL_OFF = #{SelectedCustCol7}
+				        and BUSI_DATE = #{itemDate}
+				        and DEPT_CODE = #{itemDept};
+			        </if>
+		        </foreach>
+			</if>
+		  </foreach>
+		</if>
+		<if test="DEPT_CODES_OTHERS!=null">
+		  <foreach item="itemDept" index="index" collection="DEPT_CODES_OTHERS" open=" " separator="  " close=" ">
+			<if test="itemDept!=null">
+		        <foreach item="itemDate" index="index" collection="BUSI_DATES_OTHERS" open=" " separator="  " close=" ">
+			        <if test="itemDate!=null">
+				        delete from <include refid="tableDataInputName"></include>
+				        where TYPE_CODE = #{SelectedTypeCode}
+				        and BILL_OFF = #{SelectedCustCol7}
+				        and BUSI_DATE = #{itemDate}
+				        and DEPT_CODE = #{itemDept};
+			        </if>
+		        </foreach>
+			</if>
+		  </foreach>
+		</if> -->
+		<!-- <if test="DEPT_CODES_SELF!=null">
+		  <foreach item="itemDept" index="index" collection="DEPT_CODES_SELF" open=" " separator="  " close=" ">
+			<if test="itemDept!=null">
+		        <foreach item="itemDate" index="index" collection="BUSI_DATES_SELF" open=" " separator=" " close=" ">
+			        <if test="itemDate!=null">
+		                insert into <include refid="tableDataInputName"></include>
+		                (<include refid="Field"></include>)
+		                (SELECT TYPE_CODE, BILL_OFF,	#{itemDate} as BUSI_DATE, #{itemDept} as DEPT_CODE, CHANGE_COL, DATA_VALUE
+				         FROM <include refid="tableDataInputName"></include>
+				         where TYPE_CODE = #{SelectedTypeCode}
+				         and BILL_OFF = #{SelectedCustCol7}
+				         and BUSI_DATE = #{SystemDateTime}
+				         and DEPT_CODE = #{SelectedDepartCode});
+			        </if>
+		        </foreach>
+			</if>
+		  </foreach>
+		</if>
+		<if test="DEPT_CODES_OTHERS!=null">
+		  <foreach item="itemDept" index="index" collection="DEPT_CODES_OTHERS" open=" " separator="  " close=" ">
+			<if test="itemDept!=null">
+		        <foreach item="itemDate" index="index" collection="BUSI_DATES_OTHERS" open=" " separator=" " close=" ">
+			        <if test="itemDate!=null">
+		                insert into <include refid="tableDataInputName"></include>
+		                (<include refid="Field"></include>)
+		                (SELECT TYPE_CODE, BILL_OFF,	#{itemDate} as BUSI_DATE, #{itemDept} as DEPT_CODE, CHANGE_COL, DATA_VALUE
+				         FROM <include refid="tableDataInputName"></include>
+				         where TYPE_CODE = #{SelectedTypeCode}
+				         and BILL_OFF = #{SelectedCustCol7}
+				         and BUSI_DATE = #{SystemDateTime}
+				         and DEPT_CODE = #{SelectedDepartCode}
+                         and CHANGE_COL in (select MAPPING_CODE 
+                                            from tb_sys_changevalue_mapping 
+		                                    where BILL_OFF = #{SelectedCustCol7}
+		                                    and TYPE_CODE = #{SelectedTypeCode}
+		                                    and DEPT_CODE = #{itemDept})
+                         );
+			        </if>
+		        </foreach>
+			</if>
+		  </foreach>
+		</if> -->
+		<if test="DEPT_CODES_SELF!=null">
+		  <foreach item="itemDept" index="index" collection="DEPT_CODES_SELF" open=" " separator="  " close=" ">
+			<if test="itemDept!=null">
+		        <foreach item="itemDate" index="index" collection="BUSI_DATES_SELF" open=" " separator="  " close=" ">
+			        <if test="itemDate!=null">
+				        delete from <include refid="tableDataInputName"></include>
+				        where TYPE_CODE = #{SelectedTypeCode}
+				        and BILL_OFF = #{SelectedCustCol7}
+				        and BUSI_DATE = #{itemDate}
+				        and DEPT_CODE = #{itemDept};
+			        </if>
+		        </foreach>
+			</if>
+		  </foreach>
+		</if><if test="DEPT_CODES_SELF!=null">
+		  <foreach item="itemDept" index="index" collection="DEPT_CODES_SELF" open=" " separator="  " close=" ">
+			<if test="itemDept!=null">
+		        <foreach item="itemDate" index="index" collection="BUSI_DATES_SELF" open=" " separator=" " close=" ">
+			        <if test="itemDate!=null">
+		                insert into <include refid="tableDataInputName"></include>
+		                (<include refid="Field"></include>)
+		                (SELECT t.TYPE_CODE, t.BILL_OFF, #{itemDate} as BUSI_DATE, #{itemDept} as DEPT_CODE, t.MAPPING_CODE CHANGE_COL, IFNULL(c.DATA_VALUE, 0) DATA_VALUE
+				         FROM <include refid="tableChangeValueMapName"></include> t
+		                 LEFT JOIN (SELECT * 
+		                            FROM <include refid="tableDataInputName"></include>
+		                            where BUSI_DATE = #{SystemDateTime}) C
+		                 ON t.TYPE_CODE = C.TYPE_CODE AND t.BILL_OFF = C.BILL_OFF AND t.DEPT_CODE = C.DEPT_CODE AND t.MAPPING_CODE = C.CHANGE_COL
+				         where t.TYPE_CODE = #{SelectedTypeCode}
+				         and t.BILL_OFF = #{SelectedCustCol7}
+				         <!-- and t.BUSI_DATE = #{SystemDateTime} -->
+				         and t.DEPT_CODE = #{SelectedDepartCode});
+			        </if>
+		        </foreach>
+			</if>
+		  </foreach>
+		</if>
+	</update>
+</mapper>

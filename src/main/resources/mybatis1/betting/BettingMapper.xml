@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BettingMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		tb_betting_info
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		LICENSE_NO,	
+		USER_NAME,	
+		MOBILE_TEL,	
+		OFFICE_TEL,	
+		FAX,	
+		BELONG_AREA,	
+		BETT_ADDR,	
+		BETT_AREA,	
+		BETT_INTR,	
+		GEOG_COOR,	
+		REMARK,	
+		ID_CODE,
+		ID
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field1">
+		LICENSE_NO,	
+		USER_NAME,	
+		MOBILE_TEL,	
+		OFFICE_TEL,	
+		FAX,	
+		BELONG_AREA,	
+		BETT_ADDR,	
+		BETT_AREA,	
+		BETT_INTR,	
+		GEOG_COOR,	
+		REMARK,	
+		ID_CODE
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field2">
+		B.LICENSE_NO,	
+		B.USER_NAME,	
+		B.MOBILE_TEL,	
+		B.OFFICE_TEL,	
+		B.FAX,	
+		B.BELONG_AREA,	
+		B.BETT_ADDR,	
+		B.BETT_AREA,	
+		B.BETT_INTR,	
+		B.GEOG_COOR,	
+		B.REMARK,	
+		B.ID_CODE,
+		B.ID,
+		D.NAME
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{LICENSE_NO},	
+		#{USER_NAME},	
+		#{MOBILE_TEL},	
+		#{OFFICE_TEL},	
+		#{FAX},	
+		#{BELONG_AREA},	
+		#{BETT_ADDR},	
+		#{BETT_AREA},	
+		#{BETT_INTR},	
+		#{GEOG_COOR},	
+		#{REMARK},	
+		#{ID_CODE}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field1"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ID = #{ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			ID_CODE = #{ID_CODE},
+			LICENSE_NO = #{LICENSE_NO},
+			USER_NAME = #{USER_NAME},
+			MOBILE_TEL = #{MOBILE_TEL},
+			OFFICE_TEL = #{OFFICE_TEL},
+			FAX = #{FAX},
+			BELONG_AREA = #{BELONG_AREA},
+			BETT_ADDR = #{BETT_ADDR},
+			BETT_AREA = #{BETT_AREA},
+			BETT_INTR = #{BETT_INTR},
+			GEOG_COOR = #{GEOG_COOR},
+			REMARK = #{REMARK}
+		where 
+		ID = #{ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			ID = #{ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field2"></include>
+		from 
+		<include refid="tableName"></include> B left join sys_dictionaries D
+		on B.belong_area=D.BIANMA
+		<where >
+			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+					bett_addr LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					or
+					license_no LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					or
+					user_name LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				)
+			</if>
+			<if test="pd.BELONG_AREA != null and pd.BELONG_AREA != ''"><!-- 所在区域 -->
+				and BELONG_AREA=#{pd.BELONG_AREA} 
+			</if>
+		</where>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+	</select>
+	
+	<!-- 列表(全部)根据条件搜索 -->
+	<select id="listAllByCondition" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field2"></include>
+		from 
+		<include refid="tableName"></include> B left join sys_dictionaries D
+		on B.belong_area=D.BIANMA
+		<where >
+			<if test="keywords!= null and keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+					bett_addr LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+				)
+				
+			</if>
+			<if test="BELONG_AREA != null and BELONG_AREA != ''"><!-- 所在区域 -->
+				and BELONG_AREA=#{BELONG_AREA} 
+			</if>
+			<if test="ID_CODE != null and ID_CODE != ''"><!-- 投注站编码 -->
+				and ID_CODE=#{ID_CODE} 
+			</if>
+		</where>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 通过编号获取数据 -->
+	<select id="findByIDCode" parameterType="pd" resultType="pd">
+		select 
+			1
+		from 
+			<include refid="tableName"></include>
+		where 
+			ID_CODE = #{ID_CODE}
+		<if test="ID != null and ID != ''">
+			and ID != #{ID} 
+		</if>
+	</select>
+</mapper>

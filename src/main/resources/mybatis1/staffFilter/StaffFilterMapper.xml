@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="StaffFilterMapper">
+
+	<!--表名 -->
+	<sql id="tableName">
+		tb_staff_filter_info
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="Field">
+		TYPE_CODE,
+		BILL_OFF,
+		DEPT_CODE,
+		SAL_RANGE,
+		USER_CODE_STATE,
+		STAFF_IDENT_STATE
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{TYPE_CODE},
+		#{BILL_OFF},
+		#{DEPT_CODE},
+		#{SAL_RANGE},
+		#{USER_CODE_STATE},
+		#{STAFF_IDENT_STATE}
+	</sql>
+
+	<!-- 获取信息 -->
+	<select id="getStaffFilter" parameterType="com.fh.entity.StaffFilterInfo" resultType="com.fh.entity.StaffFilterInfo">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		where TYPE_CODE = #{TYPE_CODE}
+		and BILL_OFF = #{BILL_OFF}
+		and DEPT_CODE = #{DEPT_CODE}
+	</select>
+</mapper>

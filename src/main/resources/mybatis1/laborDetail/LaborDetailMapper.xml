@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="LaborDetailMapper">
+	
+<!-- 
+ * 说明： 劳务报酬所得导入
+ * 创建人：zhangxiaoliu
+ * 创建时间：2017-06-19
+ * @version
+ -->
+	<!--表名 -->
+	<sql id="tableNameDetail">
+		TB_LABOR_DETAIL
+	</sql>
+	<sql id="tableNameBackup">
+		TB_LABOR_DETAIL_backup
+	</sql>
+
+	<!-- 列表 -->
+	<select id="datalistJqPage" parameterType="jqPage" resultType="pd">
+		select * 
+		from <include refid="tableNameDetail"></include>
+		where BUSI_DATE = '${pd.SystemDateTime}'
+		<if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			${pd.filterWhereResult}
+		</if>
+		<if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		    ${pd.QueryFeild}
+		</if>
+		<if test="sidx != null and sidx.trim() != ''" >
+			order by ${sidx} ${sord} 
+    	</if>
+	</select>
+	<select id="countJqGridExtend" parameterType="jqPage" resultType="int">
+		select count(*) 
+		from <include refid="tableNameDetail"></include> 
+		where BUSI_DATE = '${pd.SystemDateTime}'
+		<if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			${pd.filterWhereResult}
+		</if>
+		<if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		    ${pd.QueryFeild}
+		</if>
+	</select>
+	<select id="getFooterSummary" parameterType="jqPage" resultType="pd">
+		select sum(GROSS_PAY) GROSS_PAY, sum(ACCRD_TAX) ACCRD_TAX, sum(ACT_SALY) ACT_SALY
+		from <include refid="tableNameDetail"></include> 
+		where BUSI_DATE = '${pd.SystemDateTime}'
+		<if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			${pd.filterWhereResult}
+		</if>
+		<if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		    ${pd.QueryFeild}
+		</if>
+	</select>
+	
+    <!-- 通过流水号获取流水号，用于判断数据是否变更 -->
+	<select id="getSerialNoBySerialNo" parameterType="pd" resultType="pd">
+		select ${SelectFeildName}
+		from <include refid="tableNameDetail"></include>
+		where BUSI_DATE = '${SystemDateTime}'
+		<if test="QueryFeild!= null and QueryFeild != ''">
+		    ${QueryFeild}
+		</if>
+	</select>
+	
+	<!-- 导出列表 -->
+	<select id="exportList" parameterType="jqPage" resultType="pd">
+		select * 
+		from <include refid="tableNameDetail"></include>
+		where BUSI_DATE = '${pd.SystemDateTime}'
+		order by USER_NAME, STAFF_IDENT <!-- USER_CODE -->
+	</select>
+	<select id="exportSumList" parameterType="jqPage" resultType="pd">
+		select ${pd.SelectFeild} 
+		from <include refid="tableNameDetail"></include>
+		<where>
+		    ${pd.WhereSql} 
+		</where>
+		group by ${pd.GroupByFeild} 
+		order by USER_NAME, STAFF_IDENT <!-- USER_CODE -->
+	</select>
+	<!-- 导出模板 -->
+	<select id="exportModel" parameterType="pd" resultType="pd">
+		select * 
+		from <include refid="tableNameDetail"></include>
+		order by BUSI_DATE desc
+		limit 1
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="pd">
+		delete from
+		<include refid="tableNameDetail"></include>
+		where
+		<foreach item="item" index="index" collection="list" open=" (" separator=" or " close=") ">
+		    SERIAL_NO = #{item.SERIAL_NO}
+		</foreach>
+	</delete>
+	
+	<update id="insetBackup" parameterType="pd">
+	    delete from <include refid="tableNameBackup"></include>
+	    <where>
+	        ${QueryFeild}
+	    </where>;
+	    
+	    insert into <include refid="tableNameBackup"></include>
+	    (${FeildList}) 
+	    (select ${FeildList} 
+	    from <include refid="tableNameDetail"></include>
+	    <where>
+	        ${QueryFeild}
+	    </where>);
+	</update>
+	
+	<update id="batchDelAndIns" parameterType="pd">
+		<foreach item="item" index="index" collection="list" open=" " separator=" " close=" ">
+		    delete from ${item.TableName}
+		    where SERIAL_NO = #{item.SERIAL_NO};
+	        
+		    insert into ${item.TableName}
+		    (${item.InsertField}) values (${item.InsertVale});
+		</foreach>
+	</update>
+</mapper>

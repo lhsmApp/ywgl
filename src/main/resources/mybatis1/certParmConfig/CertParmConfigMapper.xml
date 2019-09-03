@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CertParmConfigMapper">
+
+	<!--表名 -->
+	<sql id="tableName">
+		TB_CERT_PARM_CONFIG
+	</sql>
+	
+	<!-- //Name	Code	Comment	Default Value	Data Type	Length	Precision	Primary	Foreign Key	Mandatory
+	//业务类型	TYPE_CODE	"业务类型"	' '	VARCHAR(20)	20		TRUE	FALSE	TRUE
+	//账套	BILL_OFF	账套	' '	VARCHAR(6)	6		FALSE	FALSE	TRUE
+	// BUSI_DATE
+	//单位编码	DEPT_CODE	单位编码	' '	VARCHAR(10)	10		FALSE	FALSE	TRUE
+	//分组条件	GROUP_COND	分组条件	' '	VARCHAR(20)	20		FALSE	FALSE	TRUE
+	//分组条件	GROUP_COND1	分组条件	' '	VARCHAR(20)	20		FALSE	FALSE	TRUE
+	//查询条件	QUERY_COND	查询条件	' '	VARCHAR(20)	20		FALSE	FALSE	TRUE
+	//自定义参数1	CUST_PARM1	自定义参数1	' '	VARCHAR(20)	20		FALSE	FALSE	TRUE
+	//自定义参数1说明	CUST_PARM1_DESC	自定义参数1说明	' '	VARCHAR(20)	20		FALSE	FALSE	TRUE
+	//自定义参数2	CUST_PARM2	自定义参数2	' '	VARCHAR(20)	20		FALSE	FALSE	TRUE
+	//自定义参数2说明	CUST_PARM2_DESC	自定义参数2说明	' '	VARCHAR(20)	20		FALSE	FALSE	TRUE
+	//自定义参数3	CUST_PARM3	自定义参数3	' '	VARCHAR(20)	20		FALSE	FALSE	TRUE
+	//自定义参数3说明	CUST_PARM3_DESC	自定义参数3说明	' '	VARCHAR(20)	20		FALSE	FALSE	TRUE -->
+
+	<!-- 字段 -->
+	<sql id="Field">
+	    TYPE_CODE,
+	    BILL_OFF,
+	    BUSI_DATE,
+	    DEPT_CODE,
+	    GROUP_COND,
+	    GROUP_COND1,
+	    QUERY_COND,
+	    CUST_PARM1,
+	    CUST_PARM1_DESC,
+	    CUST_PARM2,
+	    CUST_PARM2_DESC,
+	    CUST_PARM3,
+	    CUST_PARM3_DESC
+	</sql>
+	<sql id="FieldSelectKey">
+		,TYPE_CODE TYPE_CODE__,
+		BILL_OFF BILL_OFF__,
+		BUSI_DATE BUSI_DATE__,
+		DEPT_CODE DEPT_CODE__
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+        #{TYPE_CODE},
+	    #{BILL_OFF},
+	    #{BUSI_DATE},
+	    #{DEPT_CODE},
+	    #{GROUP_COND},
+	    #{GROUP_COND1},
+	    #{QUERY_COND},
+	    #{CUST_PARM1},
+	    #{CUST_PARM1_DESC},
+	    #{CUST_PARM2},
+	    #{CUST_PARM2_DESC},
+	    #{CUST_PARM3},
+	    #{CUST_PARM3_DESC}
+	</sql>
+	<sql id="FieldValueItem">
+        #{item.TYPE_CODE},
+	    #{item.BILL_OFF},
+	    #{item.BUSI_DATE},
+	    #{item.DEPT_CODE},
+	    #{item.GROUP_COND},
+	    #{item.GROUP_COND1},
+	    #{item.QUERY_COND},
+	    #{item.CUST_PARM1},
+	    #{item.CUST_PARM1_DESC},
+	    #{item.CUST_PARM2},
+	    #{item.CUST_PARM2_DESC},
+	    #{item.CUST_PARM3},
+	    #{item.CUST_PARM3_DESC}
+	</sql>
+
+	<!-- 列表 -->
+	<select id="datalistJqPage" parameterType="jqPage" resultType="pd">
+		select 
+		    <include refid="Field"></include>
+		    <include refid="FieldSelectKey"></include>
+		from <include refid="tableName"></include>
+		where BUSI_DATE = '${pd.SystemDateTime}'
+		    <if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			   ${pd.filterWhereResult}
+		    </if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+		<if test="sidx != null and sidx.trim() != ''" >
+			order by ${sidx} ${sord} 
+    	</if>
+		<if test="currentResult != null and rowNum != null" >           
+              limit #{currentResult}, #{rowNum} 
+        </if>
+	</select>
+	<select id="countJqGridExtend" parameterType="jqPage" resultType="int">
+		select count(*)
+		from <include refid="tableName"></include>
+		where BUSI_DATE = '${pd.SystemDateTime}'
+		    <if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			   ${pd.filterWhereResult}
+		    </if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+	</select>
+
+	<!-- 列表 -->
+	<select id="getRepeatList" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+        <where>
+		<foreach item="item" index="index" collection="list" open=" " separator=" or " close=" ">
+            ((TYPE_CODE = #{item.TYPE_CODE} and BILL_OFF = #{item.BILL_OFF} and BUSI_DATE = #{item.BUSI_DATE} and DEPT_CODE = #{item.DEPT_CODE})
+             and (TYPE_CODE != #{item.TYPE_CODE__} or BILL_OFF != #{item.BILL_OFF__} or BUSI_DATE != #{item.BUSI_DATE__} or DEPT_CODE != #{item.DEPT_CODE__}))
+		</foreach>
+		</where>
+	</select>
+	
+	<update id="batchDelAndIns" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		<foreach item="item" index="index" collection="list" open=" (" separator=" or " close=") ">
+		    TYPE_CODE = #{item.TYPE_CODE__} 
+		    and BILL_OFF = #{item.BILL_OFF__}
+		    and BUSI_DATE = #{item.BUSI_DATE__}
+		    and DEPT_CODE = #{item.DEPT_CODE__}
+		</foreach>;
+		<foreach item="item" index="index" collection="list" open=" " separator=" " close=" ">
+		    insert into <include refid="tableName"></include>
+		    (<include refid="Field"></include>) values (<include refid="FieldValueItem"></include>);
+		</foreach>
+	</update>
+
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where
+		<foreach item="item" index="index" collection="list" open=" (" separator=" or " close=") ">
+		    TYPE_CODE = #{item.TYPE_CODE__} 
+		    and BILL_OFF = #{item.BILL_OFF__}
+		    and BUSI_DATE = #{item.BUSI_DATE__}
+		    and DEPT_CODE = #{item.DEPT_CODE__}
+		</foreach>
+	</delete>
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- 张晓柳 -->
+	<select id="getSelfCertParmConfig" parameterType="com.fh.entity.CertParmConfig" resultType="com.fh.entity.CertParmConfig">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		where TYPE_CODE = #{TYPE_CODE}
+		and BILL_OFF = #{BILL_OFF}
+		and BUSI_DATE = #{BUSI_DATE}
+		and DEPT_CODE = #{DEPT_CODE}
+	</select>
+</mapper>

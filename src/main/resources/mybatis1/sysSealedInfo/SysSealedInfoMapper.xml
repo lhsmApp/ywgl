@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SysSealedInfoMapper">
+
+	<!--表名 -->
+	<sql id="tableName">
+		TB_SYS_SEALED_INFO
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="Field">
+		BILL_CODE,
+		RPT_DEPT,
+		RPT_DUR,
+		RPT_USER,
+		RPT_DATE,
+		BILL_TYPE,
+		STATE,
+		BILL_OFF
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{BILL_CODE},
+		#{RPT_DEPT},
+		#{RPT_DUR},
+		#{RPT_USER},
+		#{RPT_DATE},
+		#{BILL_TYPE},
+		#{STATE},
+		#{BILL_OFF}
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="pd">
+		insert into
+		<include refid="tableName"></include>
+		(
+		<include refid="Field"></include>
+		) values (
+		<include refid="FieldValue"></include>
+		)
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		SYSSEALEDINFO_ID = #{SYSSEALEDINFO_ID}
+	</delete>
+
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		BILL_CODE = #{BILL_CODE},
+		RPT_DEPT = #{RPT_DEPT},
+		RPT_DUR =
+		#{RPT_DUR},
+		<!-- RPT_USER = #{RPT_USER}, RPT_DATE = #{RPT_DATE}, BILL_TYPE = #{BILL_TYPE}, -->
+		STATE = #{STATE}
+		where
+		BILL_CODE = #{BILL_CODE}
+		and
+		RPT_DEPT = #{RPT_DEPT}
+		and
+		RPT_DUR = #{RPT_DUR}
+		and
+		BILL_TYPE = #{BILL_TYPE}
+		and
+		BILL_OFF =#{BILL_OFF}
+	</update>
+
+	<!-- 修改 -->
+	<update id="editTransfer" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		BILL_CODE = #{BILL_CODE},
+		RPT_DEPT = #{RPT_DEPT},
+		RPT_DUR =
+		#{RPT_DUR},
+		<!-- RPT_USER = #{RPT_USER}, RPT_DATE = #{RPT_DATE}, BILL_TYPE = #{BILL_TYPE}, -->
+		STATE = #{STATE}
+		where
+		BILL_CODE = #{BILL_CODE}
+		and
+		RPT_DEPT = #{RPT_DEPT}
+		and
+		RPT_DUR = #{RPT_DUR}
+		<!-- and BILL_TYPE = #{BILL_TYPE} -->
+		<if test="BILL_TYPES!= null and BILL_TYPES != ''"><!-- 根据类型检索 -->
+			and BILL_TYPE in
+			<foreach item="item" index="index" collection="BILL_TYPES"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		and
+		BILL_OFF = #{BILL_OFF}
+	</update>
+
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		where
+		BILL_CODE = #{BILL_CODE}
+	</select>
+
+	<!-- 列表 -->
+	<select id="datalistJqPage" parameterType="jqPage" resultType="pd">
+		select
+		A.*<!-- , B.NAME,C.NAME as USERNAME -->
+		from
+		<include refid="tableName"></include>
+		A
+		<!-- left join OA_DEPARTMENT B on A.RPT_DEPT=B.DEPARTMENT_CODE left join 
+			sys_user C on A.RPT_USER=C.USER_ID -->
+		<where>
+			STATE = '1'
+			and RPT_DUR=(select KEY_VALUE from tb_sys_config where KEY_CODE='SystemDataTime')
+			<!-- <if test="pd.RPT_DEPT!= null and pd.RPT_DEPT != ''">根据本门单位检索 and 
+				RPT_DEPT LIKE CONCAT(CONCAT('%', #{pd.RPT_DEPT}),'%') </if> -->
+			<if test="pd.RPT_DEPTS!= null and pd.RPT_DEPTS != ''"><!-- 根据本门单位检索 -->
+				and RPT_DEPT in
+				<foreach item="item" index="index" collection="pd.RPT_DEPTS"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="pd.BILL_TYPE!= null and pd.BILL_TYPE != ''">
+				and BILL_TYPE = #{pd.BILL_TYPE}
+			</if>
+			<!-- <if test="pd.STATUS!= null and pd.STATUS != ''">
+				and STATE = #{pd.STATUS}
+			</if> -->
+			<if test="pd.BILL_OFF!= null and pd.BILL_OFF != ''">
+				and BILL_OFF = #{pd.BILL_OFF}
+			</if>
+			<if test="pd.filterWhereResult != null">
+				${pd.filterWhereResult}
+			</if>
+		</where>
+		<if test="sidx != null">
+			order by ${sidx} ${sord}
+		</if>
+		<if test="currentResult != null and rowNum != null">
+			limit #{currentResult}, #{rowNum}
+		</if>
+	</select>
+	<!-- 记录数量 -->
+	<select id="count" parameterType="pd" resultType="int">
+		select count(*) from
+		<include refid="tableName"></include>
+		<where>
+			STATE = '1'
+			and RPT_DUR=(select KEY_VALUE from tb_sys_config where KEY_CODE='SystemDataTime')
+			<!-- <if test="pd.RPT_DEPT!= null and pd.RPT_DEPT != ''">根据本门单位检索 and 
+				RPT_DEPT LIKE CONCAT(CONCAT('%', #{pd.RPT_DEPT}),'%') </if> -->
+			<if test="RPT_DEPTS!= null and RPT_DEPTS != ''"><!-- 根据本门单位检索 -->
+				and RPT_DEPT in
+				<foreach item="item" index="index" collection="RPT_DEPTS"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="BILL_TYPE!= null and BILL_TYPE != ''">
+				and BILL_TYPE = #{BILL_TYPE}
+			</if>
+			<!-- <if test="STATUS!= null and STATUS != ''">
+				and STATE = #{STATUS}
+			</if> -->
+			<if test="BILL_OFF!= null and BILL_OFF != ''">
+				and BILL_OFF = #{BILL_OFF}
+			</if>
+			<if test="filterWhereResult != null">
+				${filterWhereResult}
+			</if>
+		</where>
+	</select>
+
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+	</select>
+
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where
+		SYSSEALEDINFO_ID in
+		<foreach item="item" index="index" collection="array" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<!-- 获取状态 -->
+	<select id="getState" parameterType="pd" resultType="String">
+		select STATE
+		from
+		<include refid="tableName"></include>
+		where RPT_DEPT = '${RPT_DEPT}'
+		and RPT_DUR = '${RPT_DUR}'
+		and BILL_TYPE
+		= '${BILL_TYPE}'
+		and BILL_OFF = '${BILL_OFF}'
+	</select>
+	<select id="getStateFromModel" parameterType="com.fh.entity.SysSealed"
+		resultType="String">
+		select STATE
+		from
+		<include refid="tableName"></include>
+		where RPT_DEPT = #{RPT_DEPT}
+		and RPT_DUR = #{RPT_DUR}
+		and BILL_TYPE =
+		#{BILL_TYPE}
+		and BILL_OFF = #{BILL_OFF}
+	</select>
+
+	<!-- 上报 -->
+	<delete id="reportDelete" parameterType="com.fh.entity.SysSealed">
+		delete from
+		<include refid="tableName"></include>
+		where RPT_DUR = #{RPT_DUR}
+		and RPT_DEPT = #{RPT_DEPT}
+		and BILL_TYPE =
+		#{BILL_TYPE}
+		and BILL_OFF=#{BILL_OFF}
+	</delete>
+	<insert id="reportInsert" parameterType="com.fh.entity.SysSealed">
+		insert into
+		<include refid="tableName"></include>
+		(
+		<include refid="Field"></include>
+		) values (
+		<include refid="FieldValue"></include>
+		)
+	</insert>
+
+	<!-- 删除汇总上报记录 -->
+	<insert id="deleteReportRecord" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where RPT_DUR = '${BUSI_DATE}'
+		and RPT_DEPT = '${DEPT_CODE}'
+		and
+		BILL_TYPE = '${TypeCodeSummy}'
+		and BILL_OFF = '${CUST_COL7}';
+		delete from
+		<include refid="tableName"></include>
+		where RPT_DUR = '${BUSI_DATE}'
+		and RPT_DEPT = '${DEPT_CODE}'
+		and
+		BILL_TYPE = '${TypeCodeDetail}'
+		and BILL_OFF = '${CUST_COL7}';
+		delete from
+		<include refid="tableName"></include>
+		where RPT_DUR = '${BUSI_DATE}'
+		and RPT_DEPT = '${DEPT_CODE}'
+		and
+		BILL_TYPE = '${TypeCodeListen}'
+		and BILL_OFF = '${CUST_COL7}';
+	</insert>
+
+
+
+	<!-- 批量保存 -->
+	<update id="updateAll" parameterType="pd">
+		<foreach item="item" index="index" collection="list" open=" "
+			separator="; " close=" ">
+			<if test="item!=null">
+				update
+				<include refid="tableName"></include>
+				set
+				BILL_CODE = #{item.BILL_CODE},
+				RPT_DEPT = #{item.RPT_DEPT},
+				RPT_DUR = #{item.RPT_DUR},
+				STATE = #{item.STATE}
+				where
+				BILL_CODE =
+				#{item.BILL_CODE}
+				and
+				RPT_DEPT = #{item.RPT_DEPT}
+				and
+				RPT_DUR =
+				#{item.RPT_DUR}
+				and
+				BILL_OFF = #{item.BILL_OFF}
+			</if>
+		</foreach>
+	</update>
+
+	<!-- 批量生成 -->
+	<insert id="insertBatch" parameterType="com.fh.entity.SysSealed">
+		<!-- insert into <include refid="tableName"></include> ( <include refid="Field"></include> 
+			) values <foreach item="item" index="index" collection="list" open=" " separator=", 
+			" close=" "> <if test="item!=null"> <trim prefix="(" suffix=")" suffixOverrides=","> 
+			#{item.BILL_CODE},#{item.RPT_DEPT},#{item.RPT_DUR},#{item.RPT_USER},#{item.RPT_DATE},#{item.BILL_TYPE},#{item.STATE} 
+			</trim> </if> </foreach> -->
+
+		<foreach item="item" index="index" collection="list" open=" "
+			separator="; " close=" ">
+			<if test="item!=null">
+				delete from
+				<include refid="tableName"></include>
+				where BILL_CODE = #{item.BILL_CODE}
+				and RPT_DUR = #{item.RPT_DUR}
+				and
+				RPT_DEPT = #{item.RPT_DEPT}
+				and BILL_OFF=#{item.BILL_OFF}
+				and
+				BILL_TYPE = #{item.BILL_TYPE};
+				insert into
+				<include refid="tableName"></include>
+				values
+				(#{item.BILL_CODE},#{item.RPT_DEPT},#{item.RPT_DUR},#{item.RPT_USER},#{item.RPT_DATE},#{item.BILL_TYPE},#{item.STATE},#{item.BILL_OFF})
+			</if>
+		</foreach>
+	</insert>
+
+	<!-- 获取封存状态，用于验证解封某业务时是否可以进行解封 -->
+	<select id="valiState" parameterType="pd" resultType="string">
+		select STATE from
+		<include refid="tableName"></include>
+		<where>
+			BILL_CODE=#{BILL_CODE}
+			and BILL_TYPE=#{VALI_TYPE} and RPT_DEPT=#{RPT_DEPT} and
+			RPT_DUR=#{RPT_DUR} and BILL_OFF=#{BILL_OFF}
+		</where>
+	</select>
+
+	<!-- 获取封存状态，用于页面状态 -->
+	<select id="getDeptOffList" parameterType="string" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		<where>
+			${value}
+		</where>
+	</select>
+</mapper>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FundsSummyConfirmMapper">
+	
+	<!-- 列表 -->
+	<select id="datalistJqPage" parameterType="jqPage" resultType="pd">
+		select 
+		    * 
+		    <if test="pd.FieldSelectKey!= null and pd.FieldSelectKey != ''">
+		        ${pd.FieldSelectKey}
+		    </if>
+		from ${pd.TableName}
+		<where>
+		    <if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			    ${pd.filterWhereResult}
+		    </if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+		</where>
+		<if test="sidx != null and sidx.trim() != ''" >
+			order by ${sidx} ${sord} 
+    	</if>
+	</select>
+	<select id="countJqGridExtend" parameterType="jqPage" resultType="int">
+		select count(*) 
+		from ${pd.TableName}
+		<where>
+		    <if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			    ${pd.filterWhereResult}
+		    </if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+		</where>
+	</select>
+	<select id="getFooterSummary" parameterType="jqPage" resultType="pd">
+		select ${pd.Userdata} 
+		from ${pd.TableName}
+		<where>
+		    <if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			    ${pd.filterWhereResult}
+		    </if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+		</where>
+	</select>
+	
+	<!-- 明细 -->
+	<select id="getFirstDetailList" parameterType="pd" resultType="pd">select 
+		    * 
+		    <if test="FieldSelectKey!= null and FieldSelectKey != ''">
+		        ${FieldSelectKey}
+		    </if>
+		from ${TableName}
+		where BILL_CODE = '${BILL_CODE}'
+	</select>
+	<select id="getSecondDetailList" parameterType="pd" resultType="pd">
+		select * 
+		from ${TableName}
+		<where>
+	        ${QueryFeild}
+		</where>
+		order by USER_GROP, USER_CODE
+	</select>
+	
+	<select id="getOperList" parameterType="pd" resultType="pd">
+		select * 
+		from ${TableName}
+		<where>
+		    <if test="QueryFeild!= null and QueryFeild != ''">
+		        ${QueryFeild}
+		    </if>
+		</where>
+	</select>
+</mapper>

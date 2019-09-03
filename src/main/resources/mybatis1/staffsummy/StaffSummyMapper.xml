@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="StaffSummyMapper">
+	
+<!-- 
+ * 说明： 工资汇总
+ * 创建人：zhangxiaoliu
+ * 创建时间：2017-06-19
+ * @version
+ -->
+ 
+	<!--表名 -->
+	<sql id="tableNameBill">
+		tb_staff_summy_bill
+	</sql>
+	<sql id="tableNameDetail">
+		tb_staff_summy
+	</sql>
+	<sql id="tableNameItem">
+	    TB_ITEM_STAFF_DETAIL
+	</sql>
+	<sql id="tableNameInfo">
+	    TB_ITEM_INFO
+	</sql>
+	
+	<!-- 获取单号下拉列表数据源 -->
+	<select id="getBillCodeList" parameterType="pd" resultType="String">
+		select distinct BILL_CODE
+		from <include refid="tableNameBill"></include>
+		where BUSI_DATE = '${SystemDateTime}'
+	    ${CanOperate}
+		order by BILL_CODE
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistJqPage" parameterType="jqPage" resultType="pd">
+		select 
+		    * 
+		    <if test="pd.FieldSelectKey!= null and pd.FieldSelectKey != ''">
+		        ${pd.FieldSelectKey}
+		    </if>
+		from ${pd.tableName}
+		where BUSI_DATE = '${pd.SystemDateTime}'
+		<if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			${pd.filterWhereResult}
+		</if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+		<if test="sidx != null and sidx.trim() != ''" >
+			order by ${sidx} ${sord} 
+    	</if>
+	</select>
+	<select id="countJqGridExtend" parameterType="jqPage" resultType="int">
+		select count(*) 
+		from ${pd.tableName}
+		where BUSI_DATE = '${pd.SystemDateTime}'
+		<if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			${pd.filterWhereResult}
+		</if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+	</select>
+	<select id="getFooterSummary" parameterType="jqPage" resultType="pd">
+		select ${pd.Userdata} 
+		from ${pd.tableName}
+		where BUSI_DATE = '${pd.SystemDateTime}'
+		<if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			${pd.filterWhereResult}
+		</if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+	</select>
+	
+	<select id="findSummyDetailList" parameterType="pd" resultType="pd">
+		select 
+		    * 
+		    <if test="FieldSelectKey!= null and FieldSelectKey != ''">
+		        ${FieldSelectKey}
+		    </if>
+		from <include refid="tableNameDetail"></include>
+		where BILL_CODE = '${BILL_CODE}'
+	</select>
+	
+	<!-- 编辑数据 -->
+	<delete id="updateBillState" parameterType="pd">
+		update <include refid="tableNameBill"></include>
+		set BILL_STATE = '0'
+		where BILL_CODE = #{BILL_CODE__}
+	</delete>
+	<update id="saveSummy" parameterType="java.util.Map">
+		<if test="UpdateBillNum != null">
+		    delete from TB_SYS_BILLNUM
+		    where BILL_CODE = #{UpdateBillNum.BILL_CODE} and BILL_DATE=#{UpdateBillNum.BILL_DATE};
+		
+		    insert into TB_SYS_BILLNUM
+		    (BILL_CODE,	BILL_DATE, BILL_NUMBER) values (#{UpdateBillNum.BILL_CODE}, #{UpdateBillNum.BILL_DATE}, #{UpdateBillNum.BILL_NUMBER});
+		</if>
+		<if test="DetailBillAndDetail != null">
+		    <foreach item="item" index="index" collection="DetailBillAndDetail" open=" " separator=" " close=" ">
+		        delete from  
+		        <include refid="tableNameBill"></include>
+		        where BILL_CODE = #{item.BILL_CODE__}
+	            ${item.CanOperateBill};
+		        delete from  
+		        <include refid="tableNameDetail"></include>
+		        where BILL_CODE = #{item.BILL_CODE__}
+	            ${item.CanOperateDetail};
+		        delete from  
+		        <include refid="tableNameItem"></include>
+		        where BILL_CODE = #{item.BILL_CODE__}
+	            ${item.CanOperateDetail};<!--  -->
+		        delete from  
+		        <include refid="tableNameInfo"></include>
+		        where BILL_CODE = #{item.BILL_CODE__}
+	            ${item.CanOperateDetail};<!--  --><!--  -->
+		    </foreach>
+		</if>
+		<foreach item="item" index="index" collection="SaveItem" open=" " separator=" " close=" ">
+		    insert into ${item.TableName}
+		    (${item.InsertField}) values (${item.InsertVale});
+		</foreach><!--  -->
+		<foreach item="item" index="index" collection="SaveBill" open=" " separator=" " close=" ">
+		    insert into ${item.TableName}
+		    (${item.InsertField}) values (${item.InsertVale});
+		    
+		    insert into ${item.IntoSumDetailTableName}
+		    (${item.IntoSumDetailField}) 
+		    (select ${item.FromItemDetailField}
+		     from ${item.FromItemDetailTableName}
+		     <where>
+		         ${item.FromItemDetailWhere}
+		     </where>
+		     ${item.FromItemDetailGroupBy});
+		</foreach>
+		<if test="SaveItemInfo != null">
+		    <foreach item="item" index="index" collection="SaveItemInfo" open=" " separator=" " close=" ">
+		        insert into <include refid="tableNameInfo"></include>
+		        (SERIAL_NO, BILL_CODE, BUSI_DATE, USER_CODE, DEPT_CODE, ITEM_CODE, ITEM_BL)
+		        values
+		        (#{item.SERIAL_NO}, #{item.BILL_CODE}, #{item.BUSI_DATE}, #{item.USER_CODE}, #{item.DEPT_CODE}, #{item.ITEM_CODE}, #{item.ITEM_BL});
+		    </foreach>
+		</if>
+		<!-- <foreach item="item" index="index" collection="SaveDetail" open=" " separator=" " close=" ">
+		    insert into ${item.TableName}
+		    (${item.InsertField}) values (${item.InsertVale});
+		</foreach> -->
+		<if test="DetailSetBillCode != null">
+		    <foreach item="item" index="index" collection="DetailSetBillCode" open=" " separator=" " close=" ">
+		        update tb_staff_detail
+		        set BILL_CODE = #{item.BILL_CODE}
+		        where SERIAL_NO = ${item.SERIAL_NO__}
+	            ${item.updateFilter}
+	            ;
+		    </foreach>
+		</if>
+	</update>
+	
+</mapper>

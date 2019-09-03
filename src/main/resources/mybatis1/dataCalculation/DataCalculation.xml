@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DataCalculation">
+	
+	<delete id="deleteTableData" parameterType="String">
+	    delete from ${value}
+	</delete>
+	
+	<!--  -->
+	<select id="getStaffTax" resultType="com.fh.entity.StaffTax">
+		SELECT * FROM TB_STAFF_TAX order by MIN_VALUE
+	</select>
+	<select id="getLaborTax" resultType="com.fh.entity.LaborTax">
+		SELECT * FROM TB_LABOR_TAX order by MIN_VALUE
+	</select>
+	
+	<!--  -->
+	<select id="getMaxSerialNo" parameterType="String" resultType="Integer">
+		SELECT IFNULL(MAX(SERIAL_NO), 0) FROM ${value}
+	</select>
+	
+	<!--  -->
+	<select id="getAddSerialNo" parameterType="pd" resultType="Integer">
+	    select SERIAL_NO from ${tableName} where SERIAL_NO > ${strMaxNum}
+	</select>
+	
+	<!--  -->
+	<select id="getListBySerialNo" parameterType="pd" resultType="pd">
+	    ${sqlRetSelect} where SERIAL_NO in (${SqlInBillCode}) order by SERIAL_NO
+	</select>
+	
+	<!--  -->
+	<select id="getSumByUserCode" parameterType="pd" resultType="pd">
+	    select * from (${sqlSumByUserCode}) t where USER_CODE = '${USER_CODE}'
+	</select>
+	<select id="getSumByStaffIdent" parameterType="pd" resultType="pd">
+	    select t.* from (${sqlSumByStaffIdent}) t where t.STAFF_IDENT = '${STAFF_IDENT}'
+	</select>
+	<select id="getSumByUserNameStaffIdent" parameterType="pd" resultType="pd">
+	    select * 
+	    from (${sqlSumByUserNameStaffIdent}) t 
+	    where USER_NAME = '${USER_NAME}'
+	    and STAFF_IDENT = '${STAFF_IDENT}'
+	</select>
+	
+	<update id="editSalaryFeild" parameterType="pd">
+	    ${sqlUpdateFeild} where SERIAL_NO in (${SqlInBillCode})
+	</update>
+	
+	<!--  -->
+	<select id="getTaxFormula" parameterType="pd" resultType="pd">
+	    select ${taxFormula} from ${tableName} limit 1
+	</select>
+	
+	<select id="getSelectSql" parameterType="pd" resultType="String">
+	    ${SelectSql}
+	</select>
+	
+	<select id="getStaffTransferReg" parameterType="pd" resultType="String">
+	    ${SelectSql}
+	</select>
+</mapper>

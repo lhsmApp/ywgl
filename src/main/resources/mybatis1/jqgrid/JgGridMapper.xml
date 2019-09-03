@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="JgGridMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		TB_JQGRID
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		CATEGORYNAME,	
+		PRODUCTNAME,	
+		COUNTRY,	
+		PRICE,	
+		QUANTITY,	
+		ID
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="insertField">
+		CATEGORYNAME,	
+		PRODUCTNAME,	
+		COUNTRY,	
+		PRICE,	
+		QUANTITY
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{CATEGORYNAME},	
+		#{PRODUCTNAME},	
+		#{COUNTRY},	
+		#{PRICE},	
+		#{QUANTITY}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="insertField"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ID = #{ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			CATEGORYNAME = #{CATEGORYNAME},
+			PRODUCTNAME = #{PRODUCTNAME},
+			COUNTRY = #{COUNTRY},
+			PRICE = #{PRICE},
+			QUANTITY = #{QUANTITY}
+		where 
+		ID = #{ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			ID = #{ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		<where>
+			<if test="pd._search != 'false'"><!-- 关键词检索 -->
+				and
+					(
+					#{pd.searchField} #{pd.searchOper} #{pd.searchString}
+					<!--	根据需求自己加检索条件
+						字段1 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+						 or 
+						字段2 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+					-->
+					)
+			</if>
+		</where>
+		
+	</select>
+	
+	<!-- Jq分页列表 -->
+	<select id="datalistJqPage" parameterType="jqPage" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		<where>
+		
+			<if test="pd.keywords != null and pd.keywords!= ''"><!-- 关键词检索 -->
+				and (
+					CATEGORYNAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					or
+					COUNTRY LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					)
+			</if>
+		
+			<if test="pd._search != 'false'"><!-- 关键词检索 -->
+				<if test="pd.searchOper == 'cn'">
+				and
+					(
+					${pd.searchField} LIKE CONCAT(CONCAT('%', #{pd.searchString}),'%')
+					)
+					</if>
+				<if test="pd.searchOper == 'eq'">
+				and
+					(
+					${pd.searchField} = #{pd.searchString}
+					)
+				</if>	
+				<if test="pd.searchOper == 'ne'">
+				and
+					(
+					${pd.searchField} != #{pd.searchString}
+					)
+				</if>	
+			</if>
+		</where>
+		order by CATEGORYNAME ${pd.sord} 
+		<if test="currentResult != null and rowNum != null" >           
+              limit #{currentResult}, #{rowNum} 
+        </if>
+	</select>
+	
+	<select id="countJqGrid" parameterType="pd" resultType="int">
+		select count(*) from <include refid="tableName"></include> 
+		<!-- <where>
+			<if test="menuId != null and '' != menuId" >           
+	          AND   menuId = #{menuId}
+	        </if>
+        </where> -->
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+</mapper>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FundsConfirmInfoMapper">
+	
+	<!-- 列表 -->
+	<select id="datalistJqPage" parameterType="jqPage" resultType="pd">
+	    <!-- select * 
+	    from (SELECT t.BILL_OFF, t.TYPE_CODE, t.DEPT_CODE, t.MAPPING_CODE,
+		       <if test="pd.BillTypeLeftJoin != null and pd.BillTypeLeftJoin.trim() != ''">
+                   IFNULL(f.BILL_TYPE, ' ') BILL_TYPE,
+		       </if>
+               IFNULL(a.BILL_CODE, ' ') SEALED_INFO,
+               IFNULL(b.BILL_CODE, ' ') SUMMY_BILL,
+               IFNULL(c.STATE, '0') STATE
+       
+               FROM tb_sys_dept_mapping t
+               
+		       <if test="pd.BillTypeLeftJoin != null and pd.BillTypeLeftJoin.trim() != ''">
+                   LEFT JOIN (${pd.BillTypeLeftJoin}) f ON 1 = 1
+		       </if>
+
+               LEFT JOIN (SELECT DISTINCT RPT_DEPT, BILL_OFF, 
+		                         <if test="pd.BillTypeLeftJoin != null and pd.BillTypeLeftJoin.trim() != ''">
+                                     BILL_TYPE, 
+		                         </if>
+		                         STATE
+                          FROM tb_sys_confirm_info
+                          WHERE STATE = '1' AND RPT_DUR = '${pd.filterSelectedBusiDate}' 
+                          ) c ON t.BILL_OFF = c.BILL_OFF AND t.MAPPING_CODE = c.RPT_DEPT 
+		                  <if test="pd.BillTypeLeftJoin != null and pd.BillTypeLeftJoin.trim() != ''">
+                              AND IFNULL(f.BILL_TYPE, '') = c.BILL_TYPE
+		                  </if>
+		                  
+               LEFT JOIN (SELECT DISTINCT RPT_DEPT, BILL_TYPE, BILL_OFF, COUNT(BILL_CODE) BILL_CODE
+                          FROM tb_sys_sealed_info 
+                          WHERE STATE = '1' AND RPT_DUR = '${pd.filterSelectedBusiDate}'
+                          GROUP BY RPT_DEPT, BILL_TYPE, BILL_OFF
+                          ) a ON t.BILL_OFF = a.BILL_OFF AND t.TYPE_CODE = a.BILL_TYPE AND t.DEPT_CODE = a.RPT_DEPT 
+
+               LEFT JOIN (SELECT DISTINCT DEPT_CODE, TYPE_CODE, BILL_OFF, COUNT(BILL_CODE) BILL_CODE
+                          FROM tb_gen_bus_summy_bill 
+                          WHERE BILL_STATE = '1' AND BUSI_DATE = '${pd.filterSelectedBusiDate}'
+                          GROUP BY DEPT_CODE, TYPE_CODE, BILL_OFF
+                          ) b ON t.BILL_OFF = b.BILL_OFF AND t.TYPE_CODE = b.TYPE_CODE AND t.DEPT_CODE = b.DEPT_CODE 
+               ) t
+		<where>
+		    <if test="pd.filterWhereResult != null and pd.filterWhereResult.trim() != ''">
+			    ${pd.filterWhereResult}
+		    </if>
+		    <if test="pd.QueryFeild != null and pd.QueryFeild.trim() != ''">
+		        ${pd.QueryFeild}
+		    </if>
+		</where>
+		<if test="sidx != null and sidx.trim() != ''" >
+			order by ${sidx} 
+		       <if test="pd.BillTypeLeftJoin != null and pd.BillTypeLeftJoin.trim() != ''">
+                   , BILL_TYPE
+		       </if>
+			${sord} 
+    	</if> CERT_CODE-->
+    	
+    	select * 
+	    from (SELECT t.BILL_OFF, t.TYPE_CODE, t.DEPT_CODE, t.MAPPING_CODE,
+               IFNULL(d.CERT_CODE, ' ') CERT_CODE,
+               IFNULL(a.BILL_CODE, ' ') SEALED_INFO,
+               IFNULL(b.BILL_CODE, ' ') SUMMY_BILL,
+               IFNULL(c.STATE, '0') STATE
+       
+               FROM tb_sys_dept_mapping t
+               
+               left join (SELECT t.BILL_OFF, t.TYPE_CODE, t.DEPT_CODE, t.MAPPING_CODE,
+                                 GROUP_CONCAT(c.CERT_CODE SEPARATOR ',') CERT_CODE
+                          FROM tb_sys_dept_mapping t
+                          LEFT JOIN (SELECT s.BILL_OFF, s.RPT_DEPT, g.CERT_CODE
+                                     FROM tb_sys_confirm_info s, tb_gl_cert g
+                                     WHERE s.BILL_CODE = g.BILL_CODE
+                                     AND s.STATE = '1' AND s.RPT_DUR = '${pd.filterSelectedBusiDate}') c
+                          ON t.BILL_OFF = c.BILL_OFF AND t.MAPPING_CODE = c.RPT_DEPT 
+                          GROUP BY t.BILL_OFF, t.TYPE_CODE, t.DEPT_CODE, t.MAPPING_CODE) d
+               ON t.BILL_OFF = d.BILL_OFF AND t.TYPE_CODE = d.TYPE_CODE 
+               AND t.DEPT_CODE = d.DEPT_CODE AND t.MAPPING_CODE = d.MAPPING_CODE 
+               
+               LEFT JOIN (SELECT DISTINCT RPT_DEPT, BILL_OFF, STATE
+                          FROM tb_sys_confirm_info
+                          WHERE STATE = '1' AND RPT_DUR = '${pd.filterSelectedBusiDate}' 
+                          ) c ON t.BILL_OFF = c.BILL_OFF AND t.MAPPING_CODE = c.RPT_DEPT 
+		                  
+               LEFT JOIN (SELECT DISTINCT RPT_DEPT, BILL_TYPE, BILL_OFF, COUNT(BILL_CODE) BILL_CODE
+                          FROM tb_sys_sealed_info 
+                          WHERE STATE = '1' AND RPT_DUR = '${pd.filterSelectedBusiDate}'
+                          GROUP BY RPT_DEPT, BILL_TYPE, BILL_OFF
+                          ) a ON t.BILL_OFF = a.BILL_OFF AND t.TYPE_CODE = a.BILL_TYPE AND t.DEPT_CODE = a.RPT_DEPT 
+
+               LEFT JOIN (SELECT DISTINCT DEPT_CODE, TYPE_CODE, BILL_OFF, COUNT(BILL_CODE) BILL_CODE
+                          FROM tb_gen_bus_summy_bill 
+                          WHERE BILL_STATE = '1' AND BUSI_DATE = '${pd.filterSelectedBusiDate}'
+                          GROUP BY DEPT_CODE, TYPE_CODE, BILL_OFF
+                          ) b ON t.BILL_OFF = b.BILL_OFF AND t.TYPE_CODE = b.TYPE_CODE AND t.DEPT_CODE = b.DEPT_CODE 
+               ) t
+		<where>
+		    <if test="pd.filterWhereResult != null and pd.filterWhereResult.trim() != ''">
+			    ${pd.filterWhereResult}
+		    </if>
+		    <if test="pd.QueryFeild != null and pd.QueryFeild.trim() != ''">
+		        ${pd.QueryFeild}
+		    </if>
+		</where>
+		<if test="sidx != null and sidx.trim() != ''" >
+			order by ${sidx} ${sord} 
+    	</if>
+	</select>
+</mapper>

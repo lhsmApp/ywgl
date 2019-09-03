@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SysBillOffMappingMapper">
+
+	<!--表名 -->
+	<sql id="tableName">
+		tb_sys_bill_off_mapping
+	</sql>
+	
+	<!-- Name	Code	Comment	Default Value	Data Type	Length	Precision	Primary	Foreign Key	Mandatory
+业务类型	TYPE_CODE	"业务类型1工会经费、教育经费凭证2党费凭证3社保互推凭证4公积金互推凭证5个缴凭证6应付劳务费凭证7企业年金提取凭证8补充医疗提取凭证9企业年金发放凭证10评估调整凭证"	' '	VARCHAR(20)	20		TRUE	FALSE	TRUE
+账套编码	BILL_OFF	账套编码	' '	VARCHAR(50)	50		TRUE	FALSE	TRUE
+账套映射编码	MAPPING_CODE	账套映射编码	' '	VARCHAR(50)	50		TRUE	FALSE	TRUE 
+FMIS_TABLE-->
+
+	<!-- 字段 -->
+	<sql id="Field">
+		TYPE_CODE,
+		BILL_OFF,
+		MAPPING_CODE,
+		FMIS_TABLE
+	</sql>
+	<sql id="FieldSelectKey">
+		,TYPE_CODE TYPE_CODE__,
+		BILL_OFF BILL_OFF__,
+		MAPPING_CODE MAPPING_CODE__,
+		FMIS_TABLE FMIS_TABLE__
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{TYPE_CODE},
+		#{BILL_OFF},
+		#{MAPPING_CODE},
+		#{FMIS_TABLE}
+	</sql>
+	<sql id="FieldValueItem">
+		#{item.TYPE_CODE},
+		#{item.BILL_OFF},
+		#{item.MAPPING_CODE},
+		#{item.FMIS_TABLE}
+	</sql>
+
+	<!-- 列表 -->
+	<select id="datalistJqPage" parameterType="jqPage" resultType="pd">
+		select 
+		    <include refid="Field"></include>
+		    <include refid="FieldSelectKey"></include>
+		from <include refid="tableName"></include>
+		<where>
+		    <if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			   ${pd.filterWhereResult}
+		    </if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+		</where>
+		<if test="sidx != null and sidx.trim() != ''" >
+			order by ${sidx} ${sord} 
+    	</if>
+		<if test="currentResult != null and rowNum != null" >           
+              limit #{currentResult}, #{rowNum} 
+        </if>
+	</select>
+	<select id="countJqGridExtend" parameterType="jqPage" resultType="int">
+		select count(*)
+		from <include refid="tableName"></include>
+		<where>
+		    <if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			   ${pd.filterWhereResult}
+		    </if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+		</where>
+	</select>
+
+	<!-- 列表 -->
+	<select id="getRepeatList" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+        <where>
+		<foreach item="item" index="index" collection="list" open=" " separator=" or " close=" ">
+            ((TYPE_CODE = #{item.TYPE_CODE} and BILL_OFF = #{item.BILL_OFF} and MAPPING_CODE = #{item.MAPPING_CODE})
+             and (TYPE_CODE != #{item.TYPE_CODE__} or BILL_OFF != #{item.BILL_OFF__} or MAPPING_CODE != #{item.MAPPING_CODE__}))
+		</foreach>
+		</where>
+	</select>
+	
+	<update id="batchDelAndIns" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		<foreach item="item" index="index" collection="list" open=" (" separator=" or " close=") ">
+		    TYPE_CODE = #{item.TYPE_CODE__}
+		    and BILL_OFF = #{item.BILL_OFF__}
+		    and MAPPING_CODE = #{item.MAPPING_CODE__}
+		</foreach>;
+		
+		<foreach item="item" index="index" collection="list" open=" " separator=" " close=" ">
+		    insert into <include refid="tableName"></include>
+		    (<include refid="Field"></include>) values (<include refid="FieldValueItem"></include>);
+		</foreach>
+	</update>
+
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		<foreach item="item" index="index" collection="list" open=" (" separator=" or " close=") ">
+		    TYPE_CODE = #{item.TYPE_CODE__} 
+		    and BILL_OFF = #{item.BILL_OFF__}
+		    and MAPPING_CODE = #{item.MAPPING_CODE__}
+		</foreach>
+	</delete>
+	
+	
+	
+	
+	
+	
+	
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="pd">
+		insert into
+		<include refid="tableName"></include>
+		(
+		<include refid="Field"></include>
+		) values (
+		<include refid="FieldValue"></include>
+		)
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		    where TYPE_CODE = #{TYPE_CODE__}
+		    and BILL_OFF = #{BILL_OFF__}
+		    and MAPPING_CODE = #{MAPPING_CODE__}
+	</delete>
+
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		    TYPE_CODE = #{TYPE_CODE},
+		    BILL_OFF = #{BILL_OFF},
+		    MAPPING_CODE = #{MAPPING_CODE},
+		    FMIS_TABLE = #{FMIS_TABLE}
+		    where TYPE_CODE = #{TYPE_CODE__}
+		    and BILL_OFF = #{BILL_OFF__}
+		    and MAPPING_CODE = #{MAPPING_CODE__}
+	</update>
+
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		where
+		KEY_CODE = #{KEY_CODE}
+	</select>
+
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+	</select>
+
+	<!-- <select id="getMappingListByBillOffType" parameterType="com.fh.entity.SysBillOffMapping" resultType="com.fh.entity.SysBillOffMapping">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		where TYPE_CODE = #{TYPE_CODE}
+		and BILL_OFF = #{BILL_OFF}
+		order by BILL_OFF, TYPE_CODE, MAPPING_CODE
+	</select>-->
+</mapper>

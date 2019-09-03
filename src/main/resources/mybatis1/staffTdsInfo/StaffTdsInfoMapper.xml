@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="StaffTdsInfoMapper">
+	
+<!-- 
+/** 
+ * 说明：个税扣除项导入
+ * 创建人：zhangxiaoliu
+ * 创建时间：2019-01-28
+ */
+ -->
+	<!--表名 -->
+	<sql id="tableName">
+		TB_STAFF_TDS_INFO
+	</sql>
+
+	<!-- 列表 -->
+	<select id="datalistJqPage" parameterType="jqPage" resultType="pd">
+		select 
+		    * 
+		    <if test="pd.FieldSelectKey!= null and pd.FieldSelectKey != ''">
+		        ${pd.FieldSelectKey}
+		    </if>
+		from 
+		<include refid="tableName"></include>
+		where BUSI_DATE = '${pd.SelectedBusiDate}'
+		<if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			${pd.filterWhereResult}
+		</if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+		<if test="sidx != null and sidx.trim() != ''" >
+			order by ${sidx} ${sord} 
+    	</if>
+	</select>
+	<select id="countJqGridExtend" parameterType="jqPage" resultType="int">
+		select count(*) from <include refid="tableName"></include> 
+		where BUSI_DATE = '${pd.SelectedBusiDate}'
+		<if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			${pd.filterWhereResult}
+		</if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+	</select>
+	<select id="getFooterSummary" parameterType="jqPage" resultType="pd">
+		select ${pd.Userdata} 
+		from <include refid="tableName"></include> 
+		where BUSI_DATE = '${pd.SelectedBusiDate}'
+		<if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			${pd.filterWhereResult}
+		</if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+	</select>
+	
+    <!-- 用于判断数据是否重复 -->
+	<select id="getRepeat" parameterType="pd" resultType="pd">
+		select * 
+		from 
+		<include refid="tableName"></include>
+		<where>
+		    <foreach item="item" index="index" collection="list" open=" " separator=" or " close=" ">
+                (BUSI_DATE = #{item.BUSI_DATE} and STAFF_IDENT = #{item.STAFF_IDENT} and STAFF_IDENT != #{item.STAFF_IDENT__})
+		    </foreach>
+		</where> 
+	</select>
+	
+	<!-- 导出列表 -->
+	<select id="exportList" parameterType="jqPage" resultType="pd">
+		select * 
+		from <include refid="tableName"></include>
+		where BUSI_DATE = '${pd.SelectedBusiDate}'
+		<if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			${pd.filterWhereResult}
+		</if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+		<if test="sidx != null and sidx.trim() != ''" >
+			order by ${sidx} ${sord} 
+    	</if>
+	</select>
+	<!-- 导出模板 -->
+	<select id="exportModel" parameterType="pd" resultType="pd">
+		select * 
+		from 
+		<include refid="tableName"></include>
+		where BUSI_DATE = '${SelectedBusiDate}'
+		    <if test="QueryFeild!= null and QueryFeild != ''">
+		        ${QueryFeild}
+		    </if>
+		order by BUSI_DATE desc
+		limit 1
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		<foreach item="item" index="index" collection="list" open=" (" separator=" or " close=") ">
+		    BUSI_DATE = #{item.BUSI_DATE__} 
+		    and STAFF_IDENT = #{item.STAFF_IDENT__} 
+		</foreach>
+	</delete>
+	
+	<update id="batchDelAndIns" parameterType="pd">
+		<foreach item="item" index="index" collection="list" open=" " separator=" " close=" ">
+		    delete from
+		    <include refid="tableName"></include>
+		    where BUSI_DATE = #{item.BUSI_DATE__} 
+		    and STAFF_IDENT = #{item.STAFF_IDENT__}
+		    ${item.CanDel};
+	        
+		    insert into
+		    <include refid="tableName"></include>
+		    (${item.InsertField}) values (${item.InsertVale});
+		</foreach>
+	</update>
+	
+	<update id="batchCoverAdd" parameterType="pd">
+		<foreach item="item" index="index" collection="list" open=" " separator=" " close=" ">
+		    delete from
+		    <include refid="tableName"></include>
+		    where BUSI_DATE = #{item.BUSI_DATE} 
+		    and STAFF_IDENT = #{item.STAFF_IDENT}
+		    ${item.CanDel};
+	        
+		    insert into
+		    <include refid="tableName"></include>
+		    (${item.InsertField}) values (${item.InsertVale});
+		</foreach>
+	</update>
+	
+	
+	<update id="batchCopyAdd" parameterType="pd">
+		<foreach item="item" index="index" collection="list" open=" " separator=" " close=" ">
+		    delete from
+		    <include refid="tableName"></include>
+		    where BUSI_DATE = #{item.BUSI_DATE} 
+		    and STAFF_IDENT = #{item.STAFF_IDENT}
+		    ${item.CanDel};
+	        
+		    insert into
+		    <include refid="tableName"></include>
+		    (${item.InsertField}) values (${item.InsertVale});
+		</foreach>
+	</update>
+</mapper>

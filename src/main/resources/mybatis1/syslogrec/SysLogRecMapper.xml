@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SysLogRecMapper">
+
+	<!--表名 -->
+	<sql id="tableName">
+		tb_sys_log_rec
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		USER_CODE,
+		DEPT_CODE,
+		REC_DATE,
+		TYPE_CODE,
+		SQL_STR,
+		BILL_CODE
+	</sql>
+	
+	<!-- 列表 -->
+	<select id="datalistJqPage" parameterType="jqPage" resultType="pd">
+		select 
+		    <include refid="Field"></include>
+		from <include refid="tableName"></include>
+		<where>
+		    <if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			   ${pd.filterWhereResult}
+		    </if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+		</where>
+		order by 
+		<if test="sidx != null and sidx.trim() != ''" >
+			${sidx} ${sord},
+    	</if>
+    	REC_DATE desc
+		<if test="currentResult != null and rowNum != null" >           
+              limit #{currentResult}, #{rowNum} 
+        </if>
+	</select>
+	<select id="countJqGridExtend" parameterType="jqPage" resultType="int">
+		select count(*)
+		from <include refid="tableName"></include>
+		<where>
+		    <if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			   ${pd.filterWhereResult}
+		    </if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+		</where>
+	</select>
+	
+	<select id="export" parameterType="jqPage" resultType="pd">
+		select 
+		    <include refid="Field"></include>
+		from <include refid="tableName"></include>
+		<where>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+		</where>
+		order by TYPE_CODE,DEPT_CODE,SQL_STR desc
+	</select>
+</mapper>

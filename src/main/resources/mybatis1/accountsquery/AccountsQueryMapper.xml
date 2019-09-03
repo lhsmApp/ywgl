@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AccountsQueryMapper">
+	
+	
+	<!-- 列表 -->
+	<select id="datalistJqPage" parameterType="jqPage" resultType="pd">
+		select ${pd.SelectFeild}
+		from ${pd.TableName}
+		<where>
+		    ${pd.CheckReport}
+		    <if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''">
+		    	${pd.filterWhereResult}
+		    </if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+		</where>
+	    group by ${pd.GroupbyFeild}
+		<if test="sidx != null and sidx.trim() != ''" >
+			order by ${sidx} ${sord} 
+    	</if>
+	</select>
+	
+	<select id="dataListDetail" parameterType="jqPage" resultType="pd">
+		select *, USER_CODE USER_CODE__
+		from ${pd.TableName}
+		<where>
+		    <if test="pd.whereSql!= null and pd.whereSql != ''">
+			    ${pd.whereSql}
+		    </if>
+		</where>
+		<if test="sidx != null and sidx.trim() != ''" >
+			order by ${sidx} ${sord} 
+    	</if>
+	</select>
+</mapper>

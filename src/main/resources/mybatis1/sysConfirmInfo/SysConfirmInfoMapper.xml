@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SysConfirmInfoMapper">
+
+	<!--表名 -->
+	<sql id="tableName">
+		tb_sys_confirm_info
+	</sql>
+	
+	<!-- Name	Code	Comment	Default Value	Data Type	Length	Precision	Primary	Foreign Key	Mandatory
+单据编码	BILL_CODE	"单据编码1工会经费、教育经费凭证 GZJF2党费凭证 DFJT3社保互推凭证 SBHT4公积金互推凭证 ZHHT5个缴凭证 SBGJ6应付劳务费凭证 YFLW7企业年金提取凭证 NJTQ8补充医疗提取凭证 YLTQ9企业年金发放凭证  NJFF10评估调整凭证 PGTZ"	' '	VARCHAR(20)	20		TRUE	FALSE	TRUE
+单据单位	RPT_DEPT	单据单位	' '	VARCHAR(30)	30		TRUE	FALSE	TRUE
+单据期间	RPT_DUR	"单据期间格式 YYYYMM"	' '	VARCHAR(6)	6		TRUE	FALSE	TRUE
+确认人	RPT_USER	确认人	' '	VARCHAR(6)	6		FALSE	FALSE	TRUE
+确认时间	RPT_DATE	"确认时间格式：YYYY-MM-DD HH:MM:SS"	' '	VARCHAR(20)	20		FALSE	FALSE	TRUE
+单据类型	BILL_TYPE	"单据类型1合同化工资传输2市场化工资传输3运行人员工资传输4劳务用工传输5劳务人员在建传输6社保传输7公积金传输"	' '	VARCHAR(2)	2		FALSE	FALSE	TRUE
+状态	STATE	"状态1确认0待确认"	' '	CHAR(1)	1		FALSE	FALSE	TRUE
+账套	BILL_OFF	账套	' '	VARCHAR(8)	8		FALSE	FALSE	TRUE -->
+
+	<!-- 字段 -->
+	<sql id="Field">
+		BILL_CODE,
+		CERT_CODE,
+		RPT_DEPT,
+		RPT_DUR,
+		RPT_USER,
+		RPT_DATE,
+		BILL_TYPE,
+		STATE,
+		BILL_OFF
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{BILL_CODE},
+		#{CERT_CODE},
+		#{RPT_DEPT},
+		#{RPT_DUR},
+		#{RPT_USER},
+		#{RPT_DATE},
+		#{BILL_TYPE},
+		#{STATE},
+		#{BILL_OFF}
+	</sql>
+	<sql id="FieldItemValue">
+		#{item.BILL_CODE},
+		#{item.CERT_CODE},
+		#{item.RPT_DEPT},
+		#{item.RPT_DUR},
+		#{item.RPT_USER},
+		#{item.RPT_DATE},
+		#{item.BILL_TYPE},
+		#{item.STATE},
+		#{item.BILL_OFF}
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="pd">
+		insert into
+		<include refid="tableName"></include>
+		(
+		<include refid="Field"></include>
+		) values (
+		<include refid="FieldValue"></include>
+		)
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		BILL_CODE = #{id}
+	</delete>
+
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		BILL_CODE = #{BILL_CODE},
+		CERT_CODE = #{CERT_CODE},
+		RPT_DEPT = #{RPT_DEPT},
+		RPT_DUR = #{RPT_DUR},
+		RPT_USER = #{RPT_USER},
+		RPT_DATE = #{RPT_DATE},
+		BILL_TYPE = #{BILL_TYPE},
+		STATE = #{STATE},
+		BILL_OFF = #{BILL_OFF}
+		where
+		BILL_CODE = #{BILL_CODE}
+	</update>
+
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		where
+		BILL_CODE = #{BILL_CODE}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 1=1
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+				<!--	根据需求自己加检索条件
+					字段1 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or 
+					字段2 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+				-->
+				)
+		</if>
+	</select>
+	
+	<!-- Jq分页列表 -->
+	<select id="datalistJqPage" parameterType="jqPage" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		<where>
+			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+				and
+					(
+					
+					<!--	根据需求自己加检索条件
+						字段1 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+						 or 
+						字段2 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+					-->
+					)
+			</if>
+		</where>
+				
+		<if test="currentResult != null and rowNum != null" >           
+              limit #{currentResult}, #{rowNum} 
+        </if>
+	</select>
+
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+	</select>
+
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where
+		BILL_CODE in
+		<foreach item="item" index="index" collection="array" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<!-- 张晓柳 -->
+    <!-- 通过单号判断数据是否变更 -->
+	<select id="getCheckStateList" parameterType="pd" resultType="com.fh.entity.SysConfirmInfo">
+		select BILL_CODE
+		from
+		<include refid="tableName"></include>
+		<where>
+		    <if test="CanOperate!= null and CanOperate != ''">
+		        ${CanOperate}
+		    </if>
+		</where>
+	</select>
+
+	<!-- 张晓柳 -->
+	<!-- 确认 -->
+	<update id="batchEachConfirm" parameterType="java.util.Map">
+		<if test="TransferConfirmAdd != null">
+		    <foreach item="item" index="index" collection="TransferConfirmAdd" open=" " separator=" " close=" ">
+		        delete from
+		        <include refid="tableName"></include>
+		        where BILL_CODE = #{item.BILL_CODE};
+		        insert into
+		        <include refid="tableName"></include>
+		        (<include refid="Field"></include>) values (<include refid="FieldItemValue"></include>);
+		    </foreach>
+		</if>
+		<if test="TransferCertAdd != null">
+		    <foreach item="item" index="index" collection="TransferCertAdd" open=" " separator=" " close=" ">
+			    delete from TB_GL_CERT
+			    where BILL_CODE = #{item.BILL_CODE};
+				insert into TB_GL_CERT(BILL_CODE,CERT_CODE,REVCERT_CODE,BILL_USER,BILL_DATE,VOUCHER_DATE,BUSI_DATE)
+				values
+				(#{item.BILL_CODE},#{item.CERT_CODE},#{item.REVCERT_CODE},#{item.BILL_USER},#{item.BILL_DATE},#{item.VOUCHER_DATE},#{item.BUSI_DATE});
+		    </foreach>
+		</if>
+	</update>
+	<update id="batchAllConfirm" parameterType="java.util.Map">
+		<!-- <if test="TransferConfirmDel != null"> -->
+		    delete from <include refid="tableName"></include>
+		    where RPT_DUR = #{TransferConfirmDel.RPT_DUR} 
+		    <!-- and BILL_TYPE=#{TransferConfirmDel.BILL_TYPE}
+		    and BILL_OFF=#{TransferConfirmDel.BILL_OFF} -->;
+		<!-- </if> -->
+		<if test="TransferConfirmAdd != null">
+		    <foreach item="item" index="index" collection="TransferConfirmAdd" open=" " separator=" " close=" ">
+		        insert into
+		        <include refid="tableName"></include>
+		        (<include refid="Field"></include>) values (<include refid="FieldItemValue"></include>);
+		    </foreach>
+		</if>
+		
+		<if test="TransferCertDel != null">
+			delete from TB_GL_CERT
+			<!-- where BILL_CODE in (${TransferCertDel.CanOperateBillCode}) -->
+		    <!-- and BUSI_DATE = #{TransferCertDel.BUSI_DATE} -->
+		    where BUSI_DATE = #{TransferCertDel.BUSI_DATE};
+		</if>
+		<if test="TransferCertAdd != null">
+		    <foreach item="item" index="index" collection="TransferCertAdd" open=" " separator=" " close=" ">
+				insert into TB_GL_CERT(BILL_CODE,CERT_CODE,REVCERT_CODE,BILL_USER,BILL_DATE,VOUCHER_DATE,BUSI_DATE)
+				values
+				(#{item.BILL_CODE},#{item.CERT_CODE},#{item.REVCERT_CODE},#{item.BILL_USER},#{item.BILL_DATE},#{item.VOUCHER_DATE},#{item.BUSI_DATE});
+		    </foreach>
+		</if>
+	</update>
+
+	<!-- 张晓柳 -->
+	<!-- 取消确认 -->
+	<update id="batchCancelConfirm" parameterType="com.fh.entity.SysConfirmInfo">
+		<foreach item="item" index="index" collection="list" open=" " separator=" " close=" ">
+		    update
+		    <include refid="tableName"></include>
+		    set
+		    RPT_USER = #{item.RPT_USER},
+		    RPT_DATE = #{item.RPT_DATE},
+		    STATE = #{item.STATE}
+		    where BILL_CODE = #{item.BILL_CODE};
+		</foreach>
+	</update>
+
+	<!-- 张晓柳 -->
+	<select id="getConfirmMappingList" parameterType="pd" resultType="com.fh.entity.SysConfirmInfo">
+		select <include refid="Field"></include>
+		from <include refid="tableName"></include>
+		where STATE = '1'
+		and BILL_OFF = #{BILL_OFF}
+		and RPT_DUR = #{RPT_DUR}
+		and RPT_DEPT in (select MAPPING_CODE from tb_sys_dept_mapping where TYPE_CODE = #{TYPE_CODE} and BILL_OFF = #{BILL_OFF} and DEPT_CODE = #{DEPT_CODE})
+	</select>
+</mapper>

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SysUnlockInfoMapper">
+
+	<!--表名 -->
+	<sql id="tableName">
+		TB_SYS_UNLOCK_INFO
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="Field">
+		BILL_CODE,
+		UNLK_DEPT,
+		UNLK_DUR,
+		BILL_TYPE,
+		UNLK_USER,
+		UNLK_DATE,
+		DEL_STATE,
+		DEL_USER,
+		DEL_DATE,
+		BILL_OFF
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{BILL_CODE},
+		#{UNLK_DEPT},
+		#{UNLK_DUR},
+		#{BILL_TYPE},
+		#{UNLK_USER},
+		#{UNLK_DATE},
+		#{DEL_STATE},
+		#{DEL_USER},
+		#{DEL_DATE},
+		#{BILL_OFF}
+	</sql>
+
+	<!-- 获取当前接口类型， 当前二级单位当前期间当前封存状态为封存的的传输列表 -->
+	<select id="listSyncDelUnlock" parameterType="pd" resultType="pd">
+		<!-- SELECT A.BILL_CODE,C.CERT_CODE,C.REVCERT_CODE,B.RPT_DEPT AS
+		UNLK_DEPT,B.RPT_DUR AS UNLK_DUR,B.BILL_TYPE,${USER} AS UNLK_USER,
+		NOW() AS UNLK_DATE,B.BILL_OFF
+		FROM ${TABLE_CODE} A
+		JOIN
+		tb_sys_sealed_info B
+		on A.BILL_CODE=B.BILL_CODE
+		and
+		A.DEPT_CODE=B.RPT_DEPT
+		AND A.BUSI_DATE=B.RPT_DUR
+		AND
+		A.CUST_COL7=B.BILL_OFF
+		LEFT JOIN tb_gl_cert C
+		ON A.BILL_CODE=C.BILL_CODE
+		WHERE A.BILL_STATE='1' and B.STATE='1' and A.BILL_CODE=#{BILL_CODE}
+		and B.BILL_TYPE=#{BILL_TYPE} AND A.dept_code=#{RPT_DEPT} AND
+		A.BUSI_DATE=#{RPT_DUR} AND B.BILL_OFF=#{BILL_OFF}
+		<if test="USER_GROP!= null and USER_GROP != ''">
+			and A.USER_GROP = #{USER_GROP}
+		</if> -->
+		
+		SELECT B.BILL_CODE,C.CERT_CODE,C.REVCERT_CODE,B.RPT_DEPT AS
+		UNLK_DEPT,B.RPT_DUR AS UNLK_DUR,B.BILL_TYPE,${USER} AS UNLK_USER,
+		NOW() AS UNLK_DATE,B.BILL_OFF
+		FROM tb_sys_sealed_info B
+		
+		LEFT JOIN tb_gl_cert C
+		ON B.BILL_CODE=C.BILL_CODE
+		WHERE B.STATE='1' and B.BILL_CODE=#{BILL_CODE}
+		and B.BILL_TYPE=#{BILL_TYPE} AND B.RPT_DEPT=#{RPT_DEPT} AND
+		B.RPT_DUR=#{RPT_DUR} AND B.BILL_OFF=#{BILL_OFF}
+	</select>
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="pd">
+		<!-- <foreach item="item" index="index" collection="list" open=" " separator="; 
+			" close=" "> <if test="item!=null"> delete from <include refid="tableName"></include> 
+			where BILL_CODE = #{item.BILL_CODE}; insert into <include refid="tableName"></include>(BILL_CODE,UNLK_DEPT,UNLK_DUR,BILL_TYPE,UNLK_USER,UNLK_DATE,BILL_OFF) 
+			values (#{item.BILL_CODE},#{item.UNLK_DEPT},#{item.UNLK_DUR},#{item.BILL_TYPE},#{item.UNLK_USER},#{item.UNLK_DATE},#{item.BILL_OFF}) 
+			</if> </foreach> -->
+
+		<!-- 插入保存 -->
+		<foreach item="item" index="index" collection="list" open=" "
+			separator="; " close=" ">
+			<if test="item!=null">
+				delete from
+				<include refid="tableName"></include>
+				where BILL_CODE = #{item.BILL_CODE}
+				and UNLK_DUR = #{item.UNLK_DUR}
+				and UNLK_DEPT = #{item.UNLK_DEPT}
+				and BILL_OFF=#{item.BILL_OFF}
+				and
+				BILL_TYPE = #{item.BILL_TYPE};
+				insert into
+				<include refid="tableName"></include>
+				(BILL_CODE,UNLK_DEPT,UNLK_DUR,BILL_TYPE,UNLK_USER,UNLK_DATE,BILL_OFF)
+				values
+				(#{item.BILL_CODE},#{item.UNLK_DEPT},#{item.UNLK_DUR},#{item.BILL_TYPE},#{item.UNLK_USER},#{item.UNLK_DATE},#{item.BILL_OFF})
+			</if>
+		</foreach>
+
+		<!-- insert into
+		<include refid="tableName"></include>
+		(BILL_CODE,UNLK_DEPT,UNLK_DUR,BILL_TYPE,UNLK_USER,UNLK_DATE,BILL_OFF)
+		values
+		<foreach item="item" index="index" collection="list" open=" "
+			separator=", " close=" ">
+			<if test="item!=null">
+				<trim prefix="(" suffix=")" suffixOverrides=",">
+					#{item.BILL_CODE},#{item.UNLK_DEPT},#{item.UNLK_DUR},#{item.BILL_TYPE},#{item.UNLK_USER},#{item.UNLK_DATE},#{item.BILL_OFF}
+					<include refid="FieldValue"></include>
+				</trim>
+			</if>
+		</foreach> -->
+	</insert>
+
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		<foreach item="item" index="index" collection="list" open=" "
+			separator="; " close=" ">
+			<if test="item!=null">
+				update
+				<include refid="tableName"></include>
+				set
+				DEL_STATE = '1',
+				DEL_USER = #{item.DEL_USER},
+				DEL_DATE =
+				#{item.DEL_DATE}
+				where
+				BILL_CODE = #{item.BILL_CODE}
+			</if>
+		</foreach>
+	</update>
+
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		where
+		BILL_CODE = #{BILL_CODE}
+	</select>
+
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		where 1=1
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+			(
+			<!-- 根据需求自己加检索条件 字段1 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') or 字段2 
+				LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') -->
+			)
+		</if>
+	</select>
+
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+	</select>
+
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where
+		BILL_CODE in
+		<foreach item="item" index="index" collection="array" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+</mapper>

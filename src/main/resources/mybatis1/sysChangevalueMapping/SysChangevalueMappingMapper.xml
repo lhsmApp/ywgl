@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SysChangevalueMappingMapper">
+
+	<!--表名    -->
+	<sql id="tableName">
+		tb_sys_changevalue_mapping
+	</sql>
+	<!--表名 -->
+	<sql id="tableDataInputName">
+		tb_data_input
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		TYPE_CODE,
+		BILL_OFF,
+		DEPT_CODE,
+		MAPPING_CODE
+	</sql>
+	<sql id="FieldSelectKey">
+		,TYPE_CODE TYPE_CODE__,
+		BILL_OFF BILL_OFF__,
+		DEPT_CODE DEPT_CODE__,
+		MAPPING_CODE MAPPING_CODE__
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{TYPE_CODE},
+		#{BILL_OFF},
+		#{DEPT_CODE},
+		#{MAPPING_CODE}
+	</sql>
+	<sql id="FieldValueItem">
+		#{item.TYPE_CODE},
+		#{item.BILL_OFF},
+		#{item.DEPT_CODE},
+		#{item.MAPPING_CODE}
+	</sql>
+
+	<!-- 列表 -->
+	<select id="datalistJqPage" parameterType="jqPage" resultType="pd">
+		select 
+		    <include refid="Field"></include>
+		    <include refid="FieldSelectKey"></include>
+		from <include refid="tableName"></include>
+		<where>
+		    <if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			   ${pd.filterWhereResult}
+		    </if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+		</where>
+		<if test="sidx != null and sidx.trim() != ''" >
+			order by ${sidx} ${sord} 
+    	</if>
+		<if test="currentResult != null and rowNum != null" >           
+              limit #{currentResult}, #{rowNum} 
+        </if>
+	</select>
+	<select id="countJqGridExtend" parameterType="jqPage" resultType="int">
+		select count(*)
+		from <include refid="tableName"></include>
+		<where>
+		    <if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			   ${pd.filterWhereResult}
+		    </if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+		</where>
+	</select>
+
+	<!-- 用于判断数据是否重复 -->
+	<select id="getRepeatList" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+        <where>
+		<foreach item="item" index="index" collection="list" open=" " separator=" or " close=" ">
+            ((TYPE_CODE = #{item.TYPE_CODE} and BILL_OFF = #{item.BILL_OFF} and DEPT_CODE = #{item.DEPT_CODE} and MAPPING_CODE = #{item.MAPPING_CODE})
+             and (TYPE_CODE != #{item.TYPE_CODE__} or BILL_OFF != #{item.BILL_OFF__} or DEPT_CODE != #{item.DEPT_CODE__} or MAPPING_CODE != #{item.MAPPING_CODE__}))
+		</foreach>
+		</where>
+	</select>
+	
+	<!-- 用于判断数据是否有下一步，可否删除或修改 -->
+	<select id="getDelChangeValueList" parameterType="pd" resultType="pd">
+		select *
+		from 
+		<include refid="tableDataInputName"></include>
+        <where>
+		  <foreach item="item" index="index" collection="list" open="(" separator=" or " close=")">
+            ( BUSI_DATE = #{item.BUSI_DATE}
+              and TYPE_CODE = #{item.TYPE_CODE__}
+              and BILL_OFF = #{item.BILL_OFF__}
+              and DEPT_CODE = #{item.DEPT_CODE__}
+              and CHANGE_COL = #{item.MAPPING_CODE__}
+              and DATA_VALUE != 0)
+		  </foreach>
+        </where>
+	</select>
+	<select id="getUpdateChangeValueList" parameterType="pd" resultType="pd">
+		select *
+		from 
+		<include refid="tableDataInputName"></include>
+        <where>
+		  <foreach item="item" index="index" collection="list" open=" " separator=" or " close=" ">
+            (BUSI_DATE = #{item.BUSI_DATE} and TYPE_CODE = #{item.TYPE_CODE} and BILL_OFF = #{item.BILL_OFF} and DEPT_CODE = #{item.DEPT_CODE}
+             and DATA_VALUE != 0
+             and CHANGE_COL != #{item.MAPPING_CODE} and CHANGE_COL = #{item.MAPPING_CODE__})
+		  </foreach>
+        </where>
+	</select>
+	
+	<update id="batchDelAndIns" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		<foreach item="item" index="index" collection="list" open=" (" separator=" or " close=") ">
+		    TYPE_CODE = #{item.TYPE_CODE__} 
+		    and BILL_OFF = #{item.BILL_OFF__}
+		    and DEPT_CODE = #{item.DEPT_CODE__}
+		    and MAPPING_CODE = #{item.MAPPING_CODE__}
+		</foreach>;
+		
+		<foreach item="item" index="index" collection="list" open=" " separator=" " close=" ">
+		    insert into <include refid="tableName"></include>
+		    (<include refid="Field"></include>) values (<include refid="FieldValueItem"></include>);
+		</foreach>
+	</update>
+
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		<foreach item="item" index="index" collection="list" open=" (" separator=" or " close=") ">
+		    TYPE_CODE = #{item.TYPE_CODE__} 
+		    and BILL_OFF = #{item.BILL_OFF__}
+		    and DEPT_CODE = #{item.DEPT_CODE__}
+		    and MAPPING_CODE = #{item.MAPPING_CODE__}
+		</foreach>
+	</delete>
+	
+	<!-- 设置值界面下拉列表选项 -->
+	<select id="getSelectBillOffList" parameterType="pd" resultType="com.fh.entity.system.Dictionaries">
+		select DISTINCT
+		BILL_OFF DICT_CODE, IFNULL(ZT.NAME, ' ') NAME
+		from <include refid="tableName"></include> t 
+		left join (select DICT_CODE, NAME from sys_dictionaries where PARENT_CODE = 'FMISACC') ZT
+		on t.BILL_OFF = ZT.DICT_CODE
+	</select>
+	<select id="getSelectTypeCodeList" parameterType="pd" resultType="com.fh.entity.system.Dictionaries">
+		select DISTINCT
+		TYPE_CODE DICT_CODE, IFNULL(PZ.NAME, ' ') NAME
+		from <include refid="tableName"></include> t 
+		left join (select DICT_CODE, NAME from sys_dictionaries where PARENT_CODE = 'PZTYPE') PZ
+		on t.TYPE_CODE = PZ.DICT_CODE
+        where BILL_OFF = #{BILL_OFF}
+	</select>
+	<select id="getSelectDeptCodeList" parameterType="pd" resultType="com.fh.entity.system.Dictionaries">
+		select DISTINCT
+		DEPT_CODE DICT_CODE, IFNULL(DEPT.NAME, ' ') NAME
+		from <include refid="tableName"></include> t 
+		left join oa_department DEPT on t.DEPT_CODE = DEPT.DEPARTMENT_CODE
+        where BILL_OFF = #{BILL_OFF}
+		and TYPE_CODE = #{TYPE_CODE}
+	</select>
+	<select id="getSelectMapCodeList" parameterType="pd" resultType="com.fh.entity.system.Dictionaries">
+		select DISTINCT
+		MAPPING_CODE DICT_CODE, IFNULL(MP.NAME, ' ') NAME
+		from <include refid="tableName"></include> t 
+		left join (select DICT_CODE, NAME from sys_dictionaries where PARENT_CODE = 'CHANGEVALUE') MP
+		on t.MAPPING_CODE = MP.DICT_CODE
+        where BILL_OFF = #{BILL_OFF}
+		and TYPE_CODE = #{TYPE_CODE}
+		and DEPT_CODE = #{DEPT_CODE}
+	</select>
+	
+	<!-- 获取复制的单位列表 -->
+	<select id="getCopyDeptList" parameterType="pd" resultType="com.fh.entity.system.Department">
+		select DISTINCT
+		DEPT_CODE DEPARTMENT_CODE, IFNULL(DEPT.NAME, ' ') NAME
+		from <include refid="tableName"></include> t 
+		left join oa_department DEPT on t.DEPT_CODE = DEPT.DEPARTMENT_CODE
+		
+        where BILL_OFF = #{SelectedCustCol7}
+		and TYPE_CODE = #{SelectedTypeCode}
+		and MAPPING_CODE in (select MAPPING_CODE 
+		                     from <include refid="tableName"></include> 
+		                     where BILL_OFF = #{SelectedCustCol7}
+		                     and TYPE_CODE = #{SelectedTypeCode}
+		                     and DEPT_CODE = #{SelectedDepartCode} 
+		                     ) 
+	</select>
+	
+	<select id="getDataInputCheckHavaList" parameterType="pd" resultType="pd">
+		select DISTINCT
+		MAPPING_CODE DICT_CODE, IFNULL(MP.NAME, ' ') NAME
+		from <include refid="tableName"></include> t 
+		left join (select DICT_CODE, NAME from sys_dictionaries where PARENT_CODE = 'CHANGEVALUE') MP
+		on t.MAPPING_CODE = MP.DICT_CODE
+		where
+		<foreach item="item" index="index" collection="list" open=" (" separator=" or " close=") ">
+		    TYPE_CODE = #{item.TYPE_CODE} 
+		    and BILL_OFF = #{item.BILL_OFF}
+		    and DEPT_CODE = #{item.DEPT_CODE}
+		    and MAPPING_CODE = #{item.CHANGE_COL}
+		</foreach>
+	</select>
+</mapper>

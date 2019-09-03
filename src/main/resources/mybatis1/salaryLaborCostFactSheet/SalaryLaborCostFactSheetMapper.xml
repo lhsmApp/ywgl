@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SalaryLaborCostFactSheetMapper">
+
+	<!--表名 -->
+	<sql id="tableNameDetail">
+	    view_staff_rpt_detail
+	</sql>
+	<sql id="tableNameTotal">
+	    view_staff_rpt_total
+	</sql>
+
+	<!-- 列表 -->
+	<select id="getRptDetailList" parameterType="jqPage" resultType="pd">
+		select *
+		from <include refid="tableNameDetail"></include>
+		<where>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+		</where>
+	</select>
+	<select id="getRptTotalList" parameterType="jqPage" resultType="pd">
+		select *
+		from <include refid="tableNameTotal"></include>
+		<where>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+		</where>
+	</select>
+</mapper>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="GlItemUserMapper">
+	
+<!-- 
+ * 说明： 在建工程信息维护
+ * 创建人：zhangxiaoliu
+ * 创建时间：2018-08-17
+ * @version
+ -->
+ 
+	<!--表名 -->
+	<sql id="tableName">
+		TB_GL_ITEM_USER
+	</sql>
+	
+	<!-- 列表 -->
+	<select id="datalistJqPage" parameterType="jqPage" resultType="pd">
+		select 
+		    * 
+		    <if test="pd.FieldSelectKey!= null and pd.FieldSelectKey != ''">
+		        ${pd.FieldSelectKey}
+		    </if>
+		from <include refid="tableName"></include>
+		<where>
+		    <if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			    ${pd.filterWhereResult}
+		    </if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+		</where>
+		<if test="sidx != null and sidx.trim() != ''" >
+			order by ${sidx} ${sord} 
+    	</if>
+		<!-- <if test="currentResult != null and rowNum != null" >           
+              limit #{currentResult}, #{rowNum} 
+        </if> -->
+	</select>
+	<select id="countJqGridExtend" parameterType="jqPage" resultType="int">
+		select count(*) 
+		from <include refid="tableName"></include> 
+		<where>
+		    <if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			    ${pd.filterWhereResult}
+		    </if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+		</where>
+	</select>
+
+	<!-- 列表 -->
+	<select id="getRepeatList" parameterType="pd" resultType="pd">
+		select *
+		from <include refid="tableName"></include>
+        <where>
+		<foreach item="item" index="index" collection="list" open=" " separator=" or " close=" ">
+            ((BUSI_DATE = #{item.BUSI_DATE} and BILL_OFF = #{item.BILL_OFF} and USER_CODE = #{item.USER_CODE})<!-- and DEPT_CODE = #{item.DEPT_CODE} -->
+             and (BUSI_DATE != #{item.BUSI_DATE__} or BILL_OFF != #{item.BILL_OFF__} or USER_CODE != #{item.USER_CODE__}))<!-- or DEPT_CODE != #{item.DEPT_CODE__} -->
+		</foreach>
+		</where>
+	</select>
+		
+	<update id="batchDelAndIns" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		<foreach item="item" index="index" collection="list" open=" (" separator=" or " close=") ">
+		    BUSI_DATE = #{item.BUSI_DATE__} 
+		    and BILL_OFF = #{item.BILL_OFF__}
+		    <!-- and DEPT_CODE = #{item.DEPT_CODE__} -->
+		    and USER_CODE = #{item.USER_CODE__}
+		</foreach>;
+		
+		delete from
+		<include refid="tableName"></include>
+		where
+		<foreach item="item" index="index" collection="list" open=" (" separator=" or " close=") ">
+		    BUSI_DATE = #{item.BUSI_DATE} 
+		    and BILL_OFF = #{item.BILL_OFF}
+		    <!-- and DEPT_CODE = #{item.DEPT_CODE} -->
+		    and USER_CODE = #{item.USER_CODE}
+		</foreach>;
+		
+		<foreach item="item" index="index" collection="list" open=" " separator=" " close=" ">
+		    insert into <include refid="tableName"></include>
+		    (${item.InsertField}) values (${item.InsertVale});
+		</foreach>
+	</update>
+
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		<foreach item="item" index="index" collection="list" open=" (" separator=" or " close=") ">
+		    BUSI_DATE = #{item.BUSI_DATE__} 
+		    and BILL_OFF = #{item.BILL_OFF__}
+		    <!-- and DEPT_CODE = #{item.DEPT_CODE__} -->
+		    and USER_CODE = #{item.USER_CODE__}
+		</foreach>
+	</delete>
+	
+	<!-- 导出列表 -->
+	<select id="exportList" parameterType="jqPage" resultType="pd">
+		select * 
+		from <include refid="tableName"></include>
+		<where>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+		</where>
+		<if test="sidx != null" >
+			order by ${sidx} ${sord} 
+    	</if>
+	</select>
+	<!-- 导出模板 -->
+	<select id="exportModel" parameterType="pd" resultType="pd">
+		select * 
+		from <include refid="tableName"></include>
+		<where>
+		    <if test="QueryFeild!= null and QueryFeild != ''">
+		        ${QueryFeild}
+		    </if>
+		</where>
+		limit 1
+	</select>
+
+    
+	<!-- 获取汇总要用数据 -->
+	<select id="getSumUseList" parameterType="pd" resultType="pd">
+		select * 
+		from <include refid="tableName"></include>
+		<where>
+		    <if test="QueryFeild!= null and QueryFeild != ''">
+		        ${QueryFeild}
+		    </if>
+		</where>
+	</select>
+</mapper>

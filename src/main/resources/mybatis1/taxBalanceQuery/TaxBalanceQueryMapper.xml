@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TaxBalanceQueryMapper">
+	
+<!-- 
+ * 说明： 个税差额查询
+ * 创建人：jiachao
+ * 创建时间：2019-08-10
+ * @version
+ -->
+	
+	<!-- 列表 -->
+	<select id="datalistJqPage" parameterType="jqPage" resultType="pd">
+		SELECT A.*,tax01.*,tax02.*,tax03.*,tax04.*,tax05.*,tax06.*,tax07.*,tax08.*,tax09.*,tax10.*,tax11.*,tax12.*,
+		taxStaffDetail.ACT_SALY_HJ,taxStaffDetail.ACCRD_TAX_HJ,
+		taxLaborDetail.LABOR_ACT_SALY_HJ,taxLaborDetail.LABOR_ACCRD_TAX_HJ,taxExt.ACCRD_TEX_EXT,
+		(taxStaffDetail.ACT_SALY_HJ+taxLaborDetail.LABOR_ACT_SALY_HJ) ACT_SALY,
+		(taxStaffDetail.ACCRD_TAX_HJ+taxLaborDetail.LABOR_ACCRD_TAX_HJ) ACCRD_TAX,
+		(taxStaffDetail.ACCRD_TAX_HJ+taxLaborDetail.LABOR_ACCRD_TAX_HJ-taxExt.ACCRD_TEX_EXT) TAX_BALANCE
+		FROM tb_bankcard_info A
+		<!-- tax01 -->
+		LEFT JOIN
+			 (SELECT
+			 X.USER_CODE, 
+		     X.STAFF_IDENT,
+		     X.ACT_SALY ACT_SALY1,
+		     X.ACCRD_TAX ACCRD_TAX1,
+		     Y.ACT_SALY LABOR_ACT_SALY1,
+		     Y.ACCRD_TAX LABOR_ACCRD_TAX1
+		     FROM
+		     tb_tax_staff_detail X
+		     JOIN tb_tax_labor_detail Y
+		     ON X.STAFF_IDENT=Y.STAFF_IDENT
+		     AND X.CUST_COL7=Y.BILL_OFF
+		     AND X.BUSI_DATE=Y.BUSI_DATE
+		     <where>
+			     <if test="pd.SelectedCustCol7!= null and pd.SelectedCustCol7 != ''">
+			     	AND X.CUST_COL7 = #{pd.SelectedCustCol7}
+			     </if> 
+			     <if test="pd.DeptSqlIn!= null and pd.DeptSqlIn != ''">
+			        AND X.DEPT_CODE IN (${pd.DeptSqlIn}) 
+			     </if> 
+		     	 AND X.BUSI_DATE = '${pd.SelectedBusiDateYear}01'
+		     </where>
+		     ) tax01
+		 	 ON A.STAFF_IDENT = tax01.USER_CODE
+		<!-- tax02 -->
+	 	LEFT JOIN 
+		    (SELECT
+		     X.USER_CODE,  
+		     X.STAFF_IDENT,
+		     X.ACT_SALY ACT_SALY2,
+		     X.ACCRD_TAX ACCRD_TAX2,
+		     Y.ACT_SALY LABOR_ACT_SALY2,
+		     Y.ACCRD_TAX LABOR_ACCRD_TAX2
+		     FROM
+		     tb_tax_staff_detail X
+		     JOIN tb_tax_labor_detail Y
+		     ON X.STAFF_IDENT=Y.STAFF_IDENT
+		     AND X.CUST_COL7=Y.BILL_OFF
+		     AND X.BUSI_DATE=Y.BUSI_DATE
+		     <where>
+			     <if test="pd.SelectedCustCol7!= null and pd.SelectedCustCol7 != ''">
+			     	AND X.CUST_COL7 = #{pd.SelectedCustCol7} 
+			     </if>
+			     <if test="pd.DeptSqlIn!= null and pd.DeptSqlIn != ''">
+			        AND X.DEPT_CODE IN (${pd.DeptSqlIn}) 
+			     </if>
+			     AND X.BUSI_DATE = '${pd.SelectedBusiDateYear}02'
+		     </where>
+		     ) tax02
+		     ON A.STAFF_IDENT = tax02.USER_CODE  
+		     
+		<!-- tax03 -->     
+     	LEFT JOIN 
+		    (SELECT
+		     X.USER_CODE,  
+		     X.STAFF_IDENT,
+		     X.ACT_SALY ACT_SALY3,
+		     X.ACCRD_TAX ACCRD_TAX3,
+		     Y.ACT_SALY LABOR_ACT_SALY3,
+		     Y.ACCRD_TAX LABOR_ACCRD_TAX3
+		     FROM
+		     tb_tax_staff_detail X
+		     JOIN tb_tax_labor_detail Y
+		     ON X.STAFF_IDENT=Y.STAFF_IDENT
+		     AND X.CUST_COL7=Y.BILL_OFF
+		     AND X.BUSI_DATE=Y.BUSI_DATE
+		     <where>
+			     <if test="pd.SelectedCustCol7!= null and pd.SelectedCustCol7 != ''">
+			     	AND X.CUST_COL7 = #{pd.SelectedCustCol7} 
+			     </if>
+			     <if test="pd.DeptSqlIn!= null and pd.DeptSqlIn != ''">
+			        AND X.DEPT_CODE IN (${pd.DeptSqlIn}) 
+			     </if>
+			     AND X.BUSI_DATE = '${pd.SelectedBusiDateYear}03'
+		     </where>
+		     ) tax03
+		     ON A.STAFF_IDENT = tax03.USER_CODE  
+	    <!-- tax04 -->     
+     	LEFT JOIN 
+		    (SELECT 
+		     X.USER_CODE, 
+		     X.STAFF_IDENT,
+		     X.ACT_SALY ACT_SALY4,
+		     X.ACCRD_TAX ACCRD_TAX4,
+		     Y.ACT_SALY LABOR_ACT_SALY4,
+		     Y.ACCRD_TAX LABOR_ACCRD_TAX4
+		     FROM
+		     tb_tax_staff_detail X
+		     JOIN tb_tax_labor_detail Y
+		     ON X.STAFF_IDENT=Y.STAFF_IDENT
+		     AND X.CUST_COL7=Y.BILL_OFF
+		     AND X.BUSI_DATE=Y.BUSI_DATE
+		     <where>
+			     <if test="pd.SelectedCustCol7!= null and pd.SelectedCustCol7 != ''">
+			     	AND X.CUST_COL7 = #{pd.SelectedCustCol7} 
+			     </if>
+			     <if test="pd.DeptSqlIn!= null and pd.DeptSqlIn != ''">
+			        AND X.DEPT_CODE IN (${pd.DeptSqlIn}) 
+			     </if>
+			     AND X.BUSI_DATE = '${pd.SelectedBusiDateYear}04'
+		     </where>
+		     ) tax04
+		     ON A.STAFF_IDENT = tax04.USER_CODE 
+		     
+	    <!-- tax05 -->     
+     	LEFT JOIN 
+		    (SELECT 
+		     X.USER_CODE, 
+		     X.STAFF_IDENT,
+		     X.ACT_SALY ACT_SALY5,
+		     X.ACCRD_TAX ACCRD_TAX5,
+		     Y.ACT_SALY LABOR_ACT_SALY5,
+		     Y.ACCRD_TAX LABOR_ACCRD_TAX5
+		     FROM
+		     tb_tax_staff_detail X
+		     JOIN tb_tax_labor_detail Y
+		     ON X.STAFF_IDENT=Y.STAFF_IDENT
+		     AND X.CUST_COL7=Y.BILL_OFF
+		     AND X.BUSI_DATE=Y.BUSI_DATE
+		     <where>
+			     <if test="pd.SelectedCustCol7!= null and pd.SelectedCustCol7 != ''">
+			     	AND X.CUST_COL7 = #{pd.SelectedCustCol7} 
+			     </if>
+			     <if test="pd.DeptSqlIn!= null and pd.DeptSqlIn != ''">
+			        AND X.DEPT_CODE IN (${pd.DeptSqlIn}) 
+			     </if>
+			     AND X.BUSI_DATE = '${pd.SelectedBusiDateYear}05'
+		     </where>
+		     ) tax05
+		     ON A.STAFF_IDENT = tax05.USER_CODE  
+		     
+	    <!-- tax06 -->     
+     	LEFT JOIN 
+		    (SELECT 
+		     X.USER_CODE, 
+		     X.STAFF_IDENT,
+		     X.ACT_SALY ACT_SALY6,
+		     X.ACCRD_TAX ACCRD_TAX6,
+		     Y.ACT_SALY LABOR_ACT_SALY6,
+		     Y.ACCRD_TAX LABOR_ACCRD_TAX6
+		     FROM
+		     tb_tax_staff_detail X
+		     JOIN tb_tax_labor_detail Y
+		     ON X.STAFF_IDENT=Y.STAFF_IDENT
+		     AND X.CUST_COL7=Y.BILL_OFF
+		     AND X.BUSI_DATE=Y.BUSI_DATE
+		     <where>
+			     <if test="pd.SelectedCustCol7!= null and pd.SelectedCustCol7 != ''">
+			     	AND X.CUST_COL7 = #{pd.SelectedCustCol7} 
+			     </if>
+			     <if test="pd.DeptSqlIn!= null and pd.DeptSqlIn != ''">
+			        AND X.DEPT_CODE IN (${pd.DeptSqlIn}) 
+			     </if>
+			     AND X.BUSI_DATE = '${pd.SelectedBusiDateYear}06'
+		     </where>
+		     ) tax06
+		     ON A.STAFF_IDENT = tax06.USER_CODE 
+		     
+	    <!-- tax07 -->     
+     	LEFT JOIN 
+		    (SELECT 
+		     X.USER_CODE, 
+		     X.STAFF_IDENT,
+		     X.ACT_SALY ACT_SALY7,
+		     X.ACCRD_TAX ACCRD_TAX7,
+		     Y.ACT_SALY LABOR_ACT_SALY7,
+		     Y.ACCRD_TAX LABOR_ACCRD_TAX7
+		     FROM
+		     tb_tax_staff_detail X
+		     JOIN tb_tax_labor_detail Y
+		     ON X.STAFF_IDENT=Y.STAFF_IDENT
+		     AND X.CUST_COL7=Y.BILL_OFF
+		     AND X.BUSI_DATE=Y.BUSI_DATE
+		     <where>
+			     <if test="pd.SelectedCustCol7!= null and pd.SelectedCustCol7 != ''">
+			     	AND X.CUST_COL7 = #{pd.SelectedCustCol7} 
+			     </if>
+			     <if test="pd.DeptSqlIn!= null and pd.DeptSqlIn != ''">
+			        AND X.DEPT_CODE IN (${pd.DeptSqlIn}) 
+			     </if>
+			     AND X.BUSI_DATE = '${pd.SelectedBusiDateYear}07'
+		     </where>
+		     ) tax07
+		     ON A.STAFF_IDENT = tax07.USER_CODE   
+		     
+	    <!-- tax08 -->     
+     	LEFT JOIN 
+		    (SELECT 
+		     X.USER_CODE, 
+		     X.STAFF_IDENT,
+		     X.ACT_SALY ACT_SALY8,
+		     X.ACCRD_TAX ACCRD_TAX8,
+		     Y.ACT_SALY LABOR_ACT_SALY8,
+		     Y.ACCRD_TAX LABOR_ACCRD_TAX8
+		     FROM
+		     tb_tax_staff_detail X
+		     JOIN tb_tax_labor_detail Y
+		     ON X.STAFF_IDENT=Y.STAFF_IDENT
+		     AND X.CUST_COL7=Y.BILL_OFF
+		     AND X.BUSI_DATE=Y.BUSI_DATE
+		     <where>
+			     <if test="pd.SelectedCustCol7!= null and pd.SelectedCustCol7 != ''">
+			     	AND X.CUST_COL7 = #{pd.SelectedCustCol7} 
+			     </if>
+			     <if test="pd.DeptSqlIn!= null and pd.DeptSqlIn != ''">
+			        AND X.DEPT_CODE IN (${pd.DeptSqlIn}) 
+			     </if>
+			     AND X.BUSI_DATE = '${pd.SelectedBusiDateYear}08'
+		     </where>
+		     ) tax08
+		     ON A.STAFF_IDENT = tax08.USER_CODE 
+	    <!-- tax09 -->     
+     	LEFT JOIN 
+		    (SELECT 
+		     X.USER_CODE, 
+		     X.STAFF_IDENT,
+		     X.ACT_SALY ACT_SALY9,
+		     X.ACCRD_TAX ACCRD_TAX9,
+		     Y.ACT_SALY LABOR_ACT_SALY9,
+		     Y.ACCRD_TAX LABOR_ACCRD_TAX9
+		     FROM
+		     tb_tax_staff_detail X
+		     JOIN tb_tax_labor_detail Y
+		     ON X.STAFF_IDENT=Y.STAFF_IDENT
+		     AND X.CUST_COL7=Y.BILL_OFF
+		     AND X.BUSI_DATE=Y.BUSI_DATE
+		     <where>
+			     <if test="pd.SelectedCustCol7!= null and pd.SelectedCustCol7 != ''">
+			     	AND X.CUST_COL7 = #{pd.SelectedCustCol7} 
+			     </if>
+			     <if test="pd.DeptSqlIn!= null and pd.DeptSqlIn != ''">
+			        AND X.DEPT_CODE IN (${pd.DeptSqlIn}) 
+			     </if>
+			     AND X.BUSI_DATE = '${pd.SelectedBusiDateYear}09'
+		     </where>
+		     ) tax09
+		     ON A.STAFF_IDENT = tax09.USER_CODE  
+		     
+	    <!-- tax10 -->     
+     	LEFT JOIN 
+		    (SELECT 
+		     X.USER_CODE, 
+		     X.STAFF_IDENT,
+		     X.ACT_SALY ACT_SALY10,
+		     X.ACCRD_TAX ACCRD_TAX10,
+		     Y.ACT_SALY LABOR_ACT_SALY10,
+		     Y.ACCRD_TAX LABOR_ACCRD_TAX10
+		     FROM
+		     tb_tax_staff_detail X
+		     JOIN tb_tax_labor_detail Y
+		     ON X.STAFF_IDENT=Y.STAFF_IDENT
+		     AND X.CUST_COL7=Y.BILL_OFF
+		     AND X.BUSI_DATE=Y.BUSI_DATE
+		     <where>
+			     <if test="pd.SelectedCustCol7!= null and pd.SelectedCustCol7 != ''">
+			     	AND X.CUST_COL7 = #{pd.SelectedCustCol7} 
+			     </if>
+			     <if test="pd.DeptSqlIn!= null and pd.DeptSqlIn != ''">
+			        AND X.DEPT_CODE IN (${pd.DeptSqlIn}) 
+			     </if>
+			     AND X.BUSI_DATE = '${pd.SelectedBusiDateYear}10'
+		     </where>
+		     ) tax10
+		     ON A.STAFF_IDENT = tax10.USER_CODE 
+		     
+	    <!-- tax11 -->     
+     	LEFT JOIN 
+		    (SELECT 
+		     X.USER_CODE, 
+		     X.STAFF_IDENT,
+		     X.ACT_SALY ACT_SALY11,
+		     X.ACCRD_TAX ACCRD_TAX11,
+		     Y.ACT_SALY LABOR_ACT_SALY11,
+		     Y.ACCRD_TAX LABOR_ACCRD_TAX11
+		     FROM
+		     tb_tax_staff_detail X
+		     JOIN tb_tax_labor_detail Y
+		     ON X.STAFF_IDENT=Y.STAFF_IDENT
+		     AND X.CUST_COL7=Y.BILL_OFF
+		     AND X.BUSI_DATE=Y.BUSI_DATE
+		     <where>
+			     <if test="pd.SelectedCustCol7!= null and pd.SelectedCustCol7 != ''">
+			     	AND X.CUST_COL7 = #{pd.SelectedCustCol7} 
+			     </if>
+			     <if test="pd.DeptSqlIn!= null and pd.DeptSqlIn != ''">
+			        AND X.DEPT_CODE IN (${pd.DeptSqlIn}) 
+			     </if>
+			     AND X.BUSI_DATE = '${pd.SelectedBusiDateYear}11'
+		     </where>
+		     ) tax11
+		     ON A.STAFF_IDENT = tax11.USER_CODE  
+		     
+	    <!-- tax12 -->     
+     	LEFT JOIN 
+		    (SELECT 
+		     X.USER_CODE, 
+		     X.STAFF_IDENT,
+		     X.ACT_SALY ACT_SALY12,
+		     X.ACCRD_TAX ACCRD_TAX12,
+		     Y.ACT_SALY LABOR_ACT_SALY12,
+		     Y.ACCRD_TAX LABOR_ACCRD_TAX12
+		     FROM
+		     tb_tax_staff_detail X
+		     JOIN tb_tax_labor_detail Y
+		     ON X.STAFF_IDENT=Y.STAFF_IDENT
+		     AND X.CUST_COL7=Y.BILL_OFF
+		     AND X.BUSI_DATE=Y.BUSI_DATE
+		     <where>
+			     <if test="pd.SelectedCustCol7!= null and pd.SelectedCustCol7 != ''">
+			     	AND X.CUST_COL7 = #{pd.SelectedCustCol7} 
+			     </if>
+			     <if test="pd.DeptSqlIn!= null and pd.DeptSqlIn != ''">
+			        AND X.DEPT_CODE IN (${pd.DeptSqlIn}) 
+			     </if>
+			     AND X.BUSI_DATE = '${pd.SelectedBusiDateYear}12'
+		     </where>
+		     ) tax12
+		     ON A.STAFF_IDENT = tax12.USER_CODE   
+		      
+		 LEFT JOIN 
+		     (SELECT
+		     USER_CODE, 
+		     STAFF_IDENT, 
+		     SUM(ACT_SALY) ACT_SALY_HJ,
+		     SUM(ACCRD_TAX) ACCRD_TAX_HJ  
+		     FROM tb_tax_staff_detail
+		     <where>
+			     <if test="pd.SelectedCustCol7!= null and pd.SelectedCustCol7 != ''">
+			     	AND CUST_COL7 = #{pd.SelectedCustCol7}
+			     </if>
+			     <if test="pd.DeptSqlIn!= null and pd.DeptSqlIn != ''">
+			        AND DEPT_CODE IN (${pd.DeptSqlIn}) 
+			     </if> 
+			     AND BUSI_DATE>='${pd.SelectedBusiDateYear}01'
+		     	 AND BUSI_DATE&lt;=#{pd.SelectedBusiDate}
+		     </where>
+		     GROUP BY USER_CODE,STAFF_IDENT) taxStaffDetail 
+		     ON A.STAFF_IDENT=taxStaffDetail.USER_CODE
+		     
+	     LEFT JOIN 
+		     (SELECT
+		     STAFF_IDENT, 
+		     SUM(ACT_SALY) LABOR_ACT_SALY_HJ,
+		     SUM(ACCRD_TAX) LABOR_ACCRD_TAX_HJ  
+		     FROM tb_tax_labor_detail
+		     <where>
+			     <if test="pd.SelectedCustCol7!= null and pd.SelectedCustCol7 != ''">
+			     	AND BILL_OFF = #{pd.SelectedCustCol7} 
+			     </if>
+			     <if test="pd.DeptSqlIn!= null and pd.DeptSqlIn != ''">
+			        AND DEPT_CODE IN (${pd.DeptSqlIn}) 
+			     </if>
+			     AND BUSI_DATE>='${pd.SelectedBusiDateYear}01'
+			     AND BUSI_DATE&lt;=#{pd.SelectedBusiDate}
+		     </where>
+		     GROUP BY STAFF_IDENT) taxLaborDetail 
+ 			 ON taxStaffDetail.STAFF_IDENT=taxLaborDetail.STAFF_IDENT
+ 			 
+		 LEFT JOIN 
+		     (SELECT
+		     STAFF_IDENT, 
+		     SUM(ACCRD_TAX) ACCRD_TEX_EXT  
+		     FROM tb_tax_external_system_data
+		     <where>
+			     <if test="pd.SelectedCustCol7!= null and pd.SelectedCustCol7 != ''">
+			        AND BILL_OFF = #{pd.SelectedCustCol7} 
+			     </if>
+			     <if test="pd.DeptSqlIn!= null and pd.DeptSqlIn != ''">
+			        AND DEPT_CODE IN (${pd.DeptSqlIn}) 
+			     </if>
+			     AND BUSI_DATE>='${pd.SelectedBusiDateYear}01'
+			     AND BUSI_DATE&lt;=#{pd.SelectedBusiDate}
+		     </where>
+		     GROUP BY STAFF_IDENT) taxExt 
+		 ON taxStaffDetail.STAFF_IDENT=taxExt.STAFF_IDENT
+		    
+		<if test="sidx != null and sidx.trim() != ''" >
+			order by ${sidx} ${sord} 
+    	</if>
+    	<if test="currentResult != null and rowNum != null" >           
+              limit #{currentResult}, #{rowNum} 
+        </if>
+	</select>
+	<select id="countJqGridExtend" parameterType="jqPage" resultType="int">
+		<!-- select count(*) 
+		from <include refid="tableName"></include> 
+		<where>
+		    <if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''">关键词检索
+			    ${pd.filterWhereResult}
+		    </if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+		</where> -->
+		select count(*) from tb_bankcard_info
+	</select>
+	
+	<!-- 导出列表 -->
+	<select id="exportList" parameterType="jqPage" resultType="pd">
+		
+	</select>
+</mapper>

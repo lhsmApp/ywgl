@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SysStruMappingMapper">
+
+	<!--表名 -->
+	<sql id="tableName">
+		tb_sys_stru_mapping
+	</sql>
+	
+	<!-- Name	Code	Comment	Default Value	Data Type	Length	Precision	Primary	Foreign Key	Mandatory
+业务类型	TYPE_CODE	"业务类型1工会经费、教育经费凭证2党费凭证3社保互推凭证4公积金互推凭证5个缴凭证6应付劳务费凭证7企业年金提取凭证8补充医疗提取凭证9企业年金发放凭证10评估调整凭证"	' '	VARCHAR(20)	20		TRUE	FALSE	TRUE
+业务表	TABLE_NAME	业务表	' '	VARCHAR(30)	30		TRUE	FALSE	TRUE
+映射业务表	TABLE_NAME_MAPPING	映射业务表	' '	VARCHAR(30)	30		FALSE	FALSE	TRUE
+业务表列编码	COL_CODE	业务表列编码	’ ‘	VARCHAR(20)	20		FALSE	FALSE	TRUE
+映射列列编码	COL_MAPPING_CODE	映射列列编码	’ ‘	VARCHAR(20)	20		FALSE	FALSE	TRUE
+映射名称	COL_MAPPING_NAME	映射名称	’ ‘	VARCHAR(30)	30		FALSE	FALSE	TRUE
+业务表列值	COL_VALUE	业务表列值	’ ‘	VARCHAR(40)	40		FALSE	FALSE	TRUE
+业务表列值	COL_MAPPING_VALUE	业务表列值	’ ‘	VARCHAR(40)	40		FALSE	FALSE	TRUE
+账套	BILL_OFF	账套	‘ ’	VARCHAR(6)	6		TRUE	FALSE	TRUE
+业务期间	BUSI_DATE	业务期间	‘ ’	VARCHAR(8)	8		TRUE	FALSE	TRUE
+映射列显示序号	DISP_ORDER	映射列显示序号	0	integer			FALSE	FALSE	TRUE
+映射列位数	COL_DGT	映射列数值位数	10	integer			FALSE	FALSE	TRUE
+映射列小数位数	DEC_PRECISION	映射列小数位数		integer			FALSE	FALSE	TRUE
+字典翻译	DICT_TRANS	字典翻译	' '	VARCHAR(30)	30		FALSE	FALSE	TRUE
+列隐藏	COL_HIDE	"列隐藏0隐藏 1显示 默认1"	'1'	CHAR(1)	1		FALSE	FALSE	TRUE
+列汇总	COL_SUM	"列汇总1汇总 0不汇总,默认0"	'0'	CHAR(1)	1		FALSE	FALSE	TRUE
+列平均值	COL_AVE	"列平均值0不计算 1计算 默认0"	'0'	CHAR(1)	1		FALSE	FALSE	TRUE
+列传输	COL_TRANSFER			VARCHAR(1)	1		FALSE	FALSE	TRUE 
+列启用 COL_ENABLE 列启用 1启用0停用	'1'	CHAR(1)	1		FALSE	FALSE	TRUE-->
+
+	<!-- 字段 -->
+	<sql id="Field"><!-- BILL_STATE -->
+		TYPE_CODE, BILL_OFF, BUSI_DATE, TABLE_NAME, TABLE_NAME_MAPPING, 
+		COL_CODE, COL_MAPPING_CODE, COL_MAPPING_NAME, COL_VALUE, COL_MAPPING_VALUE, DISP_ORDER, 
+		COL_DGT, DEC_PRECISION, DICT_TRANS, COL_HIDE, COL_SUM, COL_AVE, COL_TRANSFER,COL_ENABLE
+	</sql>
+	<sql id="FieldSelectKey">
+		,TYPE_CODE TYPE_CODE__, BILL_OFF BILL_OFF__, BUSI_DATE BUSI_DATE__, 
+		TABLE_NAME TABLE_NAME__, TABLE_NAME_MAPPING TABLE_NAME_MAPPING__, 
+		COL_MAPPING_CODE COL_MAPPING_CODE__
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{TYPE_CODE}, #{BILL_OFF}, #{BUSI_DATE}, #{TABLE_NAME}, #{TABLE_NAME_MAPPING}, 
+		#{COL_CODE}, #{COL_MAPPING_CODE}, #{COL_MAPPING_NAME}, #{COL_VALUE}, #{COL_MAPPING_VALUE}, #{DISP_ORDER}, 
+	    #{COL_DGT}, #{DEC_PRECISION}, #{DICT_TRANS}, #{COL_HIDE}, #{COL_SUM}, #{COL_AVE}, #{COL_TRANSFER},
+	    #{COL_ENABLE}
+	</sql>
+	<sql id="FieldValueItem">
+		#{item.TYPE_CODE}, #{item.BILL_OFF}, #{item.BUSI_DATE}, #{item.TABLE_NAME}, #{item.TABLE_NAME_MAPPING}, 
+		#{item.COL_CODE}, #{item.COL_MAPPING_CODE}, #{item.COL_MAPPING_NAME}, #{item.COL_VALUE}, #{item.COL_MAPPING_VALUE}, #{item.DISP_ORDER}, 
+	    #{item.COL_DGT}, #{item.DEC_PRECISION}, #{item.DICT_TRANS}, #{item.COL_HIDE}, #{item.COL_SUM}, #{item.COL_AVE}, #{item.COL_TRANSFER},
+	    #{item.COL_ENABLE}
+	</sql>
+
+	<!-- 列表 -->
+	<select id="datalistJqPage" parameterType="jqPage" resultType="pd">
+		select 
+		    <include refid="Field"></include>
+		    <include refid="FieldSelectKey"></include>
+		from 
+		<include refid="tableName"></include>
+		where BUSI_DATE = '${pd.SelectedBusiDate}'
+		and TYPE_CODE = #{pd.SelectedTypeCode}
+        <!-- and UPPER(TABLE_NAME) = UPPER(#{pd.SelectedTableNameTranfer}) -->
+        and UPPER(TABLE_NAME_MAPPING) = UPPER(#{pd.SelectedStruMappingTableName})
+        and BILL_OFF = #{pd.SelectedCustCol7}
+		<if test="sidx != null and sidx.trim() != ''" >
+			order by ${sidx} ${sord} 
+    	</if>
+		<if test="currentResult != null and rowNum != null" >           
+              limit #{currentResult}, #{rowNum} 
+        </if>
+	</select>
+	<select id="countJqGridExtend" parameterType="jqPage" resultType="int">
+		select count(*) 
+		from <include refid="tableName"></include> 
+		where BUSI_DATE = '${pd.SelectedBusiDate}'
+		and TYPE_CODE = #{pd.SelectedTypeCode}
+        <!-- and UPPER(TABLE_NAME) = UPPER(#{pd.SelectedTableNameTranfer}) -->
+        and UPPER(TABLE_NAME_MAPPING) = UPPER(#{pd.SelectedStruMappingTableName})
+        and BILL_OFF = #{pd.SelectedCustCol7}
+	</select>
+
+	
+	<!-- 全部保存 -->
+	<update id="batchAllDelAndIns" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		<foreach item="item" index="index" collection="list" open=" (" separator=" or " close=") ">
+		    TYPE_CODE = #{item.TYPE_CODE__} 
+		    and BILL_OFF = #{item.BILL_OFF__}
+		    and BUSI_DATE = #{item.BUSI_DATE__}
+		    and TABLE_NAME_MAPPING = #{item.TABLE_NAME_MAPPING__}
+		</foreach>;
+		
+		<foreach item="item" index="index" collection="list" open=" " separator=" " close=" ">
+		    <if test="item.BILL_STATE != null and item.BILL_STATE != '0'" >  
+		        insert into <include refid="tableName"></include>
+		        (<include refid="Field"></include>) values (<include refid="FieldValueItem"></include>);
+            </if>
+		</foreach>
+	</update>
+
+	<!-- 部分保存  -->
+	<update id="batchPartDelAndIns" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		<foreach item="item" index="index" collection="list" open=" (" separator=" or " close=") ">
+		    TYPE_CODE = #{item.TYPE_CODE__} 
+		    and BILL_OFF = #{item.BILL_OFF__}
+		    and BUSI_DATE = #{item.BUSI_DATE__}
+		    and TABLE_NAME_MAPPING = #{item.TABLE_NAME_MAPPING__}
+		    and COL_MAPPING_CODE = #{item.COL_MAPPING_CODE__}
+		</foreach>;
+		
+		<foreach item="item" index="index" collection="list" open=" " separator=" " close=" ">
+		    <if test="item.BILL_STATE != null and item.BILL_STATE != '0'" >  
+		        insert into <include refid="tableName"></include>
+		        (<include refid="Field"></include>) values (<include refid="FieldValueItem"></include>);
+            </if>
+		</foreach>
+	</update>
+		
+		<!-- update
+		<include refid="tableName"></include>
+		set
+		TYPE_CODE = #{TYPE_CODE}, TABLE_NAME = #{TABLE_NAME}, TABLE_NAME_MAPPING = #{TABLE_NAME_MAPPING}, COL_CODE = #{COL_CODE}, COL_MAPPING_CODE = #{COL_MAPPING_CODE},
+		COL_MAPPING_NAME = #{COL_MAPPING_NAME}, COL_VALUE = #{COL_VALUE}, COL_MAPPING_VALUE = #{COL_MAPPING_VALUE}, BILL_OFF = #{BILL_OFF}, BUSI_DATE = #{BUSI_DATE}, DISP_ORDER = #{DISP_ORDER},
+		COL_DGT = #{COL_DGT}, DEC_PRECISION = #{DEC_PRECISION}, DICT_TRANS = #{DICT_TRANS}, COL_HIDE = #{COL_HIDE}, COL_SUM = #{COL_SUM}, COL_AVE = #{COL_AVE},
+		COL_TRANSFER = #{COL_TRANSFER}, COL_ENABLE = #{COL_ENABLE}
+		where
+		    TYPE_CODE = #{TYPE_CODE__} 
+		    and BILL_OFF = #{BILL_OFF__}
+		    and BUSI_DATE = #{BUSI_DATE__}
+		    and COL_MAPPING_CODE = #{COL_MAPPING_CODE__} -->
+
+	<!-- 张晓柳 -->
+	<select id="getShowStruList" parameterType="com.fh.entity.SysStruMapping" resultType="com.fh.entity.SysStruMapping">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		where TYPE_CODE = #{TYPE_CODE}
+        <!-- and UPPER(TABLE_NAME) = UPPER(#{TABLE_NAME}) -->
+        and UPPER(TABLE_NAME_MAPPING) = UPPER(#{TABLE_NAME_MAPPING})
+        and BILL_OFF = #{BILL_OFF}
+        and BUSI_DATE = #{BUSI_DATE}
+		<if test="COL_ENABLE != null and COL_ENABLE != ''" >  
+            and COL_ENABLE = #{COL_ENABLE}
+        </if>
+        order by COL_HIDE desc, DISP_ORDER
+		<!-- COL_HIDE必修倒序排列，关系添加或修改弹出框的显示 -->
+	</select>
+
+	<!-- 张晓柳 -->
+	<select id="getDetailBillCodeSysStruMapping" parameterType="com.fh.entity.SysStruMapping" resultType="com.fh.entity.SysStruMapping">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		where BUSI_DATE = #{BUSI_DATE}
+        and UPPER(TABLE_NAME) = UPPER(#{TABLE_NAME})
+        and UPPER(COL_CODE) = UPPER(#{COL_CODE})
+		<if test="TABLE_NAME_MAPPING != null and TABLE_NAME_MAPPING != ''" >  
+            and UPPER(TABLE_NAME_MAPPING) = UPPER(#{TABLE_NAME_MAPPING})
+        </if>
+	</select>
+</mapper>

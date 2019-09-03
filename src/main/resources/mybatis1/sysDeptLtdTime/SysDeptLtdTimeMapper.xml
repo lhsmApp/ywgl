@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SysDeptLtdTimeMapper">
+
+	<!-- 表名  -->
+	<sql id="tableName">
+		tb_sys_dept_ltd_time
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="Field">
+		BUSI_TYPE,
+		BILL_OFF,
+		DEPT_CODE,
+		LTD_DAY,
+		STATE
+	</sql>
+	<sql id="FieldSelectKey">
+		,BUSI_TYPE BUSI_TYPE__,
+		BILL_OFF BILL_OFF__,
+		DEPT_CODE DEPT_CODE__,
+		LTD_DAY LTD_DAY__,
+		STATE STATE__
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{BUSI_TYPE},
+		#{BILL_OFF},
+		#{DEPT_CODE},
+		#{LTD_DAY},
+		#{STATE}
+	</sql>
+	<sql id="FieldValueItem">
+		#{item.BUSI_TYPE},
+		#{item.BILL_OFF},
+		#{item.DEPT_CODE},
+		#{item.LTD_DAY},
+		#{item.STATE}
+	</sql>
+
+	<!-- 列表 -->
+	<select id="datalistJqPage" parameterType="jqPage" resultType="pd">
+		select 
+		    <include refid="Field"></include>
+		    <include refid="FieldSelectKey"></include>
+		from <include refid="tableName"></include>
+		<where>
+		    <if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			    ${pd.filterWhereResult}
+		    </if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+		</where>
+		<if test="sidx != null and sidx.trim() != ''" >
+			order by ${sidx} ${sord} 
+    	</if>
+		<if test="currentResult != null and rowNum != null" >           
+              limit #{currentResult}, #{rowNum} 
+        </if>
+	</select>
+	<select id="countJqGridExtend" parameterType="jqPage" resultType="int">
+		select count(*)
+        from <include refid="tableName"></include> 
+		<where>
+		    <if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			    ${pd.filterWhereResult}
+		    </if>
+		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+		        ${pd.QueryFeild}
+		    </if>
+		</where>
+	</select>
+
+	<!-- 列表 -->
+	<select id="getRepeatList" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+        <where>
+		<foreach item="item" index="index" collection="list" open=" " separator=" or " close=" ">
+            ((BUSI_TYPE = #{item.BUSI_TYPE} and BILL_OFF = #{item.BILL_OFF} and DEPT_CODE = #{item.DEPT_CODE})
+             and (BUSI_TYPE != #{item.BUSI_TYPE__} or BILL_OFF != #{item.BILL_OFF__} or DEPT_CODE != #{item.DEPT_CODE__}))
+		</foreach>
+		</where>
+	</select>
+	
+	<update id="batchDelAndIns" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		<foreach item="item" index="index" collection="list" open=" (" separator=" or " close=") ">
+		    BUSI_TYPE = #{item.BUSI_TYPE__}
+		    and BILL_OFF = #{item.BILL_OFF__} 
+		    and DEPT_CODE = #{item.DEPT_CODE__} 
+		</foreach>;
+		
+		<foreach item="item" index="index" collection="list" open=" " separator=" " close=" ">
+		    insert into <include refid="tableName"></include>
+		    (<include refid="Field"></include>) values (<include refid="FieldValueItem"></include>);
+		</foreach>
+	</update>
+
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		<foreach item="item" index="index" collection="list" open=" (" separator=" or " close=") ">
+		    BUSI_TYPE = #{item.BUSI_TYPE__}
+		    and BILL_OFF = #{item.BILL_OFF__} 
+		    and DEPT_CODE = #{item.DEPT_CODE__} 
+		</foreach>
+	</delete>
+
+	<!-- 张晓柳 -->
+	<select id="getUseSysDeptLtdTime" parameterType="com.fh.entity.SysDeptLtdTime" resultType="com.fh.entity.SysDeptLtdTime">
+		select t.*, IFNULL(d.NAME, ' ') DEPT_NAME
+		from <include refid="tableName"></include> t
+		left join oa_department d on t.DEPT_CODE = d.DEPARTMENT_CODE
+		where BUSI_TYPE = #{BUSI_TYPE}
+		and BILL_OFF = #{BILL_OFF}
+		and DEPT_CODE = #{DEPT_CODE}
+	</select>
+</mapper>

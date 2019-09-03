@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PolicyMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		TB_POLICY_INFO
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		POLI_TYPE,	
+		TITLE,	
+		PUB_DATE,	
+		PUB_USER,	
+		TITL_CONT,
+		ID
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field1">
+		POLI_TYPE,	
+		TITLE,	
+		PUB_DATE,	
+		PUB_USER,	
+		TITL_CONT
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{POLI_TYPE},	
+		#{TITLE},	
+		#{PUB_DATE},	
+		#{PUB_USER},	
+		#{TITL_CONT}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field1"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ID = #{ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			POLI_TYPE = #{POLI_TYPE},
+			TITLE = #{TITLE},
+			PUB_DATE = #{PUB_DATE},
+			PUB_USER = #{PUB_USER},
+			TITL_CONT = #{TITL_CONT},
+			TITLE = #{TITLE}
+		where 
+		ID = #{ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			ID = #{ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		<where>
+			<if test="pd.keywords != null and pd.keywords!= ''"><!-- 关键词检索 -->
+				and (
+					POLI_TYPE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					or
+					TITLE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					or
+					PUB_USER LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					)
+			</if>
+			<if test="pd.pubDateStart!=null and pd.pubDateStart!=''"><!-- 发布时间检索 -->
+				and PUB_DATE &gt;= #{pd.pubDateStart} 
+			</if>
+			<if test="pd.pubDateEnd!=null and pd.pubDateEnd!=''"><!-- 发布时间检索 -->
+				and PUB_DATE &lt;= #{pd.pubDateEnd} 
+			</if>
+		</where>
+		order by PUB_DATE desc
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!-- 列表（政策分类） -->
+	<select id="policyTypeList" parameterType="String" resultType="pd">
+		select
+		POLI_TYPE
+		from
+		<include refid="tableName"></include>
+		group by
+		POLI_TYPE
+	</select>
+	
+	<!-- 根据分类获取政策标题列表 -->
+	<select id="policyTitlelistPage" parameterType="page" resultType="pd">
+	select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where
+			POLI_TYPE = #{pd.POLI_TYPE}
+	</select>
+	
+</mapper>
