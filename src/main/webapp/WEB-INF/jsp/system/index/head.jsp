@@ -36,7 +36,7 @@
 		<div class="navbar-buttons navbar-header pull-right" role="navigation">
 			<ul class="nav ace-nav">
 			<!-- <span class="badge badge-grey">2</span> -->
-				<!--<li title="信息模块" class="grey"><a data-toggle="dropdown"
+				<li title="信息模块" class="grey"><a data-toggle="dropdown"
 					class="dropdown-toggle" href="#"> <i
 						class="ace-icon fa fa-tasks"></i> </a>
 					 <ul
@@ -65,42 +65,42 @@
 							</a>
 						</li>
 					</ul> 
-				</li>-->
-				<!-- <li title="即时聊天" class="purple"  onclick="creatw();">creatw()在 WebRoot\plugins\websocketInstantMsg\websocket.js中
-							<a data-toggle="dropdown" class="dropdown-toggle" href="#">
-								<i class="ace-icon fa fa-bell icon-animated-bell"></i>
-								<span class="badge badge-important"></span>
-							</a>
+				</li>
+				<li title="即时聊天" class="purple"  onclick="creatw1();">
+					<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+						<i class="ace-icon fa fa-bell icon-animated-bell"></i>
+						<span class="badge badge-important">4</span>
+					</a>
+					<ul class="dropdown-menu-right dropdown-navbar navbar-pink dropdown-menu dropdown-caret dropdown-close">
+						<li class="dropdown-header">
+							<i class="ace-icon fa fa-bell-o"></i>
+							FH Aadmin 即时通讯
+						</li>
+					</ul>
+				</li>
 
-							<ul class="dropdown-menu-right dropdown-navbar navbar-pink dropdown-menu dropdown-caret dropdown-close">
-								<li class="dropdown-header">
-									<i class="ace-icon fa fa-bell-o"></i>
-									FH Aadmin 即时通讯
-								</li>
-							</ul>
-						</li> -->
-
-				 <!-- <li title="标准页面" class="purple" onclick="instframe();"
+				<!-- <li title="标准页面" class="purple" onclick="instframe();"
 					id="instframe"><a data-toggle="dropdown"
-					class="dropdown-toggle" href="#"> <i
-						class="ace-icon fa fa-users icon-animated-vertical"></i>
+					class="dropdown-toggle" href="#"> 
+					<i class="ace-icon fa fa-users icon-animated-vertical">
+					</i>
+				</li> -->
 
-				</a></li> -->
-
-				<!--<li title="练习" class="green" onclick="fhsms();" id="fhsmstss">
-					fhsms()在 WebRoot\static\js\myjs\head.js中 <a
-					data-toggle="dropdown" class="dropdown-toggle" href="#"> <i
-						class="ace-icon fa fa-briefcase icon-animated-vertical"></i> <span class="badge badge-success" id="fhsmsCount"></span>
-				</a>
+				<li title="站内信" class="green" onclick="fhsms();" id="fhsmstss"><!-- fhsms()在 WebRoot\static\js\myjs\head.js中 -->
+					<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+						<i class="ace-icon fa fa-envelope icon-animated-vertical"></i>
+						<span class="badge badge-success" id="fhsmsCount">5</span>
+					</a>
 				</li>
 
 				<!-- #section:basics/navbar.user_menu -->
-				<li class="light-blue"><a data-toggle="dropdown"
-					class="dropdown-toggle" href="#"> <img class="nav-user-photo"
-						src="static/ace/avatars/user.jpg" alt="Jason's Photo"
-						id="userPhoto" /> <span class="user-info" id="user_info">
-					</span> <i class="ace-icon fa fa-caret-down"></i>
-				</a>
+				<li class="light-blue">
+					<a data-toggle="dropdown"
+						class="dropdown-toggle" href="#"> <img class="nav-user-photo"
+							src="static/ace/avatars/user.jpg" alt="Jason's Photo"
+							id="userPhoto" /> <span class="user-info" id="user_info">
+						</span> <i class="ace-icon fa fa-caret-down"></i>
+					</a>
 
 					<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
 						<!-- <li>
@@ -113,11 +113,11 @@
 									<a onclick="editSys();" style="cursor:pointer;"><i class="ace-icon fa fa-cog"></i>系统设置</a>editSys()在 WebRoot\static\js\myjs\head.js中
 								</li>
 								<li class="divider"></li> -->
-							<li>
-								<a onclick="editUserH();" style="cursor:pointer;"><i class="ace-icon fa fa-user"></i>修改资料</a>
-							</li>
-							<li class="divider"></li>
-							<li><a href="logout"><i class="ace-icon fa fa-power-off"></i>退出登录</a></li>
+						<li>
+							<a onclick="editUserH();" style="cursor:pointer;"><i class="ace-icon fa fa-user"></i>修改资料</a>
+						</li>
+						<li class="divider"></li>
+						<li><a href="logout"><i class="ace-icon fa fa-power-off"></i>退出登录</a></li>
 					</ul></li>
 
 				<!-- /section:basics/navbar.user_menu -->
