@@ -1,5 +1,5 @@
 ﻿
-<div id="navbar" class="navbar navbar-default">
+<div id="navbar" class="navbar navbar-default navbar-fixed-top">
 	<script type="text/javascript">
 		try {
 			ace.settings.check('navbar', 'fixed');
@@ -46,12 +46,12 @@
 						<li class="dropdown-content">
 							<ul class="dropdown-menu dropdown-navbar">
 								<li><a style="cursor:pointer"
-									onclick="infoMapQuery('投注站信息查询','betting/mapQuery.do','z110','67')">
-										<i class="ace-icon fa fa-circle green"></i>投注站信息查询
+									onclick="infoMapQuery('问题信息列表','mbp/listProblemInfo.do','z110','67')">
+										<i class="ace-icon fa fa-circle green"></i>问题信息列表
 								</a></li>
 								<li><a style="cursor:pointer"
-									onclick="infoMapQuery('体育场所信息查询','stadium/mapQuery.do','z113','111')">
-										<i class="ace-icon fa fa-bar-chart-o blue"></i>体育场所信息查询 
+									onclick="infoMapQuery('人员管理','mbp/listUserInfo.do','z113','111')">
+										<i class="ace-icon fa fa-bar-chart-o blue"></i>人员管理
 								</a></li>
 								<li><a style="cursor:pointer"
 									onclick="infoMapQuery('协会信息查询','pesoinfo/mapQuery.do','z120','114')">
@@ -86,7 +86,7 @@
 					</i>
 				</li> -->
 
-				<li title="站内信" class="green" onclick="fhsms();" id="fhsmstss"><!-- fhsms()在 WebRoot\static\js\myjs\head.js中 -->
+				<li title="站内信11" class="green" onclick="fhsms();" id="fhsmstss"><!-- fhsms()在 WebRoot\static\js\myjs\head.js中 -->
 					<a data-toggle="dropdown" class="dropdown-toggle" href="#">
 						<i class="ace-icon fa fa-envelope icon-animated-vertical"></i>
 						<span class="badge badge-success" id="fhsmsCount">5</span>

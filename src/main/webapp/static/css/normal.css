@@ -35,3 +35,19 @@
 .ui-jqgrid .ui-pager-control{
 	height:40px;
 }
+
+
+
+
+.list-item-info{
+	padding:8px 0px 8px 0px;
+	color:#667E99;
+}
+.list-item-value{
+	padding: 8px 4px 8px 0px;
+}
+.list-item-value-title{
+	padding: 8px 4px 8px 0px;
+	font-weight:bold;
+	font-size:16px;
+}

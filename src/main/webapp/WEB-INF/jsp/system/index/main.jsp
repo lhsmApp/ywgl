@@ -135,18 +135,24 @@
 									</div> -->
 
 								<!-- #section:settings.sidebar -->
-								<div class="ace-settings-item">
+								<!-- <div class="ace-settings-item">
 									<input type="checkbox" class="ace ace-checkbox-2"
 										id="ace-settings-sidebar" /> <label class="lbl"
 										for="ace-settings-sidebar"> 固定导航</label>
-								</div>
+								</div> -->
 								<!-- #section:settings.navbar -->
-								<div class="ace-settings-item">
+								<!-- <div class="ace-settings-item">
 									<input type="checkbox" class="ace ace-checkbox-2"
 										id="ace-settings-navbar" /> <label class="lbl"
 										for="ace-settings-navbar">固定头部</label>
+								</div> -->
+								
+								<div class="ace-settings-item">
+									<input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-add-container" />
+									<label class="lbl" for="ace-settings-add-container">
+										居中风格
+									</label>
 								</div>
-
 								<!-- /section:settings.container -->
 							</div>
 							<!-- /.pull-left -->
@@ -156,7 +162,7 @@
 								<div class="ace-settings-item">
 									<input type="checkbox" class="ace ace-checkbox-2"
 										id="ace-settings-hover" /> <label class="lbl"
-										for="ace-settings-hover">折叠菜单</label>
+										for="ace-settings-hover">折叠菜单1</label>
 								</div>
 
 								<div class="ace-settings-item">
@@ -170,12 +176,7 @@
 										id="ace-settings-highlight" /> <label class="lbl"
 										for="ace-settings-highlight">弹出风格</label>
 								</div> -->
-								<div class="ace-settings-item">
-									<input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-add-container" />
-									<label class="lbl" for="ace-settings-add-container">
-										居中风格
-									</label>
-								</div>
+									
 
 								<!-- /section:basics/sidebar.options -->
 							</div>
@@ -273,6 +274,16 @@
 	<%@ include file="foot.jsp"%>
 
 	<!-- page specific plugin scripts -->
+	<!--[if lte IE 8]>
+		  <script src="../assets/js/excanvas.js"></script>
+	<![endif]-->
+	<!-- <script src="static/ace/js/jquery-ui.custom.js"></script>
+	<script src="static/ace/js/jquery.ui.touch-punch.js"></script>
+	<script src="static/ace/js/jquery.easypiechart.js"></script>
+	<script src="static/ace/js/jquery.sparkline.js"></script>
+	<script src="static/ace/js/flot/jquery.flot.js"></script>
+	<script src="static/ace/js/flot/jquery.flot.pie.js"></script>
+	<script src="static/ace/js/flot/jquery.flot.resize.js"></script> -->
 
 	<!-- ace scripts -->
 	<!-- <script src="static/ace/js/ace/elements.scroller.js"></script>
@@ -331,15 +342,79 @@
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 	
-	<!-- <script>
-		window.onload=function(){
+	<script>
+		/* window.onload=function(){
 			console.log($("#mainFrame").css("height"));
 			var source=$("#mainFrame").css("height").toString().replace("px","");
 			console.log(source);
 			var a=source-102;
 			console.log(a);
 			$("#mainFrame").css("height",a+"px");
+		} */
+		
+		jQuery(function($) {
+			/* var hover = $('#ace-settings-hover');
+			if( hover.length > 0 ) {
+				hover.removeAttr('checked').trigger('click');
+			} */
+			/* var compact = $('#ace-settings-compact');
+			if( compact.length > 0 ) {
+				compact.removeAttr('checked').trigger('click');
+			} */
+		})
+		
+		function applyChanges(skin_class) {
+			//skin cookie tip
+			var body = $(document.body);
+			body.removeClass('no-skin skin-1 skin-2 skin-3');
+			//if(skin_class != 'skin-0') {
+				body.addClass(skin_class);
+				ace.data.set('skin', skin_class);
+				//save the selected skin to cookies
+				//which can later be used by your server side app to set the skin
+				//for example: <body class="<?php echo $_COOKIE['ace_skin']; ?>"
+			//} else ace.data.remove('skin');
+			
+			var skin3_colors = ['red', 'blue', 'green', ''];
+			
+			//undo skin-1
+			$('.ace-nav > li.grey').removeClass('dark');
+			
+			//undo skin-2
+			$('.ace-nav > li').removeClass('no-border margin-1');
+			$('.ace-nav > li:not(:last-child)').removeClass('light-pink').find('> a > '+ace.vars['.icon']).removeClass('pink').end().eq(0).find('.badge').removeClass('badge-warning');
+			$('.sidebar-shortcuts .btn')
+			.removeClass('btn-pink btn-white')
+			.find(ace.vars['.icon']).removeClass('white');
+			
+			//undo skin-3
+			$('.ace-nav > li.grey').removeClass('red').find('.badge').removeClass('badge-yellow');
+			$('.sidebar-shortcuts .btn').removeClass('btn-primary btn-white')
+			var i = 0;
+			$('.sidebar-shortcuts .btn').each(function() {
+				$(this).find(ace.vars['.icon']).removeClass(skin3_colors[i++]);
+			})
+			
+			var skin0_buttons = ['btn-success', 'btn-info', 'btn-warning', 'btn-danger'];
+	
+			if(skin_class == 'skin-1') {
+				$('.ace-nav > li.grey').addClass('dark');
+				var i = 0;
+				$('.sidebar-shortcuts')
+				.find('.btn').each(function() {
+					$(this).attr('class', 'btn ' + skin0_buttons[i++%4]);
+				})
+				
+				$('.sidebar[data-sidebar-scroll=true]').ace_sidebar_scroll('updateStyle', 'scroll-white no-track');
+				$('.sidebar[data-sidebar-hover=true]').ace_sidebar_hover('updateStyle', 'no-track scroll-thin scroll-white');
+			}
+	
+			//some sizing differences may be there in skins, so reset scrollbar size
+			$('.sidebar[data-sidebar-scroll=true]').ace_sidebar_scroll('reset')
+			//$('.sidebar[data-sidebar-hover=true]').ace_sidebar_hover('reset')
+			
+			if(ace.vars['old_ie']) ace.helper.redraw(document.body, true);
 		}
-	</script> -->
+	</script>
 </body>
 </html>

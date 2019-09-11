@@ -195,6 +195,8 @@ function fhsms(){
 	 };
 	 diag.show();*/
 	//console.log(user);
+	
+	console.log('cccccc');
 	 if(user=="Guest"){
 		 $("#mainFrame").attr("src",locat+"/policyCustom/listAllPolicyType.do");
 		 $("#subTitle").text("政策法规浏览");
@@ -203,8 +205,8 @@ function fhsms(){
 	 else
 		 //siMenu('118','117','政策法规','policy/list.do');
 //		 siMenu('10000','1000','政策法规浏览','policyCustom/listAllPolicyType.do');
-		 siMenu('10005','1000','jqgridTest','jqgrid/listTest.do');
-
+		 //siMenu('10005','1000','jqgridTest','jqgrid/listTest.do');
+		 siMenu('10005','1000','问题分配','mbp/list.do');
 }
 
 //组织机构
