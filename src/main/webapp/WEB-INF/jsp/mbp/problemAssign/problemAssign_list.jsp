@@ -35,8 +35,8 @@
 						<!-- 检索  -->
 						<form style="margin:5px;" action="user/listUsers.do" method="post" name="userForm" id="userForm">
 							<div class="nav-search" style="margin:10px 0px;">
-								<span class="input-icon">
-									<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词" />
+								<span class="input-icon" style="width:86%">
+									<input style="width:100%" class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词" />
 									<i class="ace-icon fa fa-search nav-search-icon"></i>
 								</span>
 								<button style="margin-bottom:3px;" class="btn btn-light btn-minier" onclick="searchs();"  title="检索">

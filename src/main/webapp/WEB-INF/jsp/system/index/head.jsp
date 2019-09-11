@@ -54,8 +54,8 @@
 										<i class="ace-icon fa fa-bar-chart-o blue"></i>人员管理
 								</a></li>
 								<li><a style="cursor:pointer"
-									onclick="infoMapQuery('协会信息查询','pesoinfo/mapQuery.do','z120','114')">
-										<i class="ace-icon fa fa-flag purple"></i>协会信息查询 
+									onclick="infoMapQuery('问题提报','mbp/listProblemInfo2.do','z120','114')">
+										<i class="ace-icon fa fa-flag purple"></i>问题提报
 								</a></li>
 							</ul>
 						</li>

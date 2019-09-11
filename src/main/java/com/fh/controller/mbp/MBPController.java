@@ -114,6 +114,26 @@ public class MBPController extends BaseController {
 		return mv;
 	}
 	
+	/**问题提报列表
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/listProblemInfo2")
+	public ModelAndView listProblemInfo2() throws Exception{
+		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = this.getPageData();
+		mv.setViewName("mbp/problemManage/problemInfo_list3");
+		
+		/**此处放当前页面初始化时用到的一些数据，例如搜索的下拉列表数据，所需的字典数据、权限数据等等。
+		mv.addObject("pd", pd);
+		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
+		 * 
+		 * 
+		 */
+		return mv;
+	}
+	
 	/**列表
 	 * @param page
 	 * @throws Exception
