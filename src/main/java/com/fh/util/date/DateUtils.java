@@ -38,6 +38,16 @@ public class DateUtils {
 	}
 	
 	/**
+	 * 获取当前时间，格式为yyyyMM
+	 * @author chenssy
+	 * @date Dec 30, 2013
+	 * @return Date
+	 */
+	public static String getCurrentDateMonth(){
+		return getCurrentTime(DateFormatUtils.DATE_MONTH_FORMAT);
+	}
+	
+	/**
 	 * 获取指定格式的当前时间：为空时格式为yyyy-mm-dd HH:mm:ss
 	 * @author chenssy
 	 * @date Dec 30, 2013

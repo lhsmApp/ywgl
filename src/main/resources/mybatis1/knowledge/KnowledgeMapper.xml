@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="KnowledgeMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		tb_knowledge_base
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		KNOWLEDGE_ID,	
+		KNOWLEDGE_TITLE,	
+		KNOWLEDGE_TYPE,	
+		KNOWLEDGE_TAG,	
+		AUTHOR,	
+		READ_NUM,	
+		DETAIL,	
+		CREATE_USER,	
+		CREATE_DATE,	
+		STATE,	
+		CUST1,	
+		CUST2,	
+		CUST3,	
+		CUST4,	
+		CUST5,	
+		CUST6
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="InsertField">	
+		KNOWLEDGE_TITLE,	
+		KNOWLEDGE_TYPE,	
+		KNOWLEDGE_TAG,	
+		AUTHOR,		
+		DETAIL,	
+		CREATE_USER,	
+		CREATE_DATE,	
+		CUST1,	
+		CUST2,	
+		CUST3,	
+		CUST4,	
+		CUST5,	
+		CUST6
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{KNOWLEDGE_TITLE},	
+		#{KNOWLEDGE_TYPE},	
+		#{KNOWLEDGE_TAG},	
+		#{AUTHOR},		
+		#{DETAIL},	
+		#{CREATE_USER},	
+		#{CREATE_DATE},		
+		#{CUST1},	
+		#{CUST2},	
+		#{CUST3},	
+		#{CUST4},	
+		#{CUST5},	
+		#{CUST6}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="InsertField"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			KNOWLEDGE_ID = #{KNOWLEDGE_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			KNOWLEDGE_TITLE = #{KNOWLEDGE_TITLE},
+			KNOWLEDGE_TYPE = #{KNOWLEDGE_TYPE},
+			KNOWLEDGE_TAG = #{KNOWLEDGE_TAG},
+			AUTHOR = #{AUTHOR},
+			READ_NUM = #{READ_NUM},
+			DETAIL = #{DETAIL},
+			CREATE_USER = #{CREATE_USER},
+			CREATE_DATE = #{CREATE_DATE},
+			STATE = #{STATE},
+			CUST1 = #{CUST1},
+			CUST2 = #{CUST2},
+			CUST3 = #{CUST3},
+			CUST4 = #{CUST4},
+			CUST5 = #{CUST5},
+			CUST6 = #{CUST6}
+		where 
+		KNOWLEDGE_ID = #{KNOWLEDGE_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			KNOWLEDGE_ID = #{KNOWLEDGE_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select A.*,dic.NAME KNOWLEDGE_TYPE_NAME 
+		from 
+		<include refid="tableName"></include> A
+		LEFT JOIN (SELECT DICT_CODE,NAME FROM sys_dictionaries WHERE PARENT_CODE = 'KNOWLEDGE' ) dic 
+    	ON A.KNOWLEDGE_TYPE = dic.DICT_CODE 
+    	
+		<where>
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+				
+					KNOWLEDGE_TITLE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				<!--	根据需求自己加检索条件	
+					 or 
+					字段2 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+				-->
+				)
+		</if>
+		</where>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			KNOWLEDGE_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+</mapper>

@@ -4,35 +4,84 @@
 	
 	<!--表名 -->
 	<sql id="tableName">
-		TB_JQGRID
+		tb_problem_info
 	</sql>
 	
 	<!-- 字段 -->
 	<sql id="Field">
-		CATEGORYNAME,	
-		PRODUCTNAME,	
-		COUNTRY,	
-		PRICE,	
-		QUANTITY,	
-		ID
+		PRO_CODE,	
+		PRO_TITLE,	
+		PRO_REPORT_USER,	
+		PRO_ACCEPT_USER,	
+		PRO_DEPART,	
+		PRO_SYS_TYPE,	
+		PRO_TYPE_ID,	
+		PRO_TAG,	
+		PRO_PRIORITY,	
+		PRO_RESOLVE_TIME,	
+		PRO_CONTENT,	
+		PRO_STATE,	
+		UPDATE_DATE,	
+		BILL_USER,	
+		BILL_DATE,	
+		CUST1,	
+		CUST2,	
+		CUST3,	
+		CUST4,	
+		CUST5,	
+		CUST6
 	</sql>
 	
 	<!-- 字段 -->
 	<sql id="insertField">
-		CATEGORYNAME,	
-		PRODUCTNAME,	
-		COUNTRY,	
-		PRICE,	
-		QUANTITY
+		PRO_CODE,	
+		PRO_TITLE,	
+		PRO_REPORT_USER,	
+		PRO_ACCEPT_USER,	
+		PRO_DEPART,	
+		PRO_SYS_TYPE,	
+		PRO_TYPE_ID,	
+		PRO_TAG,	
+		PRO_PRIORITY,	
+		PRO_RESOLVE_TIME,	
+		PRO_CONTENT,	
+		<!-- PRO_STATE,	 -->
+		UPDATE_DATE,	
+		<!-- BILL_STATE, -->
+		BILL_USER,	
+		BILL_DATE,	
+		CUST1,	
+		CUST2,	
+		CUST3,	
+		CUST4,	
+		CUST5,	
+		CUST6
 	</sql>
 	
 	<!-- 字段值 -->
 	<sql id="FieldValue">
-		#{CATEGORYNAME},	
-		#{PRODUCTNAME},	
-		#{COUNTRY},	
-		#{PRICE},	
-		#{QUANTITY}
+		#{PRO_CODE},	
+		#{PRO_TITLE},	
+		#{PRO_REPORT_USER},	
+		#{PRO_ACCEPT_USER},	
+		#{PRO_DEPART},	
+		#{PRO_SYS_TYPE},	
+		#{PRO_TYPE_ID},	
+		#{PRO_TAG},	
+		#{PRO_PRIORITY},	
+		#{PRO_RESOLVE_TIME},	
+		#{PRO_CONTENT},	
+		<!-- #{PRO_STATE},	 -->
+		#{UPDATE_DATE},	
+		<!-- #{BILL_STATE},	 -->
+		#{BILL_USER},	
+		#{BILL_DATE},	
+		#{CUST1},	
+		#{CUST2},	
+		#{CUST3},	
+		#{CUST4},	
+		#{CUST5},	
+		#{CUST6}
 	</sql>
 	
 	<!-- 新增-->
@@ -51,7 +100,7 @@
 		delete from
 		<include refid="tableName"></include>
 		where 
-			ID = #{ID}
+			PRO_CODE = #{PRO_CODE}
 	</delete>
 	
 	<!-- 修改 -->
@@ -59,45 +108,102 @@
 		update
 		<include refid="tableName"></include>
 		set 
-			CATEGORYNAME = #{CATEGORYNAME},
-			PRODUCTNAME = #{PRODUCTNAME},
-			COUNTRY = #{COUNTRY},
-			PRICE = #{PRICE},
-			QUANTITY = #{QUANTITY}
+			PRO_CODE = #{PRO_CODE},
+			PRO_TITLE = #{PRO_TITLE},
+			PRO_REPORT_USER = #{PRO_REPORT_USER},
+			PRO_ACCEPT_USER = #{PRO_ACCEPT_USER},
+			PRO_DEPART = #{PRO_DEPART},
+			PRO_SYS_TYPE = #{PRO_SYS_TYPE},
+			PRO_TYPE_ID = #{PRO_TYPE_ID},
+			PRO_TAG = #{PRO_TAG},
+			PRO_PRIORITY = #{PRO_PRIORITY},
+			PRO_RESOLVE_TIME = #{PRO_RESOLVE_TIME},
+			PRO_CONTENT = #{PRO_CONTENT},
+			PRO_STATE = #{PRO_STATE},
+			UPDATE_DATE = #{UPDATE_DATE},
+			CUST1 = #{CUST1},
+			CUST2 = #{CUST2},
+			CUST3 = #{CUST3},
+			CUST4 = #{CUST4},
+			CUST5 = #{CUST5},
+			CUST6 = #{CUST6}
 		where 
-		ID = #{ID}
+		PRO_CODE = #{PRO_CODE}
 	</update>
 	
 	<!-- 通过ID获取数据 -->
 	<select id="findById" parameterType="pd" resultType="pd">
-		select 
-		<include refid="Field"></include>
-		from 
-		<include refid="tableName"></include>
+		SELECT A.*,
+		sys_user1.USERNAME PRO_REPORT_USER_NAME,
+		sys_user2.USERNAME PRO_ACCEPT_USER_NAME,
+		depart.NAME PRO_DEPART_NAME,
+		problemType.PRO_TYPE_NAME,
+		dic.NAME PRO_SYS_TYPE_NAME
+		FROM tb_problem_info A
+		
+		LEFT JOIN sys_user sys_user1
+		ON A.PRO_REPORT_USER=sys_user1.USER_ID
+		
+		LEFT JOIN sys_user sys_user2
+		ON A.PRO_ACCEPT_USER=sys_user2.USER_ID
+		
+		LEFT JOIN oa_department depart
+		ON A.PRO_DEPART=depart.DEPARTMENT_CODE
+		
+		LEFT JOIN tb_problem_type problemType
+		ON A.PRO_TYPE_ID=problemType.PRO_TYPE_ID
+		
+		LEFT JOIN (SELECT DICT_CODE,NAME FROM sys_dictionaries WHERE PARENT_CODE = 'SYSTEM' ) dic 
+    	ON A.PRO_SYS_TYPE = dic.DICT_CODE 
 		where 
-			ID = #{ID}
+			A.PRO_CODE = #{PRO_CODE}
 	</select>
 	
 	<!-- 列表 -->
 	<select id="datalistPage" parameterType="page" resultType="pd">
-		select
-		<include refid="Field"></include>
-		from 
-		<include refid="tableName"></include>
+		SELECT A.*,
+		depart.NAME PRO_DEPART_NAME,
+		problemType.PRO_TYPE_NAME,
+		dic.NAME PRO_SYS_TYPE_NAME
+		FROM tb_problem_info A
+		
+		LEFT JOIN oa_department depart
+		ON A.PRO_DEPART=depart.DEPARTMENT_CODE
+		
+		LEFT JOIN tb_problem_type problemType
+		ON A.PRO_TYPE_ID=problemType.PRO_TYPE_ID
+		
+		LEFT JOIN (SELECT DICT_CODE,NAME FROM sys_dictionaries WHERE PARENT_CODE = 'SYSTEM' ) dic 
+    	ON A.PRO_SYS_TYPE = dic.DICT_CODE 
+		
 		<where>
-			<if test="pd._search != 'false'"><!-- 关键词检索 -->
+			A.PRO_ACCEPT_USER=#{pd.BILL_USER} 
+			OR A.BILL_USER=#{pd.BILL_USER}
+			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
 				and
 					(
-					#{pd.searchField} #{pd.searchOper} #{pd.searchString}
+					
+						PRO_TITLE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 					<!--	根据需求自己加检索条件
-						字段1 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 						 or 
 						字段2 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
 					-->
 					)
 			</if>
+			<if test="pd.PRO_STATE != null and '' != pd.PRO_STATE" >           
+	          AND A.PRO_STATE = #{pd.PRO_STATE}
+	        </if>
 		</where>
-		
+		ORDER BY pro_code DESC
+	</select>
+	
+	<select id="count" parameterType="pd" resultType="int">
+		select count(*) from <include refid="tableName"></include> 
+		<!-- <where>
+			<if test="menuId != null and '' != menuId" >           
+	          AND   menuId = #{menuId}
+	        </if>
+        </where> -->
 	</select>
 	
 	<!-- Jq分页列表 -->
@@ -165,10 +271,150 @@
 		delete from
 		<include refid="tableName"></include>
 		where 
-			ID in
+			PRO_CODE in
 		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
                  #{item}
 		</foreach>
 	</delete>
 	
+	<!-- 提交 -->
+	<update id="commit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			PRO_STATE = #{PRO_STATE},
+			UPDATE_DATE = #{UPDATE_DATE}
+		where 
+		PRO_CODE = #{PRO_CODE}
+	</update>
+	
+	<!-- 取消提交 -->
+	<update id="cancel" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			PRO_STATE = #{PRO_STATE},
+			UPDATE_DATE = #{UPDATE_DATE}
+		where 
+		PRO_CODE = #{PRO_CODE}
+	</update>
+	
+	<!-- 问题领取 -->
+	<update id="proGet" parameterType="pd">
+		update 
+		<include refid="tableName"></include>
+		set 
+			PRO_STATE = #{PRO_STATE},
+			UPDATE_DATE = #{UPDATE_DATE}
+		where 
+		PRO_CODE = #{PRO_CODE}
+	</update>
+	
+	<!-- 问题分配-->
+	<insert id="addAssign" parameterType="pd">
+		insert into tb_problem_assign
+		(
+			PRO_CODE,PRO_ACCEPT_USER,PRO_SYS_TYPE,PRO_TYPE_ID,PRO_PRIORITY,BILL_USER,BILL_DATE,CUST1,CUST2,CUST3
+		) values (
+			#{PRO_CODE},#{PRO_ACCEPT_USER},#{PRO_SYS_TYPE},#{PRO_TYPE_ID},#{PRO_PRIORITY},#{BILL_USER},#{BILL_DATE},#{CUST1},#{CUST2},#{CUST3}	
+		);
+	</insert>
+	
+	<!-- 取消分配-->
+	<delete id="deleteAssign" parameterType="pd">
+		delete from 
+		tb_problem_assign
+		where 
+			ASSIGN_ID = #{ASSIGN_ID}
+	</delete>
+	
+	<!-- 问题回复-->
+	<insert id="addAnswer" parameterType="pd">
+		insert into tb_problem_answer
+		(
+			PRO_CODE,OPER_TYPE,BILL_USER,BILL_DATE,ANSWER_CONTENT,CUST1,CUST2,CUST3
+		) values (
+			#{PRO_CODE},#{OPER_TYPE},#{BILL_USER},#{BILL_DATE},#{ANSWER_CONTENT},#{CUST1},#{CUST2},#{CUST3}	
+		);
+	</insert>
+	
+	<!-- 更新问题回复 -->
+	<update id="updateAnswer" parameterType="pd">
+		update 
+		tb_problem_answer
+		set 
+			ANSWER_CONTENT = #{ANSWER_CONTENT}
+		where 
+		ANSWER_ID = #{ANSWER_ID}
+	</update>
+	
+	<!-- 取消回复-->
+	<delete id="deleteAnswer" parameterType="pd">
+		delete from 
+		tb_problem_answer
+		where 
+			ANSWER_ID = #{ANSWER_ID}
+	</delete>
+	
+	<!-- 问题关闭-->
+	<insert id="addClose" parameterType="pd">
+		delete from 
+		tb_problem_close
+		where 
+			PRO_CODE = #{PRO_CODE};
+	
+		insert into tb_problem_close
+		(
+			PRO_CODE,BILL_USER,BILL_DATE,CLOSE_CONTENT,CUST1,CUST2,CUST3
+		) values (
+			#{PRO_CODE},#{BILL_USER},#{BILL_DATE},#{CLOSE_CONTENT},#{CUST1},#{CUST2},#{CUST3}	
+		);
+		
+		update tb_problem_info
+		set PRO_STATE=#{PRO_STATE}
+		where PRO_CODE=#{PRO_CODE}
+	</insert>
+	
+	<!-- 取消关闭-->
+	<update id="deleteClose" parameterType="pd">
+		delete from 
+		tb_problem_close
+		where 
+			PRO_CODE = #{PRO_CODE};
+			
+		update tb_problem_info
+		set PRO_STATE=#{PRO_STATE}
+		where PRO_CODE=#{PRO_CODE}
+	</update>
+	
+	<!-- 获取问题回复信息列表 -->
+	<select id="getProAnswers" parameterType="pd" resultType="pd">
+		select * from tb_problem_answer
+		where PRO_CODE=#{PRO_CODE}
+	</select>
+	
+	<!-- 获取问题回复信息内容 -->
+	<select id="getAnswerContent" parameterType="pd" resultType="pd">
+		select * from tb_problem_answer
+		where ANSWER_ID=#{ANSWER_ID}
+	</select>
+	
+	<!-- 获取问题日志信息列表 -->
+	<select id="getProLog" parameterType="pd" resultType="pd">
+		select A.*,u.USERNAME from tb_problem_log A
+		left join sys_user u
+		on A.CREATE_USER=u.USER_ID
+		where A.PRO_CODE=#{PRO_CODE}
+		order by LOG_ID desc
+	</select>
+	
+	<!-- 问题日志-->
+	<insert id="addLog" parameterType="pd">
+		insert into tb_problem_log
+		(
+			PRO_CODE,CREATE_USER,CREATE_DATE,PRO_EVENT,CLIENT_IP,CUST1,CUST2,CUST3
+		) values (
+			#{PRO_CODE},#{CREATE_USER},#{CREATE_DATE},#{PRO_EVENT},#{CLIENT_IP},#{CUST1},#{CUST2},#{CUST3}	
+		);
+	</insert>
 </mapper>

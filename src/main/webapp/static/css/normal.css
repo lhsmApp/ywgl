@@ -42,6 +42,7 @@
 .list-item-info{
 	padding:8px 0px 8px 0px;
 	color:#667E99;
+	/* color:#777777; */
 }
 .list-item-value{
 	padding: 8px 4px 8px 0px;
@@ -50,4 +51,8 @@
 	padding: 8px 4px 8px 0px;
 	font-weight:bold;
 	font-size:16px;
+}
+
+.list-item-hover:hover {
+  background-color: #F4F9FD;
 }

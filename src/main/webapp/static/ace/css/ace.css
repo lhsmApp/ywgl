@@ -445,6 +445,10 @@ pre.prettyprint {
 .light-orange {
   color: #fcac6f !important;
 }
+.bc-light-orange {
+  background-color: #fcac6f !important;
+}
+
 .purple {
   color: #a069c3 !important;
 }
