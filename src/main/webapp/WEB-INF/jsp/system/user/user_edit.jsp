@@ -397,6 +397,8 @@
 				$("#DEPARTMENT_ID").val($(this).attr("relValue"));
 		    }
 		});
+		console.log(defaultNodes);
+		console.log(depname);
 		//赋给data属性
 		$("#selectTree").data("data",defaultNodes);  
 		$("#selectTree").render();

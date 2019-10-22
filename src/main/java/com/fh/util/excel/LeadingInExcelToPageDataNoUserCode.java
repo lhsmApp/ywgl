@@ -506,7 +506,9 @@ public class LeadingInExcelToPageDataNoUserCode<T> {
                 	returnErrorCustomnMessage = haveCustomnMessage + returnErrorCustomnMessage;
             	}
             }
-            if(judge)info.add(obj);
+            if(!obj.isEmpty()){
+            	if(judge)info.add(obj);
+            }
             returnErrorCustomn.remove(returnErrorUserCode);
             returnErrorCustomn.put(returnErrorUserCode, returnErrorCustomnMessage);
             returnErrorMust.remove(returnErrorUserCode);

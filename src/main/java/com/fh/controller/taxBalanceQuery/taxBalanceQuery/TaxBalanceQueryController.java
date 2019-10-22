@@ -127,7 +127,7 @@ public class TaxBalanceQueryController extends BaseController {
 		
 		
 		Map_SetColumnsList.put("USER_NAME", new TmplConfigDetail("USER_NAME", "员工姓名", "1", false));
-		Map_SetColumnsList.put("STAFF_IDENT", new TmplConfigDetail("STAFF_IDENT", "身份证号", "1", false));
+		Map_SetColumnsList.put("STAFF_IDENT", new TmplConfigDetail("STAFF_IDENT", "人员编号", "1", false));
 		Map_SetColumnsList.put("BANK_NAME", new TmplConfigDetail("BANK_NAME", "开户行", "1", false));
 		Map_SetColumnsList.put("BANK_CARD", new TmplConfigDetail("BANK_CARD", "银行帐号", "1", false));
 		

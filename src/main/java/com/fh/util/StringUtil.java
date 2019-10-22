@@ -1,5 +1,6 @@
 package com.fh.util;
 
+import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,6 +29,30 @@ public class StringUtil {
 	    }
 	    return returnStr;
 	}
+	
+	//长度为2
+    private static final String STR_FORMAT2 = "000"; 
+
+    public static String getFixedDigitsStr2(int num){
+        DecimalFormat df = new DecimalFormat(STR_FORMAT2);
+        return df.format(num);
+    }
+	
+	//长度为3
+    private static final String STR_FORMAT3 = "000"; 
+
+    public static String getFixedDigitsStr3(int num){
+        DecimalFormat df = new DecimalFormat(STR_FORMAT3);
+        return df.format(num);
+    }
+	
+	//长度为4
+    private static final String STR_FORMAT4 = "0000"; 
+
+    public static String getFixedDigitsStr4(int num){
+        DecimalFormat df = new DecimalFormat(STR_FORMAT4);
+        return df.format(num);
+    }
 	
 	/**获取字符串编码
 	 * @param str
