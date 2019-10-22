@@ -21,6 +21,16 @@
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
 
 <script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
+
+<!-- 树形下拉框start -->
+<script type="text/javascript" src="plugins/selectZtree/selectTree.js"></script>
+<script type="text/javascript" src="plugins/selectZtree/framework.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="plugins/selectZtree/import_fh.css" />
+<script type="text/javascript" src="plugins/selectZtree/ztree/ztree.js"></script>
+<link type="text/css" rel="stylesheet"
+	href="plugins/selectZtree/ztree/ztree.css"></link>
+<!-- 树形下拉框end -->
 </head>
 <body class="no-skin">
 
@@ -30,219 +40,771 @@
 		<div class="main-content">
 			<div class="main-content-inner">
 				<div class="page-content">
-					<div class="page-header">
-						<form class="form-inline">
-							<label class="pull-left" style="padding: 5px;">筛选条件：</label>
-							<span class="pull-left" style="margin-right: 5px;"> 
-								<select
-									class="chosen-select form-control" name="FMISACC"
-									id="FMISACC" data-placeholder="请选择帐套"
-									style="vertical-align: top; height: 32px; width: 150px;">
-										<option value="">请选择帐套</option>
-										<c:forEach items="${fmisacc}" var="fmi">
-											<option value="${fmi.DICT_CODE}">${fmi.NAME}</option>
-										</c:forEach>
-								</select>
-							</span> 
-							<span  class="pull-left" style="margin-right: 5px;" <c:if test="${pd.departTreeSource=='0'}">hidden</c:if>>
-								<div class="selectTree" id="selectTree" multiMode="true"
-									allSelectable="false" noGroup="false"></div>
-								<input type="text" id="RPT_DEPT" hidden></input>
-							 </span>
-							<span class="pull-left" style="margin-right: 5px;"> 
-								<select
-									class="chosen-select form-control" name="BILL_TYPE"
-									id="BILL_TYPE" data-placeholder="请选择类型"
-									style="vertical-align: top; height: 32px; width: 150px;">
-										<option value="">请选择类型</option>
-										<c:forEach items="${billTypeList}" var="billType">
-											<option value="${billType.nameKey}"
-												<c:if test="${pd.BILL_TYPE==billType.nameKey}">selected</c:if>>${billType.nameValue}</option>
-										</c:forEach>
-								</select>
-							</span>
-							
-							<!-- <span style="margin-right: 5px;"> 
-								<select class="chosen-select form-control"
-									name="STATUS" id="STATUS" data-placeholder="请选状态"
-									style="vertical-align: top; height: 32px; width: 150px;">
-										<option value="">请选择状态</option>
-										<option value="0">解封</option>
-										<option value="1">封存</option>
-								</select>
-							</span> -->
-							<button type="button" class="btn btn-info btn-xs"
-								onclick="tosearch();">
-								<i class="ace-icon fa fa-search bigger-110"></i>
-							</button>
-							
-							<div class="pull-right">
-								<button id="btnAdd" class="btn btn-success btn-xs"
-									onclick="showQueryCondi()">
-									<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>新增</span>
-								</button>
-								<button id="btnDelete" class="btn btn-danger btn-xs"
-									onclick="showQueryCondi()">
-									<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>删除</span>
-								</button>
-								<button id="btnEdit" class="btn btn-info btn-xs"
-									onclick="showQueryCondi()">
-									<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>编辑</span>
+					<div class="row">
+						<div class="col-xs-4">
+						<!-- 检索  -->
+						<form style="margin:5px;" method="post" name="problemForm" id="problemForm">
+							<div class="nav-search" style="margin:10px 0px;">
+								<span class="input-icon" style="width:86%">
+									<input style="width:100%" class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词" />
+									<i class="ace-icon fa fa-search nav-search-icon"></i>
+								</span>
+								<button style="margin-bottom:3px;" class="btn btn-light btn-minier" onclick="searchs();"  title="检索">
+									<i id="nav-search-icon" class="ace-icon fa fa-search bigger-120 nav-search-icon blue"></i>
+									<!-- <i class="ace-icon fa fa-signal icon-only bigger-150"></i> -->
 								</button>
 							</div>
-						</form>
-						
-						
-					</div>
-				
-					<div class="row">
-						<div class="col-xs-12">
-							<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
-								<thead>
-									<tr>
-										<th class="center" style="width:35px;">
-										<label class="pos-rel"><input type="checkbox" class="ace" id="zcheckbox" /><span class="lbl"></span></label>
-										</th>
-										<th class="center" style="width:50px;">序号</th>
-										<!-- <th class="center">编号</th> -->
-										<th class="center">用户名</th>
-										<th class="center">姓名</th>
-										<th class="center">角色</th>
-										<th class="center">单位</th>
-										<th class="center">手机号</th>
-										<!-- <th class="center"><i class="ace-icon fa fa-envelope-o"></i>邮箱</th> -->
-										<th class="center"><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>最近登录</th>
-										<th class="center">上次登录IP</th>
-										<th class="center">备注</th>
-										<th class="center">状态</th>
-										<th class="center">操作</th>
-									</tr>
-								</thead>
-														
-								<tbody>
+							
+							<ul id="problemList" class="item-list">
+								<!-- <li class="item-grey clearfix">
+									<div>
+										<label class="inline" style="margin-bottom:5px;">
+											<span class="list-item-value-title">测试问题1</span>
+										</label>
+									<div>
+									<div>
+										<label class="inline">
+											<span class="list-item-info"> 单位：</span>
+											<span class="list-item-value">中国石油辽河油田兴隆台采油厂</span>
+										</label>
+										<label class="inline pull-right">
+											<span class="list-item-info"> 系统：</span>
+											<span class="list-item-value">ERP系统</span>
+										</label>
+									</div>
 									
-								<!-- 开始循环 -->	
-								<c:choose>
-									<c:when test="${not empty userList}">
-										<c:if test="${QX.cha == 1 }">
-										<c:forEach items="${userList}" var="user" varStatus="vs">
-													
-											<tr>
-												<td class='center' style="width: 30px;">
-													<c:if test="${user.USERNAME != 'admin'}"><label><input type='checkbox' name='ids' value="${user.USER_ID }" id="${user.EMAIL }" alt="${user.PHONE }" title="${user.USERNAME }" class="ace"/><span class="lbl"></span></label></c:if>
-													<c:if test="${user.USERNAME == 'admin'}"><label><input type='checkbox' disabled="disabled" class="ace" /><span class="lbl"></span></label></c:if>
-												</td>
-												<td class='center' style="width: 30px;">${vs.index+1}</td>
-												<%-- <td class="center">${user.NUMBER }</td> --%>
-												<td class="center">${user.USERNAME }<%-- <a onclick="viewUser('${user.USERNAME}')" style="cursor:pointer;">${user.USERNAME }</a> --%></td>
-												<td class="center">${user.NAME }</td>
-												<td class="center">${user.ROLE_NAME }</td>
-												<td class="center">${user.DEPARTMENT_NAME }</td>
-												<td class="center">${user.PHONE }</td>
-												<%-- <td class="center"><a title="发送电子邮件" style="text-decoration:none;cursor:pointer;" <c:if test="${QX.email == 1 }">onclick="sendEmail('${user.EMAIL }');"</c:if>>${user.EMAIL }&nbsp;<i class="ace-icon fa fa-envelope-o"></i></a></td> --%>
-												<td class="center">${user.LAST_LOGIN}</td>
-												<td class="center">${user.IP}</td>
-												<td class="center">${user.BZ }</td>
-												<td style="width: 60px;" class="center">
-													<c:if test="${user.STATUS == '0' }"><span class="label label-important arrowed-in">停用</span></c:if>
-													<c:if test="${user.STATUS == '1' }"><span class="label label-success arrowed">正常</span></c:if>
-												</td>
-												<td class="center">
-													<c:if test="${QX.edit != 1 && QX.del != 1 }">
-													<span class="label label-large label-grey arrowed-in-right arrowed-in"><i class="ace-icon fa fa-lock" title="无权限"></i></span>
-													</c:if>
-													<div class="hidden-sm hidden-xs btn-group">
-														<%-- <c:if test="${QX.FHSMS == 1 }">
-														<a class="btn btn-xs btn-info" title='发送站内信' onclick="sendFhsms('${user.USERNAME }');">
-															<i class="ace-icon fa fa-envelope-o bigger-120" title="发送站内信"></i>
-														</a>
-														</c:if>
-														<c:if test="${QX.sms == 1 }">
-														<a class="btn btn-xs btn-warning" title='发送短信' onclick="sendSms('${user.PHONE }');">
-															<i class="ace-icon fa fa-envelope-o bigger-120" title="发送短信"></i>
-														</a>
-														</c:if> --%>
-														<c:if test="${QX.edit == 1 }">
-														<a class="btn btn-xs btn-success" title="编辑" onclick="editUser('${user.USER_ID}');">
-															<i class="ace-icon fa fa-pencil-square-o bigger-120" title="编辑"></i>
-														</a>
-														</c:if>
-														<%-- <c:if test="${QX.del == 1 }">
-														<a class="btn btn-xs btn-danger" onclick="delUser('${user.USER_ID }','${user.USERNAME }');">
-															<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
-														</a>
-														</c:if> --%>
+									<div>
+										<label class="inline">
+											<span class="list-item-info"> 处理状态：</span>
+											<span class="list-item-value green">新发起</span>
+										</label>
+										<label class="inline pull-right">
+											<span class="list-item-info"> 问题类型：</span>
+											<span class="list-item-value red">紧急</span>
+										</label>
+									</div>
+									<div class="time">
+										<i class="ace-icon fa fa-clock-o"></i>
+										<span class="green">6 min</span>
+									</div>
+								</li>
+
+								<li class="item-grey clearfix">
+									<div>
+										<label class="inline" style="margin-bottom:5px;">
+											<span class="list-item-value-title">测试问题2</span>
+										</label>
+									<div>
+									<div>
+										<label class="inline">
+											<span class="list-item-info"> 单位：</span>
+											<span class="list-item-value">兴工处</span>
+										</label>
+										<label class="inline pull-right">
+											<span class="list-item-info"> 系统：</span>
+											<span class="list-item-value">ERP系统</span>
+										</label>
+									</div>
+									
+									<div>
+										<label class="inline">
+											<span class="list-item-info"> 处理状态：</span>
+											<span class="list-item-value green">新发起</span>
+										</label>
+										<label class="inline pull-right">
+											<span class="list-item-info"> 问题类型：</span>
+											<span class="list-item-value red">紧急</span>
+										</label>
+									</div>
+									<div class="time">
+										<i class="ace-icon fa fa-clock-o"></i>
+										<span class="green">6 min</span>
+									</div>
+								</li> -->
+							</ul>						
+
+							<%-- <div class="page-header position-relative">
+								<table style="width:100%;">
+									<tr>
+										<td style="vertical-align:top;">
+											<c:if test="${QX.add == 1 }">
+											<a class="btn btn-mini btn-success" onclick="add();">新增</a>
+											</c:if>
+										</td>
+										<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
+									</tr>
+								</table>
+							</div> --%>
+							<div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div>
+						</form>
+					</div>
+					<!-- /.col4 -->
+					
+					<div class="col-xs-8">
+						<div class="widget-box transparent" id="recent-box">
+							<div class="widget-header">
+								<h4 class="widget-title lighter smaller blue">
+									<i class="ace-icon fa fa-rss orange"></i><span id="currentTabTitle">详情</span>
+								</h4>
+		
+								<div class="widget-toolbar no-border">
+									<ul class="nav nav-tabs" id="problem-tab">
+										<li class="active" tag="detail-tab">
+											<a data-toggle="tab" href="#detail-tab">详情</a>
+										</li>
+										
+										<li tag="report-tab">
+											<a data-toggle="tab" href="#report-tab">提报</a>
+										</li>
+										
+										<li tag="assigh-tab">
+											<a data-toggle="tab" href="#assigh-tab">分配</a>
+										</li>
+										
+										<li tag="answer-tab">
+											<a data-toggle="tab" href="#answer-tab">回复</a>
+										</li>
+		
+										<li tag="close-tab">
+											<a data-toggle="tab" href="#close-tab">关闭</a>
+										</li>
+										
+										<li tag="log-tab">
+											<a data-toggle="tab" href="#log-tab">日志</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+		
+							<div class="widget-body">
+								<div class="widget-main padding-4">
+									<div class="tab-content padding-8">
+										<!-- 问题分配 -->
+										<div id="assigh-tab" class="tab-pane">
+											<h4 class="smaller lighter green">
+												<!-- <i class="ace-icon fa fa-list"></i>
+												Sortable Lists -->
+												<button id="btnAddAssign" class="btn btn-success btn-xs"
+													onclick="addAssign()">
+													<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>分配</span>
+												</button>
+												<!-- <button id="btnDeleteAssign" class="btn btn-danger btn-xs"
+													onclick="deleteAssign()">
+													<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>取消</span>
+												</button> -->
+											</h4>
+											
+											<form id="problemAssignForm" method="post">
+												<input type="hidden" id="ff-assign-pro-code"/>
+												<div>
+													<div style="margin:10px 0px;">
+														<label for="ff-assign-pro-accept-user">受理人</label>
+														<select class="form-control" id="ff-assign-pro-accept-user">
+															<option value=""></option>
+															<c:forEach items="${userList}" var="user">
+																<%-- <option value="${system.DICT_CODE }" <c:if test="${system.DICT_CODE == pd.DICT_CODE }">selected</c:if>>${system.NAME }</option> --%>
+																<option value="${user.USER_ID}">${user.USERNAME}</option>
+															</c:forEach>
+														</select>
 													</div>
-													<div class="hidden-md hidden-lg">
-														<div class="inline pos-rel">
-															<button class="btn btn-minier btn-primary dropdown-toggle" data-toggle="dropdown" data-position="auto">
-																<i class="ace-icon fa fa-cog icon-only bigger-110"></i>
-															</button>
-															<ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
-																<%-- <c:if test="${QX.FHSMS == 1 }">
-																<li>
-																	<a style="cursor:pointer;" onclick="sendFhsms('${user.USERNAME }');" class="tooltip-info" data-rel="tooltip" title="发送站内信">
-																		<span class="blue">
-																			<i class="ace-icon fa fa-envelope bigger-120"></i>
-																		</span>
-																	</a>
-																</li>
-																</c:if>
-																<c:if test="${QX.sms == 1 }">
-																<li>
-																	<a style="cursor:pointer;" onclick="sendSms('${user.PHONE }');" class="tooltip-success" data-rel="tooltip" title="发送短信">
-																		<span class="blue">
-																			<i class="ace-icon fa fa-envelope-o bigger-120"></i>
-																		</span>
-																	</a>
-																</li>
-																</c:if> --%>
-																<c:if test="${QX.edit == 1 }">
-																<li>
-																	<a style="cursor:pointer;" onclick="editUser('${user.USER_ID}');" class="tooltip-success" data-rel="tooltip" title="修改">
-																		<span class="green">
-																			<i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
-																		</span>
-																	</a>
-																</li>
-																</c:if>
-																<%-- <c:if test="${QX.del == 1 }">
-																<li>
-																	<a style="cursor:pointer;" onclick="delUser('${user.USER_ID }','${user.USERNAME }');" class="tooltip-error" data-rel="tooltip" title="删除">
-																		<span class="red">
-																			<i class="ace-icon fa fa-trash-o bigger-120"></i>
-																		</span>
-																	</a>
-																</li>
-																</c:if> --%>
-															</ul>
+													
+													<div style="margin:10px 0px;">
+														<label for="ff-assign-pro-sys-type">提问系统</label>
+														<select class="form-control" name="PRO_SYS_TYPE" id="ff-assign-pro-sys-type">
+															<option value=""></option>
+															<c:forEach items="${systemList}" var="system">
+																<option value="${system.DICT_CODE}">${system.NAME}</option>
+															</c:forEach>
+														</select>
+													</div>
+													
+													<div style="margin:10px 0px;">
+														<label for="ff-assign-pro-type-id">问题类型</label>
+														<input type="hidden" name="PRO_TYPE_ID" id="ff-assign-pro-type-id" />
+														<div class="selectTree" id="selectTreeAssign" style="float:none;display:block;"></div>
+													</div>
+													
+													<div style="margin:10px 0px;">
+														<label for="ff-assign-pro-priority">优先级</label>
+														<select class="form-control" name="PRO_PRIORITY" id="ff-assign-pro-priority">
+															<option value=""></option>
+															<c:forEach items="${proPriorityList}" var="priority">
+																<option value="${priority.nameKey}">${priority.nameValue}</option>
+															</c:forEach>
+														</select>
+													</div>
+													<%-- <input type="number" name="PHONE" id="PHONE"  value="${pd.PHONE }"  maxlength="32" placeholder="这里输入手机号" title="手机号" style="width:98%;"/> --%>
+													<div style="margin:20px 0px;">
+														<span>分配人：</span><span>${pd.USER_NAME}</span>
+														<span style="margin-left:30px;">分配时间：</span><span>${pd.CURRENT_DATE}</span>
+													</div>
+													<!-- <hr /> -->
+															
+												</div>
+											</form>
+										</div>
+										
+										
+										<!-- 详细信息 -->
+										<div id="detail-tab" class="tab-pane active">
+											<h4>
+												<button id="btnGet" class="btn btn-success btn-xs"
+													onclick="proGet()">
+													<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>领取</span>
+												</button>
+												<button id="btnGetCancel()" class="btn btn-danger btn-xs"
+													onclick="proGetCancel()">
+													<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>取消</span>
+												</button>
+											</h4>
+											<hr />
+											<div id="modal-wizard-container">
+												<ul class="steps">
+													<li data-step="1" class="active">
+														<span class="step">1</span>
+														<span class="title">新发起</span>
+													</li>
+													<li data-step="2">
+														<span class="step">2</span>
+														<span class="title">已提交</span>
+													</li>
+													<li data-step="3">
+														<span class="step">3</span>
+														<span class="title">受理中</span>
+													</li>
+	
+													<li data-step="4">
+														<span class="step">4</span>
+														<span class="title">已关闭</span>
+													</li>
+												</ul>
+												<hr />
+												<h5 class="lighter block blue"><i class="ace-icon fa fa-rss orange"></i>&nbsp;基本信息</h5>
+												<hr />
+												
+												<div class="profile-user-info " >
+													<div class="profile-info-row">
+														<div class="profile-info-name"> 问题 </div>
+			
+														<div class="profile-info-value">
+															<span id="valPRO_TITLE">测试问题1</span>
 														</div>
 													</div>
-												</td>
-											</tr>
+													
+													<div class="profile-info-row">
+														<div class="profile-info-name"> 上报人 </div>
+			
+														<div class="profile-info-value">
+															<span id="valPRO_REPORT_USER"></span>
+														</div>
+													</div>
+													
+													<div class="profile-info-row">
+														<div class="profile-info-name"> 受理人 </div>
+			
+														<div class="profile-info-value">
+															<span id="valPRO_ACCEPT_USER"></span>
+														</div>
+													</div>
+			
+			
+													<div class="profile-info-row">
+														<div class="profile-info-name"> 上报单位 </div>
+			
+														<div class="profile-info-value">
+															<i class="fa fa-map-marker light-orange bigger-110"></i>
+															<!-- <span>中国石油</span> -->
+															<span id="valPRO_DEPART"></span>
+														</div>
+													</div>
+													
+													<div class="profile-info-row">
+														<div class="profile-info-name"> 系统 </div>
+			
+														<div class="profile-info-value">
+															<!-- <span>中国石油</span> -->
+															<span id="valPRO_SYS_TYPE"></span>
+														</div>
+													</div>
+													
+													<div class="profile-info-row">
+														<div class="profile-info-name"> 问题类型 </div>
+			
+														<div class="profile-info-value">
+															<span id="valPRO_TYPE_ID"></span>
+														</div>
+													</div>
+													
+													<div class="profile-info-row">
+														<div class="profile-info-name"> 问题标签 </div>
+			
+														<div class="profile-info-value">
+															<span id="valPRO_TAG"></span>
+														</div>
+													</div>
+													
+													<div class="profile-info-row">
+														<div class="profile-info-name"> 优先级 </div>
+			
+														<div class="profile-info-value">
+															<span id="valPRO_PRIORITY"></span>
+														</div>
+													</div>
+													
+													<div class="profile-info-row">
+														<div class="profile-info-name"> 问题解决时间 </div>
+			
+														<div class="profile-info-value">
+															<span id="valPRO_RESOLVE_TIME"></span>
+														</div>
+													</div>
+			
+													<div class="profile-info-row">
+														<div class="profile-info-name"> 处理状态 </div>
+			
+														<div class="profile-info-value">
+															<span id="valPRO_STATE"></span>
+														</div>
+													</div>
+			
+													<div class="profile-info-row">
+														<div class="profile-info-name"> 更新日期 </div>
+			
+														<div class="profile-info-value">
+															<span id="valUPDATE_DATE"></span>
+														</div>
+													</div>
+												</div>
+												<hr />
+												<h5 class="lighter block blue"><i class="ace-icon fa fa-rss blue"></i>&nbsp;问题描述</h5>
+												<hr />
+												<div id="valPRO_CONTENT" style="word-wrap:break-word">
+													
+												</div>
+											</div>
+										</div>
 										
-										</c:forEach>
-										</c:if>
-										<c:if test="${QX.cha == 0 }">
-											<tr>
-												<td colspan="10" class="center">您无权查看</td>
-											</tr>
-										</c:if>
-									</c:when>
-									<c:otherwise>
-										<tr class="main_info">
-											<td colspan="10" class="center">没有相关数据</td>
-										</tr>
-									</c:otherwise>
-								</c:choose>
-								</tbody>
-							</table>
-							<div class="page-header position-relative">
-								<div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div>	
-							</div>
-						</div>
+										<!-- 问题提报 -->
+										<div id="report-tab" class="tab-pane">
+											<h4>
+												<!-- <i class="ace-icon fa fa-list"></i>
+												Sortable Lists -->
+												<button id="btnAdd" class="btn btn-success btn-xs"
+													onclick="add()">
+													<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>新增</span>
+												</button>
+												<button id="btnEdit" class="btn btn-warning btn-xs"
+													onclick="edit()">
+													<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>编辑</span>
+												</button>
+												<button id="btnSave" class="btn btn-info btn-xs"
+													onclick="save()">
+													<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>保存</span>
+												</button>
+												<button id="btndelete" class="btn btn-danger btn-xs"
+													onclick="del()">
+													<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>作废</span>
+												</button>
+												<button id="btnCommit" class="btn btn-primary btn-xs"
+													onclick="commit()">
+													<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>提交</span>
+												</button>
+												<button id="btnCancel" class="btn btn-inverse btn-xs"
+													onclick="cancel()">
+													<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>取消</span>
+												</button>
+											</h4>
+											<div class="row">
+												<div class="col-xs-5">
+													<form name="problemReportForm" id="problemReportForm" method="post">
+														<input type="hidden" name="PRO_CODE" id="form-field-pro-code" value="${pd.PRO_CODE }"/>
+														<div id="zhongxin" style="padding-top: 13px;">
+															<div style="margin:10px 0px;">
+																<label for="form-field-pro-title">问题标题</label>
+																<input type="text" name="PRO_TITLE" id="form-field-pro-title" class="form-control" placeholder="请输入问题标题"/>
+															</div>
+															
+															<div style="margin:10px 0px;">
+																<label for="form-field-pro-report-user">上报人</label>
+																<select class="form-control" name="PRO_REPORT_USER" id="form-field-pro-report-user">
+																	<option value=""></option>
+																	<c:forEach items="${userList}" var="user">
+																		<!-- <option value="AL">Alabama</option>
+																		<option value="AK">Alaska</option> -->
+																		<%-- <option value="${system.DICT_CODE }" <c:if test="${system.DICT_CODE == pd.DICT_CODE }">selected</c:if>>${system.NAME }</option> --%>
+																		<option value="${user.USER_ID}">${user.USERNAME}</option>
+																	</c:forEach>
+																</select>
+															</div>
+														
+															<div style="margin:10px 0px;">
+																<label for="form-field-pro-accept-user">受理人</label>
+																<select class="form-control" name="PRO_ACCEPT_USER" id="form-field-pro-accept-user">
+																	<option value=""></option>
+																	<c:forEach items="${userList}" var="user">
+																		<!-- <option value="AL">Alabama</option>
+																		<option value="AK">Alaska</option> -->
+																		<%-- <option value="${system.DICT_CODE }" <c:if test="${system.DICT_CODE == pd.DICT_CODE }">selected</c:if>>${system.NAME }</option> --%>
+																		<option value="${user.USER_ID}">${user.USERNAME}</option>
+																	</c:forEach>
+																</select>
+															</div>
+															
+															<div style="margin:10px 0px;">
+																<label for="form-field-pro-sys-type">提问系统</label>
+																<select class="form-control" name="PRO_SYS_TYPE" id="form-field-pro-sys-type">
+																	<option value=""></option>
+																	<c:forEach items="${systemList}" var="system">
+																		<!-- <option value="AL">Alabama</option>
+																		<option value="AK">Alaska</option> -->
+																		<%-- <option value="${system.DICT_CODE }" <c:if test="${system.DICT_CODE == pd.DICT_CODE }">selected</c:if>>${system.NAME }</option> --%>
+																		<option value="${system.DICT_CODE}">${system.NAME}</option>
+																	</c:forEach>
+																</select>
+															</div>
+															
+															<div style="margin:10px 0px;">
+																<label for="form-field-pro-type-id">问题类型</label>
+																<input type="hidden" name="PRO_TYPE_ID" id="form-field-pro-type-id" />
+																<div class="selectTree" id="selectTree" style="float:none;display:block;"></div>
+																
+															</div>
+															
+															<div style="margin:10px 0px;">
+																<label for="form-field-pro-tag">问题标签（多个标签使用空格分隔）</label>
+																<input type="text" name="PRO_TAG" id="form-field-pro-tag" class="form-control" placeholder="请输入标签"/>
+															</div>
+															
+															<div style="margin:10px 0px;">
+																<label for="form-field-pro-priority">优先级</label>
+																<select class="form-control" name="PRO_PRIORITY" id="form-field-pro-priority">
+																	<option value=""></option>
+																	<c:forEach items="${proPriorityList}" var="priority">
+																		<option value="${priority.nameKey}">${priority.nameValue}</option>
+																	</c:forEach>
+																</select>
+															</div>
+															
+															<div style="margin:10px 0px;">
+																<label for="form-field-pro-resolve-time">问题解决时间</label>
+																<input type="text" name="PRO_RESOLVE_TIME" id="form-field-pro-resolve-time" class="form-control" placeholder="请输入问题解决时间"/>
+															</div>
+															<textarea name="PRO_CONTENT" id="form-field-pro-content" style="display:none" ></textarea>
+															<!-- <div style="margin:10px 0px;">
+																<label for="editor">问题描述</label>
+																<script id="editor" type="text/plain" style="width:100%;height:259px;"></script>
+															</div> -->
+															
+															<%-- <input type="number" name="PHONE" id="PHONE"  value="${pd.PHONE }"  maxlength="32" placeholder="这里输入手机号" title="手机号" style="width:98%;"/> --%>
+															<div style="margin:20px 0px;">
+																<span>分配人：</span><span>张三</span>
+																<span style="margin-left:30px;">分配时间：</span><span>2019-05-23</span>
+															</div>
+															
+															<!--<hr />
+															<div>
+																<a class="btn btn-mini btn-primary" onclick="save();">保存</a>
+																<a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">取消</a>
+															</div> -->		
+														</div>
+													</form>
+												</div>
+												<div class="col-xs-7">
+													<div class="no-border" style="margin-top:30px;">
+														<ul class="nav nav-tabs" id="recent-tab">
+															<li class="active">
+																<a data-toggle="tab" href="#dt-tab">动态关联</a>
+															</li>
+							
+															<li>
+																<a data-toggle="tab" href="#sd-tab">手动检索</a>
+															</li>
+														</ul>
+													</div>
+													<div class="tab-content padding-8">
+														<div id="sd-tab" class="tab-pane">
+															<div class="nav-search" style="margin:10px 0px;">
+																<span class="input-icon" style="width:90%">
+																	<input style="width:100%" class="nav-search-input " autocomplete="off" id="keywordsKnowledge" type="text" value="" placeholder="这里输入关键词" />
+																	<i class="ace-icon fa fa-search nav-search-icon"></i>
+																</span>
+																<button style="margin-bottom:3px;" class="btn btn-light btn-minier" onclick="searchKnowledgeList();"  title="检索">
+																	<i id="nav-search-icon" class="ace-icon fa fa-search bigger-120 nav-search-icon blue"></i>
+																	<!-- <i class="ace-icon fa fa-signal icon-only bigger-150"></i> -->
+																</button>
+															</div>
+															<ul id="ulSd" class="item-list">
+																
+															</ul>		
+															<div class="page-header position-relative">
+																<div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div>	
+															</div>
+														</div>
+														
+														<div id="dt-tab" class="tab-pane active">
+															<ul id="ulDt" class="item-list">
+																<!-- <li class="item-grey clearfix">
+																	<div>
+																		<label class="inline" style="margin-bottom:5px;">
+																			<span class="list-item-value-title">测试问题1</span>
+																		</label>
+																		<div class="pull-right">
+																			<button class="btn btn-xs btn-yellow" onClick="viewKnowledgeDetail(1)">详情</button>
+																		</div>
+																	<div>
+																	
+																	<div>
+																		<label class="inline">
+																			<span class="list-item-info"> 内容：</span>
+																			<span class="list-item-value">中国石油辽河油田兴隆台采油厂×××××××××××××××××××××××××××××××××××××××××××××</span>
+																		</label>
+																	</div>
+																	
+																	<div>
+																		<label class="inline">
+																			<span class="list-item-info"> 作者：</span>
+																			<span class="list-item-value">张三</span>
+																		</label>
+																		<label class="inline">
+																			<span class="list-item-info"><i class="ace-icon fa fa-clock-o"></i> 时间：</span>
+																			<span class="list-item-value red">
+																				<span>2019-07-23</span>
+																			</span>
+																		</label>
+																	</div>
+																</li>
+								
+																<li class="item-grey clearfix">
+																	<div>
+																		<label class="inline" style="margin-bottom:5px;">
+																			<span class="list-item-value-title">测试问题2</span>
+																		</label>
+																	<div>
+																	<div>
+																		<label class="inline">
+																			<span class="list-item-info"> 内容：</span>
+																			<span class="list-item-value">中国石油辽河油田兴隆台采油厂×××××××××××××××××××××××××××××××××××××××××××××</span>
+																		</label>
+																	</div>
+																	
+																	<div>
+																		<label class="inline">
+																			<span class="list-item-info"> 作者：</span>
+																			<span class="list-item-value green">李四</span>
+																		</label>
+																		<label class="inline">
+																			<span class="list-item-info"><i class="ace-icon fa fa-clock-o"></i> 时间：</span>
+																			<span class="list-item-value red">
+																				<span>2019-07-23</span>
+																			</span>
+																		</label>
+																	</div>
+																</li> -->
+															</ul>
+																	
+															<div class="page-header position-relative">
+																<div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div>	
+															</div>
+														</div>
+													</div>
+												</div>
+
+											</div>
+											<div class="row">
+												<div style="margin:10px 12px;">
+													<label for="editor">问题描述</label>
+													<script id="editor" type="text/plain" style="width:100%;height:259px;"></script>
+												</div>
+											</div>
+											<div class="row">
+												<div style="margin:10px 12px;">
+													<h4>
+														<button id="btnAddProInfoAttachment" class="btn btn-success btn-xs"
+															onclick="addProAttachmentByType('PROBLEM_INFO')">
+															<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>上传附件</span>
+														</button>
+													</h4>
+													<table id="simple-table" class="table table-striped table-bordered table-hover" style="margin-top:5px;">	
+														<thead>
+															<tr>
+																<th class="center" style="width:50px;">序号</th>
+																<th class="center">附件名</th>
+																<th class="center">附件说明</th>
+																<th class="center">附件大小</th>
+																<th class="center">上传人</th>
+																<th class="center">上传日期</th>
+																<th class="center">操作</th>
+															</tr>
+														</thead>
+																				
+														<tbody id="tbodyProInfoAttachment">
+															
+														</tbody>
+													</table>
+												</div>
+											</div>
+										</div>
+										
+										<!-- 问题回复 -->
+										<div id="answer-tab" class="tab-pane">
+											<h4 class="smaller lighter green">
+												<!-- <i class="ace-icon fa fa-list"></i>
+												Sortable Lists -->
+												<button id="btnNewAnswer" class="btn btn-success btn-xs"
+													onclick="newAnswer()">
+													<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>新回复</span>
+												</button>
+												<button id="btnAddAnswer" class="btn btn-primary btn-xs"
+													onclick="addAnswer()">
+													<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>提交</span>
+												</button>
+												<button id="btnDeleteAnswer" class="btn btn-danger btn-xs"
+													onclick="deleteAnswer()">
+													<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>删除</span>
+												</button>
+											</h4>
+											<form id="problemAnswerForm" method="post">
+												<!-- <input type="hidden" id="ff-answer-answer-id"/> -->
+												<div>
+													<div style="margin:10px 0px;">
+														<label>选择信息</label>
+														<select class="form-control" id="ff-answer-info" onChange="getAnswerContent()">
+															<%-- <option value=""></option>
+															<c:forEach items="${systemList}" var="system">
+																<option value="${system.DICT_CODE}">${system.NAME}</option>
+															</c:forEach> --%>
+														</select>
+													</div>
+													
+													<div style="margin:10px 0px;">
+														<!-- <label for="editor">回复信息</label> -->
+														<script id="editorAnswer" type="text/plain" style="width:100%;height:259px;"></script>
+													</div>
+
+													<%-- <div style="margin:20px 0px;">
+														<span>回复人：</span><span>${pd.USER_NAME}</span>
+														<span style="margin-left:30px;">回复日期：</span><span>${pd.CURRENT_DATE}</span>
+													</div> --%>	
+												</div>
+											</form>
+											
+											<div >
+												<h4>
+													<button id="btnAddProAnswerAttachment" class="btn btn-success btn-xs"
+														onclick="addProAttachmentByType('PROBLEM_ANSWER')">
+														<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>上传附件</span>
+													</button>
+												</h4>
+												<table id="simple-table" class="table table-striped table-bordered table-hover" style="margin-top:5px;">	
+													<thead>
+														<tr>
+															<th class="center" style="width:50px;">序号</th>
+															<th class="center">附件名</th>
+															<th class="center">附件说明</th>
+															<th class="center">附件大小</th>
+															<th class="center">上传人</th>
+															<th class="center">上传日期</th>
+															<th class="center">操作</th>
+														</tr>
+													</thead>
+																			
+													<tbody id="tbodyProAnswerAttachment">
+														
+													</tbody>
+												</table>
+											</div>
+										</div>
+										
+										<!-- 问题关闭 -->
+										<div id="close-tab" class="tab-pane">
+											<h4 class="smaller lighter green">
+												<!-- <i class="ace-icon fa fa-list"></i>
+												Sortable Lists -->
+												<button id="btnAddClose" class="btn btn-success btn-xs"
+													onclick="addClose()">
+													<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>提交</span>
+												</button>
+												<button id="btnDeleteClose" class="btn btn-danger btn-xs"
+													onclick="deleteClose()">
+													<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>取消</span>
+												</button>
+											</h4>
+											<form id="problemCloseForm" method="post">
+												<input type="hidden" id="ff-close-pro-code"/>
+												<div>
+													<div style="margin:10px 0px;">
+														<!-- <label for="editorClose">关闭信息</label> -->
+														<script id="editorClose" type="text/plain" style="width:100%;height:259px;"></script>
+													</div>
+
+													<%-- <div style="margin:20px 0px;">
+														<span>回复人：</span><span>${pd.USER_NAME}</span>
+														<span style="margin-left:30px;">回复日期：</span><span>${pd.CURRENT_DATE}</span>
+													</div>	 --%>
+												</div>
+											</form>
+										
+											<div >
+												<h4>
+													<button id="btnAddProCloseAttachment" class="btn btn-success btn-xs"
+														onclick="addProAttachmentByType('PROBLEM_CLOSE')">
+														<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>上传附件</span>
+													</button>
+												</h4>
+												<table id="simple-table" class="table table-striped table-bordered table-hover" style="margin-top:5px;">	
+													<thead>
+														<tr>
+															<th class="center" style="width:50px;">序号</th>
+															<th class="center">附件名</th>
+															<th class="center">附件说明</th>
+															<th class="center">附件大小</th>
+															<th class="center">上传人</th>
+															<th class="center">上传日期</th>
+															<th class="center">操作</th>
+														</tr>
+													</thead>
+																			
+													<tbody id="tbodyProCloseAttachment">
+														
+													</tbody>
+												</table>
+											</div>
+											
+										</div>
+									
+										<!-- 日志-->
+										<div id="log-tab" class="tab-pane">
+											<h4 class="smaller lighter green">
+												<!-- <i class="ace-icon fa fa-list"></i>
+												Sortable Lists -->
+											</h4>
+											
+											<table id="simple-table" class="table table-striped table-bordered table-hover" style="margin-top:5px;">	
+												<thead>
+													<tr>
+														<th class="center" style="width:50px;">序号</th>
+														<th class="center">操作人</th>
+														<th class="center">事件</th>
+														<th class="center">客户端IP</th>
+														<th class="center">请求日期</th>
+														<!-- <th class="center">操作</th> -->
+													</tr>
+												</thead>
+																		
+												<tbody id="tbodyLog">
+													
+												</tbody>
+											</table>
+												
+											
+										</div>
+									</div>
+								</div>
+							</div>	
 					</div>
-						
+					<!-- /.col8 -->
+					</div>
+					<!-- /.row -->
 				</div>
 				<!-- /.page-content -->
 			</div>
@@ -262,145 +824,36 @@
 	<%@ include file="../../system/index/foot.jsp"%>
 	<!-- 删除时确认窗口 -->
 	<script src="static/ace/js/bootbox.js"></script>
+	
+	<!-- 步骤条 -->
+	<script src="static/ace/js/fuelux/fuelux.wizard.js"></script>
+	<script src="static/ace/js/ace/elements.wizard.js"></script>
+	
 	<!-- ace scripts -->
-	<script src="static/ace/js/ace/ace.js"></script>
+	<!-- <script src="static/ace/js/ace.js"></script> -->
+	<!-- <script src="static/ace/js/ace/ace.js"></script> -->
 	<!-- 日期框 -->
 	<script src="static/ace/js/date-time/bootstrap-datepicker.js"></script>
 	<!-- 下拉框 -->
 	<script src="static/ace/js/chosen.jquery.js"></script>
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
+	
+	<!-- 编辑框-->
+	<script type="text/javascript" charset="utf-8">window.UEDITOR_HOME_URL = "<%=path%>/plugins/ueditor/";</script>
+	<script type="text/javascript" charset="utf-8" src="plugins/ueditor/ueditor.config.js"></script>
+	<script type="text/javascript" charset="utf-8" src="plugins/ueditor/ueditor.all.js"></script>
+	<!-- 编辑框-->
 	</body>
 
 <script type="text/javascript">
+var currentItem;
+
 $(top.hangge());
 
-//检索
-function searchs(){
-	top.jzts();
-	$("#userForm").submit();
-}
-
-//删除
-function delUser(userId,msg){
-	bootbox.confirm("确定要删除["+msg+"]吗?", function(result) {
-		if(result) {
-			top.jzts();
-			var url = "<%=basePath%>user/deleteU.do?USER_ID="+userId+"&tm="+new Date().getTime();
-			$.get(url,function(data){
-				nextPage(${page.currentPage});
-			});
-		};
-	});
-}
-
-//新增
-function add(){
-	 top.jzts();
-	 var diag = new top.Dialog();
-	 diag.Drag=true;
-	 diag.Title ="新增";
-	 diag.URL = '<%=basePath%>user/goAddU.do';
-	 diag.Width = 469;
-	 diag.Height = 505;
-	 diag.CancelEvent = function(){ //关闭事件
-		 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
-			 if('${page.currentPage}' == '0'){
-				 top.jzts();
-				 setTimeout("self.location=self.location",100);
-			 }else{
-				 nextPage(${page.currentPage});
-			 }
-		}
-		diag.close();
-	 };
-	 diag.show();
-}
-
-//修改
-function editUser(user_id){
-	 top.jzts();
-	 var diag = new top.Dialog();
-	 diag.Drag=true;
-	 diag.Title ="资料";
-	 diag.URL = '<%=basePath%>user/goEditU.do?USER_ID='+user_id;
-	 diag.Width = 469;
-	 diag.Height = 505;
-	 diag.CancelEvent = function(){ //关闭事件
-		 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
-			nextPage(${page.currentPage});
-		}
-		diag.close();
-	 };
-	 diag.show();
-}
-
-//批量操作
-function makeAll(msg){
-	bootbox.confirm(msg, function(result) {
-		if(result) {
-			var str = '';
-			var emstr = '';
-			var phones = '';
-			var username = '';
-			for(var i=0;i < document.getElementsByName('ids').length;i++)
-			{
-				  if(document.getElementsByName('ids')[i].checked){
-				  	if(str=='') str += document.getElementsByName('ids')[i].value;
-				  	else str += ',' + document.getElementsByName('ids')[i].value;
-				  	
-				  	if(emstr=='') emstr += document.getElementsByName('ids')[i].id;
-				  	else emstr += ';' + document.getElementsByName('ids')[i].id;
-				  	
-				  	if(phones=='') phones += document.getElementsByName('ids')[i].alt;
-				  	else phones += ';' + document.getElementsByName('ids')[i].alt;
-				  	
-				  	if(username=='') username += document.getElementsByName('ids')[i].title;
-				  	else username += ';' + document.getElementsByName('ids')[i].title;
-				  }
-			}
-			if(str==''){
-				bootbox.dialog({
-					message: "<span class='bigger-110'>您没有选择任何内容!</span>",
-					buttons: 			
-					{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
-				});
-				$("#zcheckbox").tips({
-					side:3,
-		            msg:'点这里全选',
-		            bg:'#AE81FF',
-		            time:8
-		        });
-				
-				return;
-			}else{
-				if(msg == '确定要删除选中的数据吗?'){
-					top.jzts();
-					$.ajax({
-						type: "POST",
-						url: '<%=basePath%>user/deleteAllU.do?tm='+new Date().getTime(),
-				    	data: {USER_IDS:str},
-						dataType:'json',
-						//beforeSend: validateData,
-						cache: false,
-						success: function(data){
-							 $.each(data.list, function(i, list){
-									nextPage(${page.currentPage});
-							 });
-						}
-					});
-				}else if(msg == '确定要给选中的用户发送邮件吗?'){
-					sendEmail(emstr);
-				}else if(msg == '确定要给选中的用户发送短信吗?'){
-					sendSms(phones);
-				}else if(msg == '确定要给选中的用户发送站内信吗?'){
-					sendFhsms(username);
-				}
-			}
-		}
-	});
-}
-
+/**
+ * html文档加载完成后执行初始化方法，初始化界面元素样式，初始化基础数据，列表等信息
+ */
 $(function() {
 	//日期框
 	$('.date-picker').datepicker({autoclose: true,todayHighlight: true});
@@ -442,33 +895,1393 @@ $(function() {
 			else $(row).removeClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', false);
 		});
 	});
+	
+	/* 加载进度条 */
+	$('#modal-wizard-container').ace_wizard();
+	
+	/* 加载富文本 */
+	setTimeout("ueditor()",500);
+	
+	//初始化字段为只读
+	initFieldDisabled(true);
+	
+	//初始化问题列表数据
+	initList();
+	
+	$("#problem-tab a").click(function(e){
+		$('#currentTabTitle').text($(this).text());
+		e.preventDefault();
+		console.log($(this).attr('href'));
+		if($(this).attr('href')=="#report-tab"){
+	        //add();
+			//edit();
+		}else if($(this).attr('href')=="#answer-tab"){
+			getProAnswers();
+		}
+    });
+	
+	/* $("#problem-tab li[tag='report-tab'] a").click(function(e){
+        
+    }); */
 });
 
+/**
+ * 加载富文本 
+ */
+function ueditor(){
+	var ue = UE.getEditor('editor');
+	//UE.getEditor('editor').setDisabled();
+	
+	var ueAnswer = UE.getEditor('editorAnswer');
+	var ueClose = UE.getEditor('editorClose');
+}
 
-//查看用户
-function viewUser(USERNAME){
-	if('admin' == USERNAME){
-		bootbox.dialog({
-			message: "<span class='bigger-110'>不能查看admin用户!</span>",
-			buttons: 			
-			{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
-		});
-		return;
+/**
+ * 初始化字段为只读
+ */
+function initFieldDisabled(disabled){
+	//$("#form-field-pro-code").attr("readonly",true);
+	$("#form-field-pro-title").attr("disabled",disabled);
+	$("#form-field-pro-report-user").attr("disabled",disabled);
+	$("#form-field-pro-accept-user").attr("disabled",disabled);
+	$("#form-field-pro-sys-type").attr("disabled",disabled);
+	$("#form-field-pro-type-id").attr("disabled",disabled);
+	$("#form-field-pro-tag").attr("disabled",disabled);
+	$("#form-field-pro-priority").attr("disabled",disabled);
+	$("#form-field-pro-resolve-time").attr("disabled",disabled);
+	$("#form-field-pro-content").attr("disabled",disabled);
+	
+	UE.getEditor('editor').addListener("ready", function () {
+		UE.getEditor('editor').setDisabled();
+	});
+	
+	if(UE.getEditor('editor').isReady){
+		if(disabled){
+			UE.getEditor('editor').setDisabled();
+		}else{
+			UE.getEditor('editor').setEnabled();
+		}
 	}
+}
+
+function jumpStep(step){
+	//jump to a step
+	var wizard = $('#modal-wizard-container').data('fu.wizard')
+	wizard.currentStep = step;
+	wizard.setState();
+
+	//determine selected step
+	//wizard.selectedItem().step
+}
+
+/**
+ * 初始化列表信息
+ */
+function initList(){
+	$("#problemList li").remove(); 
+	top.jzts();
+	var keywords = $("#keywords").val();
+	$.ajax({
+			type: "POST",
+			url: '<%=basePath%>mbp/getPageList.do',
+	    	data: {keywords:keywords},
+			dataType:'json',
+			cache: false,
+			success: function(data){
+				var first;
+				if(data){
+					$.each(data, function(i, item){
+						if(i==0){
+							first=item;
+						}
+						//console.log(item);
+						addItem(item); 
+				 	});
+					if(first){
+						getDetail(first.PRO_CODE);
+					}
+				}
+				else{
+					addEmpty();
+				}
+				top.hangge();
+			}
+	});
+}
+
+/**
+ * 增加Item数据
+ */
+function addItem(item){
+	var htmlProState='';
+	if(item.PRO_STATE=="2"){
+		htmlProState='<span class="list-item-value blue">'+item.PRO_STATE_NAME+'</span>'
+	}else if(item.PRO_STATE=="3"){
+		htmlProState='<span class="list-item-value orange">'+item.PRO_STATE_NAME+'</span>'
+	}else if(item.PRO_STATE=="4"){
+		htmlProState='<span class="list-item-value grey">'+item.PRO_STATE_NAME+'</span>'
+	}else{
+		htmlProState='<span class="list-item-value green">'+item.PRO_STATE_NAME+'</span>'
+	}
+	var htmlItem='<li class="item-grey clearfix list-item-hover" onclick=getDetail("'+item.PRO_CODE+'")>'
+	+'<input name="PRO_CODE" id="PRO_CODE" type="hidden" value="'+item.PRO_CODE+'" />'
+		+'<div>'
+			+'<label class="inline" style="margin-bottom:5px;">'
+				+'<span class="list-item-value-title">'+item.PRO_TITLE+'</span>'
+			+'</label>'
+		+'<div>'
+		+'<div>'
+			+'<label class="inline">'
+				+'<span class="list-item-info"> 单位：</span>'
+				+'<span class="list-item-value">'+item.PRO_DEPART_NAME+'</span>'
+			+'</label>'
+			+'<label class="inline pull-right">'
+				+'<span class="list-item-info"> 系统：</span>'
+				+'<span class="list-item-value">'+item.PRO_SYS_TYPE_NAME+'</span>'
+			+'</label>'
+		+'</div>'
+		
+		+'<div>'
+			+'<label class="inline">'
+				+'<span class="list-item-info"> 处理状态：</span>'
+				/* +'<span class="list-item-value green">'+item.PRO_STATE_NAME+'</span>' */
+				+htmlProState
+				+'</label>'
+			+'<label class="inline pull-right">'
+				+'<span class="list-item-info"> 问题类型：</span>'
+				+'<span class="list-item-value">'+item.PRO_TYPE_NAME+'</span>'
+			+'</label>'
+		+'</div>'
+		+'<div class="time">'
+			+'<i class="ace-icon fa fa-clock-o"></i>'
+			+'<span class="grey">'+item.UPDATE_DATE+'</span>'
+		+'</div>'
+	+'</li>';
+	$("#problemList").append(htmlItem);
+}
+
+/**
+ * 增加空数据提示
+ */
+function addEmpty(){
+	var htmlEmpty='<li class="item-grey clearfix">'
+		+'<div>'
+			+'<label class="inline" style="margin-bottom:5px;">'
+				+'<span class="list-item-value-title">没有相关数据</span>'
+			+'</label>'
+		+'<div>'
+	+'</li>';
+	$("#problemList").append(htmlEmpty);
+}
+
+
+/**
+ * 获取明细信息
+ */
+function getDetail(problemCode){
+	/* $("#problem-tab li").each(function(){
+		var item = this;
+		if($(item).attr("tag")=="detail-tab"){
+			$(this).tab("show");
+			$(this).click();
+		}
+	}); */
+	
+	/* $("#report-tab").removeClass("active");
+	$("#assign-tab").removeClass("active");
+	$("#close-tab").removeClass("active");
+	$("#detail-tab").addClass("active"); */
+	
+	console.log(event);
+	
+	if(event){
+		$("#problemList li").each(function(){
+			var item = this;
+			$(item).removeClass("bc-light-orange");
+		}); 
+		$($(event.srcElement).closest('li')).addClass("bc-light-orange");
+	}else{
+		$("#problemList li").first().addClass("bc-light-orange");
+		//$($(event.srcElement).parents('li')).addClass("bc-light-orange");
+	}
+	//add();//清空原有问题提报中信息
+	$("#problem-tab li[tag='detail-tab'] a").click();
+	initFieldDisabled(true);
+	
+	$.ajax({
+		type: "GET",
+		url: '<%=basePath%>mbp/getDetail.do?PRO_CODE='+problemCode,
+		dataType:'json',
+		cache: false,
+		success: function(data){
+			 if(data){
+				 currentItem=data;
+				 
+				 $("#valPRO_TITLE").text(data.PRO_TITLE);
+				 $("#valPRO_REPORT_USER").text(data.PRO_REPORT_USER_NAME);
+				 $("#valPRO_ACCEPT_USER").text(data.PRO_ACCEPT_USER_NAME);
+				 $("#valPRO_DEPART").text(data.PRO_DEPART_NAME);
+				 $("#valPRO_SYS_TYPE").text(data.PRO_SYS_TYPE_NAME);
+				 $("#valPRO_TYPE_ID").text(data.PRO_TYPE_NAME);
+				 $("#valPRO_TAG").text(data.PRO_TAG);
+				 $("#valPRO_PRIORITY").text(data.PRO_PRIORITY_NAME);
+				 $("#valPRO_RESOLVE_TIME").text(data.PRO_RESOLVE_TIME);
+				 $("#valPRO_STATE").text(data.PRO_STATE_NAME);
+				 $("#valUPDATE_DATE").text(data.UPDATE_DATE);
+				 $("#valPRO_CONTENT").html(data.PRO_CONTENT);
+				 
+				 /* 设置提报中的字段动态获取值 */
+				 setReportFieldValue(data);
+				 
+				 
+				 /* 设置分配中的字段动态获取值 */
+				 $("#ff-assign-pro-sys-type").val(data.PRO_SYS_TYPE);
+				 $("#ff-assign-pro-type-id").val(data.PRO_TYPE_ID);
+				 var proTypeName="";
+				 if(data.PRO_TYPE_ID!=null&&data.PRO_TYPE_ID!=""){
+					 proTypeName=data.PRO_TYPE_NAME;
+				 }else{
+					 proTypeName="请选择问题类型"
+				 }
+				 $("#selectTree3_input").val(proTypeName);
+				 $("#ff-assign-pro-priority").val(data.PRO_PRIORITY);
+				 
+				 /* 获取日志信息 */
+				 getProLog();
+				 
+				 /* 获取提报中附件信息 */
+				 getProAttachment("PROBLEM_INFO");
+				 /* 获取回复中附件信息 */
+				 getProAttachment("PROBLEM_ANSWER");
+				 /* 获取回复中附件信息 */
+				 getProAttachment("PROBLEM_CLOSE");
+				 
+				 if(data.PRO_STATE=="2"){
+					 jumpStep(2);
+				 }else if(data.PRO_STATE=="3"){
+					 jumpStep(3);
+				 }else if(data.PRO_STATE=="4"){
+					 jumpStep(4);
+				 }else{
+					 jumpStep(1);
+				 }
+				 
+			 }
+			 top.hangge();
+		}
+	});
+}
+
+/**
+ * 设置选中样式
+ */
+/* function setSelectStyle(){
+	background-color: red;
+} */
+
+/**
+ * 领取
+ */
+function proGet(){
+	console.log('proGet');
+	var proCode=currentItem.PRO_CODE;//问题单号
+    
+	top.jzts();
+	
+	$.ajax({
+		type: "POST",
+		url: '<%=basePath%>mbp/proGet.do',
+		data:{PRO_CODE:proCode},
+    	dataType:'json',
+		cache: false,
+		success: function(response){
+			if(response.code==0){
+				$(top.hangge());//关闭加载状态
+				$("#btnDeleteClose").tips({
+					side:3,
+		            msg:'领取成功',
+		            bg:'#009933',
+		            time:3
+		        });
+				initList();
+				jumpStep(3);
+			}else{
+				$(top.hangge());//关闭加载状态
+				$("#btnDeleteClose").tips({
+					side:3,
+		            msg:'领取失败,'+response.message,
+		            bg:'#cc0033',
+		            time:3
+		        });
+			}
+		},
+    	error: function(response) {
+    		$(top.hangge());//关闭加载状态
+    		var msgObj=JSON.parse(response.responseText);
+			$("#btnDeleteClose").tips({
+				side:3,
+	            msg:'领取失败,'+msgObj.message,
+	            bg:'#cc0033',
+	            time:3
+	        });
+    	}
+	});
+	
+}
+
+/**
+ * 领取取消
+ */
+function proGetCancel(){
+	var proCode=currentItem.PRO_CODE;//问题单号
+	top.jzts();
+	
+	$.ajax({
+		type: "POST",
+		url: '<%=basePath%>mbp/proGetCancel.do',
+		data:{PRO_CODE:proCode},
+    	dataType:'json',
+		cache: false,
+		success: function(response){
+			if(response.code==0){
+				$(top.hangge());//关闭加载状态
+				$("#btnDeleteClose").tips({
+					side:3,
+		            msg:'取消领取成功',
+		            bg:'#009933',
+		            time:3
+		        });
+				initList();
+				jumpStep(2);
+			}else{
+				$(top.hangge());//关闭加载状态
+				$("#btnDeleteClose").tips({
+					side:3,
+		            msg:'取消领取失败,'+response.message,
+		            bg:'#cc0033',
+		            time:3
+		        });
+			}
+		},
+    	error: function(response) {
+    		$(top.hangge());//关闭加载状态
+    		var msgObj=JSON.parse(response.responseText);
+			$("#btnDeleteClose").tips({
+				side:3,
+	            msg:'取消领取失败,'+msgObj.message,
+	            bg:'#cc0033',
+	            time:3
+	        });
+    	}
+	});
+}
+
+//检索
+function searchs(){
+	initList();
+	//$("#problemForm").submit();
+}
+
+/**
+ * 保存
+ */
+function save(){
+	if ($("#form-field-pro-title").attr('disabled') == 'disabled') {
+		$("#btnSave").tips({
+			side : 3,
+			msg : '请先编辑后再保存',
+			bg : '#AE81FF',
+			time : 2
+		});
+		$("#btnSave").focus();
+		return false;
+	}
+	
+	if ($.trim($("#form-field-pro-title").val()) == "") {
+		$("#form-field-pro-title").tips({
+			side : 3,
+			msg : '请输入问题标题',
+			bg : '#AE81FF',
+			time : 2
+		});
+		$("#form-field-pro-title").focus();
+		return false;
+	}
+	/* if ($("#form-field-pro-type-id").val()==null||$("#form-field-pro-type-id").val()=="") {
+		$("#form-field-pro-type-id").tips({
+			side : 3,
+			msg : '请选择问题类型',
+			bg : '#AE81FF',
+			time : 2
+		});
+		$("#form-field-pro-type-id").focus();
+		return false;
+	} */
+	
+	var content;
+	var arr = [];
+    arr.push(UE.getEditor('editor').getContent());
+    content=arr.join("");
+	$("#form-field-pro-content").val(content);
+	
+	top.jzts();
+	var proCode=$("#form-field-pro-code").val();//问题单号
+	var proTitle=$("#form-field-pro-title").val();//问题标题
+	var proReportUser=$("#form-field-pro-report-user").val();//上报人
+	var proAcceptUser=$("#form-field-pro-accept-user").val();//受理人
+	//上报单位
+	var proSysType=$("#form-field-pro-sys-type").val();//系统类型
+	var proTypeID=$("#form-field-pro-type-id").val();//问题类型
+	var proTag=$("#form-field-pro-tag").val();//问题标签
+	var proPriority=$("#form-field-pro-priority").val();//优先级
+	var proResolveTime=$("#form-field-pro-resolve-time").val();//问题解决时间
+	var proContent=$("#form-field-pro-content").val();//问题描述
+	$.ajax({
+		type: "POST",
+		url: '<%=basePath%>mbp/save.do',
+		data:{PRO_CODE:proCode,PRO_TITLE:proTitle,PRO_REPORT_USER:proReportUser,PRO_ACCEPT_USER:proAcceptUser,PRO_SYS_TYPE:proSysType,PRO_TYPE_ID:proTypeID,PRO_TAG:proTag,PRO_PRIORITY:proPriority,PRO_RESOLVE_TIME:proResolveTime,PRO_CONTENT:proContent},
+    	dataType:'json',
+		cache: false,
+		success: function(response){
+			if(response.code==0){
+				$(top.hangge());//关闭加载状态
+				$("#btnSave").tips({
+					side:3,
+		            msg:'保存任务成功',
+		            bg:'#009933',
+		            time:3
+		        });
+				initList();
+			}else{
+				$(top.hangge());//关闭加载状态
+				$("#btnSave").tips({
+					side:3,
+		            msg:'保存任务失败,'+response.message,
+		            bg:'#cc0033',
+		            time:3
+		        });
+			}
+		},
+    	error: function(response) {
+    		var msgObj=JSON.parse(response.responseText);
+    		$(top.hangge());//关闭加载状态
+			$("#btnSave").tips({
+				side:3,
+	            msg:'保存任务失败,'+msgObj.message,
+	            bg:'#cc0033',
+	            time:3
+	        });
+    	}
+	});
+}
+
+/**
+ * 增加
+ */
+function add(){
+	initFieldDisabled(false);
+	
+	$("#form-field-pro-code").val("");
+	$("#form-field-pro-title").val("");
+	$("#form-field-pro-report-user").val("");
+	$("#form-field-pro-accept-user").val("");
+	$("#form-field-pro-sys-type").val("");
+	$("#form-field-pro-type-id").val("");
+	$("#selectTree2_input").val("");
+	$("#form-field-pro-tag").val("");
+	$("#form-field-pro-priority").val("");
+	$("#form-field-pro-resolve-time").val("");
+	$("#form-field-pro-content").val("");
+	UE.getEditor('editor').setContent("");
+}
+
+/**
+ * 编辑
+ */
+function edit(){
+	initFieldDisabled(false);
+	
+	//setReportFieldValue(currentItem);
+}
+
+/**
+ * 设置提报中字段值
+ */
+function setReportFieldValue(item){
+	$("#form-field-pro-code").val(item.PRO_CODE);
+	$("#form-field-pro-title").val(item.PRO_TITLE);
+	$("#form-field-pro-report-user").val(item.PRO_REPORT_USER);
+	$("#form-field-pro-accept-user").val(item.PRO_ACCEPT_USER);
+	$("#form-field-pro-sys-type").val(item.PRO_SYS_TYPE);
+	$("#form-field-pro-type-id").val(item.PRO_TYPE_ID);
+	var proTypeName="";
+	if(item.PRO_TYPE_ID!=null&&item.PRO_TYPE_ID!=""){
+		proTypeName=item.PRO_TYPE_NAME;
+	}else{
+		proTypeName="请选择问题类型"
+	}
+	$("#selectTree2_input").val(proTypeName);
+	$("#form-field-pro-tag").val(item.PRO_TAG);
+	$("#form-field-pro-priority").val(item.PRO_PRIORITY);
+	$("#form-field-pro-resolve-time").val(item.PRO_RESOLVE_TIME);
+	$("#form-field-pro-content").val(item.PRO_CONTENT);
+	
+	
+	
+	UE.getEditor('editor').addListener("ready", function () {
+		UE.getEditor('editor').setContent(item.PRO_CONTENT);
+	});
+	if(UE.getEditor('editor').isReady&&item.PRO_CONTENT){
+    	UE.getEditor('editor').setContent(item.PRO_CONTENT);
+	}
+}
+
+/**
+ * 作废
+ */
+function del(){
+	bootbox.confirm("确定要作废当前问题吗?", function(result) {
+		if(result) {
+			top.jzts();
+			var url = "<%=basePath%>mbp/delete.do?PRO_CODE="+currentItem.PRO_CODE;
+			$.get(url,function(data){
+				initList();
+			});
+		};
+	});
+}
+
+/**
+ * 提交
+ */
+function commit(){
+	console.log('commit');
+	var proCode=currentItem.PRO_CODE;//问题单号
+	top.jzts();
+	
+	$.ajax({
+		type: "POST",
+		url: '<%=basePath%>mbp/commit.do',
+		data:{PRO_CODE:proCode},
+    	dataType:'json',
+		cache: false,
+		success: function(response){
+			if(response.code==0){
+				$(top.hangge());//关闭加载状态
+				$("#btnCommit").tips({
+					side:3,
+		            msg:'提交成功',
+		            bg:'#009933',
+		            time:3
+		        });
+				initList();
+			}else{
+				$(top.hangge());//关闭加载状态
+				$("#btnCommit").tips({
+					side:3,
+		            msg:'提交失败,'+response.message,
+		            bg:'#cc0033',
+		            time:3
+		        });
+			}
+		},
+    	error: function(response) {
+    		$(top.hangge());//关闭加载状态
+    		var msgObj=JSON.parse(response.responseText);
+			$("#btnCommit").tips({
+				side:3,
+	            msg:'提交失败,'+msgObj.message,
+	            bg:'#cc0033',
+	            time:3
+	        });
+    	}
+	});
+}
+
+/**
+ * 取消提交
+ */
+function cancel(){
+	console.log('cancel');
+
+	
+	var proCode=currentItem.PRO_CODE;//问题单号
+	top.jzts();
+	
+	$.ajax({
+		type: "POST",
+		url: '<%=basePath%>mbp/cancel.do',
+		data:{PRO_CODE:proCode},
+    	dataType:'json',
+		cache: false,
+		success: function(response){
+			if(response.code==0){
+				$(top.hangge());//关闭加载状态
+				$("#btnCancel").tips({
+					side:3,
+		            msg:'取消提交成功',
+		            bg:'#009933',
+		            time:3
+		        });
+				initList();
+			}else{
+				$(top.hangge());//关闭加载状态
+				$("#btnCancel").tips({
+					side:3,
+		            msg:'取消提交失败,'+response.message,
+		            bg:'#cc0033',
+		            time:3
+		        });
+			}
+		},
+    	error: function(response) {
+    		$(top.hangge());//关闭加载状态
+    		var msgObj=JSON.parse(response.responseText);
+			$("#btnCancel").tips({
+				side:3,
+	            msg:'取消提交失败,'+msgObj.message,
+	            bg:'#cc0033',
+	            time:3
+	        });
+    	}
+	});
+}
+
+/**
+ * 问题分配
+ */
+function addAssign(){
+	console.log('addAssign');
+    if ($("#ff-assign-pro-type").val() == "") {
+		$("#ff-assign-pro-type").tips({
+			side : 3,
+			msg : '请选择问题类型',
+			bg : '#AE81FF',
+			time : 2
+		});
+		$("#ff-assign-pro-type").focus();
+		return false;
+	}
+	
+	var proCode=currentItem.PRO_CODE;//问题单号
+	var proAcceptUser=$("#ff-assign-pro-accept-user").val();//受理人
+	var proSysType=$("#ff-assign-pro-sys-type").val();//系统类型
+	var proTypeID=$("#ff-assign-pro-type-id").val();//问题类型
+	var proPriority=$("#ff-assign-pro-priority").val();//优先级
+    
+	top.jzts();
+	
+	$.ajax({
+		type: "POST",
+		url: '<%=basePath%>mbp/addAssign.do',
+		data:{PRO_CODE:proCode,PRO_ACCEPT_USER:proAcceptUser,PRO_SYS_TYPE:proSysType,PRO_TYPE_ID:proTypeID,PRO_PRIORITY:proPriority},
+    	dataType:'json',
+		cache: false,
+		success: function(response){
+			if(response.code==0){
+				$(top.hangge());//关闭加载状态
+				$("#btnAddAssign").tips({
+					side:3,
+		            msg:'分配成功',
+		            bg:'#009933',
+		            time:3
+		        });
+				initList();
+			}else{
+				$(top.hangge());//关闭加载状态
+				$("#btnAddAssign").tips({
+					side:3,
+		            msg:'分配失败,'+response.message,
+		            bg:'#cc0033',
+		            time:3
+		        });
+			}
+		},
+    	error: function(response) {
+    		$(top.hangge());//关闭加载状态
+    		var msgObj=JSON.parse(response.responseText);
+			$("#btnAddAssign").tips({
+				side:3,
+	            msg:'分配失败,'+msgObj.message,
+	            bg:'#cc0033',
+	            time:3
+	        });
+    	}
+	});
+}
+
+/**
+ * 问题分配取消
+ */
+function deleteAssign(){
+	console.log('deleteAssign');
+	var proCode=currentItem.PRO_CODE;//问题单号
+	top.jzts();
+	
+	$.ajax({
+		type: "POST",
+		url: '<%=basePath%>mbp/deleteAssign.do',
+		data:{PRO_CODE:proCode},
+    	dataType:'json',
+		cache: false,
+		success: function(response){
+			if(response.code==0){
+				$(top.hangge());//关闭加载状态
+				$("#btnDeleteAssign").tips({
+					side:3,
+		            msg:'取消分配成功',
+		            bg:'#009933',
+		            time:3
+		        });
+			}else{
+				$(top.hangge());//关闭加载状态
+				$("#btnDeleteAssign").tips({
+					side:3,
+		            msg:'取消分配失败,'+response.message,
+		            bg:'#cc0033',
+		            time:3
+		        });
+			}
+		},
+    	error: function(response) {
+    		$(top.hangge());//关闭加载状态
+    		var msgObj=JSON.parse(response.responseText);
+			$("#btnDeleteAssign").tips({
+				side:3,
+	            msg:'取消分配失败,'+msgObj.message,
+	            bg:'#cc0033',
+	            time:3
+	        });
+    	}
+	});	
+}
+
+/**
+ * 获取问题回复信息
+ */
+function getProAnswers(){
+	$("#ff-answer-info").empty();
+	top.jzts();
+	var proCode=currentItem.PRO_CODE;//问题单号
+	var first;
+	$.ajax({
+			type: "POST",
+			url: '<%=basePath%>mbp/getProAnswers.do',
+	    	data: {PRO_CODE:proCode},
+			dataType:'json',
+			cache: false,
+			success: function(data){
+				if(data){
+					$.each(data, function(i, item){
+						if(i==0){
+							first=item;
+						}
+						var selected=true;
+						console.log(item);
+						var option = new Option(item.BILL_DATE, item.ANSWER_ID, selected, true);
+						$('#ff-answer-info').append(option);
+				 	});
+					if(first){
+						getAnswerContent();//根据ID获取回复内容
+					}
+				}
+				top.hangge();
+			}
+	});
+}
+
+/**
+ * 获取回复内容
+ */
+function getAnswerContent(){
+	var answerID=$("#ff-answer-info").val();
+	if(answerID == null){
+    	answerID='';
+	}
+	top.jzts();
+	var proCode=currentItem.PRO_CODE;//问题单号
+	$.ajax({
+			type: "POST",
+			url: '<%=basePath%>mbp/getAnswerContent.do',
+	    	data: {ANSWER_ID:answerID},
+			dataType:'json',
+			cache: false,
+			success: function(data){
+				if(data){
+					console.log(data);
+					UE.getEditor('editorAnswer').setContent(data.ANSWER_CONTENT);
+				}
+				else{
+					UE.getEditor('editorAnswer').setContent('');
+				}
+				top.hangge();
+			}
+	});
+}
+
+/**
+ * 新问题回复
+ */
+function newAnswer(){
+	console.log('newAnswer');
+	var option = new Option('', '', true, true);
+	$('#ff-answer-info').append(option);
+	UE.getEditor('editorAnswer').setContent('');
+}
+
+/**
+ * 问题回复
+ */
+function addAnswer(){
+	console.log('addAnswer');
+	var contentAnswer=UE.getEditor('editorAnswer').getContent();
+	if (contentAnswer == "") {
+		$("#editorAnswer").tips({
+			side : 3,
+			msg : '请输入回复内容',
+			bg : '#AE81FF',
+			time : 2
+		});
+		$("#editorAnswer").focus();
+		return false;
+	}
+	var content;
+	var arr = [];
+    arr.push(contentAnswer);
+    content=arr.join("");
+    var proCode=currentItem.PRO_CODE;//问题单号
+    /* var answerId=$("#ff-answer-answer-id").val(); */
+    var answerID=$("#ff-answer-info").val();
+    //if(typeof answerID == "undefined" || answerID == null || answerID == ""){
+    if(answerID == null){
+    	answerID='';
+    }
+    	
+	top.jzts();
+	console.log(answerID);
+	$.ajax({
+		type: "POST",
+		url: '<%=basePath%>mbp/addAnswer.do',
+		data:{ANSWER_ID:answerID,PRO_CODE:proCode,ANSWER_CONTENT:content},
+    	dataType:'json',
+		cache: false,
+		success: function(response){
+			if(response.code==0){
+				$(top.hangge());//关闭加载状态
+				$("#btnAddAnswer").tips({
+					side:3,
+		            msg:'回复成功',
+		            bg:'#009933',
+		            time:3
+		        });
+				getProAnswers();
+			}else{
+				$(top.hangge());//关闭加载状态
+				$("#btnAddAnswer").tips({
+					side:3,
+		            msg:'回复失败,'+response.message,
+		            bg:'#cc0033',
+		            time:3
+		        });
+			}
+		},
+    	error: function(response) {
+    		$(top.hangge());//关闭加载状态
+    		var msgObj=JSON.parse(response.responseText);
+			$("#btnAddAnswer").tips({
+				side:3,
+	            msg:'回复失败,'+msgObj.message,
+	            bg:'#cc0033',
+	            time:3
+	        });
+    	}
+	});
+}
+
+/**
+ * 问题回复作废
+ */
+function deleteAnswer(){
+	console.log('deleteAnswer');
+	var answerID=$("#ff-answer-info").val();
+	if(answerID == null){
+    	answerID='';
+	}
+	top.jzts();
+	
+	$.ajax({
+		type: "POST",
+		url: '<%=basePath%>mbp/deleteAnswer.do',
+		data:{ANSWER_ID:answerID},
+    	dataType:'json',
+		cache: false,
+		success: function(response){
+			if(response.code==0){
+				$(top.hangge());//关闭加载状态
+				$("#btnDeleteAnswer").tips({
+					side:3,
+		            msg:'回复作废成功',
+		            bg:'#009933',
+		            time:3
+		        });
+				getProAnswers();
+			}else{
+				$(top.hangge());//关闭加载状态
+				$("#btnDeleteAnswer").tips({
+					side:3,
+		            msg:'回复作废失败,'+response.message,
+		            bg:'#cc0033',
+		            time:3
+		        });
+			}
+		},
+    	error: function(response) {
+    		$(top.hangge());//关闭加载状态
+    		var msgObj=JSON.parse(response.responseText);
+			$("#btnDeleteAnswer").tips({
+				side:3,
+	            msg:'回复作废失败,'+msgObj.message,
+	            bg:'#cc0033',
+	            time:3
+	        });
+    	}
+	});
+}
+
+/**
+ * 问题关闭
+ */
+function addClose(){
+	console.log('addClose');
+	var contentClose=UE.getEditor('editorClose').getContent();
+	if (contentClose == "") {
+		$("#editorClose").tips({
+			side : 3,
+			msg : '请输入回复内容',
+			bg : '#AE81FF',
+			time : 2
+		});
+		$("#editorClose").focus();
+		return false;
+	}
+	var content;
+	var arr = [];
+    arr.push(contentClose);
+    content=arr.join("");
+    var proCode=currentItem.PRO_CODE;//问题单号
+    
+	top.jzts();
+	
+	$.ajax({
+		type: "POST",
+		url: '<%=basePath%>mbp/addClose.do',
+		data:{PRO_CODE:proCode,CLOSE_CONTENT:content},
+    	dataType:'json',
+		cache: false,
+		success: function(response){
+			if(response.code==0){
+				$(top.hangge());//关闭加载状态
+				$("#btnAddClose").tips({
+					side:3,
+		            msg:'关闭成功',
+		            bg:'#009933',
+		            time:3
+		        });
+				initList();
+				jumpStep(4);
+			}else{
+				$(top.hangge());//关闭加载状态
+				$("#btnAddClose").tips({
+					side:3,
+		            msg:'关闭失败,'+response.message,
+		            bg:'#cc0033',
+		            time:3
+		        });
+			}
+		},
+    	error: function(response) {
+    		$(top.hangge());//关闭加载状态
+    		var msgObj=JSON.parse(response.responseText);
+			$("#btnAddClose").tips({
+				side:3,
+	            msg:'关闭失败,'+msgObj.message,
+	            bg:'#cc0033',
+	            time:3
+	        });
+    	}
+	});
+}
+
+/**
+ * 问题关闭取消
+ */
+function deleteClose(){
+	console.log('deleteClose');
+	var proCode=currentItem.PRO_CODE;//问题单号
+    
+	top.jzts();
+	
+	$.ajax({
+		type: "POST",
+		url: '<%=basePath%>mbp/deleteClose.do',
+		data:{PRO_CODE:proCode},
+    	dataType:'json',
+		cache: false,
+		success: function(response){
+			if(response.code==0){
+				$(top.hangge());//关闭加载状态
+				$("#btnDeleteClose").tips({
+					side:3,
+		            msg:'取消关闭成功',
+		            bg:'#009933',
+		            time:3
+		        });
+				/* if(currentItem.PRO_STATE=="1"){
+					
+				} */
+				jumpStep(3);
+				initList();
+			}else{
+				$(top.hangge());//关闭加载状态
+				$("#btnDeleteClose").tips({
+					side:3,
+		            msg:'取消关闭失败,'+response.message,
+		            bg:'#cc0033',
+		            time:3
+		        });
+			}
+		},
+    	error: function(response) {
+    		$(top.hangge());//关闭加载状态
+    		var msgObj=JSON.parse(response.responseText);
+			$("#btnDeleteClose").tips({
+				side:3,
+	            msg:'取消关闭失败,'+msgObj.message,
+	            bg:'#cc0033',
+	            time:3
+	        });
+    	}
+	});
+}
+
+/**
+ * 获取问题日志信息
+ */
+function getProLog(){
+	
+	$("#tbodyLog").html('');
+	top.jzts();
+	var proCode=currentItem.PRO_CODE;//问题单号
+	$.ajax({
+			type: "POST",
+			url: '<%=basePath%>mbp/getProLog.do',
+	    	data: {PRO_CODE:proCode},
+			dataType:'json',
+			cache: false,
+			success: function(data){
+				if(data){
+					$.each(data, function(i, item){
+						var tr=addItemLog(item,i+1); 
+						$('#tbodyLog').append(tr);
+				 	});
+				}
+				top.hangge();
+			}
+	});
+}
+
+/**
+ * 增加日志tr
+ */
+function addItemLog(item,index){
+	var htmlLog='<tr>'
+		+'<td class="center" style="width: 30px;">'+index+'</td>'
+		+'<td class="center">'+item.USERNAME+'</td>'
+		+'<td class="center">'+item.PRO_EVENT+'</td>'
+		+'<td class="center">'+item.CLIENT_IP+'</td>'
+		+'<td class="center">'+item.CREATE_DATE+'</td>'
+	+'</tr>';
+	return htmlLog;
+}
+
+/**
+ * 获取问题附件信息
+ */
+function getProAttachment(attachmentType){
+	if(attachmentType=="PROBLEM_INFO"){
+		$("#tbodyProInfoAttachment").html('');
+	}else if(attachmentType=="PROBLEM_ANSWER"){
+		$("#tbodyProAnswerAttachment").html('');
+	}else if(attachmentType=="PROBLEM_CLOSE"){
+		$("#tbodyProCloseAttachment").html('');
+	}
+	
+	top.jzts();
+	var proCode=currentItem.PRO_CODE;//问题单号
+	$.ajax({
+			type: "GET",
+			url: '<%=basePath%>attachment/getAttachmentByType.do?BUSINESS_TYPE='+attachmentType+'&BILL_CODE='+proCode,
+	    	data: {PRO_CODE:proCode},
+			//dataType:'json',
+			cache: false,
+			success: function(data){
+				if(data){
+					$.each(data, function(i, item){
+						var tr=addItemAttachment(item,i+1,attachmentType); 
+						if(attachmentType=="PROBLEM_INFO"){
+							$('#tbodyProInfoAttachment').append(tr);
+						}else if(attachmentType=="PROBLEM_ANSWER"){
+							$('#tbodyProAnswerAttachment').append(tr);
+						}else if(attachmentType=="PROBLEM_CLOSE"){
+							$('#tbodyProCloseAttachment').append(tr);
+						}
+				 	});
+				}
+				top.hangge();
+			}
+	});
+}
+
+/**
+ * 增加附件tr
+ */
+function addItemAttachment(item,index,type){
+	var href='<%=basePath%>/attachment/download.do?ATTACHMENT_ID='+item.ATTACHMENT_ID;
+	var ext=item.ATTACHMENT_PATH.substring(19,item.ATTACHMENT_PATH.length);
+	console.log(ext);
+	var htmlLog='<tr>'
+		+'<td class="center" style="width: 30px;">'+index+'</td>'
+		+'<td class="center">'+item.ATTACHMENT_NAME+ext+'</td>'
+		+'<td class="center">'+item.ATTACHMENT_MEMO+'</td>'
+		+'<td class="center">'+item.ATTACHMENT_SIZE+'&nbsp;KB</td>'
+		+'<td class="center">'+item.CREATE_USER+'</td>'
+		+'<td class="center">'+item.CREATE_DATE+'</td>'
+		+'<td class="center">'
+			+'<div class="hidden-sm hidden-xs btn-group">'
+				+'<a class="btn btn-xs btn-success" onclick=window.location.href="'+href+'">'
+					+'<i class="ace-icon fa fa-cloud-download bigger-120" title="下载"></i>'
+				+'</a>'
+				+'<a class="btn btn-xs btn-danger" onclick=delProAttachment("'+item.ATTACHMENT_ID+'","'+type+'")>'
+					+'<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>'
+				+'</a>'
+			+'</div>'
+		+'</td>'
+	+'</tr>';
+	return htmlLog;
+}
+
+/**
+ * 上传附件
+ */
+function addProAttachmentByType(type){
+	 var proCode=currentItem.PRO_CODE;
+	 console.log(type);
 	 top.jzts();
 	 var diag = new top.Dialog();
 	 diag.Drag=true;
-	 diag.Title ="资料";
-	 diag.URL = '<%=basePath%>user/view.do?USERNAME='+USERNAME;
-	 diag.Width = 469;
-	 diag.Height = 380;
+	 diag.Title ="上传附件";
+	 diag.URL = '<%=basePath%>attachment/goAdd.do?BUSINESS_TYPE='+type+'&BILL_CODE='+proCode;
+	 diag.Width = 460;
+	 diag.Height = 290;
+	 diag.Modal = true;				//有无遮罩窗口
+	 diag. ShowMaxButton = true;	//最大化按钮
+     diag.ShowMinButton = true;		//最小化按钮
 	 diag.CancelEvent = function(){ //关闭事件
+		if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
+			console.log('gggg');
+		 	getProAttachment(type);
+		}
 		diag.close();
 	 };
 	 diag.show();
 }
 
+//删除
+function delProAttachment(Id,type){
+	bootbox.confirm("确定要删除吗?", function(result) {
+		if(result) {
+			top.jzts();
+			var url = "<%=basePath%>attachment/delete.do?ATTACHMENT_ID="+Id;
+			$.get(url,function(data){
+				getProAttachment(type);
+			});
+		}
+	});
+}
+
+/**
+ * 初始化知识库列表信息(手动)
+ */
+function searchKnowledgeList(){
+	$("#ulSd li").remove(); 
+	top.jzts();
+	var keywords = $("#keywordsKnowledge").val();
+	$.ajax({
+			type: "POST",
+			url: '<%=basePath%>knowledge/getPageListKnowledge.do',
+	    	data: {keywords:keywords},
+			dataType:'json',
+			cache: false,
+			success: function(data){
+				if(data){
+					$.each(data, function(i, item){
+						//console.log(item);
+						var htmlItem=addItemKnowledge(item); 
+						$("#ulSd").append(htmlItem);
+				 	});
+				}
+				else{
+					//addEmpty();
+				}
+				top.hangge();
+			}
+	});
+}
+
+/**
+ * 初始化知识库列表信息(动态)
+ */
+function searchKnowledgeListDT(keywords){
+	$("#ulDt li").remove(); 
+	top.jzts();
+	$.ajax({
+			type: "POST",
+			url: '<%=basePath%>knowledge/getPageListKnowledge.do',
+	    	data: {keywords:keywords},
+			dataType:'json',
+			cache: false,
+			success: function(data){
+				if(data){
+					console.log(data);
+					$.each(data, function(i, item){
+						//console.log(item);
+						var htmlItem=addItemKnowledge(item); 
+						$("#ulDt").append(htmlItem);
+				 	});
+				}
+				else{
+					//addEmpty();
+				}
+				top.hangge();
+			}
+	});
+}
+
+/*
+ * 增加Item知识库数据
+ */
+function addItemKnowledge(item){
+	//var content=item.DETAIL.substring(0,50);
+	var content=item.DETAIL;
+	var htmlItem='<li class="item-grey clearfix" onclick=getDetailKnowledge("'+item.KNOWLEDGE_ID+'")>'
+	/* +'<input name="PRO_CODE" id="PRO_CODE" type="hidden" value="'+item.PRO_CODE+'" />' */
+		+'<div>'
+			+'<label class="inline" style="margin-bottom:5px;">'
+				+'<span class="list-item-value-title">'+item.KNOWLEDGE_TITLE+'</span>'
+			+'</label>'
+		+'<div>'
+		+'<div class="pull-right">'
+			+'<button class="btn btn-xs btn-yellow" onClick=viewKnowledgeDetail("'+item.KNOWLEDGE_ID+'")>详情</button>'
+		+'</div>'
+		/* +'<div>'
+			+'<label class="inline">'
+				+'<span class="list-item-info"> 内容：</span>'
+				+'<span class="list-item-value">'+content+'</span>'
+			+'</label>'
+		+'</div>' */
+		
+		+'<div>'
+			+'<label class="inline">'
+				+'<span class="list-item-info"> 作者：</span>'
+				+'<span class="list-item-value">'+item.AUTHOR+'</span>'
+			+'</label>'
+			+'<label class="inline">'
+				+'<span class="list-item-info"><i class="ace-icon fa fa-clock-o"></i> 时间：</span>'
+				+'<span class="list-item-value grey">'+item.CREATE_DATE+'</span>'
+			+'</label>'
+		+'</div>'
+	+'</li>';
+	return htmlItem;
+}
+
+/**
+ * 查看知识详情
+ */
+function viewKnowledgeDetail(knowledgeId){
+	
+	top.jzts();
+	var diag = new top.Dialog();
+	diag.Drag=true;
+	diag.Title ="知识详情";
+	diag.URL = '<%=basePath%>knowledge/goView.do?KNOWLEDGE_ID='+knowledgeId;
+	diag.Width = 600;
+	diag.Height = 460;
+	diag.CancelEvent = function(){ //关闭事件
+		diag.close();
+	};
+	diag.show();
+}
+
+/**
+ * 知识行变化
+ */
+function getDetailKnowledge(knowledgeId){
+	
+}
 
 
+/**
+ * 延时加载动态搜索知识库内容
+ */
+var last;
+$("#form-field-pro-title").on('input propertychange', function(event){
+    //"#fix为你的输入框
+       last = event.timeStamp;
+       //利用event的timeStamp来标记时间，这样每次事件都会修改last的值，注意last必需为全局变量
+       setTimeout(function(){    //设时延迟0.5s执行
+            if(last-event.timeStamp==0)
+            //如果时间差为0（也就是你停止输入0.5s之内都没有其它的keyup事件发生）则做你想要做的事
+            {
+                 console.log($("#form-field-pro-title").val());
+                 if($("#form-field-pro-title").val()!=""){
+                 	searchKnowledgeListDT($("#form-field-pro-title").val());
+                 }
+            }
+ 
+        },1000);
+});
+
+//下拉树
+var defaultNodes = {"treeNodes":${zTreeNodes}};
+function initComplete(){
+	
+	//绑定change事件
+	$("#selectTree").bind("change",function(){
+		if(!$(this).attr("relValue")){
+	      //  top.Dialog.alert("没有选择节点");
+	    }else{
+			//alert("选中节点文本："+$(this).attr("relText")+"<br/>选中节点值："+$(this).attr("relValue"));
+			$("#form-field-pro-type-id").val($(this).attr("relValue"));
+	    }
+	});
+	//赋给data属性
+	$("#selectTree").data("data",defaultNodes);  
+	$("#selectTree").render();
+	//$("#selectTree2_input").val("${null==depname?'请选择问题类型':depname}");
+	
+	//绑定change事件
+	$("#selectTreeAssign").bind("change",function(){
+		if(!$(this).attr("relValue")){
+	      //  top.Dialog.alert("没有选择节点");
+	    }else{
+			//alert("选中节点文本："+$(this).attr("relText")+"<br/>选中节点值："+$(this).attr("relValue"));
+			$("#ff-assign-pro-type-id").val($(this).attr("relValue"));
+	    }
+	});
+	//赋给data属性
+	$("#selectTreeAssign").data("data",defaultNodes);  
+	$("#selectTreeAssign").render();
+	
+}
 </script>
 </html>
