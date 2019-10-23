@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CourseBaseMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		tb_course_base
+	</sql>
+	<sql id="typeName">
+		tb_course_type
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		COURSE_NAME,	
+		COURSE_TYPE,	
+		COURSE_TEACHER,	
+		COURSE_TAG,	
+		COURSE_NOTE,	
+		COURSE_COVER,	
+		STATE,	
+		CREATE_USER,	
+		CREATE_DATE	
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{COURSE_NAME},	
+		#{COURSE_TYPE},	
+		#{COURSE_TEACHER},	
+		#{COURSE_TAG},	
+		#{COURSE_NOTE},	
+		#{COURSE_COVER},	
+		#{STATE},	
+		#{CREATE_USER},	
+		#{CREATE_DATE}
+	</sql>
+	
+	<!-- zTree -->
+	<resultMap type="CourseTree" id="courseTreeResultMap">
+		<id column="COURSE_TYPE_ID" property="COURSE_TYPE_ID"/>
+		<id column="COURSE_TYPE_NAME" property="COURSE_TYPE_NAME"/>
+		<id column="COURSE_TYPE_PARENT_ID" property="COURSE_TYPE_PARENT_ID"/>
+	</resultMap>
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+			<include refid="tableName"></include>
+		(
+			<include refid="Field"></include>
+		) values (
+			<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		update
+			<include refid="tableName"></include>
+		set
+			STATE = 0
+		where 
+			COURSE_ID = #{COURSE_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			COURSE_NAME = #{COURSE_NAME},
+			COURSE_TYPE = #{COURSE_TYPE},
+			COURSE_TEACHER = #{COURSE_TEACHER},
+			COURSE_TAG = #{COURSE_TAG},
+			COURSE_NOTE = #{COURSE_NOTE},
+			COURSE_COVER = #{COURSE_COVER},
+			CREATE_USER = #{CREATE_USER},
+			CREATE_DATE = #{CREATE_DATE}
+		where 
+			COURSE_ID = #{COURSE_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			COURSE_ID = #{COURSE_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+			COURSE_ID,
+			COURSE_NAME,	
+			COURSE_TYPE,	
+			COURSE_TEACHER,	
+			COURSE_TAG,	
+			COURSE_NOTE,	
+			COURSE_COVER,	
+			CREATE_USER,	
+			CREATE_DATE	
+		from 
+		<include refid="tableName"></include>
+		where STATE = 1
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+					COURSE_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				)
+		</if>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			COURSE_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 通过ID获取其子级列表 -->
+	<select id="listByParentId" parameterType="String" resultMap="courseTreeResultMap">
+		select 
+			COURSE_TYPE_ID,
+			COURSE_TYPE_NAME,
+			COURSE_TYPE_PARENT_ID
+		from 
+		<include refid="typeName"></include>
+		where 
+			STATE = 1
+		and
+			COURSE_TYPE_PARENT_ID = #{parentId} order by COURSE_TYPE_NAME;
+	</select>
+</mapper>

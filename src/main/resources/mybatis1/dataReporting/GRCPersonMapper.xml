@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="GRCPersonMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		tb_di_grc_person
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		STAFF_CODE,	
+		STAFF_NAME,	
+		STAFF_UNIT,	
+		STAFF_DEPART,	
+		STAFF_POSITION,	
+		STAFF_JOB,	
+		PHONE,	
+		MOBILE_PHONE,	
+		ZSY_MAIL,
+		STATE,	
+		BILL_USER,	
+		BILL_DATE	
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{STAFF_CODE},	
+		#{STAFF_NAME},	
+		#{STAFF_UNIT},	
+		#{STAFF_DEPART},	
+		#{STAFF_POSITION},	
+		#{STAFF_JOB},	
+		#{PHONE},	
+		#{MOBILE_PHONE},	
+		#{ZSY_MAIL},
+		#{STATE},	
+		#{BILL_USER},	
+		#{BILL_DATE}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+			<include refid="Field"></include>
+		) value (
+			<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			STAFF_CODE = #{STAFF_CODE},
+			STAFF_NAME = #{STAFF_NAME},
+			STAFF_UNIT = #{STAFF_UNIT},
+			STAFF_DEPART = #{STAFF_DEPART},
+			STAFF_POSITION = #{STAFF_POSITION},
+			STAFF_JOB = #{STAFF_JOB},
+			PHONE = #{PHONE},
+			MOBILE_PHONE = #{MOBILE_PHONE},
+			ZSY_MAIL = #{ZSY_MAIL},
+			BILL_USER = #{BILL_USER},
+			BILL_DATE = #{BILL_DATE}
+		where 
+		ID = #{ID}
+	</update>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+			ID,	
+			STAFF_CODE,	
+			STAFF_NAME,	
+			STAFF_UNIT,	
+			STAFF_DEPART,	
+			STAFF_POSITION,	
+			STAFF_JOB,	
+			PHONE,	
+			MOBILE_PHONE,	
+			ZSY_MAIL,	
+			BILL_USER,	
+			BILL_DATE
+		from 
+		<include refid="tableName"></include>
+		where STATE = 1
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+					STAFF_CODE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					or
+					STAFF_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+				)
+		</if>
+	</select>
+
+	<!-- 批量删除 -->
+	<update id="deleteAll" parameterType="String">
+		update
+		<include refid="tableName"></include>
+		set
+			STATE = 0
+		where 
+			ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</update>
+	
+	<!-- *********************导入导出********************************* -->
+	<!-- 导出列表 -->
+	<select id="exportList" parameterType="Page" resultType="pd">
+		select 
+			<include refid="Field"></include>
+		from 
+			<include refid="tableName"></include>
+		where 
+			STATE = 1
+		order by 
+			ID,STAFF_NAME
+	</select>
+	
+	<!-- 更新数据 -->
+	<update id="delAndIns" parameterType="pd">
+		<foreach item="item" index="index" collection="list" open=" " separator=" " close=" ">
+		    delete from <include refid="tableName"></include>
+		    where ID = #{item.ID};
+	        insert into 
+	        <include refid="tableName"></include>
+		       (
+					<include refid="Field"></include>
+				) value (
+					#{item.STAFF_CODE},	
+					#{item.STAFF_NAME},	
+					#{item.STAFF_UNIT},	
+					#{item.STAFF_DEPART},	
+					#{item.STAFF_POSITION},	
+					#{item.STAFF_JOB},	
+					#{item.PHONE},	
+					#{item.MOBILE_PHONE},	
+					#{item.ZSY_MAIL},
+					"1",	
+					#{item.BILL_USER},	
+					#{item.BILL_DATE}
+				);
+		</foreach>
+	</update>
+	
+	<!-- 导出模板 -->
+	<select id="exportModel" parameterType="pd" resultType="pd">
+		select 
+			<include refid="Field"></include> 
+		from 
+			<include refid="tableName"></include>
+		where 
+			STATE = 1 
+		limit 1
+	</select>
+</mapper>

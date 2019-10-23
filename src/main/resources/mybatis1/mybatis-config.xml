@@ -16,9 +16,8 @@
 		<typeAlias type="com.fh.entity.system.Menu" alias="Menu"/>
 		<typeAlias type="com.fh.entity.system.Dictionaries" alias="Dictionaries"/>
 		<typeAlias type="com.fh.entity.system.Department" alias="Department"/>
-		
 		<typeAlias type="com.fh.entity.ProblemType" alias="ProblemType"/>
-		
+		<typeAlias type="com.fh.entity.coursebase.CourseTree" alias="CourseTree"/>
 		<!-- 这里添加生成的实体类 -->
 		<typeAlias type="com.fh.entity.instframe.Instframe" alias="Instframe"/>
 		
