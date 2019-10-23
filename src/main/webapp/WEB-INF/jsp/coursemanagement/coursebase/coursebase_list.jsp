@@ -19,14 +19,17 @@
 <%@ include file="../../system/index/top.jsp"%>
 <style type="text/css">
 	.course-box{
-		margin:15px 0px 5px 0px;
-		
+		margin:5px 15px 15px 15px;
+		width:170px;
+		height:350px;
 	}
 	.title-box{
 		margin:10px 0px 0px 5px;
+		width:170px;
 	}
-	.btm-box{
+ 	.btm-box{
 		margin:5px 0px 0px 5px;
+		width:170px;
 	}
 	.course-box:hover{
     	color:red;
@@ -34,14 +37,10 @@
 </style>
 </head>
 <body class="no-skin">
-
-	<!-- /section:basics/navbar.layout -->
 	<div class="main-container" id="main-container">
-		<!-- /section:basics/sidebar -->
 		<div class="main-content">
 			<div class="main-content-inner">
 				<div class="page-content">
-					<div class="well well-lg">
 						<form class="form-inline" action="coursebase/list.do" method="post" name="Form" id="Form">
 							<div class="page-header">
 								<label class="pull-left" style="padding: 5px;">筛选条件：</label>
@@ -63,13 +62,11 @@
 											<i class="ace-icon fa fa-search bigger-110"></i>
 									</button>
 									<div class="pull-right">
-										<a id="btnAdd" onclick="showQueryCondi()">
-											<i class="ace-icon fa fa-plus-circle purple"></i><span>新增</span>
-										</a>
-									</div>
+									<button id="btnSave" class="btn btn-info btn-xs" onclick="add()">
+										<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>新增</span>
+									</button>
 								</div>
-								
-						<!-- /.page-header -->
+							</div>
 						<div class="row">
 							<div class="col-xs-3">
 								<div class="widget-box transparent">
@@ -107,57 +104,57 @@
 									</div>
 								</div>
 							</div>
-						<!-- /.col-xs-3 -->
 							<div class="col-xs-9">
-								<div class="col-xs-12 widget-header-flat widget-header widget-body" style="margin-top: 3px; height: 55px ">
-									<h5 class="lighter" style="float: right; margin-top:20px;"><i class="ace-icon fa fa-bar-chart-o"></i>课件创建时间</h5>
-								</div>						
-							</div>
-							<div class="col-xs-9 widget-body font-size" style="margin-top: 30px">
 							<!-- 循环遍历 -->
 								<c:forEach items="${varList}" var="pd">
-									<div class="col-sm-3 course-box"><!-- 整体 -->
-										<div style="text-align:center">
-											<a href="" data-rel="colorbox" class="cboxElement">
-													<img width="160" height="160" alt="160x160" src="static/html_UI/assets/images/gallery/thumb-3.jpg">
-												</a>
-											<!-- <div class="text inner">
-												<font style="vertical-align: inherit;">悬停时的示例字幕</font>
-											</div>
-										 -->
+									<div class="col-xs-9 course-box"><!-- 整体 -->
+										<div style="width:170px;height:170px;">
+											<a href="static/html_UI/assets/images/gallery/thumb-3.jpg" data-rel="colorbox" class="cboxElement">
+												<img width="170" height="170" alt="200x200" src="static/html_UI/assets/images/gallery/thumb-3.jpg">
+											<!-- 	<div class="text">
+													<div class="inner"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">悬停时的示例字幕</font></font></div>
+												</div> -->
+											</a>
+										
 										</div>
+					
+					
 										<div>
 											<div class="title-box">
 												<span class="list-item-value-title">${pd.COURSE_NAME}</span>
 											</div>		
 											<div class="title-box">
-												<span class="list-item-info">${pd.COURSE_NOTE}|12人正在学习</span>
+												<span class="list-item-info">${pd.COURSE_NOTE}</span>
 											</div>
 											<div class="title-box">
+												<span class="list-item-info">${pd.COURSE_TAG}</span>
+											</div>
+											<div  class="title-box">
 												<i class="ace-icon fa fa-clock-o"></i>
-												<span class="list-item-value red">${pd.CREATE_DATE}</span>
+												<span class="list-item-info">${pd.CREATE_DATE}</span>
 												<i style="padding-left: 6%" class="ace-icon glyphicon glyphicon-user"></i>
-												<span class="list-item-value">${pd.COURSE_TEACHER}</span>
+												<span class="list-item-info">${pd.COURSE_TEACHER}</span>
 											</div>
 											<div class="btm-box">
 												<a class="btn btn-mini btn-info" title="编辑" onclick="edit('${pd.COURSE_ID}');"><i class="ace-icon fa fa-pencil-square-o bigger-130"></i>编辑</a>
-												<a style="float:right; margin-right:10px" class="btn btn-mini btn-danger" title="删除" onclick="del('${pd.COURSE_ID}');">删除<i class="ace-icon fa fa-trash-o bigger-130"></i></a>
+												<a style="float:right;" class="btn btn-mini btn-danger" title="删除" onclick="del('${pd.COURSE_ID}');">删除<i class="ace-icon fa fa-trash-o bigger-130"></i></a>
 											</div>					
 										</div>
 									</div>
+								
+								
 								</c:forEach>
 							</div>							
-							<div class="col-xs-9 page-header position-relative">
+							<%-- <div class="col-xs-9 page-header position-relative">
 								<table style="width:100%;">
 									<tr>
 										<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
 									</tr>
 								</table>
-							</div>
+							</div> --%>
 								<!-- 分页 -->
 							</div>
 						</form>
-					</div>
 				</div>
 				<!-- /.row -->
 			</div>
@@ -245,7 +242,7 @@
 			 var diag = new top.Dialog();
 			 diag.Drag=true;
 			 diag.Title ="编辑";
-			 diag.URL = '<%=basePath%>coursebase/goEdit.do?COURSEBASE_ID='+COURSE_ID;
+			 diag.URL = '<%=basePath%>coursebase/goEdit.do?COURSE_ID='+COURSE_ID;
 			 diag.Width = 600;
 			 diag.Height = 380;
 			 diag.Modal = true;				//有无遮罩窗口

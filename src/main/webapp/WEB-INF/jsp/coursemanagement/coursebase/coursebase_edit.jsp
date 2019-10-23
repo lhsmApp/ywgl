@@ -29,7 +29,7 @@
 						<div class="col-xs-6" style="padding-left:0px; margin-bottom:-15px;">
 						<input type="hidden" name="COURSEBASE_ID" id="COURSEBASE_ID" value="${pd.COURSEBASE_ID}"/>
 						<div id="zhongxin" style="padding-top: 13px;" class="form-inline">
-						<table id="table_report" class="table table-striped table-bordered table-hover">
+						<table id="table_report" class="table table-bordered table-hover">
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">课程名称:</td>
 								<td><input type="text" name="COURSE_NAME" id="COURSE_NAME" value="${pd.COURSE_NAME}" maxlength="50" placeholder="请输入课程名称" title="请输入课程名称" style="width:99%;"/></td>
@@ -37,9 +37,9 @@
 							<tr>	
 								<td style="width:75px;text-align: right;padding-top: 13px;">课程分类:</td>
 								<td>
-									<select class="chosen-select form-control" name="COURSE_ID" id="COURSE_ID" data-placeholder="请选择课件名称" style="vertical-align: top; height: 32px; width: 150px;">
+									<select class="chosen-select form-control" name="COURSE_TYPE" id="COURSE_TYPE" data-placeholder="请选择课程分类" style="vertical-align: top; height: 32px; width: 99%;">
 										<c:forEach items="${treeList}" var="tl">
-											<option value="${tl.COURSE_TYPE_ID}" <c:if test="${tl.COURSE_TYPE_ID==pd.COURSE_ID}">selected='selected'</c:if>>${tl.COURSE_TYPE_NAME}</option>
+											<option value="${tl.COURSE_TYPE_ID}" <c:if test="${tl.COURSE_TYPE_ID==pd.COURSE_TYPE}">selected="selected"</c:if>>${tl.COURSE_TYPE_NAME}</option>
 											
 										</c:forEach>
 									</select>
@@ -62,10 +62,10 @@
 								<img width="160" height="160" alt="160x160" src="static/html_UI/assets/images/gallery/thumb-3.jpg">
 							</a>
 					</div>
-					<table class="table table-striped table-bordered table-hover">
+					<table class="table table-bordered table-hover">
 						<tr>
 							<td style="width:115px;text-align: right;padding-top: 13px;">完成可获得积分:</td>
-								<td><input type="number" name="COURSE_TAG" id="COURSE_TAG" value="${pd.COURSE_TAG}" maxlength="50" placeholder="这里输入备注5" title="备注5" style="width:20%;"/></td>
+								<td><input type="number" name="COURSE_TAG" id="COURSE_TAG" value="${pd.COURSE_TAG}" maxlength="50" placeholder="这里输入备注5" title="备注5" style="width:32%;"/></td>
 						</tr>
 						<tr>
 							<td style="width:75px;text-align: center;padding-top: 13px;">课程简介:</td>
@@ -106,7 +106,7 @@
 			if($("#COURSE_NAME").val()==""){
 				$("#COURSE_NAME").tips({
 					side:3,
-		            msg:'请输入备注2',
+		            msg:'请输入课程名称',
 		            bg:'#AE81FF',
 		            time:2
 		        });
@@ -116,7 +116,7 @@
 			if($("#COURSE_TYPE").val()==""){
 				$("#COURSE_TYPE").tips({
 					side:3,
-		            msg:'请输入备注3',
+		            msg:'请输入课程分类',
 		            bg:'#AE81FF',
 		            time:2
 		        });
@@ -126,7 +126,7 @@
 			if($("#COURSE_TEACHER").val()==""){
 				$("#COURSE_TEACHER").tips({
 					side:3,
-		            msg:'请输入备注4',
+		            msg:'请输入课程讲师',
 		            bg:'#AE81FF',
 		            time:2
 		        });
@@ -136,61 +136,11 @@
 			if($("#COURSE_TAG").val()==""){
 				$("#COURSE_TAG").tips({
 					side:3,
-		            msg:'请输入备注5',
+		            msg:'请输入课程标签',
 		            bg:'#AE81FF',
 		            time:2
 		        });
 				$("#COURSE_TAG").focus();
-			return false;
-			}
-			if($("#COURSE_NOTE").val()==""){
-				$("#COURSE_NOTE").tips({
-					side:3,
-		            msg:'请输入备注6',
-		            bg:'#AE81FF',
-		            time:2
-		        });
-				$("#COURSE_NOTE").focus();
-			return false;
-			}
-			if($("#COURSE_COVER").val()==""){
-				$("#COURSE_COVER").tips({
-					side:3,
-		            msg:'请输入备注7',
-		            bg:'#AE81FF',
-		            time:2
-		        });
-				$("#COURSE_COVER").focus();
-			return false;
-			}
-			if($("#STATE").val()==""){
-				$("#STATE").tips({
-					side:3,
-		            msg:'请输入备注8',
-		            bg:'#AE81FF',
-		            time:2
-		        });
-				$("#STATE").focus();
-			return false;
-			}
-			if($("#CREATE_USER").val()==""){
-				$("#CREATE_USER").tips({
-					side:3,
-		            msg:'请输入备注9',
-		            bg:'#AE81FF',
-		            time:2
-		        });
-				$("#CREATE_USER").focus();
-			return false;
-			}
-			if($("#CREATE_DATE").val()==""){
-				$("#CREATE_DATE").tips({
-					side:3,
-		            msg:'请输入备注10',
-		            bg:'#AE81FF',
-		            time:2
-		        });
-				$("#CREATE_DATE").focus();
 			return false;
 			}
 			$("#Form").submit();

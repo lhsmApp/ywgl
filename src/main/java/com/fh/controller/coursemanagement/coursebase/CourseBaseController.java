@@ -164,10 +164,11 @@ public class CourseBaseController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/goEdit")
-	public ModelAndView goEdit()throws Exception{
+	public ModelAndView goEdit(String COURSE_ID)throws Exception{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
+		pd.put("COURSE_ID", COURSE_ID);
 		pd = coursebaseService.findById(pd);	//根据ID读取
 		List<CourseTree> treeList = coursebaseService.listByParentId("0");
 		mv.setViewName("coursemanagement/coursebase/coursebase_edit");
