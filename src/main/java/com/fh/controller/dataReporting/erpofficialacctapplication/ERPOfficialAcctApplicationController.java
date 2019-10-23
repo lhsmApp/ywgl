@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
@@ -19,14 +20,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+
 import com.fh.controller.base.BaseController;
 import com.fh.controller.common.Common;
+import com.fh.controller.common.DictsUtil;
 import com.fh.entity.CommonBase;
 import com.fh.entity.Page;
 import com.fh.entity.TableColumns;
 import com.fh.entity.TmplConfigDetail;
 import com.fh.exception.CustomException;
 import com.fh.service.dataReporting.erpofficialacctapplication.ERPOfficialAcctApplicationManager;
+import com.fh.service.fhoa.department.impl.DepartmentService;
 import com.fh.service.tmplconfig.tmplconfig.impl.TmplConfigService;
 import com.fh.util.Jurisdiction;
 import com.fh.util.ObjectExcelView;
@@ -50,6 +54,8 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 	private ERPOfficialAcctApplicationManager erpofficialacctapplicationService;
 	@Resource(name="tmplconfigService")
 	private TmplConfigService tmplconfigService;
+	@Resource(name="departmentService")
+	private DepartmentService departmentService;
 	
 	String TableNameDetail = "TB_DI_ERP_OAA"; // 表名  tb_di_erp_oaa
 	Map<String, TableColumns> Map_HaveColumnsList = new LinkedHashMap<String, TableColumns>();
@@ -96,9 +102,7 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 			pageData.put("CERTIFICATE_NUM",listTransferData.get(i++).trim());
 			pageData.put("UKEY_NUM",listTransferData.get(i++).trim());
 			pageData.put("APPLY_DATE",listTransferData.get(i++).trim());
-			pageData.put("NOTE",listTransferData.get(i++).trim());
-			pageData.put("BILL_USER",listTransferData.get(i++).trim());
-			pageData.put("BILL_DATE",listTransferData.get(i).trim());
+			pageData.put("NOTE",listTransferData.get(i).trim());
 			if(null != staffId && !"".equals(staffId)) {//如果有ID则进行修改
 				erpofficialacctapplicationService.edit(pageData);
 			}else {//如果无ID则进行新增
@@ -126,7 +130,15 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 		}
 		page.setPd(pd);
 		List<PageData>	varList = erpofficialacctapplicationService.list(page);	//列出ERPOfficialAcctApplication列表
+		String DepartmentSelectTreeSource=DictsUtil.getDepartmentSelectTreeSource(departmentService);
+		if(DepartmentSelectTreeSource.equals("0"))
+		{
+			pd.put("departTreeSource", DepartmentSelectTreeSource);
+		} else {
+			pd.put("departTreeSource", 1);
+		}
 		mv.setViewName("dataReporting/erpofficialacctapplication/erpofficialacctapplication_list");
+		mv.addObject("zTreeNodes", DepartmentSelectTreeSource);
 		mv.addObject("varList", varList);
 		mv.addObject("pd", pd);
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
@@ -150,8 +162,6 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 		Map_SetColumnsList.put("UKEY_NUM", new TmplConfigDetail("UKEY_NUM", "UKey编号", "1", false));
 		Map_SetColumnsList.put("APPLY_DATE", new TmplConfigDetail("APPLY_DATE", "申请日期", "1", false));
 		Map_SetColumnsList.put("NOTE", new TmplConfigDetail("NOTE", "备注", "1", false));
-		Map_SetColumnsList.put("BILL_USER", new TmplConfigDetail("BILL_DATE", "创建人", "1", false));
-		Map_SetColumnsList.put("BILL_DATE", new TmplConfigDetail("BILL_DATE", "创建日期", "1", false));
 		return mv;
 	}
 	

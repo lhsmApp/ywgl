@@ -90,9 +90,7 @@ public class GRCPersonController extends BaseController {
 			pageData.put("STAFF_JOB",listTransferData.get(i++).trim());
 			pageData.put("PHONE",listTransferData.get(i++).trim());
 			pageData.put("MOBILE_PHONE",listTransferData.get(i++).trim());
-			pageData.put("ZSY_MAIL",listTransferData.get(i++).trim());
-			pageData.put("BILL_USER",listTransferData.get(i++).trim());
-			pageData.put("BILL_DATE",listTransferData.get(i).trim());
+			pageData.put("ZSY_MAIL",listTransferData.get(i).trim());
 			if(null != staffId && !"".equals(staffId)) {//如果有ID则进行修改
 				grcpersonService.edit(pageData);
 			}else {//如果无ID则进行新增
@@ -136,8 +134,6 @@ public class GRCPersonController extends BaseController {
 		Map_SetColumnsList.put("PHONE", new TmplConfigDetail("PHONE", "办公室电话", "1", false));
 		Map_SetColumnsList.put("MOBILE_PHONE", new TmplConfigDetail("MOBILE_PHONE", "手机号", "1", false));
 		Map_SetColumnsList.put("ZSY_MAIL", new TmplConfigDetail("ZSY_MAIL", "中国石油邮箱", "1", false));
-		Map_SetColumnsList.put("BILL_USER", new TmplConfigDetail("BILL_USER", "创建人", "1", false));
-		Map_SetColumnsList.put("BILL_DATE", new TmplConfigDetail("BILL_DATE", "创建日期", "1", false));
 
 		return mv;
 	}

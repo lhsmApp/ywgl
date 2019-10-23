@@ -88,9 +88,7 @@ public class OperationStatisticsController extends BaseController {
 			pageData.put("SECURITY_OPER_NUM",listTransferData.get(i++).trim());
 			pageData.put("ERP_OPER_NUM",listTransferData.get(i++).trim());
 			pageData.put("CLOUD_OPER_NUM",listTransferData.get(i++).trim());
-			pageData.put("TOTAL_OPER_NUM",listTransferData.get(i++).trim());
-			pageData.put("BILL_USER",listTransferData.get(i++).trim());
-			pageData.put("BILL_DATE",listTransferData.get(i).trim());
+			pageData.put("TOTAL_OPER_NUM",listTransferData.get(i).trim());
 			if(null != staffId && !"".equals(staffId)) {//如果有ID则进行修改
 				operationstatisticsService.edit(pageData);
 			}else {//如果无ID则进行新增
@@ -133,8 +131,6 @@ public class OperationStatisticsController extends BaseController {
 		Map_SetColumnsList.put("ERP_OPER_NUM", new TmplConfigDetail("ERP_OPER_NUM", "ERP运维数量", "1", false));
 		Map_SetColumnsList.put("CLOUD_OPER_NUM", new TmplConfigDetail("CLOUD_OPER_NUM", "云桌面运维数量", "1", false));
 		Map_SetColumnsList.put("TOTAL_OPER_NUM", new TmplConfigDetail("TOTAL_OPER_NUM", "合计", "1", false));
-		Map_SetColumnsList.put("BILL_USER", new TmplConfigDetail("BILL_USER", "创建人", "1", false));
-		Map_SetColumnsList.put("BILL_DATE", new TmplConfigDetail("BILL_DATE", "创建日期", "1", false));
 		
 		return mv;
 	}

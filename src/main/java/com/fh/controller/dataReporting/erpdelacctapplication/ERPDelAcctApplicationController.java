@@ -90,9 +90,7 @@ public class ERPDelAcctApplicationController extends BaseController {
 			pageData.put("PERMISSION_CHANGE",listTransferData.get(i++).trim());
 			pageData.put("APPLY_DATE",listTransferData.get(i++).trim());
 			pageData.put("ACCOUNT_DELETE_REASON",listTransferData.get(i++).trim());
-			pageData.put("NOTE",listTransferData.get(i++).trim());
-			pageData.put("BILL_USER",listTransferData.get(i++).trim());
-			pageData.put("BILL_DATE",listTransferData.get(i).trim());
+			pageData.put("NOTE",listTransferData.get(i).trim());
 			if(null != staffId && !"".equals(staffId)) {//如果有ID则进行修改
 				erpdelacctapplicationService.edit(pageData);
 			}else {//如果无ID则进行新增
@@ -139,8 +137,6 @@ public class ERPDelAcctApplicationController extends BaseController {
 		Map_SetColumnsList.put("APPLY_DATE", new TmplConfigDetail("APPLY_DATE", "申请日期", "1", false));
 		Map_SetColumnsList.put("ACCOUNT_DELETE_REASON", new TmplConfigDetail("ACCOUNT_DELETE_REASON", "账号删除原因", "1", false));
 		Map_SetColumnsList.put("NOTE", new TmplConfigDetail("NOTE", "备注", "1", false));
-		Map_SetColumnsList.put("BILL_USER", new TmplConfigDetail("BILL_DATE", "创建人", "1", false));
-		Map_SetColumnsList.put("BILL_DATE", new TmplConfigDetail("BILL_DATE", "创建日期", "1", false));
 		
 		return mv;
 	}

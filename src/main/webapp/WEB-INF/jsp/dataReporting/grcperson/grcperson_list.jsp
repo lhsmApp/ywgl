@@ -20,6 +20,11 @@
 <%@ include file="../../system/index/top.jsp"%>
 <!--自由拉动  -->
  <link rel="stylesheet" href="static/ace/css/jquery-ui.css" />
+<style>
+    .mtable{width:auto;border-collapse:collapse;border:1px solid black;}
+    .mtable th, .mtable td{height:30px;text-align:center;border:1px solid black;}
+    .mtable th, .mtable td{position:relative;background-clip:padding-box;}
+</style>
 </head>
 <body class="no-skin">
 	<!-- /section:basics/navbar.layout -->
@@ -34,17 +39,25 @@
 							<tbody>
 							<tr>
 								<td style="vertical-align:top;">
-										<div class="pagination" style="padding-left: 70%;margin-top: 0px;">
-										<button class="btn btn-sm btn-primary" onclick="toGRCPerson()" style="background-color: blue"><font style="vertical-align: inherit; color: blue">GRC人员信息</font></button>						
-										<button class="btn btn-sm btn-primary" onclick="toGRCApprovalMatrix()"><font style="vertical-align: inherit;">GRC审批矩阵</font></button>	
+								<div class="pull-right">
+								<span class="green middle bolder">填报类型: &nbsp;</span>
+								<div class="btn-toolbar inline middle no-margin">
+									<div data-toggle="buttons" class="btn-group no-margin">
+										<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toGRCPerson()">
+											<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>GRC人员信息</span>
+										</button>
+										<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toGRCApprovalMatrix()">
+											<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>GRC审批矩阵</span>
+										</button>
 									</div>
-									
+								</div>
+							</div>
 								</td>
 							</tr>
 						</tbody>
 						</table>
 						<form action="grcperson/list.do" method="post" name="Form" id="Form">
-						<table style="margin-top:-15px;">
+						<table style="margin-top:0px;">
 							<tr>
 								<td>
 									<div class="nav-search">
@@ -66,9 +79,7 @@
 							</tr>
 						</table>
 						<!-- 检索  -->
-					
-						
-						<table id="simple-table" border='1' class="" style="margin-top:5px;">	
+						<table id="simple-table" class="mtable" style="margin-top:5px;">	
 							<thead style="height: 40px">
 								<tr>
 									<th class="center" style="width:35px; background-color: #BEBEC5;">
@@ -76,37 +87,23 @@
 									</th>
 									<th style="width:90px; background-color: #BEBEC5; text-align: center;">员工编号</th>
 									<th style="width:90px; background-color: #BEBEC5; text-align: center;">员工姓名</th>
-									<th style="background-color: #BEBEC5; text-align: center;">单位</th>
-									<th style="background-color: #BEBEC5; text-align: center;">部门</th>
-									<th style="background-color: #BEBEC5; text-align: center;">职务</th>
-									<th style="background-color: #BEBEC5; text-align: center;">岗位</th>
-									<th style="background-color: #BEBEC5; text-align: center;">办公室电话</th>
-									<th style="background-color: #BEBEC5; text-align: center;">手机号</th>
-									<th style="background-color: #BEBEC5; text-align: center;">中国石油邮箱</th>
-									<th style="background-color: #BEBEC5; text-align: center;">创建人</th>
-									<th style="width:90px; background-color: #BEBEC5; text-align: center;">创建日期</th>
+									<th style="width:90px; background-color: #BEBEC5; text-align: center;">单位</th>
+									<th style="width:90px; background-color: #BEBEC5; text-align: center;">部门</th>
+									<th style="width:90px; background-color: #BEBEC5; text-align: center;">职务</th>
+									<th style="width:90px; background-color: #BEBEC5; text-align: center;">岗位</th>
+									<th style="width:100px; background-color: #BEBEC5; text-align: center;">办公室电话</th>
+									<th style="width:90px; background-color: #BEBEC5; text-align: center;">手机号</th>
+									<th style="width:120px; background-color: #BEBEC5; text-align: center;">中国石油邮箱</th>
 								</tr>
 							</thead>
 													
 							<tbody  id="copyTable">
 							<!-- 开始循环 -->	
-							<c:choose>
-								<c:when test="${not empty varList}">
-									
-									<%-- 
-									------------权限查看开始----------------
-									<c:if test="${QX.cha == 1 }"> 
-									--%>
 									<c:forEach items="${varList}" var="pd" varStatus="vs">
 										<tr>
 											<td class='center'>
 												<label class="pos-rel"><input style="background-color: #BEBEC5;" type='checkbox' name='ids' value="${pd.ID}" class="ace"/><span class="lbl"></span></label>
 											</td>
-											
-											<%-- 
-												-------------索引编号,加不加待定---------------
-												<td class='center' style="width: 30px;">${vs.index+1}</td> 
-											--%>
 										<th><input type="text" class="STAFF_CODE" name="STAFF_CODE" id="STAFF_CODE" readonly="readonly" value="${pd.STAFF_CODE}" maxlength="30" title="员工编号" style="width:100%;"/></th>
 										<th><input type="text" class="STAFF_NAME" name="STAFF_NAME" id="STAFF_NAME" readonly="readonly" value="${pd.STAFF_NAME}" maxlength="30" title="员工姓名" style="width:100%;"/></th>
 										<th><input type="text" name="STAFF_UNIT" id="STAFF_UNIT" readonly="readonly" value="${pd.STAFF_UNIT}" maxlength="30" title="单位" style="width:100%;"/></th>
@@ -116,26 +113,8 @@
 										<th><input type="text" name="PHONE" id="PHONE" readonly="readonly" value="${pd.PHONE}" maxlength="20" title="办公室电话" style="width:100%;"/></th>
 										<th><input type="text" name="MOBILE_PHONE" id="MOBILE_PHONE" readonly="readonly" value="${pd.MOBILE_PHONE}" maxlength="20" title="手机号" style="width:100%;"/></th>
 										<th><input type="text" name="ZSY_MAIL" id="ZSY_MAIL" readonly="readonly" value="${pd.ZSY_MAIL}" maxlength="50" title="中国石油邮箱" style="width:100%;"/></th>
-										<th><input type="text" name="BILL_USER" id="BILL_USER" readonly="readonly" value="${pd.BILL_USER}" maxlength="20" title="创建人" style="width:100%;"/></th>
-										<th><input type="text" name="BILL_DATE" id="BILL_DATE" readonly="readonly" value="${pd.BILL_DATE}" maxlength="30" title="创建日期" style="width:100%;"/></th>
 									</tr>
 									</c:forEach>
-								<%-- 	</c:if> --%>
-								<%-- 	<c:if test="${QX.cha == 0 }">
-										<tr>
-											<td colspan="100" class="center">您无权查看</td>
-										</tr>
-									</c:if> 
-										-------------------------权限查看结束------------------------------
-									--%>
-									
-								</c:when>
-								<c:otherwise>
-									<tr class="main_info">
-										<td colspan="100" class="center" >没有相关数据</td>
-									</tr>
-								</c:otherwise>
-							</c:choose>
 							<tr></tr>
 							</tbody>
 						</table>
@@ -182,8 +161,6 @@
 				<th><input type="text" name="PHONE" id="PHONE" value="" maxlength="20" title="办公室电话" style="width:100%;"/></th>
 				<th><input type="text" name="MOBILE_PHONE" id="MOBILE_PHONE" value="" maxlength="20" title="手机号" style="width:100%;"/></th>
 				<th><input type="text" name="ZSY_MAIL" id="ZSY_MAIL" value="" maxlength="50" title="中国石油邮箱" style="width:100%;"/></th>
-				<th><input type="text" name="BILL_USER" id="BILL_USER" value="" maxlength="20" title="创建人" style="width:100%;"/></th>
-				<th><input type="text" name="BILL_DATE" id="BILL_DATE" value="" maxlength="30" title="创建日期" style="width:100%;"/></th>
 			</tr>
 		</tbody>
 	</table>
@@ -260,8 +237,6 @@
 			var PHONE = '';
 			var MOBILE_PHONE = '';
 			var STAFF_NAME = '';
-			var BILL_USER = '';
-			var BILL_DATE = '';
 			var codeVal = '';
 			var listData = new Array();
 			for(var i=0;i < document.getElementsByName('STAFF_CODE').length-1;i++){
@@ -280,8 +255,6 @@
 						PHONE = document.getElementsByName('PHONE')[i].value;
 						MOBILE_PHONE = document.getElementsByName('MOBILE_PHONE')[i].value;
 						ZSY_MAIL = document.getElementsByName('ZSY_MAIL')[i].value;
-						BILL_USER = document.getElementsByName('BILL_USER')[i].value;
-						BILL_DATE = document.getElementsByName('BILL_DATE')[i].value;
 						
 						listData.push(ID);
 						listData.push(STAFF_CODE);
@@ -293,8 +266,6 @@
 						listData.push(PHONE);
 						listData.push(MOBILE_PHONE);
 						listData.push(ZSY_MAIL);
-						listData.push(BILL_USER);
-						listData.push(BILL_DATE);
 				}
 			}
 			top.jzts();

@@ -18,30 +18,43 @@
 <%@ include file="../../system/index/top.jsp"%>
 <!--自由拉动  -->
  <link rel="stylesheet" href="static/ace/css/jquery-ui.css" />
+<style>
+    .mtable{width:auto;border-collapse:collapse;border:1px solid black;}
+    .mtable th, .mtable td{height:30px;text-align:center;border:1px solid black;}
+    .mtable th, .mtable td{position:relative;background-clip:padding-box;}
+</style>
 </head>
 <body class="no-skin">
-
-	<!-- /section:basics/navbar.layout -->
 	<div class="main-container" id="main-container">
-		<!-- /section:basics/sidebar -->
 		<div class="main-content">
 			<div class="main-content-inner">
 				<div class="page-content">
 					<div class="row">
 						<div class="col-xs-12">
-						<table style="width:100%;">
-							<tbody>
-							<tr>
-								<td style="vertical-align:top;">
-										<div class="pagination" style="padding-left: 760px;margin-top: 0px;">
-											<button class="btn btn-sm btn-primary" onclick="toERPOfficialAcctApplication()"><font style="vertical-align: inherit;">ERP正式账号申请</font></button>	
-											<button class="btn btn-sm btn-primary" onclick="toERPTempAcctApplication()"><font style="vertical-align: inherit;  color: blue">ERP临时账号申请</font></button>						
-											<button class="btn btn-sm btn-primary" onclick="toERPDelAcctApplication()"><font style="vertical-align: inherit;">ERP删除账号申请</font></button>						
-									</div>
-								</td>
-							</tr>
-						</tbody>
-						</table>
+							<table style="width:100%;">
+								<tbody>
+								<tr>
+									<td>
+										<div class="pull-right">
+											<span class="green middle bolder">填报类型: &nbsp;</span>
+												<div class="btn-toolbar inline middle no-margin">
+													<div data-toggle="buttons" class="btn-group no-margin">
+														<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toERPOfficialAcctApplication()">
+															<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP正式账号申请</span>
+														</button>
+														<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toERPTempacctApplication()">
+															<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP临时账号申请</span>
+														</button>
+														<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toERPDelAcctApplication()">
+															<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP删除账号申请</span>
+														</button>
+													</div>
+												</div>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
 						<!-- 检索  -->
 						<form action="erptempacctapplication/list.do" method="post" name="Form" id="Form">
 						<table style="margin-top:-15px;">
@@ -77,7 +90,7 @@
 						</table>
 						<!-- 检索  -->
 					
-						<table id="simple-table" border='1' class="" style="margin-top:5px; width:auto;">	
+						<table id="simple-table" class="mtable" style="margin-top:5px;">	
 							<thead style="height: 40px">
 								<tr>
 									<th class="center" style="width:35px; background-color: #BEBEC5;">
@@ -97,15 +110,11 @@
 									<th style="width:90px; background-color: #BEBEC5; text-align: center;">申请临时原因</th>
 									<th style="width:90px; background-color: #BEBEC5; text-align: center;">UKey编号</th>
 									<th style="width:90px; background-color: #BEBEC5; text-align: center;">备注</th>
-									<th style="width:90px; background-color: #BEBEC5; text-align: center;">创建人</th>
-									<th style="width:90px; background-color: #BEBEC5; text-align: center;">创建日期</th>
 								</tr>
 							</thead>
 													
 							<tbody id="copyTable">
 							<!-- 开始循环 -->	
-							<c:choose>
-								<c:when test="${not empty varList}">
 									<c:forEach items="${varList}" var="var" varStatus="vs">
 										<tr>
 											<td class='center'>
@@ -125,17 +134,8 @@
 											<th><input type="text" name="APPLY_TEMP_REASON" id="APPLY_TEMP_REASON" readonly="readonly" value="${var.APPLY_TEMP_REASON}" maxlength="200" title="申请临时原因" style="width:100%;"/></th>
 											<th><input type="text" name="UKEY_NUM" id="UKEY_NUM" readonly="readonly" value="${var.UKEY_NUM}" maxlength="30" title="UKey编号" style="width:100%;"/></th>
 											<th><input type="text" name="NOTE" id="NOTE" readonly="readonly" value="${var.NOTE}" maxlength="300" title="备注" style="width:100%;"/></th>
-											<th><input type="text" name="BILL_USER" id="BILL_USER" readonly="readonly" value="${var.BILL_USER}" maxlength="20" title="创建人" style="width:100%;"/></th>
-											<th><input type="text" name="BILL_DATE" id="BILL_DATE" readonly="readonly" value="${var.BILL_DATE}" maxlength="30" title="创建日期" style="width:100%;"/></th>
 										</tr>
 									</c:forEach>
-								</c:when>
-								<c:otherwise>
-									<tr class="main_info">
-										<td colspan="100" class="center" >没有相关数据</td>
-									</tr>
-								</c:otherwise>
-							</c:choose>
 							</tbody>
 						</table>
 						<div class="page-header position-relative">
@@ -185,8 +185,6 @@
 						<th><input type="text" name="APPLY_TEMP_REASON" id="APPLY_TEMP_REASON" value="" maxlength="200" title="申请临时原因" style="width:100%;"/></th>
 						<th><input type="text" name="UKEY_NUM" id="UKEY_NUM" value="" maxlength="30" title="UKey编号" style="width:100%;"/></th>
 						<th><input type="text" name="NOTE" id="NOTE" value="" maxlength="300" title="备注" style="width:100%;"/></th>
-						<th><input type="text" name="BILL_USER" id="BILL_USER" value="" maxlength="20" title="创建人" style="width:100%;"/></th>
-						<th><input type="text" name="BILL_DATE" id="BILL_DATE" value="" maxlength="30" title="创建日期" style="width:100%;"/></th>
 					</tr>
 				</tbody>
 			</table>
@@ -277,8 +275,6 @@
 						listData.push(document.getElementsByName('APPLY_TEMP_REASON')[i].value);
 						listData.push(document.getElementsByName('UKEY_NUM')[i].value);
 						listData.push(document.getElementsByName('NOTE')[i].value);
-						listData.push(document.getElementsByName('BILL_USER')[i].value);
-						listData.push(document.getElementsByName('BILL_DATE')[i].value);
 				}
 			}
 			top.jzts();

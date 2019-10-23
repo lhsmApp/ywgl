@@ -18,6 +18,11 @@
 <%@ include file="../../system/index/top.jsp"%>
 <!--自由拉动  -->
  <link rel="stylesheet" href="static/ace/css/jquery-ui.css" />
+ <style>
+    .mtable{width:auto;border-collapse:collapse;border:1px solid black;}
+    .mtable th, .mtable td{height:30px;text-align:center;border:1px solid black;}
+    .mtable th, .mtable td{position:relative;background-clip:padding-box;}
+</style>
 </head>
 <body class="no-skin">
 
@@ -29,7 +34,6 @@
 				<div class="page-content">
 					<div class="row">
 						<div class="col-xs-12">
-							
 						<!-- 检索  -->
 						<form action="permissionchangestatistics/list.do" method="post" name="Form" id="Form">
 						<table style="margin-top:5px;">
@@ -61,16 +65,9 @@
 							</td>
 							</tr>
 						</table>
-						<div class="tabbable" style="margin-top:5px">
-							<ul class="nav nav-tabs padding-18">
-								<li class="active"><a data-toggle="tab" href="#voucherTransfer"> <i class="green ace-icon fa fa-user bigger-120"></i> 权限变更统计
-								</a></li>
-							</ul>
-							<div class="tab-content no-border" style="margin-top: -15px"></div>
-						</div>
 						<!-- 检索  -->
-						<table id="simple-table" border='1' class="" style="margin-top:5px;">		
-							<thead>
+						<table id="simple-table" class="mtable" style="margin-top:5px;">		
+							<thead style="height: 40px">
 								<tr>
 									<th class="center" style="width:35px;">
 									<label class="pos-rel"><input type="checkbox" class="ace" id="zcheckbox" /><span class="lbl"></span></label>
@@ -86,42 +83,29 @@
 									<th style="width:110px; background-color: #BEBEC5; text-align: center;">删除FMIS角色</th>
 									<th style="width:110px; background-color: #BEBEC5; text-align: center;">变更用户组</th>
 									<th style="width:110px; background-color: #BEBEC5; text-align: center;">变更人次</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">创建人</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">创建日期</th>
 								</tr>
 							</thead>
 													
 							<tbody id="copyTable">
 							<!-- 开始循环 -->	
-							<c:choose>
-								<c:when test="${not empty varList}">
 									<c:forEach items="${varList}" var="var" varStatus="vs">
 										<tr>
 											<td class='center'>
 												<label class="pos-rel"><input type='checkbox' name='ids' value="${var.ID}" class="ace" /><span class="lbl"></span></label>
 											</td>
 											<th><input type="text" name="COMPANY_NAME" id="COMPANY_NAME" readonly="readonly" value="${var.COMPANY_NAME}" maxlength="100" title="公司名称" style="width:100%;"/></th>
-											<th><input type="number" name="ACCOUNT_DELAY" id="ACCOUNT_DELAY" readonly="readonly" value="${var.ACCOUNT_DELAY}" maxlength="11" title="账号延期" style="width:100%;"/></th>
-											<th><input type="number" name="ACCOUNT_UNLOCK" id="ACCOUNT_UNLOCK" readonly="readonly" value="${var.ACCOUNT_UNLOCK}" maxlength="11" title="账号解除锁定" style="width:100%;"/></th>
-											<th><input type="number" name="NEW_ROLES" id="NEW_ROLES" readonly="readonly" value="${var.NEW_ROLES}" maxlength="11" title="新增角色" style="width:100%;"/></th>
-											<th><input type="number" name="DELETE_ROLES" id="DELETE_ROLES" readonly="readonly" value="${var.DELETE_ROLES}" maxlength="11" title="删除角色" style="width:100%;"/></th>
-											<th><input type="number" name="NEW_ACCOUNTS" id="NEW_ACCOUNTS" readonly="readonly" value="${var.NEW_ACCOUNTS}" maxlength="11" title="账号新增" style="width:100%;"/></th>
-											<th><input type="number" name="DELETE_ACCOUNTS" id="DELETE_ACCOUNTS" readonly="readonly" value="${var.DELETE_ACCOUNTS}" maxlength="11" title="账号删除" style="width:100%;"/></th>
-											<th><input type="number" name="NEW_FMIS_ROLES" id="NEW_FMIS_ROLES" readonly="readonly" value="${var.NEW_FMIS_ROLES}" maxlength="11" title="增加FMIS角色" style="width:100%;"/></th>
-											<th><input type="number" name="DELETE_FMIS_ROLES" id="DELETE_FMIS_ROLES" readonly="readonly" value="${var.DELETE_FMIS_ROLES}" maxlength="11" title="删除FMIS角色" style="width:100%;"/></th>
+											<th><input type="text" name="ACCOUNT_DELAY" id="ACCOUNT_DELAY" readonly="readonly" value="${var.ACCOUNT_DELAY}" maxlength="11" title="账号延期" style="width:100%;"/></th>
+											<th><input type="text" name="ACCOUNT_UNLOCK" id="ACCOUNT_UNLOCK" readonly="readonly" value="${var.ACCOUNT_UNLOCK}" maxlength="11" title="账号解除锁定" style="width:100%;"/></th>
+											<th><input type="text" name="NEW_ROLES" id="NEW_ROLES" readonly="readonly" value="${var.NEW_ROLES}" maxlength="11" title="新增角色" style="width:100%;"/></th>
+											<th><input type="text" name="DELETE_ROLES" id="DELETE_ROLES" readonly="readonly" value="${var.DELETE_ROLES}" maxlength="11" title="删除角色" style="width:100%;"/></th>
+											<th><input type="text" name="NEW_ACCOUNTS" id="NEW_ACCOUNTS" readonly="readonly" value="${var.NEW_ACCOUNTS}" maxlength="11" title="账号新增" style="width:100%;"/></th>
+											<th><input type="text" name="DELETE_ACCOUNTS" id="DELETE_ACCOUNTS" readonly="readonly" value="${var.DELETE_ACCOUNTS}" maxlength="11" title="账号删除" style="width:100%;"/></th>
+											<th><input type="text" name="NEW_FMIS_ROLES" id="NEW_FMIS_ROLES" readonly="readonly" value="${var.NEW_FMIS_ROLES}" maxlength="11" title="增加FMIS角色" style="width:100%;"/></th>
+											<th><input type="text" name="DELETE_FMIS_ROLES" id="DELETE_FMIS_ROLES" readonly="readonly" value="${var.DELETE_FMIS_ROLES}" maxlength="11" title="删除FMIS角色" style="width:100%;"/></th>
 											<th><input type="text" name="CHANGE_USER_GROUP" id="CHANGE_USER_GROUP" readonly="readonly" value="${var.CHANGE_USER_GROUP}" maxlength="50" title="变更用户组" style="width:100%;"/></th>
-											<th><input type="number" name="CHANGE_PERSON_COUNT" id="CHANGE_PERSON_COUNT" readonly="readonly" value="${var.CHANGE_PERSON_COUNT}" maxlength="11" title="变更人次" style="width:100%;"/></th>
-											<th><input type="text" name="BILL_USER" id="BILL_USER" readonly="readonly" value="${var.BILL_USER}" maxlength="20" title="创建人" style="width:100%;"/></th>
-											<th><input type="text" name="BILL_DATE" id="BILL_DATE" readonly="readonly" value="${var.BILL_DATE}" maxlength="30" title="创建日期" style="width:100%;"/></th>
+											<th><input type="text" name="CHANGE_PERSON_COUNT" id="CHANGE_PERSON_COUNT" readonly="readonly" value="${var.CHANGE_PERSON_COUNT}" maxlength="11" title="变更人次" style="width:100%;"/></th>
 										</tr>
 									</c:forEach>
-								</c:when>
-								<c:otherwise>
-									<tr class="main_info">
-										<td colspan="100" class="center" >没有相关数据</td>
-									</tr>
-								</c:otherwise>
-							</c:choose>
 							</tbody>
 						</table>
 						<div class="page-header position-relative">
@@ -156,18 +140,16 @@
 					<label class="pos-rel"><input type='checkbox' name='ids' value="${var.ID}" class="ace" /><span class="lbl"></span></label>
 				</td>
 				<th><input type="text" name="COMPANY_NAME" id="COMPANY_NAME" value="" maxlength="100" title="公司名称" style="width:100%;"/></th>
-				<th><input type="number" name="ACCOUNT_DELAY" id="ACCOUNT_DELAY" value="" maxlength="11" title="账号延期" style="width:100%;"/></th>
-				<th><input type="number" name="ACCOUNT_UNLOCK" id="ACCOUNT_UNLOCK" value="" maxlength="11" title="账号解除锁定" style="width:100%;"/></th>
-				<th><input type="number" name="NEW_ROLES" id="NEW_ROLES" value="" maxlength="11" title="新增角色" style="width:100%;"/></th>
-				<th><input type="number" name="DELETE_ROLES" id="DELETE_ROLES" value="" maxlength="11" title="删除角色" style="width:100%;"/></th>
-				<th><input type="number" name="NEW_ACCOUNTS" id="NEW_ACCOUNTS" value="" maxlength="11" title="账号新增" style="width:100%;"/></th>
-				<th><input type="number" name="DELETE_ACCOUNTS" id="DELETE_ACCOUNTS" value="" maxlength="11" title="账号删除" style="width:100%;"/></th>
-				<th><input type="number" name="NEW_FMIS_ROLES" id="NEW_FMIS_ROLES" value="${var.NEW_FMIS_ROLES}" maxlength="11" title="增加FMIS角色" style="width:100%;"/></th>
-				<th><input type="number" name="DELETE_FMIS_ROLES" id="DELETE_FMIS_ROLES" value="" maxlength="11" title="删除FMIS角色" style="width:100%;"/></th>
+				<th><input type="text" name="ACCOUNT_DELAY" id="ACCOUNT_DELAY" value="" maxlength="11" title="账号延期" style="width:100%;"/></th>
+				<th><input type="text" name="ACCOUNT_UNLOCK" id="ACCOUNT_UNLOCK" value="" maxlength="11" title="账号解除锁定" style="width:100%;"/></th>
+				<th><input type="text" name="NEW_ROLES" id="NEW_ROLES" value="" maxlength="11" title="新增角色" style="width:100%;"/></th>
+				<th><input type="text" name="DELETE_ROLES" id="DELETE_ROLES" value="" maxlength="11" title="删除角色" style="width:100%;"/></th>
+				<th><input type="text" name="NEW_ACCOUNTS" id="NEW_ACCOUNTS" value="" maxlength="11" title="账号新增" style="width:100%;"/></th>
+				<th><input type="text" name="DELETE_ACCOUNTS" id="DELETE_ACCOUNTS" value="" maxlength="11" title="账号删除" style="width:100%;"/></th>
+				<th><input type="text" name="NEW_FMIS_ROLES" id="NEW_FMIS_ROLES" value="${var.NEW_FMIS_ROLES}" maxlength="11" title="增加FMIS角色" style="width:100%;"/></th>
+				<th><input type="text" name="DELETE_FMIS_ROLES" id="DELETE_FMIS_ROLES" value="" maxlength="11" title="删除FMIS角色" style="width:100%;"/></th>
 				<th><input type="text" name="CHANGE_USER_GROUP" id="CHANGE_USER_GROUP" value="" maxlength="50" title="变更用户组" style="width:100%;"/></th>
-				<th><input type="number" name="CHANGE_PERSON_COUNT" id="CHANGE_PERSON_COUNT" value="" maxlength="11" title="变更人次" style="width:100%;"/></th>
-				<th><input type="text" name="BILL_USER" id="BILL_USER" value="" maxlength="20" title="创建人" style="width:100%;"/></th>
-				<th><input type="text" name="BILL_DATE" id="BILL_DATE" value="" maxlength="30" title="创建日期" style="width:100%;"/></th>
+				<th><input type="text" name="CHANGE_PERSON_COUNT" id="CHANGE_PERSON_COUNT" value="" maxlength="11" title="变更人次" style="width:100%;"/></th>
 			</tr>
 		</tbody>
 	</table>
@@ -209,20 +191,6 @@ $(top.hangge());//关闭加载状态
 		$("#Form").submit();
 	}
 	
-	/* ERP正式账号申请 */
-	function toERPOfficialAcctApplication(){
-		window.location.href='<%=basePath%>erpofficialacctapplication/list.do';
-	}
-	
-	/* ERP临时账号申请 */
-	function toERPTempacctApplication(){
-		window.location.href='<%=basePath%>erptempacctapplication/list.do';
-	}
-	/* ERP删除账号申请 */
-	function toERPDelAcctApplication(){
-		window.location.href='<%=basePath%>erpdelacctapplication/list.do';
-	}
-	
 	/* 新增一行 */
 	function addRows(){
     	$("#hideTable table tbody tr").clone().appendTo("#copyTable");	           
@@ -254,8 +222,6 @@ $(top.hangge());//关闭加载状态
 					listData.push(document.getElementsByName('DELETE_FMIS_ROLES')[i].value);
 					listData.push(document.getElementsByName('CHANGE_USER_GROUP')[i].value);
 					listData.push(document.getElementsByName('CHANGE_PERSON_COUNT')[i].value);
-					listData.push(document.getElementsByName('BILL_USER')[i].value);
-					listData.push(document.getElementsByName('BILL_DATE')[i].value);
 			}
 		}
 		top.jzts();

@@ -91,8 +91,6 @@ public class ERPTempAcctApplicationController extends BaseController {
 		Map_SetColumnsList.put("APPLY_TEMP_REASON", new TmplConfigDetail("APPLY_TEMP_REASON", "申请临时原因", "1", false));
 		Map_SetColumnsList.put("UKEY_NUM", new TmplConfigDetail("UKEY_NUM", "UKey编号", "1", false));
 		Map_SetColumnsList.put("NOTE", new TmplConfigDetail("NOTE", "备注", "1", false));
-		Map_SetColumnsList.put("BILL_USER", new TmplConfigDetail("BILL_DATE", "创建人", "1", false));
-		Map_SetColumnsList.put("BILL_DATE", new TmplConfigDetail("BILL_DATE", "创建日期", "1", false));
 		return mv;
 	}
 	
@@ -134,9 +132,7 @@ public class ERPTempAcctApplicationController extends BaseController {
 			pageData.put("CANCEL_DATE",listTransferData.get(i++).trim());
 			pageData.put("APPLY_TEMP_REASON",listTransferData.get(i++).trim());
 			pageData.put("UKEY_NUM",listTransferData.get(i++).trim());
-			pageData.put("NOTE",listTransferData.get(i++).trim());
-			pageData.put("BILL_USER",listTransferData.get(i++).trim());
-			pageData.put("BILL_DATE",listTransferData.get(i).trim());
+			pageData.put("NOTE",listTransferData.get(i).trim());
 			if(null != staffId && !"".equals(staffId)) {//如果有ID则进行修改
 				erptempacctapplicationService.edit(pageData);
 			}else {//如果无ID则进行新增

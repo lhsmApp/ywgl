@@ -18,6 +18,11 @@
 <%@ include file="../../system/index/top.jsp"%>
 <!--自由拉动  -->
  <link rel="stylesheet" href="static/ace/css/jquery-ui.css" />
+ <style>
+    .mtable{width:auto;border-collapse:collapse;border:1px solid black;}
+    .mtable th, .mtable td{height:30px;text-align:center;border:1px solid black;}
+    .mtable th, .mtable td{position:relative;background-clip:padding-box;}
+</style>
 </head>
 <body class="no-skin">
 
@@ -62,16 +67,9 @@
 								</td>
 							</tr>
 						</table>
-						<div class="tabbable" style="margin-top:5px">
-							<ul class="nav nav-tabs padding-18">
-								<li class="active"><a data-toggle="tab" href="#voucherTransfer"> <i class="green ace-icon fa fa-user bigger-120"></i> 运维工作量
-								</a></li>
-							</ul>
-							<div class="tab-content no-border" style="margin-top: -15px"></div>
-						</div>
 						<!-- 检索  -->
-						<table id="simple-table" border='1' class="" style="margin-top:0px; width:auto;">	
-							<thead>
+						<table id="simple-table" class="mtable" style="margin-top:5px; width:auto;">	
+							<thead style="height: 40px">
 								<tr>
 									<th class="center" style="width:35px;">
 									<label class="pos-rel"><input type="checkbox" class="ace" id="zcheckbox" /><span class="lbl"></span></label>
@@ -83,38 +81,25 @@
 									<th style="width:150px; background-color: #BEBEC5; text-align: center;">ERP运维数量</th>
 									<th style="width:150px; background-color: #BEBEC5; text-align: center;">云桌面运维数量</th>
 									<th style="width:150px; background-color: #BEBEC5; text-align: center;">合计</th>
-									<th style="width:150px; background-color: #BEBEC5; text-align: center;">创建人</th>
-									<th style="width:150px; background-color: #BEBEC5; text-align: center;">创建日期</th>
 								</tr>
 							</thead>
 													
 							<tbody id="copyTable">
 							<!-- 开始循环 -->	
-							<c:choose>
-								<c:when test="${not empty varList}">
 									<c:forEach items="${varList}" var="var" varStatus="vs">
 										<tr>
 											<td class='center'>
 												<label class="pos-rel"><input type='checkbox' name='ids' value="${var.ID}" class="ace" /><span class="lbl"></span></label>
 											</td>
 											<th><input type="text" name="COMPANY_NAME" id="COMPANY_NAME" readonly="readonly" value="${var.COMPANY_NAME}" maxlength="100" title="单位" style="width:100%;"/></th>
-											<th><input type="number" name="AGENCY_OPER_NUM" id="AGENCY_OPER_NUM" readonly="readonly" value="${var.AGENCY_OPER_NUM}" maxlength="11" title="机关计算机运维数量" style="width:100%;"/></th>
-											<th><input type="number" name="NETWORK_OPER_NUM" id="NETWORK_OPER_NUM" readonly="readonly" value="${var.NETWORK_OPER_NUM}" maxlength="21" title="网络运维数量" style="width:100%;"/></th>
-											<th><input type="number" name="SECURITY_OPER_NUM" id="SECURITY_OPER_NUM" readonly="readonly" value="${var.SECURITY_OPER_NUM}" maxlength="11" title="信息安全运维数量" style="width:100%;"/></th>
-											<th><input type="number" name="ERP_OPER_NUM" id="ERP_OPER_NUM" readonly="readonly" value="${var.ERP_OPER_NUM}" maxlength="11" title="ERP运维数量" style="width:100%;"/></th>
-											<th><input type="number" name="CLOUD_OPER_NUM" id="CLOUD_OPER_NUM" readonly="readonly" value="${var.CLOUD_OPER_NUM}" maxlength="11" title="云桌面运维数量" style="width:100%;"/></th>
-											<th><input type="number" name="TOTAL_OPER_NUM" id="TOTAL_OPER_NUM" readonly="readonly" value="${var.TOTAL_OPER_NUM}" maxlength="11" title="合计" style="width:100%;"/></th>
-											<th><input type="text" name="BILL_USER" id="BILL_USER" readonly="readonly" value="${var.BILL_USER}" maxlength="20" title="创建人" style="width:100%;"/></th>
-											<th><input type="text" name="BILL_DATE" id="BILL_DATE" readonly="readonly" value="${var.BILL_DATE}" maxlength="30" title="创建日期" style="width:100%;"/></th>
+											<th><input type="text" name="AGENCY_OPER_NUM" id="AGENCY_OPER_NUM" readonly="readonly" value="${var.AGENCY_OPER_NUM}" maxlength="11" title="机关计算机运维数量" style="width:100%;"/></th>
+											<th><input type="text" name="NETWORK_OPER_NUM" id="NETWORK_OPER_NUM" readonly="readonly" value="${var.NETWORK_OPER_NUM}" maxlength="21" title="网络运维数量" style="width:100%;"/></th>
+											<th><input type="text" name="SECURITY_OPER_NUM" id="SECURITY_OPER_NUM" readonly="readonly" value="${var.SECURITY_OPER_NUM}" maxlength="11" title="信息安全运维数量" style="width:100%;"/></th>
+											<th><input type="text" name="ERP_OPER_NUM" id="ERP_OPER_NUM" readonly="readonly" value="${var.ERP_OPER_NUM}" maxlength="11" title="ERP运维数量" style="width:100%;"/></th>
+											<th><input type="text" name="CLOUD_OPER_NUM" id="CLOUD_OPER_NUM" readonly="readonly" value="${var.CLOUD_OPER_NUM}" maxlength="11" title="云桌面运维数量" style="width:100%;"/></th>
+											<th><input type="text" name="TOTAL_OPER_NUM" id="TOTAL_OPER_NUM" readonly="readonly" value="${var.TOTAL_OPER_NUM}" maxlength="11" title="合计" style="width:100%;"/></th>
 										</tr>
 									</c:forEach>
-								</c:when>
-								<c:otherwise>
-									<tr class="main_info">
-										<td colspan="100" class="center" >没有相关数据</td>
-									</tr>
-								</c:otherwise>
-							</c:choose>
 							</tbody>
 						</table>
 						
@@ -145,14 +130,12 @@
 					<label class="pos-rel"><input type='checkbox' name='ids' value="${var.ID}" class="ace" /><span class="lbl"></span></label>
 				</td>
 				<th><input type="text" name="COMPANY_NAME" id="COMPANY_NAME" value="" maxlength="50" title="单位" style="width:100%;"/></th>
-				<th><input type="number" onkeyup="this.value=this.value.replace(/\D/g,'')" name="AGENCY_OPER_NUM" id="AGENCY_OPER_NUM" value="" maxlength="100" title="机关计算机运维数量" style="width:100%;"/></th>
-				<th><input type="number" name="NETWORK_OPER_NUM" id="NETWORK_OPER_NUM" value="" maxlength="11" title="网络运维数量" style="width:100%;"/></th>
-				<th><input type="number" name="SECURITY_OPER_NUM" id="SECURITY_OPER_NUM" value="" maxlength="11" title="信息安全运维数量" style="width:100%;"/></th>
-				<th><input type="number" name="ERP_OPER_NUM" id="ERP_OPER_NUM" value="" maxlength="11" title="ERP运维数量" style="width:100%;"/></th>
-				<th><input type="number" name="CLOUD_OPER_NUM" id="CLOUD_OPER_NUM" value="" maxlength="11" title="云桌面运维数量" style="width:100%;"/></th>
-				<th><input type="number" name="TOTAL_OPER_NUM" id="TOTAL_OPER_NUM"  value="" maxlength="11" title="合计" style="width:100%;"/></th>
-				<th><input type="text" name="BILL_USER" id="BILL_USER"  value="" maxlength="20" title="创建人" style="width:100%;"/></th>
-				<th><input type="text" name="BILL_DATE" id="BILL_DATE"  value="" maxlength="30" title="创建日期" style="width:100%;"/></th>
+				<th><input type="text" onkeyup="this.value=this.value.replace(/\D/g,'')" name="AGENCY_OPER_NUM" id="AGENCY_OPER_NUM" value="" maxlength="100" title="机关计算机运维数量" style="width:100%;"/></th>
+				<th><input type="text" name="NETWORK_OPER_NUM" id="NETWORK_OPER_NUM" value="" maxlength="11" title="网络运维数量" style="width:100%;"/></th>
+				<th><input type="text" name="SECURITY_OPER_NUM" id="SECURITY_OPER_NUM" value="" maxlength="11" title="信息安全运维数量" style="width:100%;"/></th>
+				<th><input type="text" name="ERP_OPER_NUM" id="ERP_OPER_NUM" value="" maxlength="11" title="ERP运维数量" style="width:100%;"/></th>
+				<th><input type="text" name="CLOUD_OPER_NUM" id="CLOUD_OPER_NUM" value="" maxlength="11" title="云桌面运维数量" style="width:100%;"/></th>
+				<th><input type="text" name="TOTAL_OPER_NUM" id="TOTAL_OPER_NUM"  value="" maxlength="11" title="合计" style="width:100%;"/></th>
 			</tr>
 			</tbody>
 		</table>
@@ -202,20 +185,6 @@
 			$("#Form").submit();
 		}
 		
-		/* ERP正式账号申请 */
-		function toERPOfficialAcctApplication(){
-			window.location.href='<%=basePath%>erpofficialacctapplication/list.do';
-		}
-		
-		/* ERP临时账号申请 */
-		function toERPTempacctApplication(){
-			window.location.href='<%=basePath%>erptempacctapplication/list.do';
-		}
-		/* ERP删除账号申请 */
-		function toERPDelAcctApplication(){
-			window.location.href='<%=basePath%>erpdelacctapplication/list.do';
-		}
-		
 		/* 新增一行 */
 		function addRows(){
 	    	$("#hideTable table tbody tr").clone().appendTo("#copyTable");	           
@@ -243,8 +212,6 @@
 						listData.push(document.getElementsByName('ERP_OPER_NUM')[i].value);
 						listData.push(document.getElementsByName('CLOUD_OPER_NUM')[i].value);
 						listData.push(document.getElementsByName('TOTAL_OPER_NUM')[i].value);
-						listData.push(document.getElementsByName('BILL_USER')[i].value);
-						listData.push(document.getElementsByName('BILL_DATE')[i].value);
 				}
 			}
 			top.jzts();

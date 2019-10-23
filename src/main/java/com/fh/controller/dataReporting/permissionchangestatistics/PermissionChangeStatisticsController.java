@@ -90,9 +90,7 @@ public class PermissionChangeStatisticsController extends BaseController {
 			pageData.put("NEW_FMIS_ROLES",listTransferData.get(i++).trim());
 			pageData.put("DELETE_FMIS_ROLES",listTransferData.get(i++).trim());
 			pageData.put("CHANGE_USER_GROUP",listTransferData.get(i++).trim());
-			pageData.put("CHANGE_PERSON_COUNT",listTransferData.get(i++).trim());
-			pageData.put("BILL_USER",listTransferData.get(i++).trim());
-			pageData.put("BILL_DATE",listTransferData.get(i).trim());
+			pageData.put("CHANGE_PERSON_COUNT",listTransferData.get(i).trim());
 			if(null != staffId && !"".equals(staffId)) {//如果有ID则进行修改
 				permissionchangestatisticsService.edit(pageData);
 			}else {//如果无ID则进行新增
@@ -132,8 +130,6 @@ public class PermissionChangeStatisticsController extends BaseController {
 		Map_SetColumnsList.put("SECURITY_OPER_NUM", new TmplConfigDetail("SECURITY_OPER_NUM", "信息安全运维数量", "1", false));
 		Map_SetColumnsList.put("ERP_OPER_NUM", new TmplConfigDetail("ERP_OPER_NUM", "ERP运维数量", "1", false));
 		Map_SetColumnsList.put("TOTAL_OPER_NUM", new TmplConfigDetail("TOTAL_OPER_NUM", "合计", "1", false));
-		Map_SetColumnsList.put("BILL_USER", new TmplConfigDetail("BILL_DATE", "创建人", "1", false));
-		Map_SetColumnsList.put("BILL_DATE", new TmplConfigDetail("BILL_DATE", "创建日期", "1", false));
 		
 		return mv;
 	}

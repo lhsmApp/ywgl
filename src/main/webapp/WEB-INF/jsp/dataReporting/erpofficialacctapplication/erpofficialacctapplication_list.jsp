@@ -18,6 +18,15 @@
 <%@ include file="../../system/index/top.jsp"%>
 <!--自由拉动  -->
  <link rel="stylesheet" href="static/ace/css/jquery-ui.css" />
+ <style>
+    table.mtable th{white-space: nowrap;}
+	table.mtable td{white-space: nowrap;}
+	body.mtable,table.mtable{font-size:12px;}
+	table{empty-cells:show;border-collapse: collapse;margin:0 auto;}
+    .mtable{width:auto;border-collapse:collapse;border:1px solid black;}
+    table.mtable td,table.mtable th{height:30px; border:1px solid black;}
+    .mtable th, .mtable td{position:relative;background-clip:padding-box;}
+</style>
 </head>
 <body class="no-skin">
 
@@ -30,21 +39,32 @@
 					<div class="row">
 						<div class="col-xs-12">
 							<table style="width:100%;">
-							<tbody>
-							<tr>
-								<td style="vertical-align:top;">
-										<div class="pagination" style="padding-left: 760px;margin-top: 0px;">
-											<button class="btn btn-sm btn-primary" onclick="toERPOfficialAcctApplication()"><font style="vertical-align: inherit;  color: blue">ERP正式账号申请</font></button>	
-											<button class="btn btn-sm btn-primary" onclick="toERPTempacctApplication()"><font style="vertical-align: inherit;">ERP临时账号申请</font></button>						
-											<button class="btn btn-sm btn-primary" onclick="toERPDelAcctApplication()"><font style="vertical-align: inherit;">ERP删除账号申请</font></button>						
-									</div>
-								</td>
-							</tr>
-						</tbody>
-						</table>
+								<tbody>
+								<tr>
+									<td>
+										<div class="pull-right">
+											<span class="green middle bolder">填报类型: &nbsp;</span>
+												<div class="btn-toolbar inline middle no-margin">
+													<div data-toggle="buttons" class="btn-group no-margin">
+														<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toERPOfficialAcctApplication()">
+															<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP正式账号申请</span>
+														</button>
+														<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toERPTempacctApplication()">
+															<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP临时账号申请</span>
+														</button>
+														<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toERPDelAcctApplication()">
+															<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP删除账号申请</span>
+														</button>
+													</div>
+												</div>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
 						<!-- 检索  -->
 						<form action="erpofficialacctapplication/list.do" method="post" name="Form" id="Form">
-						<table style="margin-top:-15px;">
+						<table style="margin-top:0px; float:left;">
 							<tr>
 								<td>
 									<div class="nav-search">
@@ -55,12 +75,10 @@
 									</div>
 								</td>
 								<td style="vertical-align:top;padding-left:5px;">
-								 	<select class="chosen-select form-control" name="name" id="id" data-placeholder="请选择" style="vertical-align:top;width: 160px;">
-									<option value=""></option>
-									<option value="">全部</option>
-									<option value="">1</option>
-									<option value="">2</option>
-								  	</select>
+								 	<span class="pull-left" id="spanSelectTree" style="margin-right: 5px;">
+												<div class="selectTree" id="selectTree" multiMode="false"allSelectable="false" noGroup="false"></div>
+											    <input type="text" id="SelectedDepartCode" hidden="hidden"></input>
+									</span>
 								</td>
 								<td style="vertical-align:top;padding-left:3px;">
 									<a class="btn btn-info btn-sm" onclick="tosearch()"><i class="ace-icon fa fa-search bigger-110"></i></a>
@@ -74,39 +92,35 @@
 							</tr>
 						</table>
 						<!-- 检索  -->
-					
-					<table id="simple-table" border='1' class="" style="margin-top:5px; width:auto;">	
-							<thead style="height: 40px">
+					<div style="overflow: auto; width: 100%; height: 400px;">
+					<table id="simple-table" class="mtable" style="margin-top:5px;">	
+							<thead style="height: 40px;">
 								<tr>
 									<th class="center" style="width:35px; background-color: #BEBEC5;">
 									<label class="pos-rel"><input type="checkbox" class="ace" id="zcheckbox" /><span class="lbl"></span></label>
 									</th>
-									<th class="ui-state-default ui-th-column ui-th-ltr" style="width:110px; background-color: #BEBEC5; text-align: center;">员工编号</th>
-									<th class="ui-state-default ui-th-column ui-th-ltr" style="width:110px; background-color: #BEBEC5; text-align: center;">员工姓名</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">二级单位</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">三级单位</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">职务</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">岗位</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">模块</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">联络电话</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">电子邮件</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">是否培训</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">培训方式</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">培训时间</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">培训成绩</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">证书编号</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">UKey编号</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">申请日期</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">备注</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">创建人</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">创建日期</th>
+									<th style="width:110px; background-color: #BEBEC5; text-align: center; padding-left: 12px;padding-right:12px;">员工编号</th>
+									<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">员工姓名</th>
+									<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">二级单位</th>
+									<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">三级单位</th>
+									<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">职务</th>
+									<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">岗位</th>
+									<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">模块</th>
+									<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">联络电话</th>
+									<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">电子邮件</th>
+									<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">是否培训</th>
+									<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">培训方式</th>
+									<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">培训时间</th>
+									<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">培训成绩</th>
+									<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">证书编号</th>
+									<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">UKey编号</th>
+									<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">申请日期</th>
+									<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">备注</th>
 								</tr>
 							</thead>
 													
 							<tbody id="copyTable">
 							<!-- 开始循环 -->	
-							<c:choose>
-								<c:when test="${not empty varList}">
 									<c:forEach items="${varList}" var="var" varStatus="vs">
 										<tr>
 											<td class='center'>
@@ -124,24 +138,16 @@
 											<th><input type="text" name="IF_TRAINING" id="IF_TRAINING" readonly="readonly" value="${var.IF_TRAINING}" maxlength="1" title="是否培训" style="width:100%;"/></th>
 											<th><input type="text" name="TRAINING_METHOD" id="TRAINING_METHOD" readonly="readonly" value="${var.TRAINING_METHOD}" maxlength="30" title="培训方式" style="width:100%;"/></th>
 											<th><input type="text" name="TRAINING_TIME" id="TRAINING_TIME" readonly="readonly" value="${var.TRAINING_TIME}" maxlength="30" title="培训时间" style="width:100%;"/></th>
-											<th><input type="number" name="TRAINING_RECORD" id="TRAINING_RECORD" readonly="readonly" value="${var.TRAINING_RECORD}" maxlength="30" title="培训成绩" style="width:100%;"/></th>
+											<th><input type="text" name="TRAINING_RECORD" id="TRAINING_RECORD" readonly="readonly" value="${var.TRAINING_RECORD}" maxlength="30" title="培训成绩" style="width:100%;"/></th>
 											<th><input type="text" name="CERTIFICATE_NUM" id="CERTIFICATE_NUM" readonly="readonly" value="${var.CERTIFICATE_NUM}" maxlength="30" title="证书编号" style="width:100%;"/></th>
 											<th><input type="text" name="UKEY_NUM" id="UKEY_NUM" readonly="readonly" value="${var.UKEY_NUM}" maxlength="30" title="UKey编号" style="width:100%;"/></th>
 											<th><input type="text" name="APPLY_DATE" id="APPLY_DATE" readonly="readonly" value="${var.APPLY_DATE}" maxlength="30" title="申请日期" style="width:100%;"/></th>
 											<th><input type="text" name="NOTE" id="NOTE" readonly="readonly" value="${var.NOTE}" maxlength="30" title="备注" style="width:100%;"/></th>
-											<th><input type="text" name="BILL_USER" id="BILL_USER" readonly="readonly" value="${var.BILL_USER}" maxlength="30" title="创建人" style="width:100%;"/></th>
-											<th><input type="text" name="BILL_DATE" id="BILL_DATE" readonly="readonly" value="${var.BILL_DATE}" maxlength="30" title="创建日期" style="width:100%;"/></th>
 										</tr>
 									</c:forEach>
-								</c:when>
-								<c:otherwise>
-									<tr class="main_info">
-										<td colspan="100" class="center" >没有相关数据</td>
-									</tr>
-								</c:otherwise>
-							</c:choose>
 							</tbody>
 						</table>
+						</div>
 						<div class="page-header position-relative">
 						<table style="width:100%;">
 							<tr>
@@ -177,25 +183,23 @@
 						<td class='center'>
 							<label class="pos-rel"><input type='checkbox' name='ids' value="" class="ace" /><span class="lbl"></span></label>
 						</td>
-						<th><input type="text" name="STAFF_CODE" id="STAFF_CODE" value="" maxlength="30" title="员工编号" style="width:100%;"/></th>
-						<th><input type="text" name="STAFF_NAME" id="STAFF_NAME" value="" maxlength="30" title="员工姓名" style="width:100%;"/></th>
-						<th><input type="text" name="STAFF_UNIT_LEVEL2" id="STAFF_UNIT_LEVEL2" value="" maxlength="30" title="二级单位" style="width:100%;"/></th>
-						<th><input type="text" name="STAFF_UNIT_LEVEL3" id="STAFF_UNIT_LEVEL3" value="" maxlength="30" title="三级单位" style="width:100%;"/></th>
-						<th><input type="text" name="STAFF_POSITION" id="STAFF_POSITION" value="" maxlength="50" title="职务" style="width:100%;"/></th>
-						<th><input type="text" name="STAFF_JOB" id="STAFF_JOB" value="" maxlength="30" title="岗位" style="width:100%;"/></th>
-						<th><input type="text" name="STAFF_MODULE" id="STAFF_MODULE" value="" maxlength="20" title="模块" style="width:100%;"/></th>
-						<th><input type="text" name="PHONE" id="PHONE" value="" maxlength="30" title="联络电话" style="width:100%;"/></th>
-						<th><input type="text" name="MAIL" id="MAIL" value="" maxlength="30" title="电子邮箱" style="width:100%;"/></th>
-						<th><input type="text" name="IF_TRAINING" id="IF_TRAINING" value="" maxlength="1" title="是否培训" style="width:100%;"/></th>
-						<th><input type="text" name="TRAINING_METHOD" id="TRAINING_METHOD" value="" maxlength="30" title="培训方式" style="width:100%;"/></th>
-						<th><input type="text" name="TRAINING_TIME" id="TRAINING_TIME" value="" maxlength="30" title="培训时间" style="width:100%;"/></th>
-						<th><input type="number" name="TRAINING_RECORD" id="TRAINING_RECORD" value="" maxlength="30" title="培训成绩" style="width:100%;"/></th>
-						<th><input type="text" name="CERTIFICATE_NUM" id="CERTIFICATE_NUM" value="" maxlength="30" title="证书编号" style="width:100%;"/></th>
-						<th><input type="text" name="UKEY_NUM" id="UKEY_NUM" value="" maxlength="30" title="UKey编号" style="width:100%;"/></th>
-						<th><input type="text" name="APPLY_DATE" id="APPLY_DATE" value="" maxlength="30" title="申请日期" style="width:100%;"/></th>
-						<th><input type="text" name="NOTE" id="NOTE" value="" maxlength="30" title="备注" style="width:100%;"/></th>
-						<th><input type="text" name="BILL_USER" id="BILL_USER" value="" maxlength="30" title="创建人" style="width:100%;"/></th>
-						<th><input type="text" name="BILL_DATE" id="BILL_DATE" value="" maxlength="30" title="创建日期" style="width:100%;"/></th>
+						<th><input type="text" name="STAFF_CODE" id="STAFF_CODE" value="" maxlength="30" title="员工编号" style="width:100px;"/></th>
+						<th><input type="text" name="STAFF_NAME" id="STAFF_NAME" value="" maxlength="30" title="员工姓名" style="width:100px;"/></th>
+						<th><input type="text" name="STAFF_UNIT_LEVEL2" id="STAFF_UNIT_LEVEL2" value="" maxlength="30" title="二级单位" style="width:100px;"/></th>
+						<th><input type="text" name="STAFF_UNIT_LEVEL3" id="STAFF_UNIT_LEVEL3" value="" maxlength="30" title="三级单位" style="width:100px;"/></th>
+						<th><input type="text" name="STAFF_POSITION" id="STAFF_POSITION" value="" maxlength="50" title="职务" style="width:100px;"/></th>
+						<th><input type="text" name="STAFF_JOB" id="STAFF_JOB" value="" maxlength="30" title="岗位" style="width:100px;"/></th>
+						<th><input type="text" name="STAFF_MODULE" id="STAFF_MODULE" value="" maxlength="20" title="模块" style="width:100px;"/></th>
+						<th><input type="text" name="PHONE" id="PHONE" value="" maxlength="30" title="联络电话" style="width:100px;"/></th>
+						<th><input type="text" name="MAIL" id="MAIL" value="" maxlength="30" title="电子邮箱" style="width:100px;"/></th>
+						<th><input type="text" name="IF_TRAINING" id="IF_TRAINING" value="" maxlength="1" title="是否培训" style="width:100px;"/></th>
+						<th><input type="text" name="TRAINING_METHOD" id="TRAINING_METHOD" value="" maxlength="30" title="培训方式" style="width:100px;"/></th>
+						<th><input type="text" name="TRAINING_TIME" id="TRAINING_TIME" value="" maxlength="30" title="培训时间" style="width:100px;"/></th>
+						<th><input type="text" name="TRAINING_RECORD" id="TRAINING_RECORD" value="" maxlength="30" title="培训成绩" style="width:100px;"/></th>
+						<th><input type="text" name="CERTIFICATE_NUM" id="CERTIFICATE_NUM" value="" maxlength="30" title="证书编号" style="width:100px;"/></th>
+						<th><input type="text" name="UKEY_NUM" id="UKEY_NUM" value="" maxlength="30" title="UKey编号" style="width:100px;"/></th>
+						<th><input type="text" name="APPLY_DATE" id="APPLY_DATE" value="" maxlength="30" title="申请日期" style="width:100px;"/></th>
+						<th><input type="text" name="NOTE" id="NOTE" value="" maxlength="30" title="备注" style="width:100px;"/></th>
 					</tr>
 				</tbody>
 			</table>
@@ -215,10 +219,14 @@
 	<script type="text/javascript" src="static/ace/js/jquery-ui.js"></script>
 	<script type="text/javascript">
 		$(top.hangge());//关闭加载状态
+
 		
 		/* 复选框全选控制 */
 		$(function() {
-			$("th").resizable(); //调用方法，实现可自由调整
+			//initComplete();
+			$("th").resizable({
+				minWidth:150
+			}); //调用方法，实现可自由调整
 			$("th > div:last-child").removeClass();
 			var active_class = 'active';
 			$('#simple-table > thead > tr > th input[type=checkbox]').eq(0).on('click', function(){
@@ -288,8 +296,6 @@
 						listData.push(document.getElementsByName('UKEY_NUM')[i].value);
 						listData.push(document.getElementsByName('APPLY_DATE')[i].value);
 						listData.push(document.getElementsByName('NOTE')[i].value);
-						listData.push(document.getElementsByName('BILL_USER')[i].value);
-						listData.push(document.getElementsByName('BILL_DATE')[i].value);
 				}
 			}
 			top.jzts();
@@ -422,8 +428,30 @@
 		function toExcel(){
 			window.location.href='<%=basePath%>erpofficialacctapplication/excel.do';
 		}
+		
+		//加载单位树
+		function initComplete(){
+			alert("加载成功");
+			//下拉树
+			var defaultNodes = {"treeNodes":'${zTreeNodes}'};
+			//绑定change事件
+			$("#selectTree").bind("change",function(){
+				console.log(1);
+				$("#SelectedDepartCode").val("");
+				if($(this).attr("relValue")){
+					console.log(2);
+					$("#SelectedDepartCode").val($(this).attr("relValue"));
+					console.log(3);
+			    }
+				console.log(4);
+			});
+			//赋给data属性
+			$("#selectTree").data("data",defaultNodes);  
+			$("#selectTree").render();
+			$("#selectTree2_input").val("请选择单位");
+		}
 	</script>
-
+	
 
 </body>
 </html>

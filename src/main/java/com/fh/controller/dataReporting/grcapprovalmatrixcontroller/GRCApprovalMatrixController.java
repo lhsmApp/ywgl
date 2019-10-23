@@ -83,9 +83,7 @@ public class GRCApprovalMatrixController extends BaseController {
 			pageData.put("STAFF_CODE",listTransferData.get(i++).trim());
 			pageData.put("STAFF_NAME",listTransferData.get(i++).trim());
 			pageData.put("STAFF_CODE_APPROVAL1",listTransferData.get(i++).trim());
-			pageData.put("STAFF_NAME_APPROVAL1",listTransferData.get(i++).trim());
-			pageData.put("BILL_USER",listTransferData.get(i++).trim());
-			pageData.put("BILL_DATE",listTransferData.get(i).trim());
+			pageData.put("STAFF_NAME_APPROVAL1",listTransferData.get(i).trim());
 			if(null != staffId && !"".equals(staffId)) {//如果有ID则进行修改
 				grcapprovalmatrixService.edit(pageData);
 			}else {//如果无ID则进行新增
@@ -126,8 +124,6 @@ public class GRCApprovalMatrixController extends BaseController {
 		Map_SetColumnsList.put("STAFF_NAME", new TmplConfigDetail("STAFF_NAME", "申请人员工姓名", "1", false));
 		Map_SetColumnsList.put("STAFF_CODE_APPROVAL1", new TmplConfigDetail("STAFF_CODE_APPROVAL1", "一级审批人员工编号", "1", false));
 		Map_SetColumnsList.put("STAFF_NAME_APPROVAL1", new TmplConfigDetail("STAFF_NAME_APPROVAL1", "一级审批人员工姓名", "1", false));
-		Map_SetColumnsList.put("BILL_USER", new TmplConfigDetail("BILL_USER", "创建人", "1", false));
-		Map_SetColumnsList.put("BILL_DATE", new TmplConfigDetail("BILL_DATE", "创建日期", "1", false));
 
 		return mv;
 	}

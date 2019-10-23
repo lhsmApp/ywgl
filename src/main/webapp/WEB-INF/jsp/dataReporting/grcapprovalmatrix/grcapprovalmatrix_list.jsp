@@ -18,6 +18,11 @@
 <%@ include file="../../system/index/top.jsp"%>
 <!--自由拉动  -->
  <link rel="stylesheet" href="static/ace/css/jquery-ui.css" />
+<style>
+    .mtable{width:auto;border-collapse:collapse;border:1px solid black;}
+    .mtable th, .mtable td{height:30px;text-align:center;border:1px solid black;}
+    .mtable th, .mtable td{position:relative;background-clip:padding-box;}
+</style>
 </head>
 <body class="no-skin">
 
@@ -31,19 +36,28 @@
 						<div class="col-xs-12">
 							<table style="width:100%;">
 							<tbody>
-							<tr>
-								<td style="vertical-align:top;">
-										<div class="pagination" style="padding-left: 935px;margin-top: 0px;">
-											<button class="btn btn-sm btn-primary" onclick="toGRCPerson()"><font style="vertical-align: inherit;">GRC人员信息</font></button>						
-											<button class="btn btn-sm btn-primary" onclick="toGRCApprovalMatrix()"><font style="vertical-align: inherit;  color: blue">GRC审批矩阵</font></button>	
-									</div>
-								</td>
-							</tr>
-						</tbody>
+								<tr>
+									<td>
+										<div class="pull-right">
+											<span class="green middle bolder">填报类型: &nbsp;</span>
+												<div class="btn-toolbar inline middle no-margin">
+													<div data-toggle="buttons" class="btn-group no-margin">
+														<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toGRCPerson()">
+															<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>GRC人员信息</span>
+														</button>
+														<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toGRCApprovalMatrix()">
+															<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>GRC审批矩阵</span>
+														</button>
+													</div>
+												</div>
+											</div>
+										</td>
+									</tr>
+							</tbody>
 						</table>
 						<!-- 检索  -->
 						<form action="grcapprovalmatrix/list.do" method="post" name="Form" id="Form">
-						<table style="margin-top:-15px;">
+						<table style="margin-top:0px;">
 							<tr>
 								<td>
 									<div class="nav-search">
@@ -65,26 +79,22 @@
 						</table>
 						<!-- 检索  -->
 					
-						<table id="simple-table" border='1' class="" style="margin-top:5px; width: 1150px;">	
+						<table id="simple-table" class="mtable" style="margin-top:5px;">	
 							<thead style="height: 40px">
 								<tr>
 									<th class="center" style="width:35px; background-color: #BEBEC5;">
 									<label class="pos-rel"><input type="checkbox" class="ace" id="zcheckbox" /><span class="lbl"></span></label>
 									</th>
-									<th style="width:90px; background-color: #BEBEC5; text-align: center;">业务模块</th>
-									<th style="width:90px; background-color: #BEBEC5; text-align: center;">申请人员工编号</th>
-									<th style="width:90px; background-color: #BEBEC5; text-align: center;">申请人员工姓名</th>
-									<th style="width:90px; background-color: #BEBEC5; text-align: center;">一级审批人员工编号</th>
-									<th style="width:90px; background-color: #BEBEC5; text-align: center;">一级审批人员工姓名</th>
-									<th style="width:90px; background-color: #BEBEC5; text-align: center;">创建人</th>
-									<th style="width:90px; background-color: #BEBEC5; text-align: center;">创建日期</th>
+									<th style="width:150px; background-color: #BEBEC5; text-align: center;">业务模块</th>
+									<th style="width:150px; background-color: #BEBEC5; text-align: center;">申请人员工编号</th>
+									<th style="width:150px; background-color: #BEBEC5; text-align: center;">申请人员工姓名</th>
+									<th style="width:150px; background-color: #BEBEC5; text-align: center;">一级审批人员工编号</th>
+									<th style="width:150px; background-color: #BEBEC5; text-align: center;">一级审批人员工姓名</th>
 								</tr>
 							</thead>
 													
 							<tbody id="copyTable">
 							<!-- 开始循环 -->	
-							<c:choose>
-								<c:when test="${not empty varList}">
 									<c:forEach items="${varList}" var="var" varStatus="vs">
 										<tr>
 											<td class='center'>
@@ -95,24 +105,9 @@
 											<th><input type="text" name="STAFF_NAME" id="STAFF_NAME" readonly="readonly" value="${var.STAFF_NAME}" maxlength="30" title="申请人员工姓名" style="width:100%;"/></th>
 											<th><input type="text" name="STAFF_CODE_APPROVAL1" id="STAFF_CODE_APPROVAL1" readonly="readonly" value="${var.STAFF_CODE_APPROVAL1}" maxlength="30" title="一级审批人员工编号" style="width:100%;"/></th>
 											<th><input type="text" name="STAFF_NAME_APPROVAL1" id="STAFF_NAME_APPROVAL1" readonly="readonly" value="${var.STAFF_NAME_APPROVAL1}" maxlength="30" title="一级审批人员工姓名" style="width:100%;"/></th>
-											<th><input type="text" name="BILL_USER" id="BILL_USER" readonly="readonly" value="${var.BILL_USER}" maxlength="20" title="创建人" style="width:100%;"/></th>
-											<th><input type="text" name="BILL_DATE" id="BILL_DATE" readonly="readonly" value="${var.BILL_DATE}" maxlength="30" title="创建日期" style="width:100%;"/></th>
 										</tr>
-									
 									</c:forEach>
-									<%-- <c:if test="${QX.cha == 0 }">
-										<tr>
-											<td colspan="100" class="center">您无权查看</td>
-										</tr>
-									</c:if> --%>
-								</c:when>
-								<c:otherwise>
-									<tr class="main_info">
-										<td colspan="100" class="center" >没有相关数据</td>
-									</tr>
-								</c:otherwise>
-							</c:choose>
-							</tbody>
+								</tbody>
 						</table>
 						<!-- 分页 -->
 						<div class="page-header position-relative">
@@ -152,8 +147,6 @@
 					<th><input type="text" name="STAFF_NAME" id="STAFF_NAME" value="" maxlength="30" title="申请话其人员工姓名" style="width:100%;"/></th>
 					<th><input type="text" name="STAFF_CODE_APPROVAL1" id="STAFF_CODE_APPROVAL1" value="" maxlength="30" title="一级审批人员工编号" style="width:100%;"/></th>
 					<th><input type="text" name="STAFF_NAME_APPROVAL1" id="STAFF_NAME_APPROVAL1" value="" maxlength="30" title="一级审批人员工姓名" style="width:100%;"/></th>
-					<th><input type="text" name="BILL_USER" id="BILL_USER" value="" maxlength="20" title="创建人" style="width:100%;"/></th>
-					<th><input type="text" name="BILL_DATE" id="BILL_DATE" value="" maxlength="30" title="创建日期" style="width:100%;"/></th>
 				</tr>
 			</tbody>
 		</table>
@@ -227,8 +220,6 @@
 			var STAFF_NAME = '';
 			var STAFF_CODE_APPROVAL1 = '';
 			var STAFF_NAME_APPROVAL1 = '';
-			var BILL_USER = '';
-			var BILL_DATE = '';
 			var codeVal = '';
 			var listData = new Array();
 			for(var i=0;i < document.getElementsByName('STAFF_CODE').length-1;i++){
@@ -252,8 +243,6 @@
 						listData.push(STAFF_NAME);
 						listData.push(STAFF_CODE_APPROVAL1);
 						listData.push(STAFF_NAME_APPROVAL1);
-						listData.push(BILL_USER);
-						listData.push(BILL_DATE);
 				}
 			}
 			top.jzts();
