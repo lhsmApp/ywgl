@@ -160,10 +160,7 @@ public class ApprovalConfigController extends BaseController {
 			//判断状态是否为退回
 			if(listResult.get(0).getString("APPROVAL_STATE").equals("2")){
 				approvalconfigService.delete(pd);
-			}else{
-				pd.put("msg", "warning");
-				return pd;	
-			}		
+			}	
 		}
 		PageData pd1 = new PageData();
 		pd1 = this.getPageData();//获取申请单相关信息
@@ -203,7 +200,6 @@ public class ApprovalConfigController extends BaseController {
 		}	
 		pd1.put("listDetail", list);
 		approvalconfigService.save(pd1);
-		pd1.put("msg", "sucess");
 		return pd1;
 	}
 	/**取消系统变更单上报

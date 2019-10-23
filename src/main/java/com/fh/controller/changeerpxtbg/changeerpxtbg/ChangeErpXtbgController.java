@@ -136,6 +136,32 @@ public class ChangeErpXtbgController extends BaseController {
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		return mv;
 	}
+	/**系统变更查询列表
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/queryList")
+	public ModelAndView queryList(Page page) throws Exception{
+		logBefore(logger, Jurisdiction.getUsername()+"列表changeerpxtbg");
+		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+	    String userId=user.getUSER_ID();
+	    pd.put("BILL_USER", userId);	
+		String keywords = pd.getString("keywords");	
+		if(null != keywords && !"".equals(keywords)){
+			pd.put("keywords", keywords.trim());
+		}
+		page.setPd(pd);
+		List<PageData>	varList = changeerpxtbgService.list(page);	//列出ChangeErpXtbg列表
+		mv.setViewName("changeerpxtbg/changeerpxtbg/changeerpxtbgQuery");
+		mv.addObject("varList", varList);
+		mv.addObject("pd", pd);
+		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
+		return mv;
+	}
 	/**显示该用户提报的变更申请单
 	 * @param page
 	 * @throws Exception
@@ -172,7 +198,20 @@ public class ChangeErpXtbgController extends BaseController {
 		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
 		return mv;
 	}	
-	
+	/**显示变更详情
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/detailView")
+	public ModelAndView detailView()throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		PageData pdResult = changeerpxtbgService.findById(pd);	//根据ID读取
+		mv.setViewName("changeerpxtbg/changeerpxtbg/xtbgDetailView");
+		mv.addObject("pd", pdResult);
+		return mv;
+	}
 	 /**去修改页面
 	 * @param
 	 * @throws Exception
@@ -245,8 +284,7 @@ public class ChangeErpXtbgController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/showDetail")
-	@ResponseBody 
-	public PageData showDetail() throws Exception{
+	public @ResponseBody PageData showDetail() throws Exception{
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd = changeerpxtbgService.findById(pd);	//根据ID读取

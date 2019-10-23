@@ -404,14 +404,14 @@
 		function setDiv(item){
 		    var div = '<li  class="item-grey clearfix" onclick="showDetail(\''+item.BILL_CODE+'\');"><div><label class="inline" style="margin-bottom:5px;"><span class="list-item-value-title">'
 		        + item.BG_NAME
-		        + '</span></label></div><div><label class="inline"><span class="list-item-info">单位:&nbsp;</span><span class="list-item-value">'
-		        + item.UNIT_CODE
+		        + '</span></label></div><div><label class="inline"><span class="list-item-info">单号:&nbsp;</span><span class="list-item-value">'
+		        + item.BILL_CODE
 		        +'</span></label><label class="inline pull-right"><span class="list-item-info">科室：<span class="list-item-value">'
 		        + item.DEPT_CODE
 		        +'</span></label></div><div><label class="inline"><span class="list-item-info">变更原因:&nbsp;</span><span class="list-item-value">'
 		        + item.BG_REASON
-		        +'</span></label></div><div><label class="inline"><span class="list-item-info">单号:&nbsp;</span><span class="list-item-value">'
-		        + item.BILL_CODE
+		        +'</span></label></div><div><label class="inline"><span class="list-item-info">单位:&nbsp;</span><span class="list-item-value">'
+		        + item.UNIT_CODE
 		        +'</span></label><label class="inline pull-right"><span class="list-item-info">申请日期:&nbsp;'
 		        + item.ENTRY_DATE
 		        +'</span></label></div></li>';
@@ -427,53 +427,54 @@
 		            success:function(datas){
 		            	//全局变量存放当前点击的变更申请单号
 		            	bill_code=datas.BILL_CODE;
-		               	//全局变量存放当前点击单据的申请人
-		            	//user_Code=datas.USER_CODE;
-		             	//全局变量存放当前点击单据的申请人单位
-		            	//unit_Code=datas.UNIT_CODE;
-		            	//console.log(bill_code);
 		            	var html = '';
 		      		     html += setDetail(datas);
-			            //console.log(html);
 		      			$('#detail-tab').html(html);
-// 		      		    console.log(datas);
-		      		  if(datas.BILL_STATE==1)
+		      		    console.log(datas.APPROVAL_STATE);
+                      //2为退回状态
+		      		  if(datas.APPROVAL_STATE==2)
 		    			{
-		    			$("#step1").addClass('active');
+		    			$("#step1").removeClass('active');
 		    			$("#step2").removeClass('active');
 		    			$("#step3").removeClass('active');
-		    			}else if(datas.BILL_STATE==2)
+		    			}else if(datas.BILL_STATE==0)//0为审批状态
 		    			{
 		      			$("#step1").addClass('active');
 		    			$("#step2").addClass('active');
 		    			$("#step3").removeClass('active');
-		    			}else
+		    			}else if (datas.APPROVAL_STATE==1)//1 为完成状态
 						{
 		      			$("#step1").addClass('active');
 		    			$("#step2").addClass('active');
 			    		$("#step3").addClass('active');
+		    			}else{
+		    				$("#step1").addClass('active');
+			    			$("#step2").removeClass('active');
+			    			$("#step3").removeClass('active');
 		    			}
 		            } 
 		         });
 		}
 		//动态加载变更单详情
 		function setDetail(item){
-		    var div = '<div class="profile-user-info"><div class="profile-info-row"><div class="profile-info-name">问题：</div><div class="profile-info-value"><span>'
+		    var div = '<div class="profile-user-info"><div class="profile-info-row"><div class="profile-info-name">变更名称：</div><div class="profile-info-value"><span>'
 		        + item.BG_NAME
-		        + '</span></div></div><div class="profile-info-row"><div class="profile-info-name">单位：</div><div class="profile-info-value"><i class="fa fa-map-marker light-orange bigger-110"></i><span>'
-		        + item.UNIT_CODE		       
-		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 科室： </div><div class="profile-info-value"><span>'
-		        + item.DEPT_CODE
+		        + '</span></div></div><div class="profile-info-row"><div class="profile-info-name">申请单号：</div><div class="profile-info-value"><i class="fa fa-map-marker light-orange bigger-110"></i><span>'
+		        + item.BILL_CODE		       
+		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请单位： </div><div class="profile-info-value"><span>'
+		        + item.UNIT_CODE
+		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请部门： </div><div class="profile-info-value"><span>'
+		        +item.DEPT_CODE
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 变更原因 ：</div><div class="profile-info-value"><span>'
 		        +item.BG_REASON
-		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 单号： </div><div class="profile-info-value"><span>'
-		        +item.BILL_CODE
-		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人： </div><div class="profile-info-value"><span>'
-		        +item.USER_CODE
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人部门： </div><div class="profile-info-value"><span>'
 		        +item.USER_DEPT
+		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人： </div><div class="profile-info-value"><span>'
+		        +item.USER_CODE
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人岗位： </div><div class="profile-info-value"><span>'
 		        +item.USER_JOB
+		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 联系方式： </div><div class="profile-info-value"><span>'
+		        +item.USER_CONTACT
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请日期： </div><div class="profile-info-value"><span>'
 		        +item.ENTRY_DATE
 		        +'</span></div></div>'
@@ -534,16 +535,10 @@
 			           	url: '<%=basePath%>approvalconfig/xtbgReport.do?BUSINESS_CODE=1&BILL_CODE='+encodeURI(billCode),		      
 			            //返回数据的格式
 			        	dataType:'json',		          
-			            success:function(datas){
-			            	if(datas.msg=="sucess"){
+			            success:function(datas){		
 			            		bootbox.dialog({
 									message: "<span class='bigger-110'>单据上报成功!</span>",
-								});
-			            	}else if(datas.msg=="warning"){
-			            		bootbox.dialog({
-			            			message: "<span class='bigger-110'>单据"+billCode+"已上报，不能重复上报!</span>",
-								});
-			            	}
+								});			            	
 			            	initList();
 			            }
 			         });
@@ -562,16 +557,10 @@
 				           	url: '<%=basePath%>approvalconfig/cancleXtbgReport.do?BILL_CODE='+encodeURI(billCode),		      
 				            //返回数据的格式
 				        	dataType:'json',		          
-				            success:function(datas){	
-				            	if(datas.msg=="sucess"){
+				            success:function(datas){					            	
 				            		bootbox.dialog({
 										message: "<span class='bigger-110'>单据撤销上报成功!</span>",
-									});
-				            	}else if(datas.msg=="warning"){
-				            		bootbox.dialog({
-				            			message: "<span class='bigger-110'>单据"+billCode+"未上报，不能撤销!</span>",
-									});
-				            	}
+									});				            	
 				            	initList();
 				            }
 				

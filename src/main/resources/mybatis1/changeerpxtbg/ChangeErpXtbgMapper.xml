@@ -105,15 +105,33 @@
 		where 
 		BILL_CODE = #{BILL_CODE}
 	</update>
-	
+
 	<!-- 通过ID获取数据 -->
 	<select id="findById" parameterType="pd" resultType="pd">
-		select 
-		<include refid="Field"></include>
-		from 
-		<include refid="tableName"></include>
-		where 
-			BILL_CODE = #{BILL_CODE}
+			SELECT 
+				a.BILL_CODE AS BILL_CODE,	
+				a.UNIT_CODE AS UNIT_CODE,		
+				a.DEPT_CODE AS DEPT_CODE,	
+				a.ENTRY_DATE AS ENTRY_DATE,	
+				a.SERIAL_NUM AS SERIAL_NUM,	
+				a.USER_CODE AS USER_CODE,	
+				a.USER_DEPT AS USER_DEPT,	
+				a.USER_JOB AS USER_JOB,	
+				a.USER_CONTACT AS USER_CONTACT,	
+				a.BG_NAME AS BG_NAME,	
+				a.SYSTEM AS SYSTEM,	
+				a.BG_TYPE AS BG_TYPE,	
+				a.BG_REASON AS BG_REASON,	
+				a.BILL_STATE AS BILL_STATE,	
+				a.BILL_USER AS BILL_USER,	
+				a.BILL_DATE AS BILL_DATE,
+				b.APPROVAL_STATE AS APPROVAL_STATE
+			FROM
+				tb_change_erp_xtbg a  left join tb_approval_main b		
+			on
+			a.BILL_CODE=b.BILL_CODE
+			where
+			a.BILL_CODE=#{BILL_CODE}
 	</select>
 	<!-- 根据BILL_CODE获取表单信息以及表单上申请人所在的单位及部门名称-->
 	<select id="findByBillCode" parameterType="pd" resultType="pd">
@@ -142,15 +160,34 @@
 	</select>
 	<!-- 列表 -->
 	<select id="datalistPage" parameterType="page" resultType="pd">
-		select
-		<include refid="Field"></include>
-		from 
-		<include refid="tableName"></include>
+		SELECT * FROM 
+			(SELECT
+				a.BILL_CODE BILL_CODE,	
+				a.UNIT_CODE UNIT_CODE,		
+				a.DEPT_CODE DEPT_CODE,	
+				a.ENTRY_DATE ENTRY_DATE,	
+				a.SERIAL_NUM SERIAL_NUM,	
+				a.USER_CODE USER_CODE,	
+				a.USER_DEPT USER_DEPT,	
+				a.USER_JOB USER_JOB,	
+				a.USER_CONTACT USER_CONTACT,	
+				a.BG_NAME BG_NAME,	
+				a.SYSTEM SYSTEM,	
+				a.BG_TYPE BG_TYPE,	
+				a.BG_REASON BG_REASON,	
+				a.BILL_STATE BILL_STATE,	
+				a.BILL_USER BILL_USER,	
+				a.BILL_DATE BILL_DATE,
+				b.APPROVAL_STATE APPROVAL_STATE
+				FROM 
+				tb_change_erp_xtbg a LEFT JOIN tb_approval_main b
+				ON a.BILL_CODE=b.BILL_CODE)  AS t
 		<where>
-		(BILL_USER=#{pd.BILL_USER}
-		or
-		USER_CODE=#{pd.BILL_USER})
-		
+			(BILL_USER=#{pd.BILL_USER}
+			or
+			USER_CODE=#{pd.BILL_USER})
+<!-- 		 AND -->
+<!-- 		(APPROVAL_STATE='2' OR  APPROVAL_STATE='' OR APPROVAL_STATE IS NULL) -->
 		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
 			and
 				(
