@@ -28,29 +28,6 @@
 		<div class="main-content">
 			<div class="main-content-inner">
 				<div class="page-content">
-<!-- 				    <div class="page-header">				
-								  <div class="pull-right">
-							            <div class="btn-toolbar inline middle no-margin">
-								            <div data-toggle="buttons" class="btn-group no-margin">
-									            <label class="btn btn-sm btn-primary active"> <span
-									    	        class="bigger-110">CRC权限变更</span> <input type="radio" value="1" />
-									            </label> 
-									            <label class="btn btn-sm btn-primary"> <span
-									            	class="bigger-110">GRC账号新增</span> <input type="radio" value="2" />
-									            </label> 
-									            <label class="btn btn-sm btn-primary"> <span
-									            	class="bigger-110">ERP账号新增</span> <input type="radio" value="3" />
-									            </label>
-									            <label class="btn btn-sm btn-primary"> <span
-									    	        class="bigger-110">ERP账号注销</span> <input type="radio" value="4" />
-									            </label>
-									            <label class="btn btn-sm btn-primary"> <span
-										            class="bigger-110">ERP系统变更</span> <input type="radio" value="5" />
-									            </label>
-								            </div>
-							            </div>      
-								    </div>
-					 </div> -->
 						<!-- 检索  -->
 						<div class="row">
 						    <div class="col-xs-12">
@@ -59,7 +36,7 @@
 									    <div class="widget-main">
 										    <form class="form-inline">
 												<span class="input-icon pull-left" style="margin-right: 5px;">
-													<input id="SelectedBusiDate" class="nav-search-input" autocomplete="off" type="text" name="keywords" value="${pd.keywords }" placeholder="在已有申请中搜索"> 
+													<input id="SelectedBillCode" class="nav-search-input" autocomplete="off" type="text" name="SelectedBillCode" value="${pd.keywords }" placeholder="请输入变更申请名称"> 
 													<i class="ace-icon fa fa-search nav-search-icon"></i>
 												</span>																			 
 												<button type="button" class="btn btn-info btn-sm" onclick="tosearch();">
@@ -254,11 +231,11 @@
 	    var bill_code=undefined;
 	    //var unit_Code=undefined;
 		$(top.hangge());//关闭加载状态
-		//检索
-		function tosearch(){
-			top.jzts();
-			$("#Form").submit();
-		}
+// 		//检索
+// 		function tosearch(){
+// 			top.jzts();
+// 			$("#Form").submit();
+// 		}
 		$(function() {
 			var data=${varList};
 			showDetail(data[0].BILL_CODE);
@@ -413,7 +390,6 @@
 				}
 			});
 		};
-		//console.log(${varList});
 		var data=${varList};
 		//循环加载到页面
 		function getChangrData(){
@@ -511,7 +487,7 @@
 			 diag.Title ="系统变更申请单打印";
 			 diag.URL = '<%=basePath%>changeerpxtbg/goPrint.do?BILL_CODE='+encodeURI(Id);
 			 diag.Width = 800;
-			 diag.Height = 600;
+			 diag.Height = 750;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮 
@@ -521,7 +497,33 @@
 		function toExcel(){
 			window.location.href='<%=basePath%>changeerpxtbg/excel.do';
 		}
-	
+
+		//搜索
+		function tosearch(){
+			$("#tasks li").remove(); 
+			top.jzts();
+			var keywords = $("#SelectedBillCode").val();
+			$.ajax({
+					type: "POST",
+					url: '<%=basePath%>changeerpxtbg/getPageList.do',
+			    	data: {keywords:keywords},
+					dataType:'json',
+					cache: false,
+					success: function(data){
+						if(data.length>0){
+							$.each(data, function(i, item){
+							    var html = '';
+							        html += setDiv(item);
+								$("#tasks").append(html);
+						 	});
+						}
+						else{
+							addEmpty();
+						}
+						top.hangge();
+					}
+			});
+		}
 		//上报
 		function report(billCode){
 			bootbox.confirm("确定要对单据"+billCode+"进行上报吗?", function(result) {
@@ -533,7 +535,6 @@
 			            //返回数据的格式
 			        	dataType:'json',		          
 			            success:function(datas){
-			            	//console.log(datas.msg);  
 			            	if(datas.msg=="sucess"){
 			            		bootbox.dialog({
 									message: "<span class='bigger-110'>单据上报成功!</span>",
@@ -542,13 +543,9 @@
 			            		bootbox.dialog({
 			            			message: "<span class='bigger-110'>单据"+billCode+"已上报，不能重复上报!</span>",
 								});
-			            	}else{
-			            		bootbox.dialog({
-									message: "<span class='bigger-110'>单据上报失败!</span>",
-								});
 			            	}
+			            	initList();
 			            }
-			
 			         });
 				}
 			});
@@ -574,18 +571,57 @@
 				            		bootbox.dialog({
 				            			message: "<span class='bigger-110'>单据"+billCode+"未上报，不能撤销!</span>",
 									});
-				            	}else{
-				            		bootbox.dialog({
-										message: "<span class='bigger-110'>单据撤销上报失败!</span>",
-									});
 				            	}
-				            	
+				            	initList();
 				            }
 				
 				         });
 				}
 			});
 				 
+		}
+		
+		/**
+		 * 初始化列表信息
+		 */
+		function initList(){
+			$("#tasks li").remove(); 
+			top.jzts();
+			var keywords = $("#keywords").val();
+			$.ajax({
+					type: "POST",
+					url: '<%=basePath%>changeerpxtbg/getPageList.do',
+			    	data: {keywords:keywords},
+					dataType:'json',
+					cache: false,
+					success: function(data){
+						if(data.length>0){
+							$.each(data, function(i, item){
+							    var html = '';
+							        html += setDiv(item);
+								$("#tasks").append(html);
+						 	});
+						}
+						else{
+							addEmpty();
+						}
+						top.hangge();
+					}
+			});
+		}
+		
+		/**
+		 * 增加空数据提示
+		 */
+		function addEmpty(){
+			var htmlEmpty='<li class="item-grey clearfix">'
+				+'<div>'
+					+'<label class="inline" style="margin-bottom:5px;">'
+						+'<span class="list-item-value-title">没有相关数据</span>'
+					+'</label>'
+				+'<div>'
+			+'</li>';
+			$("#tasks").append(htmlEmpty);
 		}
 	</script>
 

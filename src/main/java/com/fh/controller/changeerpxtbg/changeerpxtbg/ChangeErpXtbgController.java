@@ -26,12 +26,15 @@ import com.fh.entity.CommonBase;
 import com.fh.entity.JqPage;
 import com.fh.entity.Page;
 import com.fh.entity.PageResult;
+import com.fh.entity.system.User;
 import com.fh.util.AppUtil;
+import com.fh.util.Const;
 import com.fh.util.ObjectExcelView;
 import com.fh.util.PageData;
 import com.fh.util.SqlTools;
 import com.fh.util.Jurisdiction;
 import com.fh.util.Tools;
+import com.fh.util.enums.ProState;
 
 import net.sf.json.JSONArray;
 
@@ -118,6 +121,9 @@ public class ChangeErpXtbgController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+	    String userId=user.getUSER_ID();
+	    pd.put("BILL_USER", userId);	
 		String keywords = pd.getString("keywords");	
 		if(null != keywords && !"".equals(keywords)){
 			pd.put("keywords", keywords.trim());
@@ -130,7 +136,25 @@ public class ChangeErpXtbgController extends BaseController {
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		return mv;
 	}
-	
+	/**显示该用户提报的变更申请单
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/getPageList")
+	public @ResponseBody List<PageData> getPageList(Page page) throws Exception{
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		String userId = user.getUSER_ID();
+		pd.put("BILL_USER", userId);	
+		String keywords = pd.getString("keywords");				//关键词检索条件
+		if(null != keywords && !"".equals(keywords)){
+			pd.put("keywords", keywords.trim());
+		}
+		page.setPd(pd);
+		List<PageData> varList = changeerpxtbgService.list(page);
+		return varList;
+	}
 	/**去新增页面
 	 * @param
 	 * @throws Exception

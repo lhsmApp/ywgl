@@ -52,7 +52,10 @@ public class ChangeErpXtbgService implements ChangeErpXtbgManager{
 	public List<PageData> list(Page page)throws Exception{
 		return (List<PageData>)dao.findForList("ChangeErpXtbgMapper.datalistPage", page);
 	}
-	
+	@SuppressWarnings("unchecked")
+	public List<PageData> listxtbg(PageData pd)throws Exception{
+		return (List<PageData>)dao.findForList("ChangeErpXtbgMapper.datalistByUser", pd);
+	}
 	/**列表(全部)
 	 * @param pd
 	 * @throws Exception

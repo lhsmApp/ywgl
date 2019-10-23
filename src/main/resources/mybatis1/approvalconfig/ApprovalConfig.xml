@@ -636,13 +636,11 @@
 			BILL_CODE = #{BILL_CODE}
 	</delete>
 	
-	<!-- 更新审批明细表 -->
+	<!-- 审批通过-更新审批明细表 -->
 	<update id="editDetail" parameterType="pd">
 		update TB_APPROVAL_DETAIL
 		set
 		 
-			UNIT_CODE = #{UNIT_CODE},
-			DEPART_CODE = #{DEPART_CODE},
 			APPROVAL_STATE = #{APPROVAL_STATE},
 			ROLE_CODE = #{ROLE_CODE},
 			APPROVAL_USER = #{APPROVAL_USER},
@@ -661,6 +659,22 @@
 		CURRENT_LEVEL=#{NEXT_LEVEL};
 	</update>
 	
+	<!-- 审批退回-更新审批明细表 -->
+	<update id="editReturnDetail" parameterType="pd">
+		update TB_APPROVAL_DETAIL
+		set		 
+			APPROVAL_STATE = #{APPROVAL_STATE},
+			APPROVAL_USER = #{APPROVAL_USER},
+			APPROVAL_DATE = #{APPROVAL_DATE},
+			APPROVAL_ADVICE = #{APPROVAL_ADVICE}
+		where 
+		BILL_CODE = #{BILL_CODE}
+		AND
+		CURRENT_LEVEL=#{CURRENT_LEVEL};
+		update TB_APPROVAL_MAIN
+		set 
+		APPROVAL_STATE=#{APPROVAL_STATE}
+	</update>
 		<!-- 通过业务表单编码等获取审批明细表数据-->
 	<select id="ListDetailByBillCode" parameterType="pd" resultType="pd">
 		select * from TB_APPROVAL_DETAIL

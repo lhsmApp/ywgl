@@ -91,21 +91,21 @@
 									<i class="ace-icon fa fa-rss orange"></i>详情
 								</h4>
 		
-								<div class="widget-toolbar no-border">
-									<ul class="nav nav-tabs" id="recent-tab">
-										<li class="active">
-											<a data-toggle="tab" href="#detail-tab">详情</a>
-										</li>
+<!-- 								<div class="widget-toolbar no-border"> -->
+<!-- 									<ul class="nav nav-tabs" id="recent-tab"> -->
+<!-- 										<li class="active"> -->
+<!-- 											<a data-toggle="tab" href="#detail-tab">详情</a> -->
+<!-- 										</li> -->
 		
-										<li>
-											<a data-toggle="tab" href="#assigh-tab">分配</a>
-										</li>
+<!-- 										<li> -->
+<!-- 											<a data-toggle="tab" href="#assigh-tab">分配</a> -->
+<!-- 										</li> -->
 		
-										<li>
-											<a data-toggle="tab" href="#comment-tab">关闭</a>
-										</li>
-									</ul>
-								</div>
+<!-- 										<li> -->
+<!-- 											<a data-toggle="tab" href="#comment-tab">关闭</a> -->
+<!-- 										</li> -->
+<!-- 									</ul> -->
+<!-- 								</div> -->
 							</div>
 		
 							<div class="widget-body">
@@ -477,7 +477,15 @@
 		            //返回数据的格式
 		        	dataType:'json',		          
 		            success:function(datas){
-		            	
+		              	if(datas.msg=="sucess"){
+		            		bootbox.dialog({
+								message: "<span class='bigger-110'>审批通过!</span>",
+							});
+		            	}else{
+		            		bootbox.dialog({
+								message: "<span class='bigger-110'>审批失败!</span>",
+							});
+		            	}
 		            }
 		
 		         });
@@ -487,11 +495,19 @@
 			  $.ajax({
 				  	type: "POST",
 		            //提交的网址
-		           	url: '<%=basePath%>approvalconfig/returnApproval.do?BILL_CODE='+encodeURI(billCode),		      
+		           	url: '<%=basePath%>approvalconfig/returnApproval.do?BILL_CODE='+encodeURI(bill_code)+'&CURRENT_LEVEL='+current_level+'&NEXT_LEVEL='+next_level,	
 		            //返回数据的格式
 		        	dataType:'json',		          
 		            success:function(datas){
-		            	
+		            	if(datas.msg=="sucess"){
+		            		bootbox.dialog({
+								message: "<span class='bigger-110'>审批退回成功!</span>",
+							});
+		            	}else{
+		            		bootbox.dialog({
+								message: "<span class='bigger-110'>审批退回失败!</span>",
+							});
+		            	}
 		            }
 		
 		         });

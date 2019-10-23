@@ -146,10 +146,15 @@
 		<include refid="Field"></include>
 		from 
 		<include refid="tableName"></include>
-		where 1=1
+		<where>
+		(BILL_USER=#{pd.BILL_USER}
+		or
+		USER_CODE=#{pd.BILL_USER})
+		
 		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
 			and
 				(
+				BG_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 				<!--	根据需求自己加检索条件
 					字段1 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 					 or 
@@ -157,6 +162,7 @@
 				-->
 				)
 		</if>
+		</where>
 	</select>
 	
 	<!-- 列表(全部) -->
@@ -167,6 +173,7 @@
 		<include refid="tableName"></include>
 	</select>
 	
+
 	<!-- 批量删除 -->
 	<delete id="deleteAll" parameterType="String">
 		delete from

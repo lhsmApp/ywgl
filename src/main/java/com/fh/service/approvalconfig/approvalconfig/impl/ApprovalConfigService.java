@@ -88,7 +88,10 @@ public class ApprovalConfigService implements ApprovalConfigManager{
 	public void editScheme(PageData pd)throws Exception{
 		dao.update("ApprovalConfigMapper.editScheme", pd);
 	}
-
+	public void editReturnDetail(PageData pd)throws Exception{
+		dao.update("ApprovalConfigMapper.editReturnDetail", pd);
+	}
+	
 	/**列表
 	 * @param page
 	 * @throws Exception

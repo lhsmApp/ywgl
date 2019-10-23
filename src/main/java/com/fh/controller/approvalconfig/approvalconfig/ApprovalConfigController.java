@@ -121,7 +121,7 @@ public class ApprovalConfigController extends BaseController {
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		return mv;
 	}
-	/**修改
+	/**显示当前待审批单据
 	 * @param
 	 * @throws Exception
 	 */
@@ -157,8 +157,13 @@ public class ApprovalConfigController extends BaseController {
 		//首先判断该单据是否上报
 		List<PageData> listResult=approvalconfigService.list(pd);
 		if(null!=listResult&&listResult.size()>0){
-			pd.put("msg", "warning");
-			return pd;
+			//判断状态是否为退回
+			if(listResult.get(0).getString("APPROVAL_STATE").equals("2")){
+				approvalconfigService.delete(pd);
+			}else{
+				pd.put("msg", "warning");
+				return pd;	
+			}		
 		}
 		PageData pd1 = new PageData();
 		pd1 = this.getPageData();//获取申请单相关信息
@@ -206,7 +211,6 @@ public class ApprovalConfigController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/cancleXtbgReport")
-	@ResponseBody 
 	public PageData cancleXtbgReport() throws Exception{
 		PageData pd = new PageData();		
 		pd = this.getPageData();
@@ -228,25 +232,45 @@ public class ApprovalConfigController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/passApproval")
-	public ModelAndView passApproval() throws Exception{
+	public PageData passApproval() throws Exception{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
-	    String unitCode=user.getDEPARTMENT_ID();
+//	    String unitCode=user.getDEPARTMENT_ID();
 	    String userName=user.getUSERNAME();  
-	    String roleId=user.getROLE_ID();
+//	    String roleId=user.getROLE_ID();
 	    pd.put("APPROVAL_USER",userName);//实际审批人
 		pd.put("APPROVAL_DATE", DateUtils.getCurrentTime());//审批日期
 		pd.put("APPROVAL_ADVICE", "同意");
 		pd.put("APPROVAL_STATE", "1");
-		pd.put("UNIT_CODE",unitCode);//单位编码
-		pd.put("ROLE_CODE",roleId);//角色
-		//通过业务单据编码、审批单位、审批部门、审批角色更新审批明细表信息
+//		pd.put("UNIT_CODE",unitCode);//单位编码
+//		pd.put("ROLE_CODE",roleId);//角色
+		//通过业务单据编码和当前审批级别更新审批明细表信息
 		approvalconfigService.editDetail(pd);
-		mv.addObject("msg","success");
-		mv.setViewName("save_result");
-		return mv;
+		pd.put("msg","success");
+		return pd;
+	}
+	/**审批通过
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/returnApproval")
+	@ResponseBody
+	public PageData returnApproval() throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+	    String userName=user.getUSERNAME();  
+	    pd.put("APPROVAL_USER",userName);//实际审批人
+		pd.put("APPROVAL_DATE", DateUtils.getCurrentTime());//审批日期
+		pd.put("APPROVAL_ADVICE", "退回");
+		pd.put("APPROVAL_STATE", "2");
+		//通过业务单据编码、审批单位、审批部门、审批角色更新审批明细表信息
+		approvalconfigService.editReturnDetail(pd);
+		pd.put("msg", "sucess");
+		return pd;
 	}
 	/**去新增页面
 	 * @param

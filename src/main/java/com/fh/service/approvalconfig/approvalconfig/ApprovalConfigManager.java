@@ -44,7 +44,8 @@ public interface ApprovalConfigManager{
 	public void editLevel(PageData pd)throws Exception;
 	public void editMain(PageData pd)throws Exception;
 	public void editScheme(PageData pd)throws Exception;
-	
+	public void editReturnDetail(PageData pd)throws Exception;
+
 	/**列表
 	 * @param page
 	 * @throws Exception
