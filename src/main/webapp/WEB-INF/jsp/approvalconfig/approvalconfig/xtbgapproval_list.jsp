@@ -36,7 +36,7 @@
 									    <div class="widget-main">
 										    <form class="form-inline">
 												<span class="input-icon pull-left" style="margin-right: 5px;">
-													<input id="SelectedBusiDate" class="nav-search-input" autocomplete="off" type="text" name="keywords" value="${pd.keywords }" placeholder="在已有申请中搜索"> 
+													<input id="SelectedBillCode" class="nav-search-input" autocomplete="off" type="text" name="keywords" value="${pd.keywords }" placeholder="在已有申请中搜索"> 
 													<i class="ace-icon fa fa-search nav-search-icon"></i>
 												</span>																			 
 												<button type="button" class="btn btn-info btn-sm" onclick="tosearch();">
@@ -360,7 +360,6 @@
 				}
 			});
 		};
-		console.log(${varList});
 		var data=${varList};
 		//循环加载到页面
 		function getChangeData(){
@@ -477,16 +476,17 @@
 		            //返回数据的格式
 		        	dataType:'json',		          
 		            success:function(datas){
-		              	if(datas.msg=="sucess"){
-		            		bootbox.dialog({
-								message: "<span class='bigger-110'>审批通过!</span>",
-							});
-		            	}else{
-		            		bootbox.dialog({
-								message: "<span class='bigger-110'>审批失败!</span>",
-							});
-		            	}
-		            }
+		            	bootbox.dialog({
+							message: "<span class='bigger-110'>"+datas.msg+"</span>",
+						});	
+		              	initList();
+		            },
+			  		 error:function(datas){
+	            	bootbox.dialog({
+						message: "<span class='bigger-110'>"+datas.msg+"</span>",
+					});	
+	              	initList();
+	            }
 		
 		         });
 		}
@@ -499,18 +499,80 @@
 		            //返回数据的格式
 		        	dataType:'json',		          
 		            success:function(datas){
-		            	if(datas.msg=="sucess"){
-		            		bootbox.dialog({
-								message: "<span class='bigger-110'>审批退回成功!</span>",
-							});
-		            	}else{
-		            		bootbox.dialog({
-								message: "<span class='bigger-110'>审批退回失败!</span>",
-							});
-		            	}
+		            	bootbox.dialog({
+							message: "<span class='bigger-110'>"+datas.msg+"</span>",
+						});	
+		            	initList();
 		            }
 		
 		         });
+		}
+		/**
+		 * 初始化列表信息
+		 */
+		function initList(){
+			$("#tasks li").remove(); 
+			top.jzts();
+			var keywords = $("#keywords").val();
+			$.ajax({
+					type: "POST",
+					url: '<%=basePath%>approvalconfig/getPageList.do',
+			    	data: {keywords:keywords},
+					dataType:'json',
+					cache: false,
+					success: function(data){
+						if(data.length>0){
+							$.each(data, function(i, item){
+							    var html = '';
+							        html += setDiv(item);
+								$("#tasks").append(html);
+						 	});
+						}
+						else{
+							addEmpty();
+						}
+						top.hangge();
+					}
+			});
+		}
+		//搜索
+		function tosearch(){
+			$("#tasks li").remove(); 
+			top.jzts();
+			var keywords = $("#SelectedBillCode").val();
+			$.ajax({
+					type: "POST",
+					url: '<%=basePath%>approvalconfig/getPageList.do',
+			    	data: {keywords:keywords},
+					dataType:'json',
+					cache: false,
+					success: function(data){
+						if(data.length>0){
+							$.each(data, function(i, item){
+							    var html = '';
+							        html += setDiv(item);
+								$("#tasks").append(html);
+						 	});
+						}
+						else{
+							addEmpty();
+						}
+						top.hangge();
+					}
+			});
+		}
+		/**
+		 * 增加空数据提示
+		 */
+		function addEmpty(){
+			var htmlEmpty='<li class="item-grey clearfix">'
+				+'<div>'
+					+'<label class="inline" style="margin-bottom:5px;">'
+						+'<span class="list-item-value-title">没有需要审批的单据</span>'
+					+'</label>'
+				+'<div>'
+			+'</li>';
+			$("#tasks").append(htmlEmpty);
 		}
 	</script>
 

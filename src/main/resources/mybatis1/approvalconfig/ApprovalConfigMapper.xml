@@ -504,19 +504,47 @@
 	
 	<!-- 列表 -->
 	<select id="datalistPageScheme" parameterType="page" resultType="pd">
-		select
-		<include refid="FieldScheme"></include>
-		from 
-		<include refid="tableNameScheme"></include>
-		where 1=1
+		SELECT * FROM	(SELECT 
+			a.BUSINESS_CODE,	
+			a.BILL_CODE,	
+			a.CURRENT_LEVEL,	
+			a.NEXT_LEVEL,	
+			a.ACTIVE_FLAG,	
+			a.UNIT_CODE AS SPUNIT_CODE,	
+			a.DEPART_CODE,	
+			a.APPROVAL_STATE,	
+			a.ROLE_CODE,	
+			a.APPROVAL_USER,	
+			a.APPROVAL_DATE,	
+			a.APPROVAL_ADVICE,	
+			b.UNIT_CODE AS UNIT_CODE,	
+			b.DEPT_CODE,	
+			b.ENTRY_DATE,	
+			b.SERIAL_NUM,	
+			b.USER_CODE,	
+			b.USER_DEPT,	
+			b.USER_JOB,	
+			b.USER_CONTACT,	
+			b.BG_NAME,	
+			b.SYSTEM,	
+			b.BG_TYPE,	
+			b.BG_REASON,	
+			b.BILL_STATE,	
+			b.BILL_USER,	
+			b.BILL_DATE
+		FROM
+			  tb_approval_detail a, tb_change_erp_xtbg b 
+		WHERE a.ACTIVE_FLAG =#{pd.ACTIVE_FLAG}
+			  AND a.UNIT_CODE = #{pd.UNIT_CODE}
+<!-- 			  AND a.ROLE_CODE = #{ROLE_CODE} -->
+			  AND a.APPROVAL_STATE = #{pd.APPROVAL_STATE}
+			AND a.BILL_CODE = b.BILL_CODE ) AS T
+		WHERE 1=1
 		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
 			and
 				(
-				<!--	根据需求自己加检索条件
-					字段1 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
-					 or 
-					字段2 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
-				-->
+				BG_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+
 				)
 		</if>
 	</select>
@@ -540,7 +568,7 @@
 		</foreach>
 	</delete>
 	<!-- 显示当前需要审批的订单 -->
-	<select id="listApproval" parameterType="page" resultType="pd">
+	<select id="listApproval" parameterType="pd" resultType="pd">
 		SELECT 
 			a.BUSINESS_CODE,	
 			a.BILL_CODE,	
@@ -674,6 +702,8 @@
 		update TB_APPROVAL_MAIN
 		set 
 		APPROVAL_STATE=#{APPROVAL_STATE}
+		where 
+		BILL_CODE = #{BILL_CODE}
 	</update>
 		<!-- 通过业务表单编码等获取审批明细表数据-->
 	<select id="ListDetailByBillCode" parameterType="pd" resultType="pd">

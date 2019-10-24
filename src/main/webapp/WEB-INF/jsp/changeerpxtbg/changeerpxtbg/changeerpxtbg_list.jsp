@@ -319,6 +319,7 @@
 					$.get(url,function(data){
 						console.log(data);
 						//nextPage(${page.currentPage});
+						initList();
 					});
 				}
 			});
@@ -406,12 +407,14 @@
 		        + item.BG_NAME
 		        + '</span></label></div><div><label class="inline"><span class="list-item-info">单号:&nbsp;</span><span class="list-item-value">'
 		        + item.BILL_CODE
-		        +'</span></label><label class="inline pull-right"><span class="list-item-info">科室：<span class="list-item-value">'
+		        +'</span></label><label class="inline pull-right"><span class="list-item-info">科室：</span><span class="list-item-value">'
 		        + item.DEPT_CODE
+		        +'</span></label></div><div><label class="inline"><span class="list-item-info">状态:&nbsp;</span><span class="list-item-value">'
+		        + item.APPROVAL_STATE
+		        +'</span></label><label class="inline pull-right"><span class="list-item-info">单位:&nbsp;</span><span class="list-item-value">'
+		        + item.UNIT_CODE
 		        +'</span></label></div><div><label class="inline"><span class="list-item-info">变更原因:&nbsp;</span><span class="list-item-value">'
 		        + item.BG_REASON
-		        +'</span></label></div><div><label class="inline"><span class="list-item-info">单位:&nbsp;</span><span class="list-item-value">'
-		        + item.UNIT_CODE
 		        +'</span></label><label class="inline pull-right"><span class="list-item-info">申请日期:&nbsp;'
 		        + item.ENTRY_DATE
 		        +'</span></label></div></li>';
@@ -535,10 +538,10 @@
 			           	url: '<%=basePath%>approvalconfig/xtbgReport.do?BUSINESS_CODE=1&BILL_CODE='+encodeURI(billCode),		      
 			            //返回数据的格式
 			        	dataType:'json',		          
-			            success:function(datas){		
+			            success:function(datas){
 			            		bootbox.dialog({
-									message: "<span class='bigger-110'>单据上报成功!</span>",
-								});			            	
+									message: "<span class='bigger-110'>"+datas.msg+"</span>",
+								});			            					            	
 			            	initList();
 			            }
 			         });
@@ -557,10 +560,10 @@
 				           	url: '<%=basePath%>approvalconfig/cancleXtbgReport.do?BILL_CODE='+encodeURI(billCode),		      
 				            //返回数据的格式
 				        	dataType:'json',		          
-				            success:function(datas){					            	
-				            		bootbox.dialog({
-										message: "<span class='bigger-110'>单据撤销上报成功!</span>",
-									});				            	
+				            success:function(datas){	
+				            	bootbox.dialog({
+									message: "<span class='bigger-110'>"+datas.msg+"</span>",
+								});					            					            	
 				            	initList();
 				            }
 				

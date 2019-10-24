@@ -130,6 +130,19 @@ public class ChangeErpXtbgController extends BaseController {
 		}
 		page.setPd(pd);
 		List<PageData>	varList = changeerpxtbgService.list(page);	//列出ChangeErpXtbg列表
+		for(PageData p:varList){
+			if(null!=p.getString("APPROVAL_STATE")&&!"".equals(p.getString("APPROVAL_STATE"))){
+				if(p.getString("APPROVAL_STATE").equals("0")){
+					p.put("APPROVAL_STATE", "审批中");
+				}else if(p.getString("APPROVAL_STATE").equals("1")){
+					p.put("APPROVAL_STATE", "已完成");
+				}else if(p.getString("APPROVAL_STATE").equals("2")){
+					p.put("APPROVAL_STATE", "退回");
+				}
+			}else{
+				p.put("APPROVAL_STATE", "未上报");
+			}		
+		} 	
 		mv.setViewName("changeerpxtbg/changeerpxtbg/changeerpxtbg_list");
 		mv.addObject("varList", JSON.toJSONString(varList));
 		mv.addObject("pd", pd);
@@ -179,6 +192,19 @@ public class ChangeErpXtbgController extends BaseController {
 		}
 		page.setPd(pd);
 		List<PageData> varList = changeerpxtbgService.list(page);
+		for(PageData p:varList){
+			if(null!=p.getString("APPROVAL_STATE")&&!"".equals(p.getString("APPROVAL_STATE"))){
+				if(p.getString("APPROVAL_STATE").equals("0")){
+					p.put("APPROVAL_STATE", "审批中");
+				}else if(p.getString("APPROVAL_STATE").equals("1")){
+					p.put("APPROVAL_STATE", "已完成");
+				}else if(p.getString("APPROVAL_STATE").equals("2")){
+					p.put("APPROVAL_STATE", "退回");
+				}
+			}else{
+				p.put("APPROVAL_STATE", "未上报");
+			}		
+		} 	
 		return varList;
 	}
 	/**去新增页面
