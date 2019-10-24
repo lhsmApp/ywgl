@@ -600,11 +600,21 @@
 			b.BILL_DATE
 		FROM
 			  tb_approval_detail a, tb_change_erp_xtbg b 
-		WHERE a.ACTIVE_FLAG =#{ACTIVE_FLAG}
-			  AND a.UNIT_CODE = #{UNIT_CODE}
-<!-- 			  AND a.ROLE_CODE = #{ROLE_CODE} -->
-			  AND a.APPROVAL_STATE = #{APPROVAL_STATE}
-			AND a.BILL_CODE = b.BILL_CODE 
+			  <where>
+			  a.BILL_CODE = b.BILL_CODE 
+			 <if test="ACTIVE_FLAG!=null and ACTIVE_FLAG!=''"> 
+			 and a.ACTIVE_FLAG =#{ACTIVE_FLAG}
+			 </if>
+		 	<if test="UNIT_CODE!=null and UNIT_CODE!=''"> 
+			 and a.UNIT_CODE = #{UNIT_CODE}
+			 </if>
+			<if test="ROLE_CODE!=null and ROLE_CODE!=''"> 
+			 and a.ROLE_CODE = #{ROLE_CODE}
+			 </if>
+			<if test="APPROVAL_STATE!=null and APPROVAL_STATE!=''"> 
+			 and a.APPROVAL_STATE = #{APPROVAL_STATE}
+			 </if>
+			</where>
 	</select>
 	<!-- 系统变更上报-->
 	<insert id="save" parameterType="pd">

@@ -1,15 +1,0 @@
-{    
-"Table": 
-[{"BILL_STATE":"1",
-"UNIT_CODE":"兴隆台采油厂",
-"DEPT_CODE":"财务科","
-USER_CONTACT":"13112345678",
-"BG_NAME":"系统变更1",
-"USER_DEPT":"信息科",
-"USER_CODE":"张三",
-"SERIAL_NUM":"EP6",
-"BILL_DATE":"2019-09-23","BILL_CODE":"1",
-"ENTRY_DATE":"2019-09-23",
-"USER_JOB":"系统管理员",
-"BG_REASON":"实际业务发展需要"}]
-}

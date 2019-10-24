@@ -1,4 +1,4 @@
-package com.fh.service.changegrczhxz.changegrczhxz.impl;
+package com.fh.service.changeerpxtbg.changeerpjsbg.impl;
 
 import java.util.List;
 import javax.annotation.Resource;
@@ -6,16 +6,16 @@ import org.springframework.stereotype.Service;
 import com.fh.dao.DaoSupport;
 import com.fh.entity.Page;
 import com.fh.util.PageData;
-import com.fh.service.changegrczhxz.changegrczhxz.ChangeGrcZhxzManager;
+import com.fh.service.changeerpxtbg.changeerpjsbg.ChangeErpJsbgManager;
 
 /** 
- * 说明： changeGrcZhxz
+ * 说明： tbchangejsbg
  * 创建人：jiachao
- * 创建时间：2019-09-29
+ * 创建时间：2019-10-24
  * @version
  */
-@Service("changegrczhxzService")
-public class ChangeGrcZhxzService implements ChangeGrcZhxzManager{
+@Service("changeErpjsbgService")
+public class ChangeErpJsbgService implements ChangeErpJsbgManager{
 
 	@Resource(name = "daoSupport")
 	private DaoSupport dao;
@@ -25,7 +25,7 @@ public class ChangeGrcZhxzService implements ChangeGrcZhxzManager{
 	 * @throws Exception
 	 */
 	public void save(PageData pd)throws Exception{
-		dao.save("ChangeGrcZhxzMapper.save", pd);
+		dao.save("ChangeErpJsbfMapper.save", pd);
 	}
 	
 	/**删除
@@ -33,7 +33,7 @@ public class ChangeGrcZhxzService implements ChangeGrcZhxzManager{
 	 * @throws Exception
 	 */
 	public void delete(PageData pd)throws Exception{
-		dao.delete("ChangeGrcZhxzMapper.delete", pd);
+		dao.delete("ChangeErpJsbfMapper.delete", pd);
 	}
 	
 	/**修改
@@ -41,7 +41,7 @@ public class ChangeGrcZhxzService implements ChangeGrcZhxzManager{
 	 * @throws Exception
 	 */
 	public void edit(PageData pd)throws Exception{
-		dao.update("ChangeGrcZhxzMapper.edit", pd);
+		dao.update("ChangeErpJsbfMapper.edit", pd);
 	}
 	
 	/**列表
@@ -50,7 +50,7 @@ public class ChangeGrcZhxzService implements ChangeGrcZhxzManager{
 	 */
 	@SuppressWarnings("unchecked")
 	public List<PageData> list(Page page)throws Exception{
-		return (List<PageData>)dao.findForList("ChangeGrcZhxzMapper.datalistPage", page);
+		return (List<PageData>)dao.findForList("ChangeErpJsbfMapper.datalistPage", page);
 	}
 	
 	/**列表(全部)
@@ -59,7 +59,7 @@ public class ChangeGrcZhxzService implements ChangeGrcZhxzManager{
 	 */
 	@SuppressWarnings("unchecked")
 	public List<PageData> listAll(PageData pd)throws Exception{
-		return (List<PageData>)dao.findForList("ChangeGrcZhxzMapper.listAll", pd);
+		return (List<PageData>)dao.findForList("ChangeErpJsbfMapper.listAll", pd);
 	}
 	
 	/**通过id获取数据
@@ -67,7 +67,7 @@ public class ChangeGrcZhxzService implements ChangeGrcZhxzManager{
 	 * @throws Exception
 	 */
 	public PageData findById(PageData pd)throws Exception{
-		return (PageData)dao.findForObject("ChangeGrcZhxzMapper.findById", pd);
+		return (PageData)dao.findForObject("ChangeErpJsbfMapper.findById", pd);
 	}
 	
 	/**批量删除
@@ -75,7 +75,7 @@ public class ChangeGrcZhxzService implements ChangeGrcZhxzManager{
 	 * @throws Exception
 	 */
 	public void deleteAll(String[] ArrayDATA_IDS)throws Exception{
-		dao.delete("ChangeGrcZhxzMapper.deleteAll", ArrayDATA_IDS);
+		dao.delete("ChangeErpJsbfMapper.deleteAll", ArrayDATA_IDS);
 	}
 	
 }

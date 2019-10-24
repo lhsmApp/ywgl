@@ -72,7 +72,7 @@
 						<div class="widget-box transparent" id="recent-box">
 							<div class="widget-header">
 								<div style="height:25%">
-									<ul class="steps">
+									<ul  id="approvalProcess" class="steps">
 									<li id="step1" data-step="1" class="active">
 										<span class="step">1</span>
 										<span class="title">发起</span>
@@ -361,6 +361,7 @@
 			});
 		};
 		var data=${varList};
+		console.log(data);
 		//循环加载到页面
 		function getChangeData(){
 		    var html = '';
@@ -372,16 +373,18 @@
 		}		
 		//动态加载变更数据
 		function setDiv(item){
-		    var div = '<li  class="item-grey clearfix" onclick="showDetail(\''+item.BILL_CODE+'\',\''+item.CURRENT_LEVEL+'\',\''+item.NEXT_LEVEL+'\');"><div><label class="inline" style="margin-bottom:5px;"><span class="list-item-value-title">'
+		    var div = '<li  class="item-grey clearfix" onclick="showDetail(\''+item.BILL_CODE+'\');"><div><label class="inline" style="margin-bottom:5px;"><span class="list-item-value-title">'
 		        + item.BG_NAME
-		        + '</span></label></div><div><label class="inline"><span class="list-item-info">单位:&nbsp;</span><span class="list-item-value">'
-		        + item.UNIT_CODE
-		        +'</span></label><label class="inline pull-right"><span class="list-item-info">科室：<span class="list-item-value">'
+		        + '</span></label></div><div><label class="inline"><span class="list-item-info">单号:&nbsp;</span><span class="list-item-value">'
+		        + item.BILL_CODE
+		        +'</span></label><label class="inline pull-right"><span class="list-item-info">科室：</span><span class="list-item-value">'
 		        + item.DEPT_CODE
+		        +'</span></label></div><div><label class="inline"><span class="list-item-info">状态:&nbsp;</span><span class="list-item-value">'
+		        + item.APPROVAL_STATE
+		        +'</span></label><label class="inline pull-right"><span class="list-item-info">单位:&nbsp;</span><span class="list-item-value">'
+		        + item.UNIT_CODE
 		        +'</span></label></div><div><label class="inline"><span class="list-item-info">变更原因:&nbsp;</span><span class="list-item-value">'
 		        + item.BG_REASON
-		        +'</span></label></div><div><label class="inline"><span class="list-item-info">单号:&nbsp;</span><span class="list-item-value">'
-		        + item.BILL_CODE
 		        +'</span></label><label class="inline pull-right"><span class="list-item-info">申请日期:&nbsp;'
 		        + item.ENTRY_DATE
 		        +'</span></label></div></li>';
@@ -398,12 +401,9 @@
 		            //返回数据的格式
 		        	dataType:'json',		          
 		            success:function(datas){
-		            	//全局变量存放当前点击的变更申请单号
-// 		            	bill_code=datas.BILL_CODE;
-		            	//console.log(bill_code);
+
 		            	var html = '';
 		      		     html += setDetail(datas);
-			            //console.log(html);
 		      			$('#detail-tab').html(html);
 // 		      		    console.log(datas);
 		      		  if(datas.BILL_STATE==1)
@@ -427,27 +427,29 @@
 		}
 		//动态加载变更单详情
 		function setDetail(item){
-		    var div = '<div class="profile-user-info"><div class="profile-info-row"><div class="profile-info-name">问题：</div><div class="profile-info-value"><span>'
+		    var div = '<div class="profile-user-info"><div class="profile-info-row"><div class="profile-info-name">变更名称：</div><div class="profile-info-value"><span>'
 		        + item.BG_NAME
-		        + '</span></div></div><div class="profile-info-row"><div class="profile-info-name">单位：</div><div class="profile-info-value"><i class="fa fa-map-marker light-orange bigger-110"></i><span>'
-		        + item.UNIT_CODE		       
-		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 科室： </div><div class="profile-info-value"><span>'
-		        + item.DEPT_CODE
+		        + '</span></div></div><div class="profile-info-row"><div class="profile-info-name">申请单号：</div><div class="profile-info-value"><i class="fa fa-map-marker light-orange bigger-110"></i><span>'
+		        + item.BILL_CODE		       
+		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请单位： </div><div class="profile-info-value"><span>'
+		        + item.UNIT_CODE
+		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请部门： </div><div class="profile-info-value"><span>'
+		        +item.DEPT_CODE
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 变更原因 ：</div><div class="profile-info-value"><span>'
 		        +item.BG_REASON
-		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 单号： </div><div class="profile-info-value"><span>'
-		        +item.BILL_CODE
-		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人： </div><div class="profile-info-value"><span>'
-		        +item.USER_CODE
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人部门： </div><div class="profile-info-value"><span>'
 		        +item.USER_DEPT
+		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人： </div><div class="profile-info-value"><span>'
+		        +item.USER_CODE
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人岗位： </div><div class="profile-info-value"><span>'
 		        +item.USER_JOB
+		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 联系方式： </div><div class="profile-info-value"><span>'
+		        +item.USER_CONTACT
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请日期： </div><div class="profile-info-value"><span>'
 		        +item.ENTRY_DATE
 		        +'</span></div></div>'
 		    return div;	
-		}			
+		}		
 		//打印
 		function printf(Id){
 			 top.jzts();

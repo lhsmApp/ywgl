@@ -1,7 +1,6 @@
-package com.fh.controller.changegrcqxbg.changegrcqxbg;
+package com.fh.controller.changeerpxtbg.changeerpjsbg;
 
 import java.io.PrintWriter;
-import java.net.URLDecoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,23 +25,20 @@ import com.fh.util.ObjectExcelView;
 import com.fh.util.PageData;
 import com.fh.util.Jurisdiction;
 import com.fh.util.Tools;
-
-import net.sf.json.JSONArray;
-
-import com.fh.service.changegrcqxbg.changegrcqxbg.ChangeGrcQxbgManager;
+import com.fh.service.changeerpxtbg.changeerpjsbg.ChangeErpJsbgManager;
 
 /** 
- * 说明：changeGrcQxbg
+ * 说明：tbchangejsbg
  * 创建人：jiachao
- * 创建时间：2019-09-29
+ * 创建时间：2019-10-24
  */
 @Controller
-@RequestMapping(value="/changegrcqxbg")
-public class ChangeGrcQxbgController extends BaseController {
+@RequestMapping(value="/changeerpjsbg")
+public class ChangeErpJsbgController extends BaseController {
 	
-	String menuUrl = "changegrcqxbg/list.do"; //菜单地址(权限用)
-	@Resource(name="changegrcqxbgService")
-	private ChangeGrcQxbgManager changegrcqxbgService;
+	String menuUrl = "changeerpjsbg/list.do"; //菜单地址(权限用)
+	@Resource(name="changeErpjsbgService")
+	private ChangeErpJsbgManager changeerpjsbgService;
 	
 	/**保存
 	 * @param
@@ -50,13 +46,13 @@ public class ChangeGrcQxbgController extends BaseController {
 	 */
 	@RequestMapping(value="/save")
 	public ModelAndView save() throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"新增ChangeGrcQxbg");
+		logBefore(logger, Jurisdiction.getUsername()+"新增ChangeJsbf");
 		if(!Jurisdiction.buttonJurisdiction(menuUrl, "add")){return null;} //校验权限
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		pd.put("CHANGEGRCQXBG_ID", this.get32UUID());	//主键
-		changegrcqxbgService.save(pd);
+		pd.put("CHANGEJSBF_ID", this.get32UUID());	//主键
+		changeerpjsbgService.save(pd);
 		mv.addObject("msg","success");
 		mv.setViewName("save_result");
 		return mv;
@@ -68,11 +64,11 @@ public class ChangeGrcQxbgController extends BaseController {
 	 */
 	@RequestMapping(value="/delete")
 	public void delete(PrintWriter out) throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"删除ChangeGrcQxbg");
+		logBefore(logger, Jurisdiction.getUsername()+"删除ChangeJsbf");
 		if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return;} //校验权限
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		changegrcqxbgService.delete(pd);
+		changeerpjsbgService.delete(pd);
 		out.write("success");
 		out.close();
 	}
@@ -83,12 +79,12 @@ public class ChangeGrcQxbgController extends BaseController {
 	 */
 	@RequestMapping(value="/edit")
 	public ModelAndView edit() throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"修改ChangeGrcQxbg");
+		logBefore(logger, Jurisdiction.getUsername()+"修改ChangeJsbf");
 		if(!Jurisdiction.buttonJurisdiction(menuUrl, "edit")){return null;} //校验权限
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		changegrcqxbgService.edit(pd);
+		changeerpjsbgService.edit(pd);
 		mv.addObject("msg","success");
 		mv.setViewName("save_result");
 		return mv;
@@ -100,7 +96,7 @@ public class ChangeGrcQxbgController extends BaseController {
 	 */
 	@RequestMapping(value="/list")
 	public ModelAndView list(Page page) throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"列表ChangeGrcQxbg");
+		logBefore(logger, Jurisdiction.getUsername()+"列表ChangeJsbf");
 		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
@@ -110,9 +106,8 @@ public class ChangeGrcQxbgController extends BaseController {
 			pd.put("keywords", keywords.trim());
 		}
 		page.setPd(pd);
-		List<PageData>	varList = changegrcqxbgService.list(page);	//列出ChangeGrcQxbg列表
-		mv.setViewName("changegrcqxbg/changegrcqxbg/changegrcqxbg_list");
-		//mv.addObject("varList", varList);
+		List<PageData>	varList = changeerpjsbgService.list(page);	//列出ChangeJsbf列表
+		mv.setViewName("changeerpxtbg/changeerpjsbg/changeerpjsbg_list");
 		mv.addObject("varList", JSON.toJSONString(varList));
 		mv.addObject("pd", pd);
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
@@ -128,7 +123,7 @@ public class ChangeGrcQxbgController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		mv.setViewName("changegrcqxbg/changegrcqxbg/changegrcqxbg_edit");
+		mv.setViewName("changeerpxtbg/changeerpjsbg/changeerpjsbg_edit");
 		mv.addObject("msg", "save");
 		mv.addObject("pd", pd);
 		return mv;
@@ -143,56 +138,13 @@ public class ChangeGrcQxbgController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		pd = changegrcqxbgService.findById(pd);	//根据ID读取
-		mv.setViewName("changegrcqxbg/changegrcqxbg/changegrcqxbg_edit");
+		pd = changeerpjsbgService.findById(pd);	//根据ID读取
+		mv.setViewName("changeerpxtbg/changeerpjsbg/changeerpjsbg_edit");
 		mv.addObject("msg", "edit");
 		mv.addObject("pd", pd);
 		return mv;
 	}	
-	 /**打印
-		 * @param
-		 * @throws Exception
-		 */
-		@RequestMapping(value="/goPrint")
-		public ModelAndView goPrint()throws Exception{
-			ModelAndView mv = this.getModelAndView();
-			PageData pd = new PageData();
-			pd = this.getPageData();
-			pd = changegrcqxbgService.findById(pd);	//根据ID读取
-			JSONArray json = JSONArray.fromObject(pd); 
-			mv.setViewName("changeerpxtbg/changeerpxtbg/PrintReport");
-			mv.addObject("report", "static/js/gridReport/grf/erpSystemChange.grf");
-			mv.addObject("msg", "edit");
-			mv.addObject("pd", pd);
-			mv.addObject("jsonStr", json);
-			return mv;
-		}	
-		/**列表
-		 * @param page
-		 * @throws Exception
-		 */
-		@RequestMapping(value="/showPrint")
-		@ResponseBody 
-		public PageData showPrint() throws Exception{
-			PageData pd1 = new PageData();
-			pd1 = this.getPageData();
-			String billCode=pd1.getString("BILL_CODE");
-			pd1.put("BILL_CODE", URLDecoder.decode(billCode, "UTF-8"));
-			pd1 = changegrcqxbgService.findById(pd1);	//根据ID读取
-			return pd1;
-		}
-		/**列表
-		 * @param page
-		 * @throws Exception
-		 */
-		@RequestMapping(value="/showDetail")
-		@ResponseBody 
-		public PageData showDetail() throws Exception{
-			PageData pd = new PageData();
-			pd = this.getPageData();
-			pd = changegrcqxbgService.findById(pd);	//根据ID读取
-			return pd;
-		}
+	
 	 /**批量删除
 	 * @param
 	 * @throws Exception
@@ -200,7 +152,7 @@ public class ChangeGrcQxbgController extends BaseController {
 	@RequestMapping(value="/deleteAll")
 	@ResponseBody
 	public Object deleteAll() throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"批量删除ChangeGrcQxbg");
+		logBefore(logger, Jurisdiction.getUsername()+"批量删除ChangeJsbf");
 		if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return null;} //校验权限
 		PageData pd = new PageData();		
 		Map<String,Object> map = new HashMap<String,Object>();
@@ -209,7 +161,7 @@ public class ChangeGrcQxbgController extends BaseController {
 		String DATA_IDS = pd.getString("DATA_IDS");
 		if(null != DATA_IDS && !"".equals(DATA_IDS)){
 			String ArrayDATA_IDS[] = DATA_IDS.split(",");
-			changegrcqxbgService.deleteAll(ArrayDATA_IDS);
+			changeerpjsbgService.deleteAll(ArrayDATA_IDS);
 			pd.put("msg", "ok");
 		}else{
 			pd.put("msg", "no");
@@ -225,7 +177,7 @@ public class ChangeGrcQxbgController extends BaseController {
 	 */
 	@RequestMapping(value="/excel")
 	public ModelAndView exportExcel() throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"导出ChangeGrcQxbg到excel");
+		logBefore(logger, Jurisdiction.getUsername()+"导出ChangeJsbf到excel");
 		if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;}
 		ModelAndView mv = new ModelAndView();
 		PageData pd = new PageData();
@@ -257,7 +209,7 @@ public class ChangeGrcQxbgController extends BaseController {
 		titles.add("备注23");	//23
 		titles.add("备注24");	//24
 		dataMap.put("titles", titles);
-		List<PageData> varOList = changegrcqxbgService.listAll(pd);
+		List<PageData> varOList = changeerpjsbgService.listAll(pd);
 		List<PageData> varList = new ArrayList<PageData>();
 		for(int i=0;i<varOList.size();i++){
 			PageData vpd = new PageData();
@@ -267,24 +219,24 @@ public class ChangeGrcQxbgController extends BaseController {
 			vpd.put("var4", varOList.get(i).getString("ENTRY_DATE"));	    //4
 			vpd.put("var5", varOList.get(i).getString("SERIAL_NUM"));	    //5
 			vpd.put("var6", varOList.get(i).getString("USER_CODE"));	    //6
-			vpd.put("var7", varOList.get(i).getString("USER_ACCOUNT_NUM"));	    //7
-			vpd.put("var8", varOList.get(i).getString("USER_DEPT"));	    //8
-			vpd.put("var9", varOList.get(i).getString("USER_JOB"));	    //9
-			vpd.put("var10", varOList.get(i).getString("USER_CONTACT"));	    //10
-			vpd.put("var11", varOList.get(i).getString("EFFECTIVE_DATE"));	    //11
-			vpd.put("var12", varOList.get(i).getString("SYSTEM"));	    //12
+			vpd.put("var7", varOList.get(i).getString("USER_DEPT"));	    //7
+			vpd.put("var8", varOList.get(i).getString("USER_JOB"));	    //8
+			vpd.put("var9", varOList.get(i).getString("USER_CONTACT"));	    //9
+			vpd.put("var10", varOList.get(i).getString("BG_NAME"));	    //10
+			vpd.put("var11", varOList.get(i).getString("SYSTEM"));	    //11
+			vpd.put("var12", varOList.get(i).getString("BG_TYPE"));	    //12
 			vpd.put("var13", varOList.get(i).getString("BG_REASON"));	    //13
-			vpd.put("var14", varOList.get(i).getString("BG_TYPE"));	    //14
-			vpd.put("var15", varOList.get(i).getString("ADD_ROLES"));	    //15
-			vpd.put("var16", varOList.get(i).getString("DELETE_ROLES"));	    //16
-			vpd.put("var17", varOList.get(i).getString("BILL_STATE"));	    //17
-			vpd.put("var18", varOList.get(i).getString("BILL_USER"));	    //18
-			vpd.put("var19", varOList.get(i).getString("BILL_DATE"));	    //19
-			vpd.put("var20", varOList.get(i).getString("CUS_COLUMN1"));	    //20
-			vpd.put("var21", varOList.get(i).getString("CUS_COLUMN2"));	    //21
-			vpd.put("var22", varOList.get(i).getString("CUS_COLUMN3"));	    //22
-			vpd.put("var23", varOList.get(i).getString("CUS_COLUMN4"));	    //23
-			vpd.put("var24", varOList.get(i).getString("CUS_COLUMN5"));	    //24
+			vpd.put("var14", varOList.get(i).getString("BILL_STATE"));	    //14
+			vpd.put("var15", varOList.get(i).getString("BILL_USER"));	    //15
+			vpd.put("var16", varOList.get(i).getString("BILL_DATE"));	    //16
+			vpd.put("var17", varOList.get(i).getString("ADD_ROLE"));	    //17
+			vpd.put("var18", varOList.get(i).getString("DEL_ROLE2"));	    //18
+			vpd.put("var19", varOList.get(i).getString("CUS_COLUMN1"));	    //19
+			vpd.put("var20", varOList.get(i).getString("CUS_COLUMN2"));	    //20
+			vpd.put("var21", varOList.get(i).getString("CUS_COLUMN3"));	    //21
+			vpd.put("var22", varOList.get(i).getString("CUS_COLUMN4"));	    //22
+			vpd.put("var23", varOList.get(i).getString("CUS_COLUMN5"));	    //23
+			vpd.put("var24", varOList.get(i).getString("EFFECTIVE_DATE"));	    //24
 			varList.add(vpd);
 		}
 		dataMap.put("varList", varList);

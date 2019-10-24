@@ -1,16 +1,16 @@
-package com.fh.service.changegrcqxbg.changegrcqxbg;
+package com.fh.service.changegrcxtbg.changegrczhzx;
 
 import java.util.List;
 import com.fh.entity.Page;
 import com.fh.util.PageData;
 
 /** 
- * 说明： changeGrcQxbg接口
+ * 说明： changegrczhzx接口
  * 创建人：jiachao
- * 创建时间：2019-09-29
+ * 创建时间：2019-10-24
  * @version
  */
-public interface ChangeGrcQxbgManager{
+public interface ChangeGrcZhzxManager{
 
 	/**新增
 	 * @param pd

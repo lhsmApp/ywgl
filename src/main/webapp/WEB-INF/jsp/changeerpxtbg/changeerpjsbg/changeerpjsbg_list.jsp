@@ -73,23 +73,10 @@
 						<div class="col-xs-4">
 						<!-- 检索  -->
 						<form style="margin:5px;" action="user/listUsers.do" method="post" name="userForm" id="userForm">
-<!-- 							<div class="nav-search" style="margin:10px 0px;"> -->
-<!-- 								<span class="input-icon" style="width:86%"> -->
-<%-- 									<input style="width:100%" class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词" /> --%>
-<!-- 									<i class="ace-icon fa fa-search nav-search-icon"></i> -->
-<!-- 								</span> -->
-<!-- 								<button style="margin-bottom:3px;" class="btn btn-light btn-minier" onclick="searchs();"  title="检索"> -->
-<!-- 									<i id="nav-search-icon" class="ace-icon fa fa-search bigger-120 nav-search-icon blue"></i> -->
-<!-- 									<i class="ace-icon fa fa-signal icon-only bigger-150"></i> -->
-<!-- 								</button> -->
-<!-- 							</div> -->
-							
 							
 							<ul id="tasks" class="item-list">
 							
-							</ul>						
-	
-				
+							</ul>									
 						</form>
 					</div>
 					
@@ -141,8 +128,8 @@
 												<i class="ace-icon fa fa-list"></i>
 												Sortable Lists
 											</h4> -->
-											<form action="problemAssign/savaProblemAssign.do" name="problemAssignForm" id="problemAssignForm" method="post">
-												<input type="hidden" name="problemID" id="problemID" value="${pd.PROBLEM_ID }"/>
+											<form action="" name="problemAssignForm" id="problemAssignForm" method="post">
+												<input type="hidden" name="problemID" id="problemID" value="${pd.BILL_CODE }"/>
 												<div id="zhongxin" style="padding-top: 13px;">
 													<div style="margin:10px 0px;">
 														<label for="form-field-select-1">受理人</label>
@@ -392,6 +379,7 @@
 			});
 		};
 		var data=${varList};
+		console.log(data);
 		//循环加载到页面
 		function getChangrData(){
 		    var html = '';

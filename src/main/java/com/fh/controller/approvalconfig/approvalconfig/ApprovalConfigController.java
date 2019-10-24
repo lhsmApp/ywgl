@@ -97,7 +97,17 @@ public class ApprovalConfigController extends BaseController {
 		mv.setViewName("save_result");
 		return mv;
 	}
-	
+	/**列表
+	 * @param page
+	 * @throws Exception
+	 */
+//	@RequestMapping(value="/showDetail")
+//	public @ResponseBody PageData showDetail() throws Exception{
+//		PageData pd = new PageData();
+//		pd = this.getPageData();
+//		pd = approvalconfigService.findById(pd);	//根据ID读取
+//		return pd;
+//	}
 	/**列表
 	 * @param page
 	 * @throws Exception
@@ -157,7 +167,7 @@ public class ApprovalConfigController extends BaseController {
 		//根据激活标识，审批单位，审批部门，审批角色和审批状态5个条件获取tb_approval_detail信息
 		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 	    String unitCode=user.getDEPARTMENT_ID();
-//	    String roleCode=user.getROLE_ID();    
+//	    String roleCode=user.getROLE_ID(); //审批角色   
 //	    pd.put("ROLE_CODE", roleCode);//单位编码
 		pd.put("UNIT_CODE", unitCode);//单位编码
 		pd.put("ACTIVE_FLAG", '1');//激活状态为1

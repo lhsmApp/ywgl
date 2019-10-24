@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
 import com.fh.controller.base.BaseController;
+import com.fh.controller.common.BillnumUtil;
 import com.fh.controller.common.QueryFeildString;
 import com.fh.controller.common.TmplUtil;
 import com.fh.entity.CommonBase;
@@ -34,10 +35,12 @@ import com.fh.util.PageData;
 import com.fh.util.SqlTools;
 import com.fh.util.Jurisdiction;
 import com.fh.util.Tools;
+import com.fh.util.enums.BillNumType;
 import com.fh.util.enums.ProState;
 
 import net.sf.json.JSONArray;
 
+import com.fh.service.billnum.BillNumManager;
 import com.fh.service.changeerpxtbg.changeerpxtbg.ChangeErpXtbgManager;
 import com.fh.service.fhoa.department.DepartmentManager;
 
@@ -57,18 +60,20 @@ public class ChangeErpXtbgController extends BaseController {
 	@Resource(name="departmentService")
 	private DepartmentManager departmentService;
 	
+	@Resource(name = "billnumService")
+	private BillNumManager billNumService;
+	
 	/**保存
 	 * @param
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/save")
 	public ModelAndView save() throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"新增changeerpxtbg");
-		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "add")){return null;} //校验权限
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		pd.put("CHANGEERPXTBG_ID", this.get32UUID());	//主键
+		String billCode=BillnumUtil.getBillnum(billNumService, BillNumType.ERP_XTBG, pd.getString("PRO_DEPART"), "");
+		pd.put("BILL_CODE", billCode);
 		changeerpxtbgService.save(pd);
 		mv.addObject("msg","success");
 		mv.setViewName("save_result");
@@ -97,10 +102,6 @@ public class ChangeErpXtbgController extends BaseController {
 	 */
 	@RequestMapping(value="/edit")
 	public ModelAndView edit() throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"修改changeerpxtbg");
-//		if(!Jurisdiction.buttonJurisdiction(menuUrl, "edit")){
-//			return null;
-//			} //校验权限
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
