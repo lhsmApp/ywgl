@@ -4,7 +4,7 @@
 	
 	<!--表名 -->
 	<sql id="tableName">
-		CHANGEGRCZHZX
+	tb_change_grc_zhzx
 	</sql>
 	
 	<!-- 字段 -->
@@ -29,8 +29,7 @@
 		CUS_COLUMN2,	
 		CUS_COLUMN3,	
 		CUS_COLUMN4,	
-		CUS_COLUMN5,	
-		CHANGEGRCZHZX_ID
+		CUS_COLUMN5
 	</sql>
 	
 	<!-- 字段值 -->
@@ -55,8 +54,7 @@
 		#{CUS_COLUMN2},	
 		#{CUS_COLUMN3},	
 		#{CUS_COLUMN4},	
-		#{CUS_COLUMN5},	
-		#{CHANGEGRCZHZX_ID}
+		#{CUS_COLUMN5}
 	</sql>
 	
 	<!-- 新增-->
@@ -75,7 +73,7 @@
 		delete from
 		<include refid="tableName"></include>
 		where 
-			CHANGEGRCZHZX_ID = #{CHANGEGRCZHZX_ID}
+			BILL_CODE = #{BILL_CODE}
 	</delete>
 	
 	<!-- 修改 -->
@@ -103,10 +101,9 @@
 			CUS_COLUMN2 = #{CUS_COLUMN2},
 			CUS_COLUMN3 = #{CUS_COLUMN3},
 			CUS_COLUMN4 = #{CUS_COLUMN4},
-			CUS_COLUMN5 = #{CUS_COLUMN5},
-		CHANGEGRCZHZX_ID = CHANGEGRCZHZX_ID
+			CUS_COLUMN5 = #{CUS_COLUMN5}
 		where 
-		CHANGEGRCZHZX_ID = #{CHANGEGRCZHZX_ID}
+		BILL_CODE = #{BILL_CODE}
 	</update>
 	
 	<!-- 通过ID获取数据 -->
@@ -116,7 +113,7 @@
 		from 
 		<include refid="tableName"></include>
 		where 
-			CHANGEGRCZHZX_ID = #{CHANGEGRCZHZX_ID}
+			BILL_CODE = #{BILL_CODE}
 	</select>
 	
 	<!-- 列表 -->
@@ -151,7 +148,7 @@
 		delete from
 		<include refid="tableName"></include>
 		where 
-			CHANGEGRCZHZX_ID in
+			BILL_CODE in
 		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
                  #{item}
 		</foreach>

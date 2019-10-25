@@ -16,6 +16,14 @@
 	<%@ include file="../../system/index/top.jsp"%>
 	<!-- 日期框 -->
 	<link rel="stylesheet" href="static/ace/css/datepicker.css" />
+	<script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
+	<!-- 树形下拉框start -->
+	<script type="text/javascript" src="plugins/selectZtree/selectTree.js"></script>
+	<script type="text/javascript" src="plugins/selectZtree/framework.js"></script>
+	<link rel="stylesheet" type="text/css" href="plugins/selectZtree/import_fh.css"/>
+	<script type="text/javascript" src="plugins/selectZtree/ztree/ztree.js"></script>
+	<link type="text/css" rel="stylesheet" href="plugins/selectZtree/ztree/ztree.css"></link>
+	<!-- 树形下拉框end -->
 </head>
 <body class="no-skin">
 <!-- /section:basics/navbar.layout -->
@@ -30,102 +38,56 @@
 					<form action="changejsbf/${msg }.do" name="Form" id="Form" method="post">
 						<input type="hidden" name="CHANGEJSBF_ID" id="CHANGEJSBF_ID" value="${pd.CHANGEJSBF_ID}"/>
 						<div id="zhongxin" style="padding-top: 13px;">
-						<table id="table_report" class="table table-striped table-bordered table-hover">
+					<table id="table_report" class="table table-striped table-bordered table-hover">
 							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">备注1:</td>
-								<td><input type="text" name="BILL_CODE" id="BILL_CODE" value="${pd.BILL_CODE}" maxlength="100" placeholder="这里输入备注1" title="备注1" style="width:98%;"/></td>
+								<td style="width:115px;text-align: right;padding-top: 13px;">申请单号:</td>
+								<td><input type="text" name="BILL_CODE" id="BILL_CODE" value="${pd.BILL_CODE}" maxlength="100" placeholder="这里输入申请单号" title="申请单号" style="width:98%;"/></td>
+								<td style="width:115px;text-align: right;padding-top: 13px;">单位简称:</td>
+<%-- 								<td><input type="hidden" name="UNIT_CODE" id="UNIT_CODE" value="${pd.UNIT_CODE}" maxlength="30" placeholder="这里输入单位简称" title="单位简称" style="width:0%;"/></td> --%>
+								<td><input type="hidden" name="UNIT_CODE" style="width:98%; id="UNIT_CODE" value="${pd.DEPARTMENT_ID}" />
+										<div class="selectTree" id="selectTree"></div></td>
 							</tr>
 							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">备注2:</td>
-								<td><input type="text" name="UNIT_CODE" id="UNIT_CODE" value="${pd.UNIT_CODE}" maxlength="30" placeholder="这里输入备注2" title="备注2" style="width:98%;"/></td>
+								<td style="width:115px;text-align: right;padding-top: 13px;">部门简称:</td>
+								<td><input type="text" name="DEPT_CODE" id="DEPT_CODE" value="${pd.DEPT_CODE}" maxlength="30" placeholder="这里输入部门简称" title="部门简称" style="width:98%;"/></td>
+								<td style="width:115px;text-align: right;padding-top: 13px;">填表日期:</td>
+								<td><input type="text" name="ENTRY_DATE" id="ENTRY_DATE" value="${pd.ENTRY_DATE}" maxlength="30" placeholder="这里输入填表日期" title="填表日期" style="width:98%;"/></td>
 							</tr>
 							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">备注3:</td>
-								<td><input type="text" name="DEPT_CODE" id="DEPT_CODE" value="${pd.DEPT_CODE}" maxlength="30" placeholder="这里输入备注3" title="备注3" style="width:98%;"/></td>
+								<td style="width:115px;text-align: right;padding-top: 13px;">序号:</td>
+								<td><input type="text" name="SERIAL_NUM" id="SERIAL_NUM" value="${pd.SERIAL_NUM}" maxlength="20" placeholder="这里输入序号" title="序号" style="width:98%;"/></td>
+								<td style="width:115px;text-align: right;padding-top: 13px;">申请人:</td>
+								<td><input type="text" name="USER_CODE" id="USER_CODE" value="${pd.USER_CODE}" maxlength="20" placeholder="这里输入申请人" title="申请人" style="width:98%;"/></td>
 							</tr>
 							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">备注4:</td>
-								<td><input type="text" name="ENTRY_DATE" id="ENTRY_DATE" value="${pd.ENTRY_DATE}" maxlength="30" placeholder="这里输入备注4" title="备注4" style="width:98%;"/></td>
+								<td style="width:115px;text-align: right;padding-top: 13px;">申请人部门:</td>
+								<td><input type="text" name="USER_DEPT" id="USER_DEPT" value="${pd.USER_DEPT}" maxlength="30" placeholder="这里输入申请人部门" title="申请人部门" style="width:98%;"/></td>
+								<td style="width:115px;text-align: right;padding-top: 13px;">申请人岗位:</td>
+								<td><input type="text" name="USER_JOB" id="USER_JOB" value="${pd.USER_JOB}" maxlength="50" placeholder="这里输入申请人岗位" title="申请人岗位" style="width:98%;"/></td>
 							</tr>
 							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">备注5:</td>
-								<td><input type="text" name="SERIAL_NUM" id="SERIAL_NUM" value="${pd.SERIAL_NUM}" maxlength="20" placeholder="这里输入备注5" title="备注5" style="width:98%;"/></td>
+								<td style="width:115px;text-align: right;padding-top: 13px;">联系方式:</td>
+								<td><input type="text" name="USER_CONTACT" id="USER_CONTACT" value="${pd.USER_CONTACT}" maxlength="50" placeholder="这里输入联系方式" title="联系方式" style="width:98%;"/></td>
+								<td style="width:115px;text-align: right;padding-top: 13px;">变更名称:</td>
+								<td><input type="text" name="BG_NAME" id="BG_NAME" value="${pd.BG_NAME}" maxlength="50" placeholder="变更名称" title="变更名称" style="width:98%;"/></td>
 							</tr>
 							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">备注6:</td>
-								<td><input type="text" name="USER_CODE" id="USER_CODE" value="${pd.USER_CODE}" maxlength="20" placeholder="这里输入备注6" title="备注6" style="width:98%;"/></td>
+								<td style="width:115px;text-align: right;padding-top: 13px;">ERP系统名称:</td>
+								<td><input type="text" name="SYSTEM" id="SYSTEM" value="${pd.SYSTEM}" maxlength="20" placeholder="这里输入ERP系统名称" title="ERP系统名称" style="width:98%;"/></td>
+								<td style="width:115px;text-align: right;padding-top: 13px;">变更类型:</td>
+								<td><input type="text" name="BG_TYPE" id="BG_TYPE" value="${pd.BG_TYPE}" maxlength="100" placeholder="这里输入变更类型" title="变更类型" style="width:98%;"/></td>
 							</tr>
 							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">备注7:</td>
-								<td><input type="text" name="USER_DEPT" id="USER_DEPT" value="${pd.USER_DEPT}" maxlength="30" placeholder="这里输入备注7" title="备注7" style="width:98%;"/></td>
+								<td style="width:115px;text-align: right;padding-top: 13px;">变更原因:</td>
+								<td><input type="text" name="BG_REASON" id="BG_REASON" value="${pd.BG_REASON}" maxlength="300" placeholder="这里输入变更原因" title="变更原因" style="width:98%;"/></td>
+								<td style="width:115px;text-align: right;padding-top: 13px;">单据状态:</td>
+								<td><input type="text" name="BILL_STATE" id="BILL_STATE" value="${pd.BILL_STATE}" maxlength="10" placeholder="这里输入单据状态" title="单据状态" style="width:98%;"/></td>
 							</tr>
 							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">备注8:</td>
-								<td><input type="text" name="USER_JOB" id="USER_JOB" value="${pd.USER_JOB}" maxlength="50" placeholder="这里输入备注8" title="备注8" style="width:98%;"/></td>
-							</tr>
-							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">备注9:</td>
-								<td><input type="text" name="USER_CONTACT" id="USER_CONTACT" value="${pd.USER_CONTACT}" maxlength="50" placeholder="这里输入备注9" title="备注9" style="width:98%;"/></td>
-							</tr>
-							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">备注10:</td>
-								<td><input type="text" name="BG_NAME" id="BG_NAME" value="${pd.BG_NAME}" maxlength="50" placeholder="这里输入备注10" title="备注10" style="width:98%;"/></td>
-							</tr>
-							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">备注11:</td>
-								<td><input type="text" name="SYSTEM" id="SYSTEM" value="${pd.SYSTEM}" maxlength="20" placeholder="这里输入备注11" title="备注11" style="width:98%;"/></td>
-							</tr>
-							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">备注12:</td>
-								<td><input type="text" name="BG_TYPE" id="BG_TYPE" value="${pd.BG_TYPE}" maxlength="100" placeholder="这里输入备注12" title="备注12" style="width:98%;"/></td>
-							</tr>
-							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">备注13:</td>
-								<td><input type="text" name="BG_REASON" id="BG_REASON" value="${pd.BG_REASON}" maxlength="300" placeholder="这里输入备注13" title="备注13" style="width:98%;"/></td>
-							</tr>
-							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">备注14:</td>
-								<td><input type="text" name="BILL_STATE" id="BILL_STATE" value="${pd.BILL_STATE}" maxlength="10" placeholder="这里输入备注14" title="备注14" style="width:98%;"/></td>
-							</tr>
-							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">备注15:</td>
-								<td><input type="text" name="BILL_USER" id="BILL_USER" value="${pd.BILL_USER}" maxlength="20" placeholder="这里输入备注15" title="备注15" style="width:98%;"/></td>
-							</tr>
-							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">备注16:</td>
-								<td><input type="text" name="BILL_DATE" id="BILL_DATE" value="${pd.BILL_DATE}" maxlength="30" placeholder="这里输入备注16" title="备注16" style="width:98%;"/></td>
-							</tr>
-							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">备注17:</td>
-								<td><input type="text" name="ADD_ROLE" id="ADD_ROLE" value="${pd.ADD_ROLE}" maxlength="300" placeholder="这里输入备注17" title="备注17" style="width:98%;"/></td>
-							</tr>
-							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">备注18:</td>
-								<td><input type="text" name="DEL_ROLE2" id="DEL_ROLE2" value="${pd.DEL_ROLE2}" maxlength="300" placeholder="这里输入备注18" title="备注18" style="width:98%;"/></td>
-							</tr>
-							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">备注19:</td>
-								<td><input type="text" name="CUS_COLUMN1" id="CUS_COLUMN1" value="${pd.CUS_COLUMN1}" maxlength="30" placeholder="这里输入备注19" title="备注19" style="width:98%;"/></td>
-							</tr>
-							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">备注20:</td>
-								<td><input type="text" name="CUS_COLUMN2" id="CUS_COLUMN2" value="${pd.CUS_COLUMN2}" maxlength="30" placeholder="这里输入备注20" title="备注20" style="width:98%;"/></td>
-							</tr>
-							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">备注21:</td>
-								<td><input type="text" name="CUS_COLUMN3" id="CUS_COLUMN3" value="${pd.CUS_COLUMN3}" maxlength="30" placeholder="这里输入备注21" title="备注21" style="width:98%;"/></td>
-							</tr>
-							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">备注22:</td>
-								<td><input type="text" name="CUS_COLUMN4" id="CUS_COLUMN4" value="${pd.CUS_COLUMN4}" maxlength="30" placeholder="这里输入备注22" title="备注22" style="width:98%;"/></td>
-							</tr>
-							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">备注23:</td>
-								<td><input type="text" name="CUS_COLUMN5" id="CUS_COLUMN5" value="${pd.CUS_COLUMN5}" maxlength="30" placeholder="这里输入备注23" title="备注23" style="width:98%;"/></td>
-							</tr>
-							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;">备注24:</td>
-								<td><input type="text" name="EFFECTIVE_DATE" id="EFFECTIVE_DATE" value="${pd.EFFECTIVE_DATE}" maxlength="30" placeholder="这里输入备注24" title="备注24" style="width:98%;"/></td>
+								<td style="width:115px;text-align: right;padding-top: 13px;">创建人:</td>
+								<td><input type="text" name="BILL_USER" id="BILL_USER" value="${pd.BILL_USER}" maxlength="20" placeholder="这里输入创建人" title="创建人" style="width:98%;"/></td>
+								<td style="width:115px;text-align: right;padding-top: 13px;">创建日期:</td>
+								<td><input type="text" name="BILL_DATE" id="BILL_DATE" value="${pd.BILL_DATE}" maxlength="30" placeholder="这里输入创建日期" title="创建日期" style="width:98%;"/></td>
 							</tr>
 							<tr>
 								<td style="text-align: center;" colspan="10">
@@ -406,7 +368,24 @@
 			$("#zhongxin").hide();
 			$("#zhongxin2").show();
 		}
-		
+		function initComplete(){
+			//下拉树
+			var zTreeNodes=${zTreeNodes};
+			//console.log(zTreeNodes);
+			var defaultNodes = {"treeNodes":zTreeNodes};
+			//绑定change事件
+			$("#selectTree").bind("change",function(){
+				if(!$(this).attr("relValue")){
+			    }else{
+					//$("#UNIT_CODE").val($(this).attr("relValue"));
+					$("#UNIT_CODE").val($(this).attr("relText"));
+			    }
+			});
+			//赋给data属性
+			$("#selectTree").data("data",defaultNodes);  
+			$("#selectTree").render();
+			$("#selectTree2_input").val("${null==depname?'请选择单位':depname}");
+		}
 		$(function() {
 			//日期框
 			$('.date-picker').datepicker({autoclose: true,todayHighlight: true});

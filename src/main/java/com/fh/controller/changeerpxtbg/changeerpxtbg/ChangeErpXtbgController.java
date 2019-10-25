@@ -271,7 +271,8 @@ public class ChangeErpXtbgController extends BaseController {
 		pd = changeerpxtbgService.findById(pd);	//根据ID读取
 		JSONArray json = JSONArray.fromObject(pd); 
 		mv.setViewName("changeerpxtbg/changeerpxtbg/PrintReport");
-		mv.addObject("report", "static/js/gridReport/grf/erpSystemChange.grf");
+		mv.addObject("ReportURL", "static/js/gridReport/grf/erpSystemChange.grf");
+		mv.addObject("DataURL", "changeerpxtbg/PrintXtbg.do?BILL_CODE="+pd.getString("BILL_CODE"));
 		mv.addObject("msg", "edit");
 		mv.addObject("pd", pd);
 		mv.addObject("billCode", pd.get("BILL_CODE"));

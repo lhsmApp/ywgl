@@ -111,7 +111,7 @@ public class ChangeGrcQxbgController extends BaseController {
 		}
 		page.setPd(pd);
 		List<PageData>	varList = changegrcqxbgService.list(page);	//列出ChangeGrcQxbg列表
-		mv.setViewName("changegrcqxbg/changegrcqxbg/changegrcqxbg_list");
+		mv.setViewName("changegrcxtbg/changegrcqxbg/changegrcqxbg_list");
 		//mv.addObject("varList", varList);
 		mv.addObject("varList", JSON.toJSONString(varList));
 		mv.addObject("pd", pd);
@@ -128,7 +128,7 @@ public class ChangeGrcQxbgController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		mv.setViewName("changegrcqxbg/changegrcqxbg/changegrcqxbg_edit");
+		mv.setViewName("changegrcxtbg/changegrcqxbg/changegrcqxbg_edit");
 		mv.addObject("msg", "save");
 		mv.addObject("pd", pd);
 		return mv;
@@ -144,7 +144,7 @@ public class ChangeGrcQxbgController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd = changegrcqxbgService.findById(pd);	//根据ID读取
-		mv.setViewName("changegrcqxbg/changegrcqxbg/changegrcqxbg_edit");
+		mv.setViewName("changegrcxtbg/changegrcqxbg/changegrcqxbg_edit");
 		mv.addObject("msg", "edit");
 		mv.addObject("pd", pd);
 		return mv;

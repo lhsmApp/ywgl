@@ -18,11 +18,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import com.fh.controller.base.BaseController;
 import com.fh.entity.Page;
+import com.fh.entity.system.User;
 import com.fh.util.AppUtil;
+import com.fh.util.Const;
 import com.fh.util.ObjectExcelView;
 import com.fh.util.PageData;
 import com.fh.util.Jurisdiction;
 import com.fh.util.Tools;
+
+import net.sf.json.JSONArray;
+
 import com.fh.service.changegrcxtbg.changegrczhzx.ChangeGrcZhzxManager;
 
 /** 
@@ -99,19 +104,66 @@ public class ChangeGrcZhzxController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+	    String userId=user.getUSER_ID();
+	    pd.put("BILL_USER", userId);	
 		String keywords = pd.getString("keywords");				//关键词检索条件
 		if(null != keywords && !"".equals(keywords)){
 			pd.put("keywords", keywords.trim());
 		}
 		page.setPd(pd);
 		List<PageData>	varList = changegrczhzxService.list(page);	//列出ChangeGrcZhzx列表
-		mv.setViewName("changegrczhzx/changegrczhzx/changegrczhzx_list");
+		for(PageData p:varList){
+			if(null!=p.getString("APPROVAL_STATE")&&!"".equals(p.getString("APPROVAL_STATE"))){
+				if(p.getString("APPROVAL_STATE").equals("0")){
+					p.put("APPROVAL_STATE", "审批中");
+				}else if(p.getString("APPROVAL_STATE").equals("1")){
+					p.put("APPROVAL_STATE", "已完成");
+				}else if(p.getString("APPROVAL_STATE").equals("2")){
+					p.put("APPROVAL_STATE", "退回");
+				}
+			}else{
+				p.put("APPROVAL_STATE", "未上报");
+			}		
+		} 	
+		mv.setViewName("changegrcxtbg/changegrczhzx/changegrczhzx_list");
 		mv.addObject("varList", varList);
 		mv.addObject("pd", pd);
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		return mv;
 	}
-	
+	/**显示该用户提报的变更申请单
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/getPageList")
+	public @ResponseBody List<PageData> getPageList(Page page) throws Exception{
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		String userId = user.getUSER_ID();
+		pd.put("BILL_USER", userId);	
+		String keywords = pd.getString("keywords");				//关键词检索条件
+		if(null != keywords && !"".equals(keywords)){
+			pd.put("keywords", keywords.trim());
+		}
+		page.setPd(pd);
+		List<PageData> varList = changegrczhzxService.list(page);
+		for(PageData p:varList){
+			if(null!=p.getString("APPROVAL_STATE")&&!"".equals(p.getString("APPROVAL_STATE"))){
+				if(p.getString("APPROVAL_STATE").equals("0")){
+					p.put("APPROVAL_STATE", "审批中");
+				}else if(p.getString("APPROVAL_STATE").equals("1")){
+					p.put("APPROVAL_STATE", "已完成");
+				}else if(p.getString("APPROVAL_STATE").equals("2")){
+					p.put("APPROVAL_STATE", "退回");
+				}
+			}else{
+				p.put("APPROVAL_STATE", "未上报");
+			}		
+		} 	
+		return varList;
+	}
 	/**去新增页面
 	 * @param
 	 * @throws Exception
@@ -121,7 +173,7 @@ public class ChangeGrcZhzxController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		mv.setViewName("changegrczhzx/changegrczhzx/changegrczhzx_edit");
+		mv.setViewName("changegrcxtbg/changegrczhzx/changegrczhzx_edit");
 		mv.addObject("msg", "save");
 		mv.addObject("pd", pd);
 		return mv;
@@ -137,12 +189,56 @@ public class ChangeGrcZhzxController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd = changegrczhzxService.findById(pd);	//根据ID读取
-		mv.setViewName("changegrczhzx/changegrczhzx/changegrczhzx_edit");
+		mv.setViewName("changegrcxtbg/changegrczhzx/changegrczhzx_edit");
 		mv.addObject("msg", "edit");
 		mv.addObject("pd", pd);
 		return mv;
 	}	
-	
+	 /**打印
+		 * @param
+		 * @throws Exception
+		 */
+		@RequestMapping(value="/goPrint")
+		public ModelAndView goPrint()throws Exception{
+			ModelAndView mv = this.getModelAndView();
+			PageData pd = new PageData();
+			pd = this.getPageData();
+			pd = changegrczhzxService.findById(pd);	//根据ID读取
+			JSONArray json = JSONArray.fromObject(pd); 
+			mv.setViewName("changeerpxtbg/changeerpxtbg/PrintReport");
+			mv.addObject("ReportURL", "static/js/gridReport/grf/changeGrcZhzx.grf");
+			mv.addObject("DataURL", "changegrczhzx/PrintZhzx.do?BILL_CODE="+pd.getString("BILL_CODE"));
+			mv.addObject("msg", "edit");
+			mv.addObject("pd", pd);
+			mv.addObject("billCode", pd.get("BILL_CODE"));
+			
+			return mv;
+		}	
+		@RequestMapping(value="/PrintZhzx")
+		@ResponseBody 
+		public  PageData PrintZhzx() throws Exception{
+			PageData pd = new PageData();
+			pd = this.getPageData();
+			//根据BILL_CODE读取表单信息以及表单上申请人所在的单位及部门名称
+			//pd = changegrczhzxService.findByBillCode(pd);	
+			List<PageData> listPageData=new ArrayList<PageData>();
+			listPageData.add(pd);
+			
+			PageData pdResult=new PageData();
+			pdResult.put("Table", listPageData);
+			return 	pdResult;
+		}
+		/**列表
+		 * @param page
+		 * @throws Exception
+		 */
+		@RequestMapping(value="/showDetail")
+		public @ResponseBody PageData showDetail() throws Exception{
+			PageData pd = new PageData();
+			pd = this.getPageData();
+			pd = changegrczhzxService.findById(pd);	//根据ID读取
+			return pd;
+		}
 	 /**批量删除
 	 * @param
 	 * @throws Exception

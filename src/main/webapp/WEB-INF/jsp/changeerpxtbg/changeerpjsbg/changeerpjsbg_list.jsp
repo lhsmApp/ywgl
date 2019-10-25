@@ -277,7 +277,7 @@
 			 var diag = new top.Dialog();
 			 diag.Drag=true;
 			 diag.Title ="新增";
-			 diag.URL = '<%=basePath%>changeerpxtbg/goAdd.do';
+			 diag.URL = '<%=basePath%>changeerpjsbg/goAdd.do';
 			 diag.Width = 750;
 			 diag.Height = 455;
 			 diag.Modal = true;				//有无遮罩窗口
@@ -302,7 +302,7 @@
 			bootbox.confirm("确定要删除吗?", function(result) {
 				if(result) {
 					top.jzts();
-					var url = "<%=basePath%>changeerpxtbg/delete.do?BILL_CODE="+encodeURI(Id);
+					var url = "<%=basePath%>changeerpjsbg/delete.do?BILL_CODE="+encodeURI(Id);
 					$.get(url,function(data){
 						console.log(data);
 						//nextPage(${page.currentPage});
@@ -318,7 +318,7 @@
 			 var diag = new top.Dialog();
 			 diag.Drag=true;
 			 diag.Title ="编辑";
-			 diag.URL = '<%=basePath%>changeerpxtbg/goEdit.do?BILL_CODE='+encodeURI(Id);
+			 diag.URL = '<%=basePath%>changeerpjsbg/goEdit.do?BILL_CODE='+encodeURI(Id);
 			 diag.Width = 750;
 			 diag.Height = 455;
 			 diag.Modal = true;				//有无遮罩窗口
@@ -362,7 +362,6 @@
 							top.jzts();
 							$.ajax({
 								type: "POST",
-								url: '<%=basePath%>changeerpxtbg/deleteAll.do?tm='+new Date().getTime(),
 						    	data: {DATA_IDS:str},
 								dataType:'json',
 								//beforeSend: validateData,
@@ -412,7 +411,7 @@
 			  $.ajax({
 				  	type: "POST",
 		            //提交的网址
-		           	url: '<%=basePath%>changeerpxtbg/showDetail.do?BILL_CODE='+code,		      
+		           	url: '<%=basePath%>changeerpjsbg/showDetail.do?BILL_CODE='+code,		      
 		            //返回数据的格式
 		        	dataType:'json',		          
 		            success:function(datas){
@@ -421,7 +420,7 @@
 		            	var html = '';
 		      		     html += setDetail(datas);
 		      			$('#detail-tab').html(html);
-		      		    console.log(datas.APPROVAL_STATE);
+		      		    //console.log(datas.APPROVAL_STATE);
                       //2为退回状态
 		      		  if(datas.APPROVAL_STATE==2)
 		    			{
@@ -458,6 +457,10 @@
 		        +item.DEPT_CODE
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 变更原因 ：</div><div class="profile-info-value"><span>'
 		        +item.BG_REASON
+		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 增加角色 ：</div><div class="profile-info-value"><span>'
+		        +item.ADD_ROLE
+		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 删除角色 ：</div><div class="profile-info-value"><span>'
+		        +item.DEL_ROLE
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人部门： </div><div class="profile-info-value"><span>'
 		        +item.USER_DEPT
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人： </div><div class="profile-info-value"><span>'
@@ -477,9 +480,9 @@
 			 var diag = new top.Dialog();
 			 diag.Drag=true;
 			 diag.Title ="系统变更申请单打印";
-			 diag.URL = '<%=basePath%>changeerpxtbg/goPrint.do?BILL_CODE='+encodeURI(Id);
+			 diag.URL = '<%=basePath%>changeerpjsbg/goPrint.do?BILL_CODE='+encodeURI(Id);
 			 diag.Width = 800;
-			 diag.Height = 750;
+			 diag.Height = 650;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮 
@@ -487,7 +490,7 @@
 		}
 		//导出excel
 		function toExcel(){
-			window.location.href='<%=basePath%>changeerpxtbg/excel.do';
+			window.location.href='<%=basePath%>changeerpjsbg/excel.do';
 		}
 
 		//搜索
@@ -497,7 +500,7 @@
 			var keywords = $("#SelectedBillCode").val();
 			$.ajax({
 					type: "POST",
-					url: '<%=basePath%>changeerpxtbg/getPageList.do',
+					url: '<%=basePath%>changeerpjsbg/getPageList.do',
 			    	data: {keywords:keywords},
 					dataType:'json',
 					cache: false,
@@ -523,7 +526,7 @@
 				  $.ajax({
 					  	type: "POST",
 			            //提交的网址
-			           	url: '<%=basePath%>approvalconfig/xtbgReport.do?BUSINESS_CODE=1&BILL_CODE='+encodeURI(billCode),		      
+			           	url: '<%=basePath%>approvalconfig/bgReport.do?BUSINESS_CODE=2&BILL_CODE='+encodeURI(billCode),		      
 			            //返回数据的格式
 			        	dataType:'json',		          
 			            success:function(datas){
@@ -539,13 +542,13 @@
 		}
 		//撤销上报
 		function cancleXtbgReport(billCode){
-			bootbox.confirm("确定要撤销上报吗?", function(result) {
+			bootbox.confirm("确定要对单据"+billCode+"撤销上报吗?", function(result) {
 				if(result) {
 // 					top.jzts();
 					 $.ajax({
 						  	type: "POST",
 				            //提交的网址
-				           	url: '<%=basePath%>approvalconfig/cancleXtbgReport.do?BILL_CODE='+encodeURI(billCode),		      
+				           	url: '<%=basePath%>approvalconfig/cancleReport.do?BILL_CODE='+encodeURI(billCode),		      
 				            //返回数据的格式
 				        	dataType:'json',		          
 				            success:function(datas){	
@@ -570,7 +573,7 @@
 			var keywords = $("#keywords").val();
 			$.ajax({
 					type: "POST",
-					url: '<%=basePath%>changeerpxtbg/getPageList.do',
+					url: '<%=basePath%>changeerpjsbg/getPageList.do',
 			    	data: {keywords:keywords},
 					dataType:'json',
 					cache: false,

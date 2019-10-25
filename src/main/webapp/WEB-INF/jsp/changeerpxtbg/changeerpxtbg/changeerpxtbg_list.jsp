@@ -491,7 +491,7 @@
 			 diag.Title ="系统变更申请单打印";
 			 diag.URL = '<%=basePath%>changeerpxtbg/goPrint.do?BILL_CODE='+encodeURI(Id);
 			 diag.Width = 800;
-			 diag.Height = 750;
+			 diag.Height = 650;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮 
@@ -535,7 +535,7 @@
 				  $.ajax({
 					  	type: "POST",
 			            //提交的网址
-			           	url: '<%=basePath%>approvalconfig/xtbgReport.do?BUSINESS_CODE=1&BILL_CODE='+encodeURI(billCode),		      
+			           	url: '<%=basePath%>approvalconfig/bgReport.do?BUSINESS_CODE=1&BILL_CODE='+encodeURI(billCode),		      
 			            //返回数据的格式
 			        	dataType:'json',		          
 			            success:function(datas){
@@ -551,13 +551,13 @@
 		}
 		//撤销上报
 		function cancleXtbgReport(billCode){
-			bootbox.confirm("确定要撤销上报吗?", function(result) {
+			bootbox.confirm("确定要对单据"+billCode+"撤销上报吗?", function(result) {
 				if(result) {
 // 					top.jzts();
 					 $.ajax({
 						  	type: "POST",
 				            //提交的网址
-				           	url: '<%=basePath%>approvalconfig/cancleXtbgReport.do?BILL_CODE='+encodeURI(billCode),		      
+				           	url: '<%=basePath%>approvalconfig/cancleReport.do?BILL_CODE='+encodeURI(billCode),		      
 				            //返回数据的格式
 				        	dataType:'json',		          
 				            success:function(datas){	

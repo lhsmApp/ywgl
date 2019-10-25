@@ -29,6 +29,7 @@ import com.fh.util.Jurisdiction;
 import com.fh.util.Tools;
 import com.fh.util.date.DateUtils;
 import com.fh.service.approvalconfig.approvalconfig.ApprovalConfigManager;
+import com.fh.service.changeerpxtbg.changeerpjsbg.impl.ChangeErpJsbgService;
 import com.fh.service.changeerpxtbg.changeerpxtbg.impl.ChangeErpXtbgService;
 
 /** 
@@ -46,6 +47,10 @@ public class ApprovalConfigController extends BaseController {
 	
 	@Resource(name="changeerpxtbgService")
 	private ChangeErpXtbgService changeerpxtbgService;
+	
+	@Resource(name="changeErpjsbgService")
+	private ChangeErpJsbgService changeerpjsbgService;
+	
 	
 	
 	/**保存
@@ -179,13 +184,13 @@ public class ApprovalConfigController extends BaseController {
 		mv.addObject("pd", pd);
 		return mv;
 	}
-	/**系统变更单上报
+	/**变更上报
 	 * @param page
 	 * @throws Exception
 	 */
-	@RequestMapping(value="/xtbgReport")
+	@RequestMapping(value="/bgReport")
 	@ResponseBody 
-	public PageData xtbgReport() throws Exception{
+	public PageData bgReport() throws Exception{
 		PageData pd = new PageData();
 		pd = this.getPageData();//获取变更审批表配置信息
 		//首先判断该单据是否上报
@@ -201,7 +206,17 @@ public class ApprovalConfigController extends BaseController {
 		}
 		PageData pd1 = new PageData();
 		pd1 = this.getPageData();//获取申请单相关信息
-		pd1 = changeerpxtbgService.findById(pd1);
+		switch(pd1.getString("BUSINESS_CODE")){
+		case "1":   //系统变更;	 
+			pd1 = changeerpxtbgService.findById(pd1);
+		    break;
+		case "2": //角色变更;		   
+			pd1 = changeerpjsbgService.findById(pd1);
+		    break;	
+		default:
+			
+		    break;
+		}	
 		String unitCode=pd1.getString("UNIT_CODE");//获取申请人单位
 		String userCode=pd1.getString("USER_CODE");//获取申请人编码
 		String businessCode=pd.getString("BUSINESS_CODE");//审批业务编码
@@ -246,9 +261,9 @@ public class ApprovalConfigController extends BaseController {
 	 * @param page
 	 * @throws Exception
 	 */
-	@RequestMapping(value="/cancleXtbgReport")
+	@RequestMapping(value="/cancleReport")
 	@ResponseBody 
-	public PageData cancleXtbgReport() throws Exception{
+	public PageData cancleReport() throws Exception{
 		PageData pd = new PageData();		
 		pd = this.getPageData();
 		//首先判断该单据是否上报

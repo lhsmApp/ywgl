@@ -69,6 +69,9 @@ public class ChangeErpJsbgService implements ChangeErpJsbgManager{
 	public PageData findById(PageData pd)throws Exception{
 		return (PageData)dao.findForObject("ChangeErpJsbfMapper.findById", pd);
 	}
+	public PageData findByBillCode(PageData pd)throws Exception{
+		return (PageData)dao.findForObject("ChangeErpJsbfMapper.findByBillCode", pd);
+	}
 	
 	/**批量删除
 	 * @param ArrayDATA_IDS

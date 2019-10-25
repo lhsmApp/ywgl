@@ -20,8 +20,8 @@
 <body class="no-skin">
 	<div style="width:800;height:600;">	
 		<object classid="clsid:ABB64AAC-D7E8-4733-B052-1B141C92F3CE" width="100%" height="97%">
-			<param name="ReportURL" value='<%=basePath%>${report}' />
-			<param name="DataURL" value='<%=basePath%>changeerpxtbg/PrintXtbg.do?BILL_CODE=${billCode}' />
+			<param name="ReportURL" value='<%=basePath%>${ReportURL}' />
+			<param name="DataURL" value='<%=basePath%>${DataURL}' />
 			<param name="AutoRun" value="true" />
 			<param name="SerialNo" value="GA1F6NS5D6CPYN6FD1G6061B8EFLI5KI0L4Y1233TR5C74WND6898W9DJRJ9Y0AR69VTS4FNJN8L2SD5J9GK3AVET4TGTG4CWFZ4V9E98AWRM5SW4F817198A3UA5Y4TZ9EBIN44QNM56BIA988BR4" />
 			<param name="UserName" value="广州锐浪软件技术有限公司" />
@@ -42,9 +42,6 @@
 		<script type="text/javascript">
 		$(top.hangge());
 <%-- 		var Report='<%=basePath%>${report}'; --%>
-// 		var billCode='${billCode}';
-// 		console.log(billCode);
-
 		$(function() {
 			//日期框
 			$('.date-picker').datepicker({autoclose: true,todayHighlight: true});

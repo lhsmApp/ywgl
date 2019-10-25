@@ -151,11 +151,13 @@
 		a.BILL_STATE,	
 		a.BILL_USER,	
 		a.BILL_DATE,	
-		b.NAME AS UNIT_CODE
+		b.NAME AS UNIT_CODE,
+		c.USERNAME
 		FROM
 		  tb_change_erp_xtbg a,
-		  oa_department b
+		  oa_department b, sys_user c 
 		WHERE b.DEPARTMENT_CODE = a.UNIT_CODE
+		AND a.USER_CODE=c.USER_ID
 	  	AND a.BILL_CODE =#{BILL_CODE} 
 	</select>
 	<!-- 列表 -->
