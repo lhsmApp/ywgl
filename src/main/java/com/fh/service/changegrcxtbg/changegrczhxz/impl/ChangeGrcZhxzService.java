@@ -69,6 +69,9 @@ public class ChangeGrcZhxzService implements ChangeGrcZhxzManager{
 	public PageData findById(PageData pd)throws Exception{
 		return (PageData)dao.findForObject("ChangeGrcZhxzMapper.findById", pd);
 	}
+	public PageData findByBillCode(PageData pd)throws Exception{
+		return (PageData)dao.findForObject("ChangeGrcZhxzMapper.findByBillCode", pd);
+	}
 	
 	/**批量删除
 	 * @param ArrayDATA_IDS

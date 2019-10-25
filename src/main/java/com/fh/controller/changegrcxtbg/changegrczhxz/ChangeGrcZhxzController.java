@@ -21,7 +21,9 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSON;
 import com.fh.controller.base.BaseController;
 import com.fh.entity.Page;
+import com.fh.entity.system.User;
 import com.fh.util.AppUtil;
+import com.fh.util.Const;
 import com.fh.util.ObjectExcelView;
 import com.fh.util.PageData;
 import com.fh.util.Jurisdiction;
@@ -105,6 +107,9 @@ public class ChangeGrcZhxzController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		String userId = user.getUSER_ID();
+		pd.put("BILL_USER", userId);	
 		String keywords = pd.getString("keywords");				//关键词检索条件
 		if(null != keywords && !"".equals(keywords)){
 			pd.put("keywords", keywords.trim());
@@ -118,7 +123,38 @@ public class ChangeGrcZhxzController extends BaseController {
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		return mv;
 	}
-	
+	/**显示该用户提报的变更申请单
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/getPageList")
+	public @ResponseBody List<PageData> getPageList(Page page) throws Exception{
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		String userId = user.getUSER_ID();
+		pd.put("BILL_USER", userId);	
+		String keywords = pd.getString("keywords");				//关键词检索条件
+		if(null != keywords && !"".equals(keywords)){
+			pd.put("keywords", keywords.trim());
+		}
+		page.setPd(pd);
+		List<PageData> varList = changegrczhxzService.list(page);
+		for(PageData p:varList){
+			if(null!=p.getString("APPROVAL_STATE")&&!"".equals(p.getString("APPROVAL_STATE"))){
+				if(p.getString("APPROVAL_STATE").equals("0")){
+					p.put("APPROVAL_STATE", "审批中");
+				}else if(p.getString("APPROVAL_STATE").equals("1")){
+					p.put("APPROVAL_STATE", "已完成");
+				}else if(p.getString("APPROVAL_STATE").equals("2")){
+					p.put("APPROVAL_STATE", "退回");
+				}
+			}else{
+				p.put("APPROVAL_STATE", "未上报");
+			}		
+		} 	
+		return varList;
+	}
 	/**去新增页面
 	 * @param
 	 * @throws Exception
@@ -160,13 +196,33 @@ public class ChangeGrcZhxzController extends BaseController {
 		pd = this.getPageData();
 		pd = changegrczhxzService.findById(pd);	//根据ID读取
 		JSONArray json = JSONArray.fromObject(pd); 
-		mv.setViewName("changegrczhxz/changegrczhxz/PrintReport");
-		mv.addObject("report", "static/js/gridReport/grf/erpSystemChange.grf");
+		mv.setViewName("changeerpxtbg/changeerpxtbg/PrintReport");
+		mv.addObject("ReportURL", "static/js/gridReport/grf/changeGrcZhxz.grf");
+		mv.addObject("DataURL", "changegrczhxz/PrintZhxz.do?BILL_CODE="+pd.getString("BILL_CODE"));
 		mv.addObject("msg", "edit");
 		mv.addObject("pd", pd);
-		mv.addObject("jsonStr", json);
+		mv.addObject("jsonStr", json);		
 		return mv;
 	}	
+	/**打印
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/PrintZhxz")
+	@ResponseBody 
+	public  PageData PrintZhzx() throws Exception{
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		//根据BILL_CODE读取表单信息以及表单上申请人所在的单位及部门名称
+		pd = changegrczhxzService.findByBillCode(pd);	
+		List<PageData> listPageData=new ArrayList<PageData>();
+		listPageData.add(pd);
+		
+		PageData pdResult=new PageData();
+		pdResult.put("Table", listPageData);
+		return 	pdResult;
+	}
+	
 	/**列表
 	 * @param page
 	 * @throws Exception

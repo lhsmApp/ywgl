@@ -169,7 +169,7 @@
 					"Width":2.59292,
 					"Height":0.396875,
 					"TextAlign":"MiddleCenter",
-					"DataField":"UNIT_CODE"
+					"DataField":"UNIT_NAME"
 				},
 				{
 					"Type":"Line",
@@ -203,7 +203,7 @@
 					"Width":2.64583,
 					"Height":0.396875,
 					"TextAlign":"MiddleCenter",
-					"DataField":"UNIT_NAME"
+					"DataField":"DEPT_CODE"
 				},
 				{
 					"Type":"Line",

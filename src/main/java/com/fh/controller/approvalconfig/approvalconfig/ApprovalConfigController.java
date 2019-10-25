@@ -31,6 +31,9 @@ import com.fh.util.date.DateUtils;
 import com.fh.service.approvalconfig.approvalconfig.ApprovalConfigManager;
 import com.fh.service.changeerpxtbg.changeerpjsbg.impl.ChangeErpJsbgService;
 import com.fh.service.changeerpxtbg.changeerpxtbg.impl.ChangeErpXtbgService;
+import com.fh.service.changegrcxtbg.changegrcqxbg.impl.ChangeGrcQxbgService;
+import com.fh.service.changegrcxtbg.changegrczhxz.impl.ChangeGrcZhxzService;
+import com.fh.service.changegrcxtbg.changegrczhzx.impl.ChangeGrcZhzxService;
 
 /** 
  * 说明：TB_APPROVAL_BUSINESS_CONFIG
@@ -51,6 +54,14 @@ public class ApprovalConfigController extends BaseController {
 	@Resource(name="changeErpjsbgService")
 	private ChangeErpJsbgService changeerpjsbgService;
 	
+	@Resource(name="changegrcqxbgService")
+	private ChangeGrcQxbgService changegrcqxbgService;
+	
+	@Resource(name="changegrczhxzService")
+	private ChangeGrcZhxzService changegrczhxzService;
+	
+	@Resource(name="changegrczhzxService")
+	private ChangeGrcZhzxService changegrczhzxService;
 	
 	
 	/**保存
@@ -213,6 +224,15 @@ public class ApprovalConfigController extends BaseController {
 		case "2": //角色变更;		   
 			pd1 = changeerpjsbgService.findById(pd1);
 		    break;	
+		case "3": //GRC账号新增;		   
+			pd1 = changegrczhxzService.findById(pd1);
+		    break;
+		case "4": //GRC权限变更;		   
+			pd1 = changegrcqxbgService.findById(pd1);
+		    break;
+		case "5": //GRC账号撤销;		   
+			pd1 = changegrczhzxService.findById(pd1);
+		    break;
 		default:
 			
 		    break;

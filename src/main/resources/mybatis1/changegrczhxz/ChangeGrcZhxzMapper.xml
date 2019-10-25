@@ -112,26 +112,71 @@
 		BILL_CODE = #{BILL_CODE}
 	</update>
 	
-	<!-- 通过ID获取数据 -->
+		<!-- 通过ID获取数据 -->
 	<select id="findById" parameterType="pd" resultType="pd">
-		select 
-		<include refid="Field"></include>
-		from 
-		<include refid="tableName"></include>
-		where 
-			BILL_CODE = #{BILL_CODE}
+		SELECT 
+				a.BILL_CODE,
+				a.UNIT_CODE,		
+				a.DEPT_CODE,	
+				a.ENTRY_DATE,	
+				a.SERIAL_NUM,	
+				a.USER_CODE,	
+				a.USER_DEPT,	
+				a.USER_JOB,	
+				a.USER_CONTACT,	
+				a.EFFECTIVE_DATE,		
+				a.SYSTEM SYSTEM,	
+				a.ACCOUNT_NEW,
+				a.ACCOUNT_VALIDITY,
+				a.ACCOUNT_REASON,
+				a.ACCOUNT_ROLES,
+				a.BILL_STATE,	
+				a.BILL_USER,	
+				a.BILL_DATE,
+				b.APPROVAL_STATE
+			FROM
+				tb_change_grc_zhxz a  left join tb_approval_main b		
+			on
+			a.BILL_CODE=b.BILL_CODE
+			where
+			a.BILL_CODE=#{BILL_CODE}
 	</select>
-	
-	<!-- 列表 -->
+<!-- 列表 -->
 	<select id="datalistPage" parameterType="page" resultType="pd">
-		select
-		<include refid="Field"></include>
-		from 
-		<include refid="tableName"></include>
-		where 1=1
+		SELECT * FROM 
+			(SELECT
+				a.BILL_CODE,
+				a.UNIT_CODE,		
+				a.DEPT_CODE,	
+				a.ENTRY_DATE,	
+				a.SERIAL_NUM,	
+				a.USER_CODE,	
+				a.USER_DEPT,	
+				a.USER_JOB,	
+				a.USER_CONTACT,	
+				a.EFFECTIVE_DATE,		
+				a.SYSTEM,	
+				a.ACCOUNT_NEW,
+				a.ACCOUNT_VALIDITY,
+				a.ACCOUNT_REASON,
+				a.ACCOUNT_ROLES,
+				a.BILL_STATE,	
+				a.BILL_USER,	
+				a.BILL_DATE,
+				b.APPROVAL_STATE
+				FROM 
+				tb_change_grc_zhxz a LEFT JOIN tb_approval_main b
+				ON a.BILL_CODE=b.BILL_CODE)  AS t
+		<where>
+			(BILL_USER=#{pd.BILL_USER}
+			or
+			USER_CODE=#{pd.BILL_USER})
+<!-- 		 AND -->
+<!-- 		(APPROVAL_STATE='2' OR  APPROVAL_STATE='' OR APPROVAL_STATE IS NULL) -->
 		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
 			and
 				(
+				BG_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 				<!--	根据需求自己加检索条件
 					字段1 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 					 or 
@@ -139,8 +184,38 @@
 				-->
 				)
 		</if>
+		</where>
 	</select>
-	
+	<!-- 根据BILL_CODE获取表单信息以及表单上申请人所在的单位及部门名称-->
+	<select id="findByBillCode" parameterType="pd" resultType="pd">
+		SELECT 
+				a.BILL_CODE,	
+				a.UNIT_CODE,		
+				a.DEPT_CODE,	
+				a.ENTRY_DATE,	
+				a.SERIAL_NUM,	
+				a.USER_CODE,	
+				a.USER_DEPT,	
+				a.USER_JOB,	
+				a.USER_CONTACT,	
+				a.EFFECTIVE_DATE,		
+				a.SYSTEM SYSTEM,	
+				a.ACCOUNT_NEW,
+				a.ACCOUNT_VALIDITY,
+				a.ACCOUNT_REASON,
+				a.ACCOUNT_ROLES,
+				a.BILL_STATE,	
+				a.BILL_USER,	
+				a.BILL_DATE,	
+				b.NAME AS UNIT_NAME,
+				c.USERNAME
+			FROM
+		  tb_change_grc_zhxz a,
+		  oa_department b, sys_user c 
+		WHERE b.DEPARTMENT_CODE = a.UNIT_CODE
+		AND a.USER_CODE=c.USER_ID
+	  	AND a.BILL_CODE =#{BILL_CODE} 
+	</select>
 	<!-- 列表(全部) -->
 	<select id="listAll" parameterType="pd" resultType="pd">
 		select

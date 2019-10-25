@@ -425,7 +425,7 @@
 		//动态加载变更数据
 		function setDiv(item){
 		    var div = '<li  class="item-grey clearfix" onclick="showDetail(\''+item.BILL_CODE+'\');"><div><label class="inline" style="margin-bottom:5px;"><span class="list-item-value-title">'
-		        + item.BG_NAME
+		        + "GRC帐号新增"
 		        + '</span></label></div><div><label class="inline"><span class="list-item-info">单位:&nbsp;</span><span class="list-item-value">'
 		        + item.UNIT_CODE
 		        +'</span></label><label class="inline pull-right"><span class="list-item-info">科室：<span class="list-item-value">'
@@ -477,7 +477,7 @@
 		//动态加载变更单详情
 		function setDetail(item){
 		    var div = '<div class="profile-user-info"><div class="profile-info-row"><div class="profile-info-name">问题：</div><div class="profile-info-value"><span>'
-		        + item.BG_NAME
+		    	+ "GRC帐号新增"
 		        + '</span></div></div><div class="profile-info-row"><div class="profile-info-name">单位：</div><div class="profile-info-value"><i class="fa fa-map-marker light-orange bigger-110"></i><span>'
 		        + item.UNIT_CODE		       
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 科室： </div><div class="profile-info-value"><span>'

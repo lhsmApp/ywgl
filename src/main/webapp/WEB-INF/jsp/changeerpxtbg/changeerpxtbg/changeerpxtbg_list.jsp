@@ -121,7 +121,9 @@
 										<li class="active">
 											<a data-toggle="tab" href="#detail-tab">详情</a>
 										</li>
-		
+										<li>
+											<a data-toggle="tab" href="#report-tab">提报</a>
+										</li>
 										<li>
 											<a data-toggle="tab" href="#assigh-tab">分配</a>
 										</li>
@@ -141,8 +143,8 @@
 												<i class="ace-icon fa fa-list"></i>
 												Sortable Lists
 											</h4> -->
-											<form action="problemAssign/savaProblemAssign.do" name="problemAssignForm" id="problemAssignForm" method="post">
-												<input type="hidden" name="problemID" id="problemID" value="${pd.PROBLEM_ID }"/>
+											<form action="" name="xtbgAssignForm" id="xtbgAssignForm" method="post">
+												<input type="hidden" name="xtbgID" id="xtbgID" value="${pd.BILL_CODE }"/>
 												<div id="zhongxin" style="padding-top: 13px;">
 													<div style="margin:10px 0px;">
 														<label for="form-field-select-1">受理人</label>
@@ -151,12 +153,6 @@
 															<option value="AL">Alabama</option>
 															<option value="AK">Alaska</option>
 														</select>
-														<%-- <select class="chosen-select form-control" name="ROLE_ID" id="role_id" data-placeholder="请选择角色" style="vertical-align:top;" style="width:98%;" >
-															<option value=""></option>
-															<c:forEach items="${roleList}" var="role">
-																<option value="${role.ROLE_ID }" <c:if test="${role.ROLE_ID == pd.ROLE_ID }">selected</c:if>>${role.ROLE_NAME }</option>
-															</c:forEach>
-														</select> --%>
 													</div>
 													
 													<div style="margin:10px 0px;">
@@ -192,6 +188,43 @@
 										</div>
 										<div id="detail-tab" class="tab-pane active">
 											
+										</div>
+										<div id="report-tab" class="tab-pane">
+													<form action="" name="problemAssignForm" id="problemAssignForm" method="post">
+												<input type="hidden" name="xtbgID" id="xtbgID" value="${pd.BILL_CODE }"/>
+												<div id="zhongxin" style="padding-top: 13px;">
+													<div style="margin:10px 0px;">
+														<label for="form-field-select-1">系统变更名称</label>
+														<input type="text" name="xtbg_title" id="xtbg_title" class="form-control" placeholder="请输入系统变更名称"/>
+													</div>
+													
+													<div style="margin:10px 0px;">
+														<label for="form-field-select-1">申请人</label>
+														<input type="text" name="xtbg_uesr" id="xtbg_uesr" class="form-control" placeholder="请输入申请人"/>
+													</div>
+												    <div style="margin:10px 0px;">
+														<label for="form-field-select-1">申请人单位</label>
+														<input type="text" name="xtbg_unit" id="xtbg_unit" class="form-control" placeholder="请输入申请人单位"/>
+													</div>
+													   <div style="margin:10px 0px;">
+														<label for="form-field-select-1">申请人部门</label>
+														<input type="text" name="xtbg_depart" id="xtbg_depart" class="form-control" placeholder="请输入申请人部门"/>
+													</div>
+													<div style="margin:10px 0px;">
+														<label for="form-field-select-1">变更内容及原因</label>
+														<input type="text" name="xtbg_reason" id="xtbg_reason" class="form-control" placeholder="请输入变更内容及原因"/>
+													</div>
+													<div style="margin:10px 0px;">
+														<label for="form-field-select-1">联系方式</label>
+														<input type="text" name="xtbg_contact" id="xtbg_contact" class="form-control" placeholder="请输入联系方式"/>
+													</div>
+													<hr />
+													<div>
+														<a class="btn btn-mini btn-primary" onclick="save();">保存</a>
+														<a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">取消</a>
+													</div>		
+												</div>											
+											</form>
 										</div>
 									</div>
 								</div>

@@ -7,6 +7,7 @@
 	String basePath = request.getScheme() + "://"
 			+ request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
+	String user=request.getUserPrincipal().getName();
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,199 +28,218 @@
 		<div class="main-content">
 			<div class="main-content-inner">
 				<div class="page-content">
+						<!-- 检索  -->
+						<div class="row">
+						    <div class="col-xs-12">
+							    <div class="widget-box" >
+								    <div class="widget-body">
+									    <div class="widget-main">
+										    <form class="form-inline">
+												<span class="input-icon pull-left" style="margin-right: 5px;">
+													<input id="SelectedBillCode" class="nav-search-input" autocomplete="off" type="text" name="SelectedBillCode" value="${pd.keywords }" placeholder="请输入变更申请名称"> 
+													<i class="ace-icon fa fa-search nav-search-icon"></i>
+												</span>																			 
+												<button type="button" class="btn btn-info btn-sm" onclick="tosearch();">
+												    <i class="ace-icon fa fa-search bigger-110"></i>
+												</button>									
+												            <label class="btn btn-sm btn-danger " onclick="add()"> 
+												    	          <i class="ace-icon fa  glyphicon-plus bigger-160"></i>新增
+												            </label> 
+												            <label class="btn btn-sm btn-primary" onclick="edit(bill_code)"> 
+												            <i class="ace-icon fa fa-pencil-square-o bigger-160"></i>编辑
+												            </label> 
+												            <label class="btn btn-sm btn-success" onclick="del(bill_code)"> 	
+												            <i class="ace-icon fa fa-trash-o bigger-160"></i>删除
+												            </label>
+												            <label class="btn btn-sm btn-purple" onclick="report(bill_code)"> 
+<!-- 												        <span  class="bigger-110">上报</span>  -->
+												    	    <i class="ace-icon fa fa-share bigger-160"></i>上报
+												            </label>
+												            <label class="btn btn-sm btn-warning" onclick="cancleReport(bill_code)">
+													        <i class="ace-icon fa fa-undo bigger-160"></i>撤销上报
+												            </label>
+												             <label class="btn btn-sm btn-pink" onclick="printf(bill_code)">
+												             <i class="ace-icon fa fa-print bigger-160"></i>
+															打印
+												            </label>										
+										    </form>
+									    </div>
+								    </div>
+							    </div>
+						    </div>
+						    
+					    </div>	
 					<div class="row">
-						<div class="col-xs-12">
+						<div class="col-xs-4">
+						<!-- 检索  -->
+						<form style="margin:5px;" action="user/listUsers.do" method="post" name="userForm" id="userForm">
+<!-- 							<div class="nav-search" style="margin:10px 0px;"> -->
+<!-- 								<span class="input-icon" style="width:86%"> -->
+<%-- 									<input style="width:100%" class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词" /> --%>
+<!-- 									<i class="ace-icon fa fa-search nav-search-icon"></i> -->
+<!-- 								</span> -->
+<!-- 								<button style="margin-bottom:3px;" class="btn btn-light btn-minier" onclick="searchs();"  title="检索"> -->
+<!-- 									<i id="nav-search-icon" class="ace-icon fa fa-search bigger-120 nav-search-icon blue"></i> -->
+<!-- 									<i class="ace-icon fa fa-signal icon-only bigger-150"></i> -->
+<!-- 								</button> -->
+<!-- 							</div> -->
 							
-						<!-- 检索  -->
-						<form action="changegrczhzx/list.do" method="post" name="Form" id="Form">
-						<table style="margin-top:5px;">
-							<tr>
-								<td>
-									<div class="nav-search">
-										<span class="input-icon">
-											<input type="text" placeholder="这里输入关键词" class="nav-search-input" id="nav-search-input" autocomplete="off" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词"/>
-											<i class="ace-icon fa fa-search nav-search-icon"></i>
-										</span>
-									</div>
-								</td>
-								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastStart" id="lastStart"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="开始日期" title="开始日期"/></td>
-								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastEnd" name="lastEnd"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="结束日期"/></td>
-								<td style="vertical-align:top;padding-left:2px;">
-								 	<select class="chosen-select form-control" name="name" id="id" data-placeholder="请选择" style="vertical-align:top;width: 120px;">
-									<option value=""></option>
-									<option value="">全部</option>
-									<option value="">1</option>
-									<option value="">2</option>
-								  	</select>
-								</td>
-								<c:if test="${QX.cha == 1 }">
-								<td style="vertical-align:top;padding-left:2px"><a class="btn btn-light btn-xs" onclick="tosearch();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
-								</c:if>
-								<c:if test="${QX.toExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="toExcel();" title="导出到EXCEL"><i id="nav-search-icon" class="ace-icon fa fa-download bigger-110 nav-search-icon blue"></i></a></td></c:if>
-							</tr>
-						</table>
-						<!-- 检索  -->
-					
-						<table id="simple-table" class="table table-striped table-bordered table-hover" style="margin-top:5px;">	
-							<thead>
-								<tr>
-									<th class="center" style="width:35px;">
-									<label class="pos-rel"><input type="checkbox" class="ace" id="zcheckbox" /><span class="lbl"></span></label>
-									</th>
-									<th class="center" style="width:50px;">序号</th>
-									<th class="center">备注1</th>
-									<th class="center">备注2</th>
-									<th class="center">备注3</th>
-									<th class="center">备注4</th>
-									<th class="center">备注5</th>
-									<th class="center">备注6</th>
-									<th class="center">备注7</th>
-									<th class="center">备注8</th>
-									<th class="center">备注9</th>
-									<th class="center">备注10</th>
-									<th class="center">备注11</th>
-									<th class="center">备注12</th>
-									<th class="center">备注13</th>
-									<th class="center">备注14</th>
-									<th class="center">备注15</th>
-									<th class="center">备注16</th>
-									<th class="center">备注17</th>
-									<th class="center">备注18</th>
-									<th class="center">备注19</th>
-									<th class="center">备注20</th>
-									<th class="center">备注21</th>
-									<th class="center">操作</th>
-								</tr>
-							</thead>
-													
-							<tbody>
-							<!-- 开始循环 -->	
-							<c:choose>
-								<c:when test="${not empty varList}">
-									<c:if test="${QX.cha == 1 }">
-									<c:forEach items="${varList}" var="var" varStatus="vs">
-										<tr>
-											<td class='center'>
-												<label class="pos-rel"><input type='checkbox' name='ids' value="${var.CHANGEGRCZHZX_ID}" class="ace" /><span class="lbl"></span></label>
-											</td>
-											<td class='center' style="width: 30px;">${vs.index+1}</td>
-											<td class='center'>${var.BILL_CODE}</td>
-											<td class='center'>${var.UNIT_CODE}</td>
-											<td class='center'>${var.DEPT_CODE}</td>
-											<td class='center'>${var.ENTRY_DATE}</td>
-											<td class='center'>${var.SERIAL_NUM}</td>
-											<td class='center'>${var.USER_CODE}</td>
-											<td class='center'>${var.USER_DEPT}</td>
-											<td class='center'>${var.USER_JOB}</td>
-											<td class='center'>${var.USER_CONTACT}</td>
-											<td class='center'>${var.EFFECTIVE_DATE}</td>
-											<td class='center'>${var.SYSTEM}</td>
-											<td class='center'>${var.ACCOUNT_NAME}</td>
-											<td class='center'>${var.CANCLE_REASON}</td>
-											<td class='center'>${var.BILL_STATE}</td>
-											<td class='center'>${var.BILL_USER}</td>
-											<td class='center'>${var.BILL_DATE}</td>
-											<td class='center'>${var.CUS_COLUMN1}</td>
-											<td class='center'>${var.CUS_COLUMN2}</td>
-											<td class='center'>${var.CUS_COLUMN3}</td>
-											<td class='center'>${var.CUS_COLUMN4}</td>
-											<td class='center'>${var.CUS_COLUMN5}</td>
-											<td class="center">
-												<c:if test="${QX.edit != 1 && QX.del != 1 }">
-												<span class="label label-large label-grey arrowed-in-right arrowed-in"><i class="ace-icon fa fa-lock" title="无权限"></i></span>
-												</c:if>
-												<div class="hidden-sm hidden-xs btn-group">
-													<c:if test="${QX.edit == 1 }">
-													<a class="btn btn-xs btn-success" title="编辑" onclick="edit('${var.CHANGEGRCZHZX_ID}');">
-														<i class="ace-icon fa fa-pencil-square-o bigger-120" title="编辑"></i>
-													</a>
-													</c:if>
-													<c:if test="${QX.del == 1 }">
-													<a class="btn btn-xs btn-danger" onclick="del('${var.CHANGEGRCZHZX_ID}');">
-														<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
-													</a>
-													</c:if>
-												</div>
-												<div class="hidden-md hidden-lg">
-													<div class="inline pos-rel">
-														<button class="btn btn-minier btn-primary dropdown-toggle" data-toggle="dropdown" data-position="auto">
-															<i class="ace-icon fa fa-cog icon-only bigger-110"></i>
-														</button>
-			
-														<ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
-															<c:if test="${QX.edit == 1 }">
-															<li>
-																<a style="cursor:pointer;" onclick="edit('${var.CHANGEGRCZHZX_ID}');" class="tooltip-success" data-rel="tooltip" title="修改">
-																	<span class="green">
-																		<i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
-																	</span>
-																</a>
-															</li>
-															</c:if>
-															<c:if test="${QX.del == 1 }">
-															<li>
-																<a style="cursor:pointer;" onclick="del('${var.CHANGEGRCZHZX_ID}');" class="tooltip-error" data-rel="tooltip" title="删除">
-																	<span class="red">
-																		<i class="ace-icon fa fa-trash-o bigger-120"></i>
-																	</span>
-																</a>
-															</li>
-															</c:if>
-														</ul>
-													</div>
-												</div>
-											</td>
-										</tr>
-									
-									</c:forEach>
-									</c:if>
-									<c:if test="${QX.cha == 0 }">
-										<tr>
-											<td colspan="100" class="center">您无权查看</td>
-										</tr>
-									</c:if>
-								</c:when>
-								<c:otherwise>
-									<tr class="main_info">
-										<td colspan="100" class="center" >没有相关数据</td>
-									</tr>
-								</c:otherwise>
-							</c:choose>
-							</tbody>
-						</table>
-						<div class="page-header position-relative">
-						<table style="width:100%;">
-							<tr>
-								<td style="vertical-align:top;">
-									<c:if test="${QX.add == 1 }">
-									<a class="btn btn-mini btn-success" onclick="add();">新增</a>
-									</c:if>
-									<c:if test="${QX.del == 1 }">
-									<a class="btn btn-mini btn-danger" onclick="makeAll('确定要删除选中的数据吗?');" title="批量删除" ><i class='ace-icon fa fa-trash-o bigger-120'></i></a>
-									</c:if>
-								</td>
-								<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
-							</tr>
-						</table>
-						</div>
+							
+							<ul id="tasks" class="item-list">
+							
+							</ul>						
+	
+				
 						</form>
-					
-						</div>
-						<!-- /.col -->
 					</div>
-					<!-- /.row -->
-				</div>
-				<!-- /.page-content -->
-			</div>
-		</div>
-		<!-- /.main-content -->
-
-		<!-- 返回顶部 -->
-		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
-			<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
-		</a>
-
-	</div>
+					
+					<div class="col-xs-8">
+						<div class="widget-box transparent" id="recent-box">
+							<div class="widget-header">
+								<div style="height:25%">
+									<ul class="steps">
+									<li id="step1" data-step="1" class="active">
+										<span class="step">1</span>
+										<span class="title">发起</span>
+									</li>
+									<li id="step2"  data-step="2">
+										<span class="step">2</span>
+										<span class="title">审批中</span>
+									</li>
+									<li id="step3" data-step="3">
+										<span class="step">3</span>
+										<span class="title">完成</span>
+									</li>
+									</ul>
+								</div>		
+								<h4 class="widget-title lighter smaller">
+									<i class="ace-icon fa fa-rss orange"></i>详情
+								</h4>
+		
+								<div class="widget-toolbar no-border">
+									<ul class="nav nav-tabs" id="recent-tab">
+										<li class="active">
+											<a data-toggle="tab" href="#detail-tab">详情</a>
+										</li>
+										<li>
+											<a data-toggle="tab" href="#report-tab">提报</a>
+										</li>
+										<li>
+											<a data-toggle="tab" href="#assigh-tab">分配</a>
+										</li>
+		
+										<li>
+											<a data-toggle="tab" href="#comment-tab">关闭</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+		
+							<div class="widget-body">
+								<div class="widget-main padding-4">
+									<div class="tab-content padding-8">
+										<div id="assigh-tab" class="tab-pane">
+											<!-- <h4 class="smaller lighter green">
+												<i class="ace-icon fa fa-list"></i>
+												Sortable Lists
+											</h4> -->
+											<form action="" name="xtbgAssignForm" id="xtbgAssignForm" method="post">
+												<input type="hidden" name="xtbgID" id="xtbgID" value="${pd.BILL_CODE }"/>
+												<div id="zhongxin" style="padding-top: 13px;">
+													<div style="margin:10px 0px;">
+														<label for="form-field-select-1">受理人</label>
+														<select class="form-control" id="form-field-select-1">
+															<option value=""></option>
+															<option value="AL">Alabama</option>
+															<option value="AK">Alaska</option>
+														</select>
+													</div>
+													
+													<div style="margin:10px 0px;">
+														<label for="form-field-select-2">提问系统</label>
+														<select class="form-control" id="form-field-select-2">
+															<option value=""></option>
+															<option value="AL">ERP系统</option>
+															<option value="AK">财务系统</option>
+														</select>
+													</div>
+													
+													<div style="margin:10px 0px;">
+														<label for="form-field-select-3">优先级</label>
+														<select class="form-control" id="form-field-select-3">
+															<option value=""></option>
+															<option value="AL">紧急</option>
+															<option value="AK">一般</option>
+														</select>
+													</div>
+													<%-- <input type="number" name="PHONE" id="PHONE"  value="${pd.PHONE }"  maxlength="32" placeholder="这里输入手机号" title="手机号" style="width:98%;"/> --%>
+													<div style="margin:20px 0px;">
+														<span>分配人：</span><span>张三</span>
+														<span style="margin-left:30px;">分配时间：</span><span>2019-05-23</span>
+													</div>
+													<hr />
+													<div>
+														<a class="btn btn-mini btn-primary" onclick="save();">保存</a>
+														<a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">取消</a>
+													</div>		
+												</div>
+												<div id="zhongxin2" class="center" style="display:none"><br/><br/><br/><br/><img src="static/images/jiazai.gif" /><br/><h4 class="lighter block green"></h4></div>
+											</form>
+										</div>
+										<div id="detail-tab" class="tab-pane active">
+											
+										</div>
+										<div id="report-tab" class="tab-pane">
+													<form action="" name="problemAssignForm" id="problemAssignForm" method="post">
+												<input type="hidden" name="xtbgID" id="xtbgID" value="${pd.BILL_CODE }"/>
+												<div id="zhongxin" style="padding-top: 13px;">													
+													<div style="margin:10px 0px;">
+														<label for="form-field-select-1">申请人</label>
+														<input type="text" name="xtbg_uesr" id="xtbg_uesr" class="form-control" placeholder="请输入申请人"/>
+													</div>
+												    <div style="margin:10px 0px;">
+														<label for="form-field-select-1">申请人单位</label>
+														<input type="text" name="xtbg_unit" id="xtbg_unit" class="form-control" placeholder="请输入申请人单位"/>
+													</div>
+													   <div style="margin:10px 0px;">
+														<label for="form-field-select-1">申请人部门</label>
+														<input type="text" name="xtbg_depart" id="xtbg_depart" class="form-control" placeholder="请输入申请人部门"/>
+													</div>
+													<div style="margin:10px 0px;">
+														<label for="form-field-select-1">账号撤销原因</label>
+														<input type="text" name="xtbg_reason" id="xtbg_reason" class="form-control" placeholder="请输入变更内容及原因"/>
+													</div>
+													<div style="margin:10px 0px;">
+														<label for="form-field-select-1">联系方式</label>
+														<input type="text" name="xtbg_contact" id="xtbg_contact" class="form-control" placeholder="请输入联系方式"/>
+													</div>
+													<hr />
+													<div>
+														<a class="btn btn-mini btn-primary" onclick="save();">保存</a>
+														<a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">取消</a>
+													</div>		
+												</div>											
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>	
+					</div>			
+ 					<div class="row">
+						    <div class="col-xs-12">
+						        <table id="jqGridBase"></table>
+						        <div id="jqGridBasePager"></div>
+						    </div>
+					    </div>
+				    </div>
+			    </div>
+		    </div>
+	
+		    <!-- 返回顶部 -->
+		    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+			    <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+		    </a>
+	    </div>
 	<!-- /.main-container -->
 
 	<!-- basic scripts -->
@@ -236,20 +256,23 @@
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 	<script type="text/javascript">
+	    var bill_code=undefined;
+	    //var unit_Code=undefined;
 		$(top.hangge());//关闭加载状态
-		//检索
-		function tosearch(){
-			top.jzts();
-			$("#Form").submit();
-		}
+// 		//检索
+// 		function tosearch(){
+// 			top.jzts();
+// 			$("#Form").submit();
+// 		}
 		$(function() {
-		
+			var data=${varList};
+			showDetail(data[0].BILL_CODE);
 			//日期框
 			$('.date-picker').datepicker({
 				autoclose: true,
 				todayHighlight: true
 			});
-			
+			getChangrData();
 			//下拉框
 			if(!ace.vars['touch']) {
 				$('.chosen-select').chosen({allow_single_deselect:true}); 
@@ -296,8 +319,8 @@
 			 diag.Drag=true;
 			 diag.Title ="新增";
 			 diag.URL = '<%=basePath%>changegrczhzx/goAdd.do';
-			 diag.Width = 450;
-			 diag.Height = 355;
+			 diag.Width = 750;
+			 diag.Height = 455;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮
@@ -307,7 +330,7 @@
 						 top.jzts();
 						 setTimeout("self.location=self.location",100);
 					 }else{
-						 nextPage(${page.currentPage});
+						 //nextPage(${page.currentPage});
 					 }
 				}
 				diag.close();
@@ -320,9 +343,12 @@
 			bootbox.confirm("确定要删除吗?", function(result) {
 				if(result) {
 					top.jzts();
-					var url = "<%=basePath%>changegrczhzx/delete.do?CHANGEGRCZHZX_ID="+Id+"&tm="+new Date().getTime();
+					var url = "<%=basePath%>changegrczhzx/delete.do?BILL_CODE="+encodeURI(Id);
 					$.get(url,function(data){
-						nextPage(${page.currentPage});
+						bootbox.dialog({
+							message: "<span class='bigger-110'>删除成功</span>",
+						});		
+						initList();
 					});
 				}
 			});
@@ -334,15 +360,15 @@
 			 var diag = new top.Dialog();
 			 diag.Drag=true;
 			 diag.Title ="编辑";
-			 diag.URL = '<%=basePath%>changegrczhzx/goEdit.do?CHANGEGRCZHZX_ID='+Id;
-			 diag.Width = 450;
-			 diag.Height = 355;
+			 diag.URL = '<%=basePath%>changegrczhzx/goEdit.do?BILL_CODE='+encodeURI(Id);
+			 diag.Width = 750;
+			 diag.Height = 455;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮 
 			 diag.CancelEvent = function(){ //关闭事件
 				 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
-					 nextPage(${page.currentPage});
+					 //nextPage(${page.currentPage});
 				}
 				diag.close();
 			 };
@@ -394,10 +420,231 @@
 				}
 			});
 		};
-		
+		var data=${varList};
+		//循环加载到页面
+		function getChangrData(){
+		    var html = '';
+		    for(var i = 0;i<data.length;i++){
+		        html += setDiv(data[i]);
+		    }
+		    //document.getElementById("tasks").innerHTML = html;
+			$('#tasks').html(html);
+		}		
+		//动态加载变更数据
+		function setDiv(item){
+		    var div = '<li  class="item-grey clearfix" onclick="showDetail(\''+item.BILL_CODE+'\');"><div><label class="inline" style="margin-bottom:5px;"><span class="list-item-value-title">'
+		        + "账号撤销"
+		        + '</span></label></div><div><label class="inline"><span class="list-item-info">单号:&nbsp;</span><span class="list-item-value">'
+		        + item.BILL_CODE
+		        +'</span></label><label class="inline pull-right"><span class="list-item-info">科室：</span><span class="list-item-value">'
+		        + item.DEPT_CODE
+		        +'</span></label></div><div><label class="inline"><span class="list-item-info">状态:&nbsp;</span><span class="list-item-value">'
+		        + item.APPROVAL_STATE
+		        +'</span></label><label class="inline pull-right"><span class="list-item-info">单位:&nbsp;</span><span class="list-item-value">'
+		        + item.UNIT_CODE
+		        +'</span></label></div><div><label class="inline"><span class="list-item-info">账号撤销原因:&nbsp;</span><span class="list-item-value">'
+		        + item.CANCLE_REASON
+		        +'</span></label><label class="inline pull-right"><span class="list-item-info">申请日期:&nbsp;'
+		        + item.ENTRY_DATE
+		        +'</span></label></div></li>';
+		    return div;
+		}
+		function showDetail(code){
+			  $.ajax({
+				  	type: "POST",
+		            //提交的网址
+		           	url: '<%=basePath%>changegrczhzx/showDetail.do?BILL_CODE='+code,		      
+		            //返回数据的格式
+		        	dataType:'json',		          
+		            success:function(datas){
+		            	//全局变量存放当前点击的变更申请单号
+		            	bill_code=datas.BILL_CODE;
+		            	var html = '';
+		      		     html += setDetail(datas);
+		      			$('#detail-tab').html(html);
+		      		    console.log(datas.APPROVAL_STATE);
+                      //2为退回状态
+		      		  if(datas.APPROVAL_STATE==2)
+		    			{
+		    			$("#step1").removeClass('active');
+		    			$("#step2").removeClass('active');
+		    			$("#step3").removeClass('active');
+		    			}else if(datas.APPROVAL_STATE==0)//0为审批中
+		    			{
+		      			$("#step1").addClass('active');
+		    			$("#step2").addClass('active');
+		    			$("#step3").removeClass('active');
+		    			}else if (datas.APPROVAL_STATE==1)//1 为完成状态
+						{
+		      			$("#step1").addClass('active');
+		    			$("#step2").addClass('active');
+			    		$("#step3").addClass('active');
+		    			}else{
+		    				$("#step1").addClass('active');
+			    			$("#step2").removeClass('active');
+			    			$("#step3").removeClass('active');
+		    			}
+		            } 
+		         });
+		}
+		//动态加载变更单详情
+		function setDetail(item){
+		    var div = '<div class="profile-user-info"><div class="profile-info-row"><div class="profile-info-name">变更名称：</div><div class="profile-info-value"><span>'
+		        + "账号撤销"
+		        + '</span></div></div><div class="profile-info-row"><div class="profile-info-name">申请单号：</div><div class="profile-info-value"><i class="fa fa-map-marker light-orange bigger-110"></i><span>'
+		        + item.BILL_CODE		       
+		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请单位： </div><div class="profile-info-value"><span>'
+		        + item.UNIT_CODE
+		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请部门： </div><div class="profile-info-value"><span>'
+		        +item.DEPT_CODE
+		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 账号撤销原因 ：</div><div class="profile-info-value"><span>'
+		        +item.CANCLE_REASON
+		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人部门： </div><div class="profile-info-value"><span>'
+		        +item.USER_DEPT
+		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人： </div><div class="profile-info-value"><span>'
+		        +item.USER_CODE
+		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人岗位： </div><div class="profile-info-value"><span>'
+		        +item.USER_JOB
+		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 联系方式： </div><div class="profile-info-value"><span>'
+		        +item.USER_CONTACT
+		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请生效日期： </div><div class="profile-info-value"><span>'
+		        +item.EFFECTIVE_DATE
+		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请日期： </div><div class="profile-info-value"><span>'
+		        +item.ENTRY_DATE
+		        +'</span></div></div>'
+		    return div;	
+		}			
+		//打印
+		function printf(Id){
+			 top.jzts();
+			 var diag = new top.Dialog();
+			 diag.Drag=true;
+			 diag.Title ="系统变更申请单打印";
+			 diag.URL = '<%=basePath%>changegrczhzx/goPrint.do?BILL_CODE='+encodeURI(Id);
+			 diag.Width = 800;
+			 diag.Height = 600;
+			 diag.Modal = true;				//有无遮罩窗口
+			 diag. ShowMaxButton = true;	//最大化按钮
+		     diag.ShowMinButton = true;		//最小化按钮 
+			 diag.show();
+		}
 		//导出excel
 		function toExcel(){
-			window.location.href='<%=basePath%>changegrczhzx/excel.do';
+			window.location.href='<%=basePath%>changeerpxtbg/excel.do';
+		}
+
+		//搜索
+		function tosearch(){
+			$("#tasks li").remove(); 
+			top.jzts();
+			var keywords = $("#SelectedBillCode").val();
+			$.ajax({
+					type: "POST",
+					url: '<%=basePath%>changegrczhzx/getPageList.do',
+			    	data: {keywords:keywords},
+					dataType:'json',
+					cache: false,
+					success: function(data){
+						if(data.length>0){
+							$.each(data, function(i, item){
+							    var html = '';
+							        html += setDiv(item);
+								$("#tasks").append(html);
+						 	});
+						}
+						else{
+							addEmpty();
+						}
+						top.hangge();
+					}
+			});
+		}
+		//上报
+		function report(billCode){
+			bootbox.confirm("确定要对单据"+billCode+"进行上报吗?", function(result) {
+				if(result) {
+				  $.ajax({
+					  	type: "POST",
+			            //提交的网址
+			           	url: '<%=basePath%>approvalconfig/bgReport.do?BUSINESS_CODE=5&BILL_CODE='+encodeURI(billCode),		      
+			            //返回数据的格式
+			        	dataType:'json',		          
+			            success:function(datas){
+			            		bootbox.dialog({
+									message: "<span class='bigger-110'>"+datas.msg+"</span>",
+								});			            					            	
+			            	initList();
+			            }
+			         });
+				}
+			});
+				 
+		}
+		//撤销上报
+		function cancleReport(billCode){
+			bootbox.confirm("确定要对单据"+billCode+"撤销上报吗?", function(result) {
+				if(result) {
+// 					top.jzts();
+					 $.ajax({
+						  	type: "POST",
+				            //提交的网址
+				           	url: '<%=basePath%>approvalconfig/cancleReport.do?BILL_CODE='+encodeURI(billCode),		      
+				            //返回数据的格式
+				        	dataType:'json',		          
+				            success:function(datas){	
+				            	bootbox.dialog({
+									message: "<span class='bigger-110'>"+datas.msg+"</span>",
+								});					            					            	
+				            	initList();
+				            }
+				
+				         });
+				}
+			});
+				 
+		}
+		
+		/**
+		 * 初始化列表信息
+		 */
+		function initList(){
+			$("#tasks li").remove(); 
+			top.jzts();
+			var keywords = $("#keywords").val();
+			$.ajax({
+					type: "POST",
+					url: '<%=basePath%>changegrczhzx/getPageList.do',
+			    	data: {keywords:keywords},
+					dataType:'json',
+					cache: false,
+					success: function(data){
+						if(data.length>0){
+							$.each(data, function(i, item){
+							    var html = '';
+							        html += setDiv(item);
+								$("#tasks").append(html);
+						 	});
+						}
+						else{
+							addEmpty();
+						}
+						top.hangge();
+					}
+			});
+		}
+		
+		/**
+		 * 增加空数据提示
+		 */
+		function addEmpty(){
+			var htmlEmpty='<li class="item-grey clearfix">'
+				+'<div>'
+					+'<label class="inline" style="margin-bottom:5px;">'
+						+'<span class="list-item-value-title">没有相关数据</span>'
+					+'</label>'
+				+'<div>'
+			+'</li>';
+			$("#tasks").append(htmlEmpty);
 		}
 	</script>
 

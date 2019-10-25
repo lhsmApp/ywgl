@@ -1,6 +1,7 @@
 package com.fh.controller.changegrcxtbg.changegrczhzx;
 
 import java.io.PrintWriter;
+import java.net.URLDecoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.alibaba.fastjson.JSON;
 import com.fh.controller.base.BaseController;
 import com.fh.entity.Page;
 import com.fh.entity.system.User;
@@ -67,10 +70,10 @@ public class ChangeGrcZhzxController extends BaseController {
 	 */
 	@RequestMapping(value="/delete")
 	public void delete(PrintWriter out) throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"删除ChangeGrcZhzx");
-		if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return;} //校验权限
 		PageData pd = new PageData();
 		pd = this.getPageData();
+		String billCode=pd.getString("BILL_CODE");
+		pd.put("BILL_CODE", URLDecoder.decode(billCode, "UTF-8"));
 		changegrczhzxService.delete(pd);
 		out.write("success");
 		out.close();
@@ -99,7 +102,7 @@ public class ChangeGrcZhzxController extends BaseController {
 	 */
 	@RequestMapping(value="/list")
 	public ModelAndView list(Page page) throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"列表ChangeGrcZhzx");
+		//logBefore(logger, Jurisdiction.getUsername()+"列表ChangeGrcZhzx");
 		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
@@ -127,7 +130,7 @@ public class ChangeGrcZhzxController extends BaseController {
 			}		
 		} 	
 		mv.setViewName("changegrcxtbg/changegrczhzx/changegrczhzx_list");
-		mv.addObject("varList", varList);
+		mv.addObject("varList", JSON.toJSONString(varList));
 		mv.addObject("pd", pd);
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		return mv;
@@ -206,21 +209,25 @@ public class ChangeGrcZhzxController extends BaseController {
 			pd = changegrczhzxService.findById(pd);	//根据ID读取
 			JSONArray json = JSONArray.fromObject(pd); 
 			mv.setViewName("changeerpxtbg/changeerpxtbg/PrintReport");
-			mv.addObject("ReportURL", "static/js/gridReport/grf/changeGrcZhzx.grf");
+			mv.addObject("ReportURL", "static/js/gridReport/grf/changeGrcZhzx1.grf");
 			mv.addObject("DataURL", "changegrczhzx/PrintZhzx.do?BILL_CODE="+pd.getString("BILL_CODE"));
 			mv.addObject("msg", "edit");
 			mv.addObject("pd", pd);
 			mv.addObject("billCode", pd.get("BILL_CODE"));
 			
 			return mv;
-		}	
+		}
+	/**打印
+		 * @param
+		 * @throws Exception
+		 */
 		@RequestMapping(value="/PrintZhzx")
 		@ResponseBody 
 		public  PageData PrintZhzx() throws Exception{
 			PageData pd = new PageData();
 			pd = this.getPageData();
 			//根据BILL_CODE读取表单信息以及表单上申请人所在的单位及部门名称
-			//pd = changegrczhzxService.findByBillCode(pd);	
+			pd = changegrczhzxService.findByBillCode(pd);	
 			List<PageData> listPageData=new ArrayList<PageData>();
 			listPageData.add(pd);
 			

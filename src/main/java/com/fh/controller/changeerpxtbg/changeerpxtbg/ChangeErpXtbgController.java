@@ -86,7 +86,6 @@ public class ChangeErpXtbgController extends BaseController {
 	 */
 	@RequestMapping(value="/delete")
 	public void delete(PrintWriter out) throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"删除changeerpxtbg");
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		String billCode=pd.getString("BILL_CODE");

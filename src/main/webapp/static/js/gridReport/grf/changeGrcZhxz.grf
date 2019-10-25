@@ -133,7 +133,7 @@
 						"Bold":true,
 						"Charset":134
 					},
-					"Text":"权限管理系统用户帐号撤销申请表"
+					"Text":"权限管理系统用户帐号新增申请表"
 				},
 				{
 					"Type":"StaticBox",
@@ -169,7 +169,7 @@
 					"Width":2.59292,
 					"Height":0.396875,
 					"TextAlign":"MiddleCenter",
-					"DataField":"UNIT_CODE"
+					"DataField":"UNIT_NAME"
 				},
 				{
 					"Type":"Line",
@@ -203,7 +203,7 @@
 					"Width":2.64583,
 					"Height":0.396875,
 					"TextAlign":"MiddleCenter",
-					"DataField":"UNIT_NAME"
+					"DataField":"DEPT_CODE"
 				},
 				{
 					"Type":"Line",
@@ -337,11 +337,11 @@
 						"Styles":"[DrawLeft|DrawTop|DrawRight|DrawBottom]"
 					},
 					"ColumnCount":4,
-					"RowCount":7,
+					"RowCount":8,
 					"FreeGridColumn":[
 						{
 							"index":2,
-							"Width":4.49792
+							"Width":4.47146
 						},
 						{
 							"index":3,
@@ -371,14 +371,18 @@
 						},
 						{
 							"index":5,
-							"Height":2.77813
+							"Height":2.32833
 						},
 						{
 							"index":6,
-							"Height":2.38125
+							"Height":1.98438
 						},
 						{
 							"index":7,
+							"Height":2.38125
+						},
+						{
+							"index":8,
 							"Height":2.64583
 						}
 					],
@@ -461,14 +465,19 @@
 								"Charset":134
 							},
 							"TextAlign":"MiddleCenter",
-							"Text":"帐号撤销",
+							"Text":"帐号新增",
 							"RowSpan":2
 						},
 						{
 							"row":4,
 							"col":2,
-							"Text":"  账号名：",
-							"ColSpan":3
+							"Text":"  账号：见附件"
+						},
+						{
+							"row":4,
+							"col":3,
+							"Text":"   帐号有效期：永久",
+							"ColSpan":2
 						},
 						{
 							"row":5,
@@ -485,13 +494,7 @@
 								"Charset":134
 							},
 							"TextAlign":"MiddleCenter",
-							"LnSpacing":7,
-							"Text":"支持人员\r\n（三级运维）\r\n"
-						},
-						{
-							"row":6,
-							"col":2,
-							"ColSpan":3
+							"Text":"帐号角色"
 						},
 						{
 							"row":7,
@@ -504,10 +507,28 @@
 							},
 							"TextAlign":"MiddleCenter",
 							"LnSpacing":7,
-							"Text":"申请人主管领\r\n导审批意见"
+							"Text":"支持人员\r\n（三级运维）\r\n"
 						},
 						{
 							"row":7,
+							"col":2,
+							"ColSpan":3
+						},
+						{
+							"row":8,
+							"col":1,
+							"Font":{
+								"Name":"宋体",
+								"Size":90000,
+								"Bold":true,
+								"Charset":134
+							},
+							"TextAlign":"MiddleCenter",
+							"LnSpacing":7,
+							"Text":"申请人主管领\r\n导审批意见"
+						},
+						{
+							"row":8,
 							"col":2,
 							"ColSpan":3
 						}
@@ -569,7 +590,7 @@
 					"Type":"StaticBox",
 					"Name":"StaticBox17",
 					"Left":8.44021,
-					"Top":13.9435,
+					"Top":15.6104,
 					"Width":1.00542,
 					"Height":0.396875,
 					"Text":"签字"
@@ -578,7 +599,7 @@
 					"Type":"StaticBox",
 					"Name":"StaticBox18",
 					"Left":11.6417,
-					"Top":13.7319,
+					"Top":15.3988,
 					"Width":4.81542,
 					"Height":0.79375,
 					"Text":"年         月           日"
@@ -587,16 +608,16 @@
 					"Type":"StaticBox",
 					"Name":"StaticBox19",
 					"Left":11.5888,
-					"Top":16.5629,
+					"Top":17.9917,
 					"Width":4.81542,
-					"Height":0.79375,
+					"Height":0.820208,
 					"Text":"年         月           日"
 				},
 				{
 					"Type":"StaticBox",
 					"Name":"StaticBox20",
 					"Left":8.38729,
-					"Top":16.7746,
+					"Top":18.2033,
 					"Width":1.00542,
 					"Height":0.396875,
 					"Text":"签字"
@@ -708,7 +729,7 @@
 					"Type":"StaticBox",
 					"Name":"StaticBox23",
 					"Left":12.1973,
-					"Top":20.1877,
+					"Top":21.9869,
 					"Width":4.81542,
 					"Height":0.820208,
 					"Text":"年         月           日"
@@ -720,15 +741,6 @@
 					"Top":7.19667,
 					"Width":0.35,
 					"Height":0.35
-				},
-				{
-					"Type":"FieldBox",
-					"Name":"FieldBox10",
-					"Left":5.21229,
-					"Top":8.59896,
-					"Width":2.59292,
-					"Height":0.608542,
-					"DataField":"ACCOUNT_NAME"
 				},
 				{
 					"Type":"FieldBox",
@@ -746,7 +758,7 @@
 					"Top":10.2129,
 					"Width":2.59292,
 					"Height":0.582083,
-					"Text":"撤销帐号原因："
+					"Text":"新增帐号原因："
 				}
 			]
 		}
