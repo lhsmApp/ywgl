@@ -14,165 +14,160 @@
 <base href="<%=basePath%>">
 <!-- 下拉框 -->
 <link rel="stylesheet" href="static/ace/css/chosen.css" />
+<!-- 树形下拉框start -->
+<script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
+<script type="text/javascript" src="plugins/selectZtree/selectTree.js"></script>
+<script type="text/javascript" src="plugins/selectZtree/framework.js"></script>
+<link rel="stylesheet" type="text/css" href="plugins/selectZtree/import_fh.css" />
+<script type="text/javascript" src="plugins/selectZtree/ztree/ztree.js"></script>
+<link type="text/css" rel="stylesheet" href="plugins/selectZtree/ztree/ztree.css"></link>
+<!-- 树形下拉框end -->
+<!-- 标准页面统一样式 -->
+<link rel="stylesheet" href="static/css/normal.css" />
 <!-- jsp文件头和头部 -->
 <%@ include file="../../system/index/top.jsp"%>
 <!--自由拉动  -->
  <link rel="stylesheet" href="static/ace/css/jquery-ui.css" />
  <style>
-    table.mtable th{white-space: nowrap;}
-	table.mtable td{white-space: nowrap;}
-	body.mtable,table.mtable{font-size:12px;}
-	table{empty-cells:show;border-collapse: collapse;margin:0 auto;}
     .mtable{width:auto;border-collapse:collapse;border:1px solid black;}
-    table.mtable td,table.mtable th{height:30px; border:1px solid black;}
+    .mtable th, .mtable td{text-align:center;border:1px solid black;}
     .mtable th, .mtable td{position:relative;background-clip:padding-box;}
 </style>
 </head>
 <body class="no-skin">
-
-	<!-- /section:basics/navbar.layout -->
 	<div class="main-container" id="main-container">
-		<!-- /section:basics/sidebar -->
 		<div class="main-content">
 			<div class="main-content-inner">
 				<div class="page-content">
-					<div class="row">
-						<div class="col-xs-12">
-							<table style="width:100%;">
-								<tbody>
-								<tr>
-									<td>
-										<div class="pull-right">
-											<span class="green middle bolder">填报类型: &nbsp;</span>
-												<div class="btn-toolbar inline middle no-margin">
-													<div data-toggle="buttons" class="btn-group no-margin">
-														<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toERPOfficialAcctApplication()">
-															<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP正式账号申请</span>
-														</button>
-														<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toERPTempacctApplication()">
-															<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP临时账号申请</span>
-														</button>
-														<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toERPDelAcctApplication()">
-															<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP删除账号申请</span>
-														</button>
-													</div>
-												</div>
-											</div>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						<!-- 检索  -->
-						<form action="erpofficialacctapplication/list.do" method="post" name="Form" id="Form">
-						<table style="margin-top:0px; float:left;">
+					<div class="page-header">
+						<table style="width:100%;">
+							<tbody>
 							<tr>
 								<td>
-									<div class="nav-search">
-										<span class="input-icon">
-											<input type="text" placeholder="这里输入关键词" class="nav-search-input" id="nav-search-input" autocomplete="off" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词"/>
-											<i class="ace-icon fa fa-search nav-search-icon"></i>
-										</span>
-									</div>
-								</td>
-								<td style="vertical-align:top;padding-left:5px;">
-								 	<span class="pull-left" id="spanSelectTree" style="margin-right: 5px;">
-												<div class="selectTree" id="selectTree" multiMode="false"allSelectable="false" noGroup="false"></div>
-											    <input type="text" id="SelectedDepartCode" hidden="hidden"></input>
-									</span>
-								</td>
-								<td style="vertical-align:top;padding-left:3px;">
-									<a class="btn btn-info btn-sm" onclick="tosearch()"><i class="ace-icon fa fa-search bigger-110"></i></a>
-									<a class="btn btn-white btn-info btn-bold" onclick="addRows()"><span class="ace-icon fa fa-plus-circle purple"></span>添加</a>						
-									<a class="btn btn-white btn-info btn-bold" onclick="edit()"><span class="ace-icon fa fa-pencil-square-o purple"></span>编辑</a>
-									<a class="btn btn-white btn-info btn-bold" onclick="save()"><i class="ace-icon fa fa-floppy-o bigger-120 blue"></i>保存</a>
-									<a class="btn btn-white btn-info btn-bold" onclick="makeAll('确定要删除选中的数据吗?');" title="批量删除" ><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>删除</a>
-									<a class="btn btn-white btn-info btn-bold" onclick="importExcel()"><span class="ace-icon fa fa-cloud-upload"></span>导入</a>
-									<a class="btn btn-white btn-info btn-bold" onclick="toExcel()"><span class="ace-icon fa fa-cloud-download"></span>导出</a>
-								</td>
-							</tr>
-						</table>
-						<!-- 检索  -->
-					<div style="overflow: auto; width: 100%; height: 400px;">
-					<table id="simple-table" class="mtable" style="margin-top:5px;">	
-							<thead style="height: 40px;">
-								<tr>
-									<th class="center" style="width:35px; background-color: #BEBEC5;">
-									<label class="pos-rel"><input type="checkbox" class="ace" id="zcheckbox" /><span class="lbl"></span></label>
-									</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center; padding-left: 12px;padding-right:12px;">员工编号</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">员工姓名</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">二级单位</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">三级单位</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">职务</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">岗位</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">模块</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">联络电话</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">电子邮件</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">是否培训</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">培训方式</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">培训时间</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">培训成绩</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">证书编号</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">UKey编号</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">申请日期</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">备注</th>
+									<div class="pull-right">
+										<span class="green middle bolder">填报类型: &nbsp;</span>
+											<div class="btn-toolbar inline middle no-margin">
+												<div data-toggle="buttons" class="btn-group no-margin">
+													<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toERPOfficialAcctApplication()">
+														<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP正式账号申请</span>
+													</button>
+													<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toERPTempacctApplication()">
+														<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP临时账号申请</span>
+													</button>
+													<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toERPDelAcctApplication()">
+														<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP删除账号申请</span>
+													</button>
+												</div>
+											</div>
+										</div>
+									</td>
 								</tr>
-							</thead>
-													
-							<tbody id="copyTable">
-							<!-- 开始循环 -->	
-									<c:forEach items="${varList}" var="var" varStatus="vs">
-										<tr>
-											<td class='center'>
-												<label class="pos-rel"><input type='checkbox' name='ids' value="${var.ID}" class="ace" /><span class="lbl"></span></label>
-											</td>
-											<th><input type="text" class="ui-state-default ui-th-column ui-th-ltr" name="STAFF_CODE" id="STAFF_CODE" readonly="readonly" value="${var.STAFF_CODE}" maxlength="30" title="员工编号" style="width:100%;"/></th>
-											<th><input type="text" name="STAFF_NAME" id="STAFF_NAME" readonly="readonly" value="${var.STAFF_NAME}" maxlength="30" title="员工姓名" style="width:100%;"/></th>
-											<th><input type="text" name="STAFF_UNIT_LEVEL2" id="STAFF_UNIT_LEVEL2" readonly="readonly" value="${var.STAFF_UNIT_LEVEL2}" maxlength="30" title="二级单位" style="width:100%;"/></th>
-											<th><input type="text" name="STAFF_UNIT_LEVEL3" id="STAFF_UNIT_LEVEL3" readonly="readonly" value="${var.STAFF_UNIT_LEVEL3}" maxlength="30" title="三级单位" style="width:100%;"/></th>
-											<th><input type="text" name="STAFF_POSITION" id="STAFF_POSITION" readonly="readonly" value="${var.STAFF_POSITION}" maxlength="50" title="职务" style="width:100%;"/></th>
-											<th><input type="text" name="STAFF_JOB" id="STAFF_JOB" readonly="readonly" value="${var.STAFF_JOB}" maxlength="10" title="岗位" style="width:100%;"/></th>
-											<th><input type="text" name="STAFF_MODULE" id="STAFF_MODULE" readonly="readonly" value="${var.STAFF_MODULE}" maxlength="20" title="模块" style="width:100%;"/></th>
-											<th><input type="text" name="PHONE" id="PHONE" readonly="readonly" value="${var.PHONE}" maxlength="30" title="联络电话" style="width:100%;"/></th>
-											<th><input type="text" name="MAIL" id="MAIL" readonly="readonly" value="${var.MAIL}" maxlength="30" title="电子邮件" style="width:100%;"/></th>
-											<th><input type="text" name="IF_TRAINING" id="IF_TRAINING" readonly="readonly" value="${var.IF_TRAINING}" maxlength="1" title="是否培训" style="width:100%;"/></th>
-											<th><input type="text" name="TRAINING_METHOD" id="TRAINING_METHOD" readonly="readonly" value="${var.TRAINING_METHOD}" maxlength="30" title="培训方式" style="width:100%;"/></th>
-											<th><input type="text" name="TRAINING_TIME" id="TRAINING_TIME" readonly="readonly" value="${var.TRAINING_TIME}" maxlength="30" title="培训时间" style="width:100%;"/></th>
-											<th><input type="text" name="TRAINING_RECORD" id="TRAINING_RECORD" readonly="readonly" value="${var.TRAINING_RECORD}" maxlength="30" title="培训成绩" style="width:100%;"/></th>
-											<th><input type="text" name="CERTIFICATE_NUM" id="CERTIFICATE_NUM" readonly="readonly" value="${var.CERTIFICATE_NUM}" maxlength="30" title="证书编号" style="width:100%;"/></th>
-											<th><input type="text" name="UKEY_NUM" id="UKEY_NUM" readonly="readonly" value="${var.UKEY_NUM}" maxlength="30" title="UKey编号" style="width:100%;"/></th>
-											<th><input type="text" name="APPLY_DATE" id="APPLY_DATE" readonly="readonly" value="${var.APPLY_DATE}" maxlength="30" title="申请日期" style="width:100%;"/></th>
-											<th><input type="text" name="NOTE" id="NOTE" readonly="readonly" value="${var.NOTE}" maxlength="30" title="备注" style="width:100%;"/></th>
-										</tr>
-									</c:forEach>
 							</tbody>
 						</table>
-						</div>
-						<div class="page-header position-relative">
-						<table style="width:100%;">
-							<tr>
-								<td style="vertical-align:top;"><div class="pagination" style="padding-left: 640px;margin-top: 0px;">${page.pageStr}</div></td>
-							</tr>
-						</table>
-						</div>
-						</form>
-					
-						</div>
-						<!-- /.col -->
 					</div>
-					<!-- /.row -->
+					<div class="row" style="width:100%;overflow: auto; height:600px;">
+						<form action="erpofficialacctapplication/list.do" method="post" name="Form" id="Form">
+							<table style="margin-top:0px; float:left;">
+								<tr>
+									<td>
+										<div class="nav-search">
+											<span class="input-icon">
+												<input type="text" placeholder="这里输入关键词" class="nav-search-input" id="nav-search-input" autocomplete="off" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词"/>
+												<i class="ace-icon fa fa-search nav-search-icon"></i>
+											</span>
+										</div>
+									</td>
+									<td style="vertical-align:top;padding-left:5px;">
+									 	<span class="pull-left" style="margin-right: 5px;" <c:if test="${pd.departTreeSource=='0'}">hidden</c:if>>
+												<div class="selectTree" id="selectTree" multiMode="true"
+												    allSelectable="false" noGroup="false"></div>
+											    <input type="text" id="SelectedDepartCode" hidden></input>
+											</span>
+									</td>
+									<td style="vertical-align:top;padding-left:3px;">
+										<a class="btn btn-info btn-sm" onclick="tosearch()"><i class="ace-icon fa fa-search bigger-110"></i></a>
+										<a class="btn btn-white btn-info btn-bold" onclick="addRows()"><span class="ace-icon fa fa-plus-circle purple"></span>添加</a>						
+										<a class="btn btn-white btn-info btn-bold" onclick="edit()"><span class="ace-icon fa fa-pencil-square-o purple"></span>编辑</a>
+										<a class="btn btn-white btn-info btn-bold" onclick="save()"><i class="ace-icon fa fa-floppy-o bigger-120 blue"></i>保存</a>
+										<a class="btn btn-white btn-info btn-bold" onclick="makeAll('确定要删除选中的数据吗?');" title="批量删除" ><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>删除</a>
+										<a class="btn btn-white btn-info btn-bold" onclick="importExcel()"><span class="ace-icon fa fa-cloud-upload"></span>导入</a>
+										<a class="btn btn-white btn-info btn-bold" onclick="toExcel()"><span class="ace-icon fa fa-cloud-download"></span>导出</a>
+									</td>
+								</tr>
+							</table>
+							<table id="simple-table" class="mtable" style="margin-top:5px; width:1404px;">	
+								<thead style="height: 40px;">
+									<tr>
+										<th class="center" style="width:35px; background-color: #BEBEC5; padding-left: 5px;padding-right:5px;">
+										<label class="pos-rel"><input type="checkbox" class="ace" id="zcheckbox" /><span class="lbl"></span></label>
+										</th>
+										<th style="width:110px; background-color: #BEBEC5; text-align: center; padding-left: 12px;padding-right:12px;">员工编号</th>
+										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">员工姓名</th>
+										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">二级单位</th>
+										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">三级单位</th>
+										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">职务</th>
+										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">岗位</th>
+										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">模块</th>
+										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">联络电话</th>
+										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">电子邮件</th>
+										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">是否培训</th>
+										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">培训方式</th>
+										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">培训时间</th>
+										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">培训成绩</th>
+										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">证书编号</th>
+										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">UKey编号</th>
+										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">申请日期</th>
+										<th style="width:110px; background-color: #BEBEC5; text-align: center;">备注</th>
+									</tr>
+								</thead>
+														
+								<tbody id="copyTable">
+								<!-- 开始循环 -->	
+										<c:forEach items="${varList}" var="var" varStatus="vs">
+											<tr>
+												<td class='center'>
+													<label class="pos-rel"><input type='checkbox' name='ids' value="${var.ID}" class="ace" /><span class="lbl"></span></label>
+												</td>
+												<th><input type="text" class="ui-state-default ui-th-column ui-th-ltr" name="STAFF_CODE" id="STAFF_CODE" readonly="readonly" value="${var.STAFF_CODE}" maxlength="30" title="员工编号" style="width:100%;"/></th>
+												<th><input type="text" name="STAFF_NAME" id="STAFF_NAME" readonly="readonly" value="${var.STAFF_NAME}" maxlength="30" title="员工姓名" style="width:100%;"/></th>
+												<th><input type="text" name="STAFF_UNIT_LEVEL2" id="STAFF_UNIT_LEVEL2" readonly="readonly" value="${var.STAFF_UNIT_LEVEL2}" maxlength="30" title="二级单位" style="width:100%;"/></th>
+												<th><input type="text" name="STAFF_UNIT_LEVEL3" id="STAFF_UNIT_LEVEL3" readonly="readonly" value="${var.STAFF_UNIT_LEVEL3}" maxlength="30" title="三级单位" style="width:100%;"/></th>
+												<th><input type="text" name="STAFF_POSITION" id="STAFF_POSITION" readonly="readonly" value="${var.STAFF_POSITION}" maxlength="50" title="职务" style="width:100%;"/></th>
+												<th><input type="text" name="STAFF_JOB" id="STAFF_JOB" readonly="readonly" value="${var.STAFF_JOB}" maxlength="10" title="岗位" style="width:100%;"/></th>
+												<th><input type="text" name="STAFF_MODULE" id="STAFF_MODULE" readonly="readonly" value="${var.STAFF_MODULE}" maxlength="20" title="模块" style="width:100%;"/></th>
+												<th><input type="text" name="PHONE" id="PHONE" readonly="readonly" value="${var.PHONE}" maxlength="30" title="联络电话" style="width:100%;"/></th>
+												<th><input type="text" name="MAIL" id="MAIL" readonly="readonly" value="${var.MAIL}" maxlength="30" title="电子邮件" style="width:100%;"/></th>
+												<th><input type="text" name="IF_TRAINING" id="IF_TRAINING" readonly="readonly" value="${var.IF_TRAINING}" maxlength="1" title="是否培训" style="width:100%;"/></th>
+												<th><input type="text" name="TRAINING_METHOD" id="TRAINING_METHOD" readonly="readonly" value="${var.TRAINING_METHOD}" maxlength="30" title="培训方式" style="width:100%;"/></th>
+												<th><input type="text" name="TRAINING_TIME" id="TRAINING_TIME" readonly="readonly" value="${var.TRAINING_TIME}" maxlength="30" title="培训时间" style="width:100%;"/></th>
+												<th><input type="text" name="TRAINING_RECORD" id="TRAINING_RECORD" readonly="readonly" value="${var.TRAINING_RECORD}" maxlength="30" title="培训成绩" style="width:100%;"/></th>
+												<th><input type="text" name="CERTIFICATE_NUM" id="CERTIFICATE_NUM" readonly="readonly" value="${var.CERTIFICATE_NUM}" maxlength="30" title="证书编号" style="width:100%;"/></th>
+												<th><input type="text" name="UKEY_NUM" id="UKEY_NUM" readonly="readonly" value="${var.UKEY_NUM}" maxlength="30" title="UKey编号" style="width:100%;"/></th>
+												<th><input type="text" name="APPLY_DATE" id="APPLY_DATE" readonly="readonly" value="${var.APPLY_DATE}" maxlength="30" title="申请日期" style="width:100%;"/></th>
+												<th><input type="text" name="NOTE" id="NOTE" readonly="readonly" value="${var.NOTE}" maxlength="30" title="备注" style="width:100%;"/></th>
+											</tr>
+										</c:forEach>
+								</tbody>
+							</table>
+								<div class="position-relative">
+									<table style="width:100%;">
+										<tr>
+											<td style="vertical-align:top;"><div class="pagination" style="padding-left: 640px;margin-top: 0px;">${page.pageStr}</div></td>
+										</tr>
+									</table>
+								</div>
+						</form>
+					</div>
 				</div>
-				<!-- /.page-content -->
 			</div>
 		</div>
-		<!-- /.main-content -->
-
+	</div>
 		<!-- 返回顶部 -->
 		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
 			<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
 		</a>
 
-	</div>
+	
 	<!-- /.main-container -->
 	
 	<!-- 复制用空表格 -->
@@ -183,23 +178,23 @@
 						<td class='center'>
 							<label class="pos-rel"><input type='checkbox' name='ids' value="" class="ace" /><span class="lbl"></span></label>
 						</td>
-						<th><input type="text" name="STAFF_CODE" id="STAFF_CODE" value="" maxlength="30" title="员工编号" style="width:100px;"/></th>
-						<th><input type="text" name="STAFF_NAME" id="STAFF_NAME" value="" maxlength="30" title="员工姓名" style="width:100px;"/></th>
-						<th><input type="text" name="STAFF_UNIT_LEVEL2" id="STAFF_UNIT_LEVEL2" value="" maxlength="30" title="二级单位" style="width:100px;"/></th>
-						<th><input type="text" name="STAFF_UNIT_LEVEL3" id="STAFF_UNIT_LEVEL3" value="" maxlength="30" title="三级单位" style="width:100px;"/></th>
-						<th><input type="text" name="STAFF_POSITION" id="STAFF_POSITION" value="" maxlength="50" title="职务" style="width:100px;"/></th>
-						<th><input type="text" name="STAFF_JOB" id="STAFF_JOB" value="" maxlength="30" title="岗位" style="width:100px;"/></th>
-						<th><input type="text" name="STAFF_MODULE" id="STAFF_MODULE" value="" maxlength="20" title="模块" style="width:100px;"/></th>
-						<th><input type="text" name="PHONE" id="PHONE" value="" maxlength="30" title="联络电话" style="width:100px;"/></th>
-						<th><input type="text" name="MAIL" id="MAIL" value="" maxlength="30" title="电子邮箱" style="width:100px;"/></th>
-						<th><input type="text" name="IF_TRAINING" id="IF_TRAINING" value="" maxlength="1" title="是否培训" style="width:100px;"/></th>
-						<th><input type="text" name="TRAINING_METHOD" id="TRAINING_METHOD" value="" maxlength="30" title="培训方式" style="width:100px;"/></th>
-						<th><input type="text" name="TRAINING_TIME" id="TRAINING_TIME" value="" maxlength="30" title="培训时间" style="width:100px;"/></th>
-						<th><input type="text" name="TRAINING_RECORD" id="TRAINING_RECORD" value="" maxlength="30" title="培训成绩" style="width:100px;"/></th>
-						<th><input type="text" name="CERTIFICATE_NUM" id="CERTIFICATE_NUM" value="" maxlength="30" title="证书编号" style="width:100px;"/></th>
-						<th><input type="text" name="UKEY_NUM" id="UKEY_NUM" value="" maxlength="30" title="UKey编号" style="width:100px;"/></th>
-						<th><input type="text" name="APPLY_DATE" id="APPLY_DATE" value="" maxlength="30" title="申请日期" style="width:100px;"/></th>
-						<th><input type="text" name="NOTE" id="NOTE" value="" maxlength="30" title="备注" style="width:100px;"/></th>
+						<th><input type="text" name="STAFF_CODE" id="STAFF_CODE" value="" maxlength="30" title="员工编号" style="width:100%;"/></th>
+						<th><input type="text" name="STAFF_NAME" id="STAFF_NAME" value="" maxlength="30" title="员工姓名" style="width:100%;"/></th>
+						<th><input type="text" name="STAFF_UNIT_LEVEL2" id="STAFF_UNIT_LEVEL2" value="" maxlength="30" title="二级单位" style="width:100%;"/></th>
+						<th><input type="text" name="STAFF_UNIT_LEVEL3" id="STAFF_UNIT_LEVEL3" value="" maxlength="30" title="三级单位" style="width:100%;"/></th>
+						<th><input type="text" name="STAFF_POSITION" id="STAFF_POSITION" value="" maxlength="50" title="职务" style="width:100%;"/></th>
+						<th><input type="text" name="STAFF_JOB" id="STAFF_JOB" value="" maxlength="30" title="岗位" style="width:100%;"/></th>
+						<th><input type="text" name="STAFF_MODULE" id="STAFF_MODULE" value="" maxlength="20" title="模块" style="width:100%;"/></th>
+						<th><input type="text" name="PHONE" id="PHONE" value="" maxlength="30" title="联络电话" style="width:100%;"/></th>
+						<th><input type="text" name="MAIL" id="MAIL" value="" maxlength="30" title="电子邮箱" style="width:100%;"/></th>
+						<th><input type="text" name="IF_TRAINING" id="IF_TRAINING" value="" maxlength="1" title="是否培训" style="width:100%;"/></th>
+						<th><input type="text" name="TRAINING_METHOD" id="TRAINING_METHOD" value="" maxlength="30" title="培训方式" style="width:100%;"/></th>
+						<th><input type="text" name="TRAINING_TIME" id="TRAINING_TIME" value="" maxlength="30" title="培训时间" style="width:100%;"/></th>
+						<th><input type="text" name="TRAINING_RECORD" id="TRAINING_RECORD" value="" maxlength="30" title="培训成绩" style="width:100%;"/></th>
+						<th><input type="text" name="CERTIFICATE_NUM" id="CERTIFICATE_NUM" value="" maxlength="30" title="证书编号" style="width:100%;"/></th>
+						<th><input type="text" name="UKEY_NUM" id="UKEY_NUM" value="" maxlength="30" title="UKey编号" style="width:100%;"/></th>
+						<th><input type="text" name="APPLY_DATE" id="APPLY_DATE" value="" maxlength="30" title="申请日期" style="width:100%;"/></th>
+						<th><input type="text" name="NOTE" id="NOTE" value="" maxlength="30" title="备注" style="width:100%;"/></th>
 					</tr>
 				</tbody>
 			</table>
@@ -219,15 +214,21 @@
 	<script type="text/javascript" src="static/ace/js/jquery-ui.js"></script>
 	<script type="text/javascript">
 		$(top.hangge());//关闭加载状态
-
+		//table自由拉动
+		var tablewidth = 0;
+		$("th").resizable({
+			start:function(event,ui){
+				tablewidth = $("#simple-table").width()-ui.size.width;
+			},resize:function(event,ui){
+				$("#simple-table").css("width",tablewidth+ui.size.width+"px")
+			},stop:function(event,ui){
+				$("#simple-table").css("width",tablewidth+ui.size.width+"px")
+			}
+		})
+		$("th > div:last-child").removeClass();		
 		
 		/* 复选框全选控制 */
 		$(function() {
-			//initComplete();
-			$("th").resizable({
-				minWidth:150
-			}); //调用方法，实现可自由调整
-			$("th > div:last-child").removeClass();
 			var active_class = 'active';
 			$('#simple-table > thead > tr > th input[type=checkbox]').eq(0).on('click', function(){
 				var th_checked = this.checked;//checkbox inside "TH" table header
@@ -423,27 +424,20 @@
 	           };
 	           diag.show();
 		}		
-		
 		//导出excel
 		function toExcel(){
 			window.location.href='<%=basePath%>erpofficialacctapplication/excel.do';
 		}
 		
-		//加载单位树
+		//下拉树
+		var defaultNodes = {"treeNodes":${zTreeNodes}};
 		function initComplete(){
-			alert("加载成功");
-			//下拉树
-			var defaultNodes = {"treeNodes":'${zTreeNodes}'};
 			//绑定change事件
 			$("#selectTree").bind("change",function(){
-				console.log(1);
 				$("#SelectedDepartCode").val("");
 				if($(this).attr("relValue")){
-					console.log(2);
 					$("#SelectedDepartCode").val($(this).attr("relValue"));
-					console.log(3);
 			    }
-				console.log(4);
 			});
 			//赋给data属性
 			$("#selectTree").data("data",defaultNodes);  

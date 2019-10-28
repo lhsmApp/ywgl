@@ -17,10 +17,7 @@
 		COURSE_TEACHER,	
 		COURSE_TAG,	
 		COURSE_NOTE,	
-		COURSE_COVER,	
-		STATE,	
-		CREATE_USER,	
-		CREATE_DATE	
+		COURSE_COVER	
 	</sql>
 	
 	<!-- 字段值 -->
@@ -30,10 +27,7 @@
 		#{COURSE_TEACHER},	
 		#{COURSE_TAG},	
 		#{COURSE_NOTE},	
-		#{COURSE_COVER},	
-		#{STATE},	
-		#{CREATE_USER},	
-		#{CREATE_DATE}
+		#{COURSE_COVER}
 	</sql>
 	
 	<!-- zTree -->
@@ -67,23 +61,29 @@
 	<update id="edit" parameterType="pd">
 		update
 		<include refid="tableName"></include>
-		set 
+		set
 			COURSE_NAME = #{COURSE_NAME},
 			COURSE_TYPE = #{COURSE_TYPE},
 			COURSE_TEACHER = #{COURSE_TEACHER},
 			COURSE_TAG = #{COURSE_TAG},
 			COURSE_NOTE = #{COURSE_NOTE},
-			COURSE_COVER = #{COURSE_COVER},
-			CREATE_USER = #{CREATE_USER},
-			CREATE_DATE = #{CREATE_DATE}
+			COURSE_COVER = #{COURSE_COVER}
 		where 
 			COURSE_ID = #{COURSE_ID}
 	</update>
 	
 	<!-- 通过ID获取数据 -->
 	<select id="findById" parameterType="pd" resultType="pd">
-		select 
-		<include refid="Field"></include>
+		select
+			COURSE_ID,
+			COURSE_NAME,	
+			COURSE_TYPE,	
+			COURSE_TEACHER,	
+			COURSE_TAG,	
+			COURSE_NOTE,	
+			COURSE_COVER,	
+			CREATE_USER,	
+			CREATE_DATE
 		from 
 		<include refid="tableName"></include>
 		where 
@@ -114,11 +114,23 @@
 	</select>
 	
 	<!-- 列表(全部) -->
-	<select id="listAll" parameterType="pd" resultType="pd">
+	<select id="listById" parameterType="pd" resultType="pd">
 		select
-		<include refid="Field"></include>
+			COURSE_ID,
+			COURSE_NAME,	
+			COURSE_TYPE,	
+			COURSE_TEACHER,	
+			COURSE_TAG,	
+			COURSE_NOTE,	
+			COURSE_COVER,	
+			CREATE_USER,	
+			CREATE_DATE	
 		from 
 		<include refid="tableName"></include>
+		where
+			STATE = 1
+		and
+			COURSE_TYPE = #{COURSE_TYPE}
 	</select>
 	
 	<!-- 批量删除 -->

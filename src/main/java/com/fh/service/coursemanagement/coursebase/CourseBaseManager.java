@@ -37,12 +37,6 @@ public interface CourseBaseManager{
 	 */
 	public List<PageData> list(Page page)throws Exception;
 	
-	/**列表(全部)
-	 * @param pd
-	 * @throws Exception
-	 */
-	public List<PageData> listAll(PageData pd)throws Exception;
-	
 	/**通过id获取数据
 	 * @param pd
 	 * @throws Exception
@@ -68,6 +62,14 @@ public interface CourseBaseManager{
 	 * @throws Exception
 	 */
 	public List<CourseTree> listByParentId(String parentId) throws Exception;
+	
+	/**
+	 * 通过id获取分类数据集合
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public List<PageData> listById(PageData pd) throws Exception;
 	
 }
 

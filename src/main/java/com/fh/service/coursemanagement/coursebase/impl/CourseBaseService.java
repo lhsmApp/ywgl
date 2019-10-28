@@ -57,15 +57,6 @@ public class CourseBaseService implements CourseBaseManager{
 		return (List<PageData>)dao.findForList("CourseBaseMapper.datalistPage", page);
 	}
 	
-	/**列表(全部)
-	 * @param pd
-	 * @throws Exception
-	 */
-	@SuppressWarnings("unchecked")
-	public List<PageData> listAll(PageData pd)throws Exception{
-		return (List<PageData>)dao.findForList("CourseBaseMapper.listAll", pd);
-	}
-	
 	/**通过id获取数据
 	 * @param pd
 	 * @throws Exception
@@ -102,11 +93,21 @@ public class CourseBaseService implements CourseBaseManager{
 	public List<CourseTree> listTree(String parentId) throws Exception {
 		List<CourseTree> valueList = this.listByParentId(parentId);
 		for(CourseTree fhentity : valueList){
-			fhentity.setTreeurl("coursebase/list.do?COURSE_TYPE_ID="+fhentity.getCOURSE_TYPE_ID());
 			fhentity.setSubTreeList(this.listTree(fhentity.getCOURSE_TYPE_ID()));
 			fhentity.setTarget("treeFrame");
 		}
 		return valueList;
+	}
+
+	/**
+	 * 通过id获取分类数据集合
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PageData> listById(PageData pd) throws Exception {
+		return (List<PageData>)dao.findForList("CourseBaseMapper.listById", pd);
 	}
 }
 

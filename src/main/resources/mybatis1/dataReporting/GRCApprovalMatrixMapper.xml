@@ -14,9 +14,7 @@
 		STAFF_NAME,	
 		STAFF_CODE_APPROVAL1,	
 		STAFF_NAME_APPROVAL1,
-		STATE,	
-		BILL_USER,	
-		BILL_DATE
+		STATE
 	</sql>
 	
 	<!-- 字段值 -->
@@ -26,9 +24,7 @@
 		#{STAFF_NAME},	
 		#{STAFF_CODE_APPROVAL1},	
 		#{STAFF_NAME_APPROVAL1},	
-		#{STATE},
-		#{BILL_USER},	
-		#{BILL_DATE}
+		#{STATE}
 	
 	</sql>
 	
@@ -52,9 +48,7 @@
 			STAFF_CODE = #{STAFF_CODE},
 			STAFF_NAME = #{STAFF_NAME},
 			STAFF_CODE_APPROVAL1 = #{STAFF_CODE_APPROVAL1},
-			STAFF_NAME_APPROVAL1 = #{STAFF_NAME_APPROVAL1},
-			BILL_USER = #{BILL_USER},
-			BILL_DATE = #{BILL_DATE}
+			STAFF_NAME_APPROVAL1 = #{STAFF_NAME_APPROVAL1}
 		where 
 			ID = #{ID}	
 	</update>
@@ -67,9 +61,7 @@
 			STAFF_CODE,	
 			STAFF_NAME,	
 			STAFF_CODE_APPROVAL1,	
-			STAFF_NAME_APPROVAL1,	
-			BILL_USER,	
-			BILL_DATE
+			STAFF_NAME_APPROVAL1
 		from 
 		<include refid="tableName"></include>
 		where STATE = 1
@@ -125,9 +117,7 @@
 				#{item.STAFF_NAME},	
 				#{item.STAFF_CODE_APPROVAL1},	
 				#{item.STAFF_NAME_APPROVAL1},	
-				"1",
-				#{item.BILL_USER},	
-				#{item.BILL_DATE}
+				"1"
 			);
 		</foreach>
 	</update>

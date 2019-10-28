@@ -23,14 +23,11 @@
 		APPLY_TEMP_REASON,	
 		UKEY_NUM,	
 		NOTE,
-		STATE,	
-		BILL_USER,	
-		BILL_DATE
+		STATE
 	</sql>
 	
 	<!-- 字段值 -->
 	<sql id="FieldValue">
-		#{ID},
 		#{STAFF_CODE},	
 		#{STAFF_NAME},	
 		#{STAFF_UNIT_LEVEL2},	
@@ -45,9 +42,7 @@
 		#{APPLY_TEMP_REASON},	
 		#{UKEY_NUM},	
 		#{NOTE},
-		#{STATE},	
-		#{BILL_USER},	
-		#{BILL_DATE}	
+		#{STATE}
 	</sql>
 	
 	<!-- 新增-->
@@ -79,9 +74,7 @@
 			CANCEL_DATE = #{CANCEL_DATE},
 			APPLY_TEMP_REASON = #{APPLY_TEMP_REASON},
 			UKEY_NUM = #{UKEY_NUM},
-			NOTE = #{NOTE},
-			BILL_USER = #{BILL_USER},
-			BILL_DATE = #{BILL_DATE}
+			NOTE = #{NOTE}
 		where 
 			ID = #{ID}
 	</update>
@@ -103,9 +96,7 @@
 			CANCEL_DATE,	
 			APPLY_TEMP_REASON,	
 			UKEY_NUM,	
-			NOTE,
-			BILL_USER,	
-			BILL_DATE
+			NOTE
 		from 
 		<include refid="tableName"></include>
 		where STATE=1
@@ -173,9 +164,7 @@
 					#{item.APPLY_TEMP_REASON},	
 					#{item.UKEY_NUM},	
 					#{item.NOTE},	
-					"1",
-					#{item.BILL_USER},	
-					#{item.BILL_DATE}
+					"1"
 			);
 		</foreach>
 	</update>

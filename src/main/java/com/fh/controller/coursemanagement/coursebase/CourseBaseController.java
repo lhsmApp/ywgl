@@ -1,5 +1,6 @@
 package com.fh.controller.coursemanagement.coursebase;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -9,14 +10,18 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONObject;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fh.controller.base.BaseController;
@@ -25,8 +30,12 @@ import com.fh.entity.Page;
 import com.fh.entity.coursebase.CourseTree;
 import com.fh.service.coursemanagement.coursebase.CourseBaseManager;
 import com.fh.util.AppUtil;
+import com.fh.util.Const;
+import com.fh.util.FileUpload;
+import com.fh.util.FileUtil;
 import com.fh.util.Jurisdiction;
 import com.fh.util.PageData;
+import com.fh.util.PathUtil;
 
 import net.sf.json.JSONArray;
 
@@ -54,7 +63,7 @@ public class CourseBaseController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		pd.put("COURSEBASE_ID", this.get32UUID());	//主键
+		pd.put("STATE", "1");
 		coursebaseService.save(pd);
 		mv.addObject("msg","success");
 		mv.setViewName("save_result");
@@ -87,13 +96,12 @@ public class CourseBaseController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/edit")
-	public ModelAndView edit(String COURSE_ID) throws Exception{
+	public ModelAndView edit() throws Exception{
 		logBefore(logger, Jurisdiction.getUsername()+"修改CourseBase");
-		if(!Jurisdiction.buttonJurisdiction(menuUrl, "edit")){return null;} //校验权限
+		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "edit")){return null;} //校验权限
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		pd.put("COURSE_ID", COURSE_ID);
 		coursebaseService.edit(pd);
 		mv.addObject("msg","success");
 		mv.setViewName("save_result");
@@ -137,11 +145,17 @@ public class CourseBaseController extends BaseController {
 		
 	}
 	
-	@RequestMapping(value="/selectByPid")
+	@RequestMapping(value="/listById")
 	@ResponseBody
-	public CommonBase selectTree() throws Exception{
-		//TODO
-		return null;
+	public CommonBase listById() throws Exception{
+		PageData pd = new PageData();
+		CommonBase commonBase = new CommonBase();
+		commonBase.setCode(1);
+		pd = this.getPageData();
+		JSONArray arr = JSONArray.fromObject(coursebaseService.listById(pd));
+		String json = arr.toString();
+		commonBase.setMessage(json);
+		return commonBase;
 	}
 	
 	/**去新增页面
@@ -153,7 +167,9 @@ public class CourseBaseController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
+		List<CourseTree> treeList = coursebaseService.listByParentId("0");
 		mv.setViewName("coursemanagement/coursebase/coursebase_edit");
+		mv.addObject("treeList",treeList);
 		mv.addObject("msg", "save");
 		mv.addObject("pd", pd);
 		return mv;
@@ -203,7 +219,25 @@ public class CourseBaseController extends BaseController {
 		map.put("list", pdList);
 		return AppUtil.returnObject(pd, map);
 	}
-	
+	/**
+	 *  图片上传上传
+	 * @param pic
+	 * @param response
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/uploadPic")
+	public void uploadPic(MultipartFile pic,HttpServletResponse response) throws Exception {
+		logBefore(logger, Jurisdiction.getUsername()+"图片上传CourseBase");
+		//TODO 文件上传路径
+		String picPath = PathUtil.getClasspath()+Const.FILEPATHIMG;
+		String picName = FileUpload.fileUp(pic,picPath,this.get32UUID());
+		System.out.println(picPath+picName);
+		JSONObject json = new JSONObject();
+		//回调文件路径
+		json.put("path",Const.FILEPATHIMG+picName); 
+		response.setContentType("application/json;charset=UTF-8");
+		response.getWriter().write(json.toString());
+	}
 		@InitBinder
 	public void initBinder(WebDataBinder binder){
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");

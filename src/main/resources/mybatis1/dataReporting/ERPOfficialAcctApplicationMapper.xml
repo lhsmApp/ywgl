@@ -26,9 +26,7 @@
 		UKEY_NUM,	
 		APPLY_DATE,	
 		NOTE,
-		STATE,	
-		BILL_USER,	
-		BILL_DATE
+		STATE
 	</sql>
 	
 	<!-- 字段值 -->
@@ -50,9 +48,7 @@
 		#{UKEY_NUM},	
 		#{APPLY_DATE},	
 		#{NOTE},
-		#{STATE},	
-		#{BILL_USER},	
-		#{BILL_DATE}
+		#{STATE}
 	</sql>
 	
 	<!-- 新增-->
@@ -87,9 +83,7 @@
 			CERTIFICATE_NUM = #{CERTIFICATE_NUM},
 			UKEY_NUM = #{UKEY_NUM},
 			APPLY_DATE = #{APPLY_DATE},
-			NOTE = #{NOTE},
-			BILL_USER = #{BILL_USER},
-			BILL_DATE = #{BILL_DATE}
+			NOTE = #{NOTE}
 		where 
 			ID = #{ID}
 	</update>
@@ -114,9 +108,7 @@
 			CERTIFICATE_NUM,	
 			UKEY_NUM,	
 			APPLY_DATE,	
-			NOTE,	
-			BILL_USER,	
-			BILL_DATE
+			NOTE
 		from 
 		<include refid="tableName"></include>
 		where STATE=1
@@ -185,9 +177,7 @@
 				#{item.UKEY_NUM},	
 				#{item.APPLY_DATE},	
 				#{item.NOTE},	
-				"1",
-				#{item.BILL_USER},	
-				#{item.BILL_DATE}
+				"1"
 			);
 		</foreach>
 	</update>

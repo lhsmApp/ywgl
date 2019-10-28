@@ -14,8 +14,20 @@
 	<link rel="stylesheet" href="static/ace/css/chosen.css" />
 	<!-- jsp文件头和头部 -->
 	<%@ include file="../../system/index/top.jsp"%>
+	<!-- 图片上传 -->
+	<script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
+	<script type="text/javascript" src="static/ace/js/jquery.form.js"></script>
 	<!-- 日期框 -->
 	<link rel="stylesheet" href="static/ace/css/datepicker.css" />
+	<link rel="stylesheet" href="static/ace/assets/css/ace.css" class="ace-main-stylesheet" id="main-ace-style" />
+	<link rel="stylesheet" href="static/ace/assets/css/bootstrap-editable.css" />
+	
+	<!-- bootstrap & fontawesome -->
+		<link rel="stylesheet" href="static/ace/css/bootstrap.css" />
+		<link rel="stylesheet" href="static/ace/css/bootstrap-editable.css" />
+		<script src="static/ace/js/ace-extra.js"></script>
+		<!-- text fonts -->
+		<link rel="stylesheet" href="static/ace/css/ace-fonts.css" />
 </head>
 <body class="no-skin">
 <!-- /section:basics/navbar.layout -->
@@ -25,9 +37,9 @@
 		<div class="main-content-inner">
 			<div class="page-content">
 				<div class="row">
-					<form action="coursebase/${msg }.do" name="Form" id="Form" method="post">
+					<form action="coursebase/${msg}.do" name="Form" id="Form" method="post">
 						<div class="col-xs-6" style="padding-left:0px; margin-bottom:-15px;">
-						<input type="hidden" name="COURSEBASE_ID" id="COURSEBASE_ID" value="${pd.COURSEBASE_ID}"/>
+						<input type="hidden" name="COURSE_ID" id="COURSE_ID" value="${pd.COURSE_ID}"/>
 						<div id="zhongxin" style="padding-top: 13px;" class="form-inline">
 						<table id="table_report" class="table table-bordered table-hover">
 							<tr>
@@ -57,19 +69,14 @@
 						</div>
 						<div id="zhongxin2" class="center" style="display:none"><br/><br/><br/><br/><br/><img src="static/images/jiazai.gif" /><br/><h4 class="lighter block green">提交中...</h4></div>
 					</div>
-					<div class="col-xs-6" style="text-align:center; padding-top:5%;">
-							<a href="" data-rel="colorbox" class="cboxElement">
-								<img width="160" height="160" alt="160x160" src="static/html_UI/assets/images/gallery/thumb-3.jpg">
-							</a>
+					<div id="uploadPic" class="col-xs-6" style="text-align:center; padding-top:10%;">
+						<input id="pic" name="pic" type="file">
 					</div>
+						<input hidden="hidden" id="COURSE_COVER" name="COURSE_COVER" value="${pd.COURSE_COVER}">
 					<table class="table table-bordered table-hover">
 						<tr>
-							<td style="width:115px;text-align: right;padding-top: 13px;">完成可获得积分:</td>
-								<td><input type="number" name="COURSE_TAG" id="COURSE_TAG" value="${pd.COURSE_TAG}" maxlength="50" placeholder="这里输入备注5" title="备注5" style="width:32%;"/></td>
-						</tr>
-						<tr>
 							<td style="width:75px;text-align: center;padding-top: 13px;">课程简介:</td>
-								<td><textarea name="COURSE_TAG" id="COURSE_TAG" maxlength="50" placeholder="请输入课程介绍" title="备注5" style="width:99%;"></textarea></td>
+								<td><textarea name="COURSE_NOTE" id="COURSE_NOTE" maxlength="50" placeholder="请输入课程介绍" title="请输入课程介绍" style="width:99%;">${pd.COURSE_NOTE}</textarea></td>
 						</tr>
 						<tr>
 								<td style="text-align: center;" colspan="10">
@@ -97,20 +104,98 @@
 	<script src="static/ace/js/chosen.jquery.js"></script>
 	<!-- 日期框 -->
 	<script src="static/ace/js/date-time/bootstrap-datepicker.js"></script>
+	
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
+	<script type="text/javascript" src="static/ace/js/ace/ace.js"></script>
+	<script type="text/javascript" src="static/ace/js/x-editable/bootstrap-editable.js"></script>
+	<script type="text/javascript" src="static/ace/js/x-editable/ace-editable.js"></script>
+		
+		<!-- ace scripts -->
+		<script src="static/ace/js/ace/elements.fileinput.js"></script>
+		<script src="static/ace/js/ace/ace.js"></script>
 		<script type="text/javascript">
+		</script>
+	<script type="text/javascript">
 		$(top.hangge());
+		jQuery(function($){
+			$('#uploadPic').find('input[type=file]').ace_file_input({
+				style:'well',
+				btn_choose:'点击选择图片上传/修改',
+				btn_change:null,
+				no_icon:'ace-icon fa fa-picture-o',
+				thumbnail:'large',
+				droppable:true,
+				before_change: function(files, dropped){
+					var file = files[0];
+					var name = file.name;
+					//判断文件类型
+					if (!name.endsWith(".jpg") && !name.endsWith(".jpeg") && !name.endsWith(".png") 
+						&& !name.endsWith(".gif") && !name.endsWith(".bmp")){
+						$("#pic").tips({
+							side:3,
+				            msg:'仅可上传 jpg jpeg png gif bmp 类型图片',
+				            bg:'#AE81FF',
+				            time:2
+				        });
+						return false;	 
+					}
+					//判断文件大小
+					if(file.size > 2097152){
+						$("#pic").tips({
+							side:3,
+				            msg:'文件大小不能超过2M',
+				            bg:'#AE81FF',
+				            time:2
+				        });
+						return false;
+					}
+					//上传图片
+					var options = {
+						url: '<%=basePath%>coursebase/uploadPic.do?tm='+new Date().getTime(),
+						type: 'POST',
+						dataType: 'json',
+						cache: false,
+						success: function(data){
+							// 动态追加pic地址 
+							$("#COURSE_COVER").attr("value",data.path);
+							$("#pic").tips({
+								side:3,
+					            msg:'上传图片成功',
+					            bg:'#AE81FF',
+					            time:2
+					        });
+						},
+						error: function(data){
+							$("#pic").tips({
+								side:3,
+					            msg:'图片上传失败',
+					            bg:'#AE81FF',
+					            time:2
+					        });
+						}
+					}
+					$("#Form").ajaxSubmit(options);
+					return true;
+				}
+			})
+		});
+		
+		//获取文件后缀名
+		function endsWith(str, suffix) {
+    		return str.indexOf(suffix, str.length - suffix.length) !== -1;
+		}
+		
 		//保存
 		function save(){
 			if($("#COURSE_NAME").val()==""){
-				$("#COURSE_NAME").tips({
-					side:3,
-		            msg:'请输入课程名称',
-		            bg:'#AE81FF',
-		            time:2
-		        });
-				$("#COURSE_NAME").focus();
+			$("#COURSE_NAME").tips({
+				side:3,
+	            msg:'请输入课程名称',
+	            bg:'#AE81FF',
+	            time:2
+	        });
+			$("#COURSE_NAME").focus();
 			return false;
 			}
 			if($("#COURSE_TYPE").val()==""){
@@ -147,11 +232,6 @@
 			$("#zhongxin").hide();
 			$("#zhongxin2").show();
 		}
-		
-		$(function() {
-			//日期框
-			$('.date-picker').datepicker({autoclose: true,todayHighlight: true});
-		});
 		</script>
 </body>
 </html>

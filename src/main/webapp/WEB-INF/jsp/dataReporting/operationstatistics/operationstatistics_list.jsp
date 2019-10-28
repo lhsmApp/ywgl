@@ -14,6 +14,14 @@
 <base href="<%=basePath%>">
 <!-- 下拉框 -->
 <link rel="stylesheet" href="static/ace/css/chosen.css" />
+ <!-- 树形下拉框start -->
+<script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
+<script type="text/javascript" src="plugins/selectZtree/selectTree.js"></script>
+<script type="text/javascript" src="plugins/selectZtree/framework.js"></script>
+<link rel="stylesheet" type="text/css" href="plugins/selectZtree/import_fh.css" />
+<script type="text/javascript" src="plugins/selectZtree/ztree/ztree.js"></script>
+<link type="text/css" rel="stylesheet" href="plugins/selectZtree/ztree/ztree.css"></link>
+<!-- 树形下拉框end -->
 <!-- jsp文件头和头部 -->
 <%@ include file="../../system/index/top.jsp"%>
 <!--自由拉动  -->
@@ -32,12 +40,12 @@
 		<div class="main-content">
 			<div class="main-content-inner">
 				<div class="page-content">
-					<div class="row">
+					<div class="row" style="width: 100%;overflow: auto;">
 						<div class="col-xs-12">
 							
 						<!-- 检索  -->
 						<form action="operationstatistics/list.do" method="post" name="Form" id="Form">
-						<table style="margin-top:5px;">
+						<table style="margin-top:15px;">
 							<tr>
 								<td>
 									<div class="nav-search">
@@ -49,12 +57,10 @@
 								</td>
 								
 								<td style="vertical-align:top;padding-left:2px;">
-								 	<select class="chosen-select form-control" name="name" id="id" data-placeholder="请选择" style="vertical-align:top;width: 160px;">
-									<option value=""></option>
-									<option value="">全部</option>
-									<option value="">1</option>
-									<option value="">2</option>
-								  	</select>
+								 	<span class="pull-left" style="margin-right: 5px;">
+										<div class="selectTree" id="selectTree" multiMode="true" <c:if test="${pd.departTreeSource=='0'}">hidden</c:if> allSelectable="false" noGroup="false"></div>
+									    <input type="text" id="SelectedDepartCode" hidden></input>
+									</span>
 								</td>
 								<td style="vertical-align:top;padding-left:3px;">
 									<a class="btn btn-info btn-sm" onclick="tosearch()"><i class="ace-icon fa fa-search bigger-110"></i></a>
@@ -68,7 +74,7 @@
 							</tr>
 						</table>
 						<!-- 检索  -->
-						<table id="simple-table" class="mtable" style="margin-top:5px; width:auto;">	
+						<table id="simple-table" class="mtable" style="margin-top:10px;">	
 							<thead style="height: 40px">
 								<tr>
 									<th class="center" style="width:35px;">
@@ -103,7 +109,7 @@
 							</tbody>
 						</table>
 						
-						<div class="page-header position-relative">
+						<div class="position-relative">
 						
 						<table style="width:100%;">
 							<tr>
@@ -165,9 +171,17 @@
 		$(top.hangge());//关闭加载状态
 		/* 复选框全选控制 */
 		$(function() {
-			$("th").resizable(); //调用方法，实现可自由调整
-			$("th > div:last-child").removeClass();
-			
+			//table自由拉动
+			var tablewidth = 0;
+			$("th").resizable({
+				start:function(event,ui){
+					tablewidth = $("#simple-table").width()-ui.size.width;
+				},resize:function(event,ui){
+					$("#simple-table").css("width",tablewidth+ui.size.width+"px")
+				},stop:function(event,ui){
+					$("#simple-table").css("width",tablewidth+ui.size.width+"px")
+				}
+			})
 			var active_class = 'active';
 			$('#simple-table > thead > tr > th input[type=checkbox]').eq(0).on('click', function(){
 				var th_checked = this.checked;//checkbox inside "TH" table header
@@ -340,11 +354,25 @@
 	           diag.show();
 		}			
 			
-		
-		
 		//导出excel
 		function toExcel(){
 			window.location.href='<%=basePath%>operationstatistics/excel.do';
+		}
+		
+		//下拉树
+		var defaultNodes = {"treeNodes":${zTreeNodes}};
+		function initComplete(){
+			//绑定change事件
+			$("#selectTree").bind("change",function(){
+				$("#SelectedDepartCode").val("");
+				if($(this).attr("relValue")){
+					$("#SelectedDepartCode").val($(this).attr("relValue"));
+			    }
+			});
+			//赋给data属性
+			$("#selectTree").data("data",defaultNodes);  
+			$("#selectTree").render();
+			$("#selectTree2_input").val("请选择单位");
 		}
 	</script>
 

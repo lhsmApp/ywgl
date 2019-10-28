@@ -14,6 +14,14 @@
 <base href="<%=basePath%>">
 <!-- 下拉框 -->
 <link rel="stylesheet" href="static/ace/css/chosen.css" />
+ <!-- 树形下拉框start -->
+<script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
+<script type="text/javascript" src="plugins/selectZtree/selectTree.js"></script>
+<script type="text/javascript" src="plugins/selectZtree/framework.js"></script>
+<link rel="stylesheet" type="text/css" href="plugins/selectZtree/import_fh.css" />
+<script type="text/javascript" src="plugins/selectZtree/ztree/ztree.js"></script>
+<link type="text/css" rel="stylesheet" href="plugins/selectZtree/ztree/ztree.css"></link>
+<!-- 树形下拉框end -->
 <!-- jsp文件头和头部 -->
 <%@ include file="../../system/index/top.jsp"%>
 <!--自由拉动  -->
@@ -29,8 +37,7 @@
 		<div class="main-content">
 			<div class="main-content-inner">
 				<div class="page-content">
-					<div class="row">
-						<div class="col-xs-12">
+					<div class="page-header">
 							<table style="width:100%;">
 								<tbody>
 								<tr>
@@ -55,9 +62,10 @@
 									</tr>
 								</tbody>
 							</table>
-						<!-- 检索  -->
+						</div>
+						<div class="row" style="width: 100%; overflow: auto;height: 100%;">
 						<form action="erptempacctapplication/list.do" method="post" name="Form" id="Form">
-						<table style="margin-top:-15px;">
+						<table style="margin-top:0px;">
 							<tr>
 								<td>
 									<div class="nav-search">
@@ -68,13 +76,10 @@
 									</div>
 								</td>
 								<td style="vertical-align:top;padding-left:5px;">
-								 	<select class="chosen-select form-control" name="name" id="id" style="vertical-align:top;width: 160px;">
-									<option value="">--请选择填报单位--</option>
-									<option value="">--二级单位--</option>
-									<%-- <c:forEach items="${a}" var="each">
-										<option value="${a}">${a}</option>
-									</c:forEach> --%>
-								  	</select>
+								 	<span class="pull-left" style="margin-right: 5px;">
+										<div class="selectTree" id="selectTree" multiMode="true" <c:if test="${pd.departTreeSource=='0'}">hidden</c:if> allSelectable="false" noGroup="false"></div>
+									    <input type="text" id="SelectedDepartCode" hidden></input>
+									</span>
 								</td>
 							
 						<td style="vertical-align:top;padding-left:2px;">
@@ -88,8 +93,7 @@
 						</td>
 							</tr>
 						</table>
-						<!-- 检索  -->
-					
+						
 						<table id="simple-table" class="mtable" style="margin-top:5px;">	
 							<thead style="height: 40px">
 								<tr>
@@ -138,30 +142,23 @@
 									</c:forEach>
 							</tbody>
 						</table>
-						<div class="page-header position-relative">
-						<table style="width:100%;">
-							<tr>
-								<td style="vertical-align:top;"><div class="pagination" style="padding-left: 640px;margin-top: 0px;">${page.pageStr}</div></td>
-							</tr>
-						</table>
+						<div class="position-relative">
+							<table style="width:100%;">
+								<tr>
+									<td style="vertical-align:top;"><div class="pagination" style="padding-left: 640px;margin-top: 0px;">${page.pageStr}</div></td>
+								</tr>
+							</table>
 						</div>
-						</form>
-					
-						</div>
-						<!-- /.col -->
+					</form>
 					</div>
-					<!-- /.row -->
+					</div>
+					</div>
 				</div>
-				<!-- /.page-content -->
-			</div>
-		</div>
-		<!-- /.main-content -->
+				</div>
 		<!-- 返回顶部 -->
 		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
 			<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
 		</a>
-
-	</div>
 	<!-- /.main-container -->
 			<!-- 复制用空表格 -->
 		<div id="hideTable" style="display: none;">
@@ -207,8 +204,17 @@
 		
 		/* 复选框全选控制 */
 		$(function() {
-			$("th").resizable(); //调用方法，实现可自由调整
-			$("th > div:last-child").removeClass();
+			//table自由拉动
+			var tablewidth = 0;
+			$("th").resizable({
+				start:function(event,ui){
+					tablewidth = $("#simple-table").width()-ui.size.width;
+				},resize:function(event,ui){
+					$("#simple-table").css("width",tablewidth+ui.size.width+"px")
+				},stop:function(event,ui){
+					$("#simple-table").css("width",tablewidth+ui.size.width+"px")
+				}
+			})
 			
 			var active_class = 'active';
 			$('#simple-table > thead > tr > th input[type=checkbox]').eq(0).on('click', function(){
@@ -405,6 +411,22 @@
 		//导出excel
 		function toExcel(){
 			window.location.href='<%=basePath%>erptempacctapplication/excel.do';
+		}
+		
+		//下拉树
+		var defaultNodes = {"treeNodes":${zTreeNodes}};
+		function initComplete(){
+			//绑定change事件
+			$("#selectTree").bind("change",function(){
+				$("#SelectedDepartCode").val("");
+				if($(this).attr("relValue")){
+					$("#SelectedDepartCode").val($(this).attr("relValue"));
+			    }
+			});
+			//赋给data属性
+			$("#selectTree").data("data",defaultNodes);  
+			$("#selectTree").render();
+			$("#selectTree2_input").val("请选择单位");
 		}
 	</script>
 
