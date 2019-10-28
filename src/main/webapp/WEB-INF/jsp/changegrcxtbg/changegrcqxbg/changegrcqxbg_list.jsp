@@ -73,11 +73,11 @@
 												            <label class="btn btn-sm btn-success" onclick="del(bill_code)"> 	
 												            <i class="ace-icon fa fa-trash-o bigger-160"></i>删除
 												            </label>
-												            <label class="btn btn-sm btn-purple"> 
+												            <label class="btn btn-sm btn-purple" onclick="report(bill_code)"> 
 <!-- 												        <span  class="bigger-110">上报</span>  -->
 												    	    <i class="ace-icon fa fa-share bigger-160"></i>上报
 												            </label>
-												            <label class="btn btn-sm btn-warning">
+												            <label class="btn btn-sm btn-warning" onclick="cancleReport(bill_code)">
 													        <i class="ace-icon fa fa-undo bigger-160"></i>撤销上报
 												            </label>
 												             <label class="btn btn-sm btn-pink"onclick="printf(bill_code)">
@@ -338,7 +338,10 @@
 					top.jzts();
 					var url = "<%=basePath%>changegrcqxbg/delete.do?BILL_CODE="+encodeURI(Id);
 					$.get(url,function(data){
-						console.log(data);
+						bootbox.dialog({
+							message: "<span class='bigger-110'>删除成功</span>",
+						});		
+						initList();
 						//nextPage(${page.currentPage});
 					});
 				}
@@ -425,18 +428,20 @@
 		//动态加载变更数据
 		function setDiv(item){
 		    var div = '<li  class="item-grey clearfix" onclick="showDetail(\''+item.BILL_CODE+'\');"><div><label class="inline" style="margin-bottom:5px;"><span class="list-item-value-title">'
-		        + item.BG_NAME
-		        + '</span></label></div><div><label class="inline"><span class="list-item-info">单位:&nbsp;</span><span class="list-item-value">'
-		        + item.UNIT_CODE
-		        +'</span></label><label class="inline pull-right"><span class="list-item-info">科室：<span class="list-item-value">'
-		        + item.DEPT_CODE
-		        +'</span></label></div><div><label class="inline"><span class="list-item-info">变更原因:&nbsp;</span><span class="list-item-value">'
-		        + item.BG_REASON
-		        +'</span></label></div><div><label class="inline"><span class="list-item-info">单号:&nbsp;</span><span class="list-item-value">'
-		        + item.BILL_CODE
-		        +'</span></label><label class="inline pull-right"><span class="list-item-info">申请日期:&nbsp;'
-		        + item.ENTRY_DATE
-		        +'</span></label></div></li>';
+		    + "GRC权限变更"
+	        + '</span></label></div><div><label class="inline"><span class="list-item-info">单号:&nbsp;</span><span class="list-item-value">'
+	        + item.BILL_CODE
+	        +'</span></label><label class="inline pull-right"><span class="list-item-info">科室：</span><span class="list-item-value">'
+	        + item.DEPT_CODE
+	        +'</span></label></div><div><label class="inline"><span class="list-item-info">状态:&nbsp;</span><span class="list-item-value">'
+	        + item.APPROVAL_STATE
+	        +'</span></label><label class="inline pull-right"><span class="list-item-info">单位:&nbsp;</span><span class="list-item-value">'
+	        + item.UNIT_CODE
+	        +'</span></label></div><div><label class="inline"><span class="list-item-info">账号撤销原因:&nbsp;</span><span class="list-item-value">'
+	        + item.BG_REASON
+	        +'</span></label><label class="inline pull-right"><span class="list-item-info">申请日期:&nbsp;'
+	        + item.ENTRY_DATE
+	        +'</span></label></div></li>';
 		    return div;
 		}
 		function showDetail(code){
@@ -454,22 +459,25 @@
 		      		     html += setDetail(datas);
 			            //console.log(html);
 		      			$('#detail-tab').html(html);
-// 		      		    console.log(datas);
-		      		  if(datas.BILL_STATE==1)
+		      		 if(datas.APPROVAL_STATE==2)
 		    			{
-		    			$("#step1").addClass('active');
+		    			$("#step1").removeClass('active');
 		    			$("#step2").removeClass('active');
 		    			$("#step3").removeClass('active');
-		    			}else if(datas.BILL_STATE==2)
+		    			}else if(datas.APPROVAL_STATE==0)//0为审批中
 		    			{
 		      			$("#step1").addClass('active');
 		    			$("#step2").addClass('active');
 		    			$("#step3").removeClass('active');
-		    			}else
+		    			}else if (datas.APPROVAL_STATE==1)//1 为完成状态
 						{
 		      			$("#step1").addClass('active');
 		    			$("#step2").addClass('active');
 			    		$("#step3").addClass('active');
+		    			}else{
+		    				$("#step1").addClass('active');
+			    			$("#step2").removeClass('active');
+			    			$("#step3").removeClass('active');
 		    			}
 		            } 
 		         });
@@ -477,24 +485,28 @@
 		//动态加载变更单详情
 		function setDetail(item){
 		    var div = '<div class="profile-user-info"><div class="profile-info-row"><div class="profile-info-name">问题：</div><div class="profile-info-value"><span>'
-		        + item.BG_NAME
-		        + '</span></div></div><div class="profile-info-row"><div class="profile-info-name">单位：</div><div class="profile-info-value"><i class="fa fa-map-marker light-orange bigger-110"></i><span>'
-		        + item.UNIT_CODE		       
-		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 科室： </div><div class="profile-info-value"><span>'
-		        + item.DEPT_CODE
-		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 变更原因 ：</div><div class="profile-info-value"><span>'
-		        +item.BG_REASON
-		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 单号： </div><div class="profile-info-value"><span>'
-		        +item.BILL_CODE
-		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人： </div><div class="profile-info-value"><span>'
-		        +item.USER_CODE
-		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人部门： </div><div class="profile-info-value"><span>'
-		        +item.USER_DEPT
-		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人岗位： </div><div class="profile-info-value"><span>'
-		        +item.USER_JOB
-		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请日期： </div><div class="profile-info-value"><span>'
-		        +item.ENTRY_DATE
-		        +'</span></div></div>'
+		    	  + "GRC权限变更"
+			        + '</span></div></div><div class="profile-info-row"><div class="profile-info-name">申请单号：</div><div class="profile-info-value"><i class="fa fa-map-marker light-orange bigger-110"></i><span>'
+			        + item.BILL_CODE		       
+			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请单位： </div><div class="profile-info-value"><span>'
+			        + item.UNIT_CODE
+			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请部门： </div><div class="profile-info-value"><span>'
+			        +item.DEPT_CODE
+			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 账号撤销原因 ：</div><div class="profile-info-value"><span>'
+			        +item.BG_REASON
+			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人部门： </div><div class="profile-info-value"><span>'
+			        +item.USER_DEPT
+			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人： </div><div class="profile-info-value"><span>'
+			        +item.USER_CODE
+			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人岗位： </div><div class="profile-info-value"><span>'
+			        +item.USER_JOB
+			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 联系方式： </div><div class="profile-info-value"><span>'
+			        +item.USER_CONTACT
+			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请生效日期： </div><div class="profile-info-value"><span>'
+			        +item.EFFECTIVE_DATE
+			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请日期： </div><div class="profile-info-value"><span>'
+			        +item.ENTRY_DATE
+			        +'</span></div></div>'
 		    return div;	
 		}	
 		function printf1(){
@@ -523,6 +535,120 @@
 		//导出excel
 		function toExcel(){
 			window.location.href='<%=basePath%>changegrcqxbg/excel.do';
+		}
+		//搜索
+		function tosearch(){
+			$("#tasks li").remove(); 
+			top.jzts();
+			var keywords = $("#SelectedBillCode").val();
+			$.ajax({
+					type: "POST",
+					url: '<%=basePath%>changegrcqxbg/getPageList.do',
+			    	data: {keywords:keywords},
+					dataType:'json',
+					cache: false,
+					success: function(data){
+						if(data.length>0){
+							$.each(data, function(i, item){
+							    var html = '';
+							        html += setDiv(item);
+								$("#tasks").append(html);
+						 	});
+						}
+						else{
+							addEmpty();
+						}
+						top.hangge();
+					}
+			});
+		}
+		//上报
+		function report(billCode){
+			bootbox.confirm("确定要对单据"+billCode+"进行上报吗?", function(result) {
+				if(result) {
+				  $.ajax({
+					  	type: "POST",
+			            //提交的网址
+			           	url: '<%=basePath%>approvalconfig/bgReport.do?BUSINESS_CODE=4&BILL_CODE='+encodeURI(billCode),		      
+			            //返回数据的格式
+			        	dataType:'json',		          
+			            success:function(datas){
+			            	console.log(datas.msg);
+			            		bootbox.dialog({
+									message: "<span class='bigger-110'>"+datas.msg+"</span>",
+								});			            					            	
+			            	initList();
+			            }
+			         });
+				}
+			});
+				 
+		}
+		//撤销上报
+		function cancleReport(billCode){
+			bootbox.confirm("确定要对单据"+billCode+"撤销上报吗?", function(result) {
+				if(result) {
+// 					top.jzts();
+					 $.ajax({
+						  	type: "POST",
+				            //提交的网址
+				           	url: '<%=basePath%>approvalconfig/cancleReport.do?BILL_CODE='+encodeURI(billCode),		      
+				            //返回数据的格式
+				        	dataType:'json',		          
+				            success:function(datas){	
+				            	bootbox.dialog({
+									message: "<span class='bigger-110'>"+datas.msg+"</span>",
+								});					            					            	
+				            	initList();
+				            }
+				
+				         });
+				}
+			});
+				 
+		}
+		
+		/**
+		 * 初始化列表信息
+		 */
+		function initList(){
+			$("#tasks li").remove(); 
+			top.jzts();
+			var keywords = $("#keywords").val();
+			$.ajax({
+					type: "POST",
+					url: '<%=basePath%>changegrcqxbg/getPageList.do',
+			    	data: {keywords:keywords},
+					dataType:'json',
+					cache: false,
+					success: function(data){
+						if(data.length>0){
+							$.each(data, function(i, item){
+							    var html = '';
+							        html += setDiv(item);
+								$("#tasks").append(html);
+						 	});
+						}
+						else{
+							addEmpty();
+						}
+						top.hangge();
+					}
+			});
+		}
+		
+		/**
+		 * 增加空数据提示
+		 */
+		function addEmpty(){
+			var htmlEmpty='<li class="item-grey clearfix">'
+				+'<div>'
+					+'<label class="inline" style="margin-bottom:5px;">'
+						+'<span class="list-item-value-title">没有相关数据</span>'
+					+'</label>'
+				+'<div>'
+			+'</li>';
+			$("#tasks").append(htmlEmpty);
 		}
 		
 	</script>

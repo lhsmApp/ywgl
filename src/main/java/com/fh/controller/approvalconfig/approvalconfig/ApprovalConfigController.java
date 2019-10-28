@@ -168,7 +168,19 @@ public class ApprovalConfigController extends BaseController {
 		}
 		page.setPd(pd);
 		List<PageData> varList = approvalconfigService.listScheme(page);
-		
+		for(PageData p:varList){
+			if(null!=p.getString("APPROVAL_STATE")&&!"".equals(p.getString("APPROVAL_STATE"))){
+				if(p.getString("APPROVAL_STATE").equals("0")){
+					p.put("APPROVAL_STATE", "审批中");
+				}else if(p.getString("APPROVAL_STATE").equals("1")){
+					p.put("APPROVAL_STATE", "已完成");
+				}else if(p.getString("APPROVAL_STATE").equals("2")){
+					p.put("APPROVAL_STATE", "退回");
+				}
+			}else{
+				p.put("APPROVAL_STATE", "未上报");
+			}		
+		} 	
 		return varList;
 	}
 	/**初始列表,显示当前待审批单据
@@ -188,7 +200,21 @@ public class ApprovalConfigController extends BaseController {
 		pd.put("UNIT_CODE", unitCode);//单位编码
 		pd.put("ACTIVE_FLAG", '1');//激活状态为1
 		pd.put("APPROVAL_STATE", "0");///审批状态为0
+		pd.put("BUSINESS_CODE", "1");///初始显示业务单据类型为系统变更
 		List<PageData>	varList = approvalconfigService.listApproval(pd);	//列出ChangeErpXtbg列表
+		for(PageData p:varList){
+			if(null!=p.getString("APPROVAL_STATE")&&!"".equals(p.getString("APPROVAL_STATE"))){
+				if(p.getString("APPROVAL_STATE").equals("0")){
+					p.put("APPROVAL_STATE", "审批中");
+				}else if(p.getString("APPROVAL_STATE").equals("1")){
+					p.put("APPROVAL_STATE", "已完成");
+				}else if(p.getString("APPROVAL_STATE").equals("2")){
+					p.put("APPROVAL_STATE", "退回");
+				}
+			}else{
+				p.put("APPROVAL_STATE", "未上报");
+			}		
+		} 	
 		mv.setViewName("approvalconfig/approvalconfig/xtbgapproval_list");
 		mv.addObject("varList", JSON.toJSONString(varList));
 		mv.addObject("msg", "edit");
@@ -224,7 +250,7 @@ public class ApprovalConfigController extends BaseController {
 		case "2": //角色变更;		   
 			pd1 = changeerpjsbgService.findById(pd1);
 		    break;	
-		case "3": //GRC账号新增;		   
+		case "3": //GRC帐号新增;		   
 			pd1 = changegrczhxzService.findById(pd1);
 		    break;
 		case "4": //GRC权限变更;		   
@@ -269,8 +295,8 @@ public class ApprovalConfigController extends BaseController {
 				}				
 			}
 		}else{
-			pd.put("msg", "审批级别配置表中未找到相关信息，请确认！");
-			return pd;
+			pd1.put("msg", "审批级别配置表中未找到相关信息，请确认！");
+			return pd1;
 		}
 		pd1.put("listDetail", list);
 		approvalconfigService.save(pd1);

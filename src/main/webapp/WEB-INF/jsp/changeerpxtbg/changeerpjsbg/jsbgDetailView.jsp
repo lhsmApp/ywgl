@@ -41,7 +41,7 @@
 								<td style="width:115px;text-align: right;padding-top: 13px;">申请单号:</td>
 								<td><input type="text" name="BILL_CODE" id="BILL_CODE" value="${pd.BILL_CODE}" maxlength="100" title="申请单号" style="width:98%;"/></td>
 								<td style="width:115px;text-align: right;padding-top: 13px;">单位简称:</td>
-								<td><input type="text" name="UNIT_CODE" id="UNIT_CODE" value="${pd.UNIT_CODE}" maxlength="30" title="单位简称" style="width:98%;"/></td>		 
+								<td><input type="text" name="UNIT_CODE" id="UNIT_CODE" value="${pd.UNIT_CODE}" maxlength="30" title="单位简称" style="width:98%;"/></td>		
 							</tr>
 							<tr>
 								<td style="width:115px;text-align: right;padding-top: 13px;">部门简称:</td>
@@ -80,12 +80,17 @@
 								<td><input type="text" name="BILL_STATE" id="BILL_STATE" value="${pd.BILL_STATE}" maxlength="10"  title="单据状态" style="width:98%;"/></td>
 							</tr>
 							<tr>
+								<td style="width:115px;text-align: right;padding-top: 13px;">增加角色:</td>
+								<td><input type="text" name="BILL_USER" id="BILL_USER" value="${pd.ADD_ROLE}" maxlength="20"  title="创建人" style="width:98%;"/></td>
+								<td style="width:115px;text-align: right;padding-top: 13px;">删除角色:</td>
+								<td><input type="text" name="BILL_DATE" id="BILL_DATE" value="${pd.DEL_ROLE}" maxlength="30" title="创建日期" style="width:98%;"/></td>
+							</tr>
+							<tr>
 								<td style="width:115px;text-align: right;padding-top: 13px;">创建人:</td>
 								<td><input type="text" name="BILL_USER" id="BILL_USER" value="${pd.BILL_USER}" maxlength="20"  title="创建人" style="width:98%;"/></td>
 								<td style="width:115px;text-align: right;padding-top: 13px;">创建日期:</td>
 								<td><input type="text" name="BILL_DATE" id="BILL_DATE" value="${pd.BILL_DATE}" maxlength="30" title="创建日期" style="width:98%;"/></td>
 							</tr>
-
 						</table>
 						</div>
 					<!-- /.col -->

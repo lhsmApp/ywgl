@@ -176,7 +176,7 @@
 		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
 			and
 				(
-				BG_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				ACCOUNT_REASON LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 				<!--	根据需求自己加检索条件
 					字段1 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 					 or 

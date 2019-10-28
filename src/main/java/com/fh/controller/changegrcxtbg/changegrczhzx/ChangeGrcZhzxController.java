@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
 import com.fh.controller.base.BaseController;
+import com.fh.controller.common.BillnumUtil;
 import com.fh.entity.Page;
 import com.fh.entity.system.User;
 import com.fh.util.AppUtil;
@@ -28,10 +29,13 @@ import com.fh.util.ObjectExcelView;
 import com.fh.util.PageData;
 import com.fh.util.Jurisdiction;
 import com.fh.util.Tools;
+import com.fh.util.enums.BillNumType;
 
 import net.sf.json.JSONArray;
 
+import com.fh.service.billnum.BillNumManager;
 import com.fh.service.changegrcxtbg.changegrczhzx.ChangeGrcZhzxManager;
+import com.fh.service.fhoa.department.DepartmentManager;
 
 /** 
  * 说明：changegrczhzx
@@ -46,18 +50,25 @@ public class ChangeGrcZhzxController extends BaseController {
 	@Resource(name="changegrczhzxService")
 	private ChangeGrcZhzxManager changegrczhzxService;
 	
+	@Resource(name="departmentService")
+	private DepartmentManager departmentService;
+	
+	@Resource(name = "billnumService")
+	private BillNumManager billNumService;
 	/**保存
 	 * @param
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/save")
 	public ModelAndView save() throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"新增ChangeGrcZhzx");
-		if(!Jurisdiction.buttonJurisdiction(menuUrl, "add")){return null;} //校验权限
+//		logBefore(logger, Jurisdiction.getUsername()+"新增ChangeGrcZhzx");
+//		if(!Jurisdiction.buttonJurisdiction(menuUrl, "add")){return null;} //校验权限
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		pd.put("CHANGEGRCZHZX_ID", this.get32UUID());	//主键
+//		pd.put("CHANGEGRCZHZX_ID", this.get32UUID());	//主键
+		String billCode=BillnumUtil.getBillnum(billNumService, BillNumType.GRC_ZHZX, pd.getString("PRO_DEPART"), "");
+		pd.put("BILL_CODE", billCode);
 		changegrczhzxService.save(pd);
 		mv.addObject("msg","success");
 		mv.setViewName("save_result");
@@ -167,6 +178,44 @@ public class ChangeGrcZhzxController extends BaseController {
 		} 	
 		return varList;
 	}
+	/**GRC帐号撤销查询列表
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/queryList")
+	public ModelAndView queryList(Page page) throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+	    String userId=user.getUSER_ID();
+	    pd.put("BILL_USER", userId);	
+		String keywords = pd.getString("keywords");	
+		if(null != keywords && !"".equals(keywords)){
+			pd.put("keywords", keywords.trim());
+		}
+		page.setPd(pd);
+		List<PageData>	varList = changegrczhzxService.list(page);	//列出ChangeErpXtbg列表
+		mv.setViewName("changegrcxtbg/changegrczhzx/changegrczhzxQuery");
+		mv.addObject("varList", varList);
+		mv.addObject("pd", pd);
+		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
+		return mv;
+	}
+	/**显示变更详情
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/detailView")
+	public ModelAndView detailView()throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		PageData pdResult = changegrczhzxService.findById(pd);	//根据ID读取
+		mv.setViewName("changegrcxtbg/changegrczhzx/grczhzxDetailView");
+		mv.addObject("pd", pdResult);
+		return mv;
+	}
 	/**去新增页面
 	 * @param
 	 * @throws Exception
@@ -179,6 +228,9 @@ public class ChangeGrcZhzxController extends BaseController {
 		mv.setViewName("changegrcxtbg/changegrczhzx/changegrczhzx_edit");
 		mv.addObject("msg", "save");
 		mv.addObject("pd", pd);
+		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
+		JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0",zdepartmentPdList));
+		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
 		return mv;
 	}	
 	
@@ -195,6 +247,9 @@ public class ChangeGrcZhzxController extends BaseController {
 		mv.setViewName("changegrcxtbg/changegrczhzx/changegrczhzx_edit");
 		mv.addObject("msg", "edit");
 		mv.addObject("pd", pd);
+		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
+		JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0",zdepartmentPdList));
+		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
 		return mv;
 	}	
 	 /**打印

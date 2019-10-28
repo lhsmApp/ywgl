@@ -35,6 +35,19 @@
 								    <div class="widget-body">
 									    <div class="widget-main">
 										    <form class="form-inline">
+										    <span class="pull-left" style="margin-right: 5px;"> 
+												<select
+													class="chosen-select form-control" name="BUSINESS_TYPE"
+													id=BUSINESS_TYPE data-placeholder="请选择业务类型"
+													style="vertical-align: top; height: 32px; width: 150px;">
+														<option value="">请选择业务类型</option>
+														<option  value="1">系统变更</option>
+														<option  value="2">角色变更</option>
+														<option  value="3">GRC帐号新增</option>
+														<option  value="4">GRC帐号变更</option>
+														<option  value="5">GRC帐号撤销</option>
+												</select>
+											</span>		
 												<span class="input-icon pull-left" style="margin-right: 5px;">
 													<input id="SelectedBillCode" class="nav-search-input" autocomplete="off" type="text" name="keywords" value="${pd.keywords }" placeholder="在已有申请中搜索"> 
 													<i class="ace-icon fa fa-search nav-search-icon"></i>
@@ -208,7 +221,7 @@
 		}
 		$(function() {
 			var data=${varList};
-			showDetail(data[0].BILL_CODE);
+			showDetail(data[0].BILL_CODE,data[0].CURRENT_LEVEL,data[0].NEXT_LEVEL);
 			//日期框
 			$('.date-picker').datepicker({
 				autoclose: true,
@@ -373,7 +386,7 @@
 		}		
 		//动态加载变更数据
 		function setDiv(item){
-		    var div = '<li  class="item-grey clearfix" onclick="showDetail(\''+item.BILL_CODE+'\');"><div><label class="inline" style="margin-bottom:5px;"><span class="list-item-value-title">'
+		    var div = '<li  class="item-grey clearfix" onclick="showDetail(\''+item.BILL_CODE+'\',\''+item.CURRENT_LEVEL+'\',\''+item.NEXT_LEVEL+'\');"><div><label class="inline" style="margin-bottom:5px;"><span class="list-item-value-title">'
 		        + item.BG_NAME
 		        + '</span></label></div><div><label class="inline"><span class="list-item-info">单号:&nbsp;</span><span class="list-item-value">'
 		        + item.BILL_CODE
@@ -394,6 +407,8 @@
 			bill_code=code;
 		 	current_level=current;//当前审批级别
 		    next_level=next;//下一审批级别	  
+		    console.log(current_level);
+		    console.log(next_level);
 			  $.ajax({
 				  	type: "POST",
 		            //提交的网址
@@ -406,21 +421,25 @@
 		      		     html += setDetail(datas);
 		      			$('#detail-tab').html(html);
 // 		      		    console.log(datas);
-		      		  if(datas.BILL_STATE==1)
+		      		    if(datas.APPROVAL_STATE==2)
 		    			{
-		    			$("#step1").addClass('active');
+		    			$("#step1").removeClass('active');
 		    			$("#step2").removeClass('active');
 		    			$("#step3").removeClass('active');
-		    			}else if(datas.BILL_STATE==2)
+		    			}else if(datas.APPROVAL_STATE==0)//0为审批中
 		    			{
 		      			$("#step1").addClass('active');
 		    			$("#step2").addClass('active');
 		    			$("#step3").removeClass('active');
-		    			}else
+		    			}else if (datas.APPROVAL_STATE==1)//1 为完成状态
 						{
 		      			$("#step1").addClass('active');
 		    			$("#step2").addClass('active');
 			    		$("#step3").addClass('active');
+		    			}else{
+		    				$("#step1").addClass('active');
+			    			$("#step2").removeClass('active');
+			    			$("#step3").removeClass('active');
 		    			}
 		            } 
 		         });
@@ -471,10 +490,12 @@
 	
 		//审批通过
 		function passApproval(){
+			var businessType= $("#BUSINESS_TYPE").val()
+// 			console.log(businessType);
 			  $.ajax({
 				  	type: "POST",
 		            //提交的网址
-		           	url: '<%=basePath%>approvalconfig/passApproval.do?BILL_CODE='+encodeURI(bill_code)+'&CURRENT_LEVEL='+current_level+'&NEXT_LEVEL='+next_level,			      
+		           	url: '<%=basePath%>approvalconfig/passApproval.do?BILL_CODE='+encodeURI(bill_code)+'&CURRENT_LEVEL='+current_level+'&NEXT_LEVEL='+next_level+'&BUSINESS_TYPE='+businessType,			      
 		            //返回数据的格式
 		        	dataType:'json',		          
 		            success:function(datas){

@@ -21,7 +21,9 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSON;
 import com.fh.controller.base.BaseController;
 import com.fh.entity.Page;
+import com.fh.entity.system.User;
 import com.fh.util.AppUtil;
+import com.fh.util.Const;
 import com.fh.util.ObjectExcelView;
 import com.fh.util.PageData;
 import com.fh.util.Jurisdiction;
@@ -68,8 +70,8 @@ public class ChangeGrcQxbgController extends BaseController {
 	 */
 	@RequestMapping(value="/delete")
 	public void delete(PrintWriter out) throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"删除ChangeGrcQxbg");
-		if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return;} //校验权限
+//		logBefore(logger, Jurisdiction.getUsername()+"删除ChangeGrcQxbg");
+//		if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return;} //校验权限
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		changegrcqxbgService.delete(pd);
@@ -105,12 +107,28 @@ public class ChangeGrcQxbgController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+	    String userId=user.getUSER_ID();
+	    pd.put("BILL_USER", userId);	
 		String keywords = pd.getString("keywords");				//关键词检索条件
 		if(null != keywords && !"".equals(keywords)){
 			pd.put("keywords", keywords.trim());
 		}
 		page.setPd(pd);
 		List<PageData>	varList = changegrcqxbgService.list(page);	//列出ChangeGrcQxbg列表
+		for(PageData p:varList){
+			if(null!=p.getString("APPROVAL_STATE")&&!"".equals(p.getString("APPROVAL_STATE"))){
+				if(p.getString("APPROVAL_STATE").equals("0")){
+					p.put("APPROVAL_STATE", "审批中");
+				}else if(p.getString("APPROVAL_STATE").equals("1")){
+					p.put("APPROVAL_STATE", "已完成");
+				}else if(p.getString("APPROVAL_STATE").equals("2")){
+					p.put("APPROVAL_STATE", "退回");
+				}
+			}else{
+				p.put("APPROVAL_STATE", "未上报");
+			}		
+		} 	
 		mv.setViewName("changegrcxtbg/changegrcqxbg/changegrcqxbg_list");
 		//mv.addObject("varList", varList);
 		mv.addObject("varList", JSON.toJSONString(varList));
@@ -118,7 +136,44 @@ public class ChangeGrcQxbgController extends BaseController {
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		return mv;
 	}
-	
+	/**GRC权限变更查询列表
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/queryList")
+	public ModelAndView queryList(Page page) throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+	    String userId=user.getUSER_ID();
+	    pd.put("BILL_USER", userId);	
+		String keywords = pd.getString("keywords");	
+		if(null != keywords && !"".equals(keywords)){
+			pd.put("keywords", keywords.trim());
+		}
+		page.setPd(pd);
+		List<PageData>	varList = changegrcqxbgService.list(page);	//列出ChangeErpXtbg列表
+		mv.setViewName("changegrcxtbg/changegrcqxbg/changegrcqxbgQuery");
+		mv.addObject("varList", varList);
+		mv.addObject("pd", pd);
+		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
+		return mv;
+	}
+	/**显示变更详情
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/detailView")
+	public ModelAndView detailView()throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		PageData pdResult = changegrcqxbgService.findById(pd);	//根据ID读取
+		mv.setViewName("changegrcxtbg/changegrcqxbg/grcqxbgDetailView");
+		mv.addObject("pd", pdResult);
+		return mv;
+	}
 	/**去新增页面
 	 * @param
 	 * @throws Exception
@@ -149,6 +204,38 @@ public class ChangeGrcQxbgController extends BaseController {
 		mv.addObject("pd", pd);
 		return mv;
 	}	
+	/**显示该用户提报的变更申请单
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/getPageList")
+	public @ResponseBody List<PageData> getPageList(Page page) throws Exception{
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		String userId = user.getUSER_ID();
+		pd.put("BILL_USER", userId);	
+		String keywords = pd.getString("keywords");				//关键词检索条件
+		if(null != keywords && !"".equals(keywords)){
+			pd.put("keywords", keywords.trim());
+		}
+		page.setPd(pd);
+		List<PageData> varList = changegrcqxbgService.list(page);
+		for(PageData p:varList){
+			if(null!=p.getString("APPROVAL_STATE")&&!"".equals(p.getString("APPROVAL_STATE"))){
+				if(p.getString("APPROVAL_STATE").equals("0")){
+					p.put("APPROVAL_STATE", "审批中");
+				}else if(p.getString("APPROVAL_STATE").equals("1")){
+					p.put("APPROVAL_STATE", "已完成");
+				}else if(p.getString("APPROVAL_STATE").equals("2")){
+					p.put("APPROVAL_STATE", "退回");
+				}
+			}else{
+				p.put("APPROVAL_STATE", "未上报");
+			}		
+		} 	
+		return varList;
+	}
 	 /**打印
 		 * @param
 		 * @throws Exception
@@ -161,12 +248,31 @@ public class ChangeGrcQxbgController extends BaseController {
 			pd = changegrcqxbgService.findById(pd);	//根据ID读取
 			JSONArray json = JSONArray.fromObject(pd); 
 			mv.setViewName("changeerpxtbg/changeerpxtbg/PrintReport");
-			mv.addObject("report", "static/js/gridReport/grf/erpSystemChange.grf");
+			mv.addObject("ReportURL", "static/js/gridReport/grf/changeGrcQxbg.grf");
+			mv.addObject("DataURL", "changegrcqxbg/PrintQxbg.do?BILL_CODE="+pd.getString("BILL_CODE"));
 			mv.addObject("msg", "edit");
 			mv.addObject("pd", pd);
 			mv.addObject("jsonStr", json);
 			return mv;
 		}	
+		/**打印
+		 * @param
+		 * @throws Exception
+		 */
+		@RequestMapping(value="/PrintQxbg")
+		@ResponseBody 
+		public  PageData PrintZhzx() throws Exception{
+			PageData pd = new PageData();
+			pd = this.getPageData();
+			//根据BILL_CODE读取表单信息以及表单上申请人所在的单位及部门名称
+			pd = changegrcqxbgService.findByBillCode(pd);	
+			List<PageData> listPageData=new ArrayList<PageData>();
+			listPageData.add(pd);
+			
+			PageData pdResult=new PageData();
+			pdResult.put("Table", listPageData);
+			return 	pdResult;
+		}
 		/**列表
 		 * @param page
 		 * @throws Exception

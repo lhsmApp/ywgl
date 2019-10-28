@@ -31,7 +31,9 @@ import com.fh.util.Tools;
 
 import net.sf.json.JSONArray;
 
+import com.fh.service.billnum.BillNumManager;
 import com.fh.service.changegrcxtbg.changegrczhxz.ChangeGrcZhxzManager;
+import com.fh.service.fhoa.department.DepartmentManager;
 
 /** 
  * 说明：changeGrcZhxz
@@ -46,14 +48,18 @@ public class ChangeGrcZhxzController extends BaseController {
 	@Resource(name="changegrczhxzService")
 	private ChangeGrcZhxzManager changegrczhxzService;
 	
+	@Resource(name="departmentService")
+	private DepartmentManager departmentService;
+	
+	@Resource(name = "billnumService")
+	private BillNumManager billNumService;
+	
 	/**保存
 	 * @param
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/save")
 	public ModelAndView save() throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"新增ChangeGrcZhxz");
-		if(!Jurisdiction.buttonJurisdiction(menuUrl, "add")){return null;} //校验权限
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
@@ -70,8 +76,6 @@ public class ChangeGrcZhxzController extends BaseController {
 	 */
 	@RequestMapping(value="/delete")
 	public void delete(PrintWriter out) throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"删除ChangeGrcZhxz");
-		if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return;} //校验权限
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		changegrczhxzService.delete(pd);
@@ -85,8 +89,6 @@ public class ChangeGrcZhxzController extends BaseController {
 	 */
 	@RequestMapping(value="/edit")
 	public ModelAndView edit() throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"修改ChangeGrcZhxz");
-		if(!Jurisdiction.buttonJurisdiction(menuUrl, "edit")){return null;} //校验权限
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
@@ -102,8 +104,6 @@ public class ChangeGrcZhxzController extends BaseController {
 	 */
 	@RequestMapping(value="/list")
 	public ModelAndView list(Page page) throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"列表ChangeGrcZhxz");
-		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
@@ -116,11 +116,62 @@ public class ChangeGrcZhxzController extends BaseController {
 		}
 		page.setPd(pd);
 		List<PageData>	varList = changegrczhxzService.list(page);	//列出ChangeGrcZhxz列表
+		for(PageData p:varList){
+			if(null!=p.getString("APPROVAL_STATE")&&!"".equals(p.getString("APPROVAL_STATE"))){
+				if(p.getString("APPROVAL_STATE").equals("0")){
+					p.put("APPROVAL_STATE", "审批中");
+				}else if(p.getString("APPROVAL_STATE").equals("1")){
+					p.put("APPROVAL_STATE", "已完成");
+				}else if(p.getString("APPROVAL_STATE").equals("2")){
+					p.put("APPROVAL_STATE", "退回");
+				}
+			}else{
+				p.put("APPROVAL_STATE", "未上报");
+			}		
+		} 	
 		mv.setViewName("changegrcxtbg/changegrczhxz/changegrczhxz_list");
 		//mv.addObject("varList", varList);		
 		mv.addObject("varList", JSON.toJSONString(varList));
 		mv.addObject("pd", pd);
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
+		return mv;
+	}
+	/**GRC权限变更查询列表
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/queryList")
+	public ModelAndView queryList(Page page) throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+	    String userId=user.getUSER_ID();
+	    pd.put("BILL_USER", userId);	
+		String keywords = pd.getString("keywords");	
+		if(null != keywords && !"".equals(keywords)){
+			pd.put("keywords", keywords.trim());
+		}
+		page.setPd(pd);
+		List<PageData>	varList = changegrczhxzService.list(page);	//列出ChangeErpXtbg列表
+		mv.setViewName("changegrcxtbg/changegrczhxz/changegrczhxzQuery");
+		mv.addObject("varList", varList);
+		mv.addObject("pd", pd);
+		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
+		return mv;
+	}
+	/**显示变更详情
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/detailView")
+	public ModelAndView detailView()throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		PageData pdResult = changegrczhxzService.findById(pd);	//根据ID读取
+		mv.setViewName("changegrcxtbg/changegrczhxz/grczhxzDetailView");
+		mv.addObject("pd", pdResult);
 		return mv;
 	}
 	/**显示该用户提报的变更申请单
@@ -167,6 +218,9 @@ public class ChangeGrcZhxzController extends BaseController {
 		mv.setViewName("changegrcxtbg/changegrczhxz/changegrczhxz_edit");
 		mv.addObject("msg", "save");
 		mv.addObject("pd", pd);
+		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
+		JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0",zdepartmentPdList));
+		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
 		return mv;
 	}	
 	
@@ -183,6 +237,9 @@ public class ChangeGrcZhxzController extends BaseController {
 		mv.setViewName("changegrcxtbg/changegrczhxz/changegrczhxz_edit");
 		mv.addObject("msg", "edit");
 		mv.addObject("pd", pd);
+		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
+		JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0",zdepartmentPdList));
+		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
 		return mv;
 	}	
 	 /**打印

@@ -58,7 +58,7 @@
 									    <div class="widget-main">
 										    <form class="form-inline">
 												<span class="input-icon pull-left" style="margin-right: 5px;">
-													<input id="SelectedBusiDate" class="nav-search-input" autocomplete="off" type="text" name="keywords" value="${pd.keywords }" placeholder="在已有申请中搜索"> 
+													<input id="SelectedBillCode" class="nav-search-input" autocomplete="off" type="text" name="keywords" value="${pd.keywords }" placeholder="在已有申请中搜索"> 
 													<i class="ace-icon fa fa-search nav-search-icon"></i>
 												</span>																			 
 												<button type="button" class="btn btn-info btn-sm" onclick="tosearch();">
@@ -73,14 +73,14 @@
 												            <label class="btn btn-sm btn-success" onclick="del(bill_code)"> 	
 												            <i class="ace-icon fa fa-trash-o bigger-160"></i>删除
 												            </label>
-												            <label class="btn btn-sm btn-purple"> 
+												            <label class="btn btn-sm btn-purple" onclick="report(bill_code)"> 
 <!-- 												        <span  class="bigger-110">上报</span>  -->
 												    	    <i class="ace-icon fa fa-share bigger-160"></i>上报
 												            </label>
-												            <label class="btn btn-sm btn-warning">
+												            <label class="btn btn-sm btn-warning" onclick="cancleReport(bill_code)">
 													        <i class="ace-icon fa fa-undo bigger-160"></i>撤销上报
 												            </label>
-												             <label class="btn btn-sm btn-pink"onclick="printf(bill_code)">
+												             <label class="btn btn-sm btn-pink" onclick="printf(bill_code)">
 												             <i class="ace-icon fa fa-print bigger-160"></i>
 															打印
 												            </label>										
@@ -94,7 +94,7 @@
 					<div class="row">
 						<div class="col-xs-4">
 						<!-- 检索  -->
-						<form style="margin:5px;" action="user/listUsers.do" method="post" name="userForm" id="userForm">
+<!-- 						<form style="margin:5px;" action="user/listUsers.do" method="post" name="userForm" id="userForm"> -->
 <!-- 							<div class="nav-search" style="margin:10px 0px;"> -->
 <!-- 								<span class="input-icon" style="width:86%"> -->
 <%-- 									<input style="width:100%" class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词" /> --%>
@@ -112,7 +112,7 @@
 							</ul>						
 	
 				
-						</form>
+<!-- 						</form> -->
 					</div>
 					
 					<div class="col-xs-8">
@@ -143,7 +143,9 @@
 										<li class="active">
 											<a data-toggle="tab" href="#detail-tab">详情</a>
 										</li>
-		
+										<li>
+											<a data-toggle="tab" href="#report-tab">提报</a>
+										</li>
 										<li>
 											<a data-toggle="tab" href="#assigh-tab">分配</a>
 										</li>
@@ -214,6 +216,65 @@
 										</div>
 										<div id="detail-tab" class="tab-pane active">
 											
+										</div>
+											<div id="report-tab" class="tab-pane">
+											<form action="" name="problemAssignForm" id="problemAssignForm" method="post">
+												<input type="hidden" name="xtbgID" id="xtbgID" value="${pd.BILL_CODE }"/>
+												<div id="zhongxin" style="padding-top: 13px;">													
+													<div style="margin:10px 0px;">
+														<label for="form-field-select-1">申请人</label>
+														<input type="text" name="zhxz_uesr" id="zhxz_uesr" class="form-control" placeholder="请输入申请人"/>
+													</div>
+												    <div style="margin:10px 0px;">
+														<label for="form-field-select-1">申请人单位</label>
+														<input type="text" name="zhxz_unit" id="zhxz_unit" class="form-control" placeholder="请输入申请人单位"/>
+													</div>
+													   <div style="margin:10px 0px;">
+														<label for="form-field-select-1">申请人部门</label>
+														<input type="text" name="zhxz_depart" id="zhxz_depart" class="form-control" placeholder="请输入申请人部门"/>
+													</div>
+													<div style="margin:10px 0px;">
+														<label for="form-field-select-1">帐号撤销原因</label>
+														<input type="text" name="zhxz_reason" id="zhxz_reason" class="form-control" placeholder="请输入变更内容及原因"/>
+													</div>
+													<div style="margin:10px 0px;">
+														<label for="form-field-select-1">联系方式</label>
+														<input type="text" name="zhxz_contact" id="zhxz_contact" class="form-control" placeholder="请输入联系方式"/>
+													</div>
+													<hr />
+													<div class="row">
+												<div style="margin:10px 12px;">
+													<h4>
+														<button id="btnAddProInfoAttachment" class="btn btn-success btn-xs"
+															onclick="addProAttachmentByType('PROBLEM_INFO')">
+															<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>上传附件</span>
+														</button>
+													</h4>
+													<table id="simple-table" class="table table-striped table-bordered table-hover" style="margin-top:5px;">	
+														<thead>
+															<tr>
+																<th class="center" style="width:50px;">序号</th>
+																<th class="center">附件名</th>
+																<th class="center">附件说明</th>
+																<th class="center">附件大小</th>
+																<th class="center">上传人</th>
+																<th class="center">上传日期</th>
+																<th class="center">操作</th>
+															</tr>
+														</thead>
+																				
+														<tbody id="tbodyProInfoAttachment">
+															
+														</tbody>
+													</table>
+												</div>
+											</div>
+													<div>
+														<a class="btn btn-mini btn-primary" onclick="save();">保存</a>
+														<a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">取消</a>
+													</div>		
+												</div>											
+											</form>
 										</div>
 									</div>
 								</div>
@@ -330,16 +391,45 @@
 			 };
 			 diag.show();
 		}
-		
+		/**
+		 * 上传附件
+		 */
+		function addProAttachmentByType(type){
+			 var proCode=0;
+			 console.log(type);
+			 top.jzts();
+			 var diag = new top.Dialog();
+			 diag.Drag=true;
+			 diag.Title ="上传附件";
+			 diag.URL = '<%=basePath%>attachment/goAdd.do?BUSINESS_TYPE='+type+'&BILL_CODE='+proCode;
+			 diag.Width = 460;
+			 diag.Height = 290;
+			 diag.Modal = true;				//有无遮罩窗口
+			 diag. ShowMaxButton = true;	//最大化按钮
+		     diag.ShowMinButton = true;		//最小化按钮
+			 diag.CancelEvent = function(){ //关闭事件
+				if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
+					console.log('gggg');
+				 	getProAttachment(type);
+				}
+				diag.close();
+			 };
+			 diag.show();
+		}
 		//删除
 		function del(Id){
+			console.log(Id);
 			bootbox.confirm("确定要删除吗?", function(result) {
 				if(result) {
 					top.jzts();
 					var url = "<%=basePath%>changegrczhxz/delete.do?BILL_CODE="+encodeURI(Id);
 					$.get(url,function(data){
-						console.log(data);
+// 						console.log(data);
 						//nextPage(${page.currentPage});
+						bootbox.dialog({
+							message: "<span class='bigger-110'>删除成功</span>",
+						});		
+						initList();
 					});
 				}
 			});
@@ -426,14 +516,16 @@
 		function setDiv(item){
 		    var div = '<li  class="item-grey clearfix" onclick="showDetail(\''+item.BILL_CODE+'\');"><div><label class="inline" style="margin-bottom:5px;"><span class="list-item-value-title">'
 		        + "GRC帐号新增"
-		        + '</span></label></div><div><label class="inline"><span class="list-item-info">单位:&nbsp;</span><span class="list-item-value">'
-		        + item.UNIT_CODE
-		        +'</span></label><label class="inline pull-right"><span class="list-item-info">科室：<span class="list-item-value">'
-		        + item.DEPT_CODE
-		        +'</span></label></div><div><label class="inline"><span class="list-item-info">变更原因:&nbsp;</span><span class="list-item-value">'
-		        + item.BG_REASON
-		        +'</span></label></div><div><label class="inline"><span class="list-item-info">单号:&nbsp;</span><span class="list-item-value">'
+		        + '</span></label></div><div><label class="inline"><span class="list-item-info">单号:&nbsp;</span><span class="list-item-value">'
 		        + item.BILL_CODE
+		        +'</span></label><label class="inline pull-right"><span class="list-item-info">科室：</span><span class="list-item-value">'
+		        + item.DEPT_CODE
+		        +'</span></label></div><div><label class="inline"><span class="list-item-info">状态:&nbsp;</span><span class="list-item-value">'
+		        + item.APPROVAL_STATE
+		        +'</span></label><label class="inline pull-right"><span class="list-item-info">单位:&nbsp;</span><span class="list-item-value">'
+		        + item.UNIT_CODE
+		        +'</span></label></div><div><label class="inline"><span class="list-item-info">账号撤销原因:&nbsp;</span><span class="list-item-value">'
+		        + item.ACCOUNT_REASON
 		        +'</span></label><label class="inline pull-right"><span class="list-item-info">申请日期:&nbsp;'
 		        + item.ENTRY_DATE
 		        +'</span></label></div></li>';
@@ -455,21 +547,25 @@
 			            //console.log(html);
 		      			$('#detail-tab').html(html);
 // 		      		    console.log(datas);
-		      		  if(datas.BILL_STATE==1)
+		      		   if(datas.APPROVAL_STATE==2)
 		    			{
-		    			$("#step1").addClass('active');
+		    			$("#step1").removeClass('active');
 		    			$("#step2").removeClass('active');
 		    			$("#step3").removeClass('active');
-		    			}else if(datas.BILL_STATE==2)
+		    			}else if(datas.APPROVAL_STATE==0)//0为审批中
 		    			{
 		      			$("#step1").addClass('active');
 		    			$("#step2").addClass('active');
 		    			$("#step3").removeClass('active');
-		    			}else
+		    			}else if (datas.APPROVAL_STATE==1)//1 为完成状态
 						{
 		      			$("#step1").addClass('active');
 		    			$("#step2").addClass('active');
 			    		$("#step3").addClass('active');
+		    			}else{
+		    				$("#step1").addClass('active');
+			    			$("#step2").removeClass('active');
+			    			$("#step3").removeClass('active');
 		    			}
 		            } 
 		         });
@@ -478,23 +574,27 @@
 		function setDetail(item){
 		    var div = '<div class="profile-user-info"><div class="profile-info-row"><div class="profile-info-name">问题：</div><div class="profile-info-value"><span>'
 		    	+ "GRC帐号新增"
-		        + '</span></div></div><div class="profile-info-row"><div class="profile-info-name">单位：</div><div class="profile-info-value"><i class="fa fa-map-marker light-orange bigger-110"></i><span>'
-		        + item.UNIT_CODE		       
-		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 科室： </div><div class="profile-info-value"><span>'
-		        + item.DEPT_CODE
-		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 变更原因 ：</div><div class="profile-info-value"><span>'
-		        +item.BG_REASON
-		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 单号： </div><div class="profile-info-value"><span>'
-		        +item.BILL_CODE
-		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人： </div><div class="profile-info-value"><span>'
-		        +item.USER_CODE
-		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人部门： </div><div class="profile-info-value"><span>'
-		        +item.USER_DEPT
-		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人岗位： </div><div class="profile-info-value"><span>'
-		        +item.USER_JOB
-		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请日期： </div><div class="profile-info-value"><span>'
-		        +item.ENTRY_DATE
-		        +'</span></div></div>'
+		    	  + '</span></div></div><div class="profile-info-row"><div class="profile-info-name">申请单号：</div><div class="profile-info-value"><i class="fa fa-map-marker light-orange bigger-110"></i><span>'
+			        + item.BILL_CODE		       
+			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请单位： </div><div class="profile-info-value"><span>'
+			        + item.UNIT_CODE
+			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请部门： </div><div class="profile-info-value"><span>'
+			        +item.DEPT_CODE
+			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 账号撤销原因 ：</div><div class="profile-info-value"><span>'
+			        +item.ACCOUNT_REASON
+			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人部门： </div><div class="profile-info-value"><span>'
+			        +item.USER_DEPT
+			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人： </div><div class="profile-info-value"><span>'
+			        +item.USER_CODE
+			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人岗位： </div><div class="profile-info-value"><span>'
+			        +item.USER_JOB
+			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 联系方式： </div><div class="profile-info-value"><span>'
+			        +item.USER_CONTACT
+			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请生效日期： </div><div class="profile-info-value"><span>'
+			        +item.EFFECTIVE_DATE
+			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请日期： </div><div class="profile-info-value"><span>'
+			        +item.ENTRY_DATE
+			        +'</span></div></div>'
 		    return div;	
 		}	
 		function printf1(){
@@ -523,6 +623,119 @@
 		//导出excel
 		function toExcel(){
 			window.location.href='<%=basePath%>changegrczhxz/excel.do';
+		}
+		//搜索
+		function tosearch(){
+			$("#tasks li").remove(); 
+			top.jzts();
+			var keywords = $("#SelectedBillCode").val();
+			$.ajax({
+					type: "POST",
+					url: '<%=basePath%>changegrczhxz/getPageList.do',
+			    	data: {keywords:keywords},
+					dataType:'json',
+					cache: false,
+					success: function(data){
+						if(data.length>0){
+							$.each(data, function(i, item){
+							    var html = '';
+							        html += setDiv(item);
+								$("#tasks").append(html);
+						 	});
+						}
+						else{
+							addEmpty();
+						}
+						top.hangge();
+					}
+			});
+		}
+		//上报
+		function report(billCode){
+			bootbox.confirm("确定要对单据"+billCode+"进行上报吗?", function(result) {
+				if(result) {
+				  $.ajax({
+					  	type: "POST",
+			            //提交的网址
+			           	url: '<%=basePath%>approvalconfig/bgReport.do?BUSINESS_CODE=3&BILL_CODE='+encodeURI(billCode),		      
+			            //返回数据的格式
+			        	dataType:'json',		          
+			            success:function(datas){
+			            		bootbox.dialog({
+									message: "<span class='bigger-110'>"+datas.msg+"</span>",
+								});			            					            	
+			            	initList();
+			            }
+			         });
+				}
+			});
+				 
+		}
+		//撤销上报
+		function cancleReport(billCode){
+			bootbox.confirm("确定要对单据"+billCode+"撤销上报吗?", function(result) {
+				if(result) {
+// 					top.jzts();
+					 $.ajax({
+						  	type: "POST",
+				            //提交的网址
+				           	url: '<%=basePath%>approvalconfig/cancleReport.do?BILL_CODE='+encodeURI(billCode),		      
+				            //返回数据的格式
+				        	dataType:'json',		          
+				            success:function(datas){	
+				            	bootbox.dialog({
+									message: "<span class='bigger-110'>"+datas.msg+"</span>",
+								});					            					            	
+				            	initList();
+				            }
+				
+				         });
+				}
+			});
+				 
+		}
+		
+		/**
+		 * 初始化列表信息
+		 */
+		function initList(){
+			$("#tasks li").remove(); 
+			top.jzts();
+			var keywords = $("#keywords").val();
+			$.ajax({
+					type: "POST",
+					url: '<%=basePath%>changegrczhxz/getPageList.do',
+			    	data: {keywords:keywords},
+					dataType:'json',
+					cache: false,
+					success: function(data){
+						if(data.length>0){
+							$.each(data, function(i, item){
+							    var html = '';
+							        html += setDiv(item);
+								$("#tasks").append(html);
+						 	});
+						}
+						else{
+							addEmpty();
+						}
+						top.hangge();
+					}
+			});
+		}
+		
+		/**
+		 * 增加空数据提示
+		 */
+		function addEmpty(){
+			var htmlEmpty='<li class="item-grey clearfix">'
+				+'<div>'
+					+'<label class="inline" style="margin-bottom:5px;">'
+						+'<span class="list-item-value-title">没有相关数据</span>'
+					+'</label>'
+				+'<div>'
+			+'</li>';
+			$("#tasks").append(htmlEmpty);
 		}
 		
 	</script>

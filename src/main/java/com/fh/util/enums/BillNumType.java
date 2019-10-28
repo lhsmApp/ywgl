@@ -32,9 +32,11 @@ public class BillNumType {
 	
 	public static final String RPOBLEM = "PRO";//问题管理
 	
-	public static final String GRC_ZHZX = "GRC-AQ-01";//GRC账号新增 
+	public static final String GRC_ZHXZ = "GRC-AQ-01";//GRC账号新增 
 	public static final String GRC_QXBG = "GRC-AQ-02";//GRC权限变更
+	public static final String GRC_ZHZX = "GRC-AQ-03";//GRC账号注销
 	public static final String ERP_ZHXZ = "ERP-AQ-01";//ERP账号新增 
 	public static final String ERP_ZHZX = "ERP-AQ-02";//ERP账号注销
 	public static final String ERP_XTBG = "ERP-BG-01";//ERP系统变更
+	public static final String ERP_JSBG = "SAP-AQ-03";//ERP角色变更
 }

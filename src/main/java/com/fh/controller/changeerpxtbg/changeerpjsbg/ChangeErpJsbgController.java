@@ -166,23 +166,24 @@ public class ChangeErpJsbgController extends BaseController {
 		}
 		page.setPd(pd);
 		List<PageData>	varList = changeerpjsbgService.list(page);	//列出ChangeErpXtbg列表
-		for(PageData p:varList){
-			if(null!=p.getString("APPROVAL_STATE")&&!"".equals(p.getString("APPROVAL_STATE"))){
-				if(p.getString("APPROVAL_STATE").equals("0")){
-					p.put("APPROVAL_STATE", "审批中");
-				}else if(p.getString("APPROVAL_STATE").equals("1")){
-					p.put("APPROVAL_STATE", "已完成");
-				}else if(p.getString("APPROVAL_STATE").equals("2")){
-					p.put("APPROVAL_STATE", "退回");
-				}
-			}else{
-				p.put("APPROVAL_STATE", "未上报");
-			}		
-		} 	
 		mv.setViewName("changeerpxtbg/changeerpjsbg/changeerpjsbgQuery");
 		mv.addObject("varList", varList);
 		mv.addObject("pd", pd);
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
+		return mv;
+	}
+	/**显示变更详情
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/detailView")
+	public ModelAndView detailView()throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		PageData pdResult = changeerpjsbgService.findById(pd);	//根据ID读取
+		mv.setViewName("changeerpxtbg/changeerpjsbg/jsbgDetailView");
+		mv.addObject("pd", pdResult);
 		return mv;
 	}
 	/**显示该用户提报的角色变更申请单

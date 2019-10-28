@@ -30,6 +30,7 @@ import com.fh.util.Tools;
 import net.sf.json.JSONArray;
 
 import com.fh.service.changeerpzhzx.changeerpzhzx.ChangeErpZhzxManager;
+import com.fh.service.fhoa.department.DepartmentManager;
 
 /** 
  * 说明：changeErpZhzx
@@ -44,6 +45,8 @@ public class ChangeErpZhzxController extends BaseController {
 	@Resource(name="changeerpzhzxService")
 	private ChangeErpZhzxManager changeerpzhzxService;
 	
+	@Resource(name="departmentService")
+	private DepartmentManager departmentService;
 	/**保存
 	 * @param
 	 * @throws Exception
@@ -128,9 +131,12 @@ public class ChangeErpZhzxController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		mv.setViewName("changeerpzhzx/changeerpzhzx/changeerpzhzx_edit");
+		mv.setViewName("changegrcxtbg/changeerpzhzx/changeerpzhzx_edit");
 		mv.addObject("msg", "save");
 		mv.addObject("pd", pd);
+		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
+		JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0",zdepartmentPdList));
+		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
 		return mv;
 	}	
 	
@@ -144,9 +150,12 @@ public class ChangeErpZhzxController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd = changeerpzhzxService.findById(pd);	//根据ID读取
-		mv.setViewName("changeerpzhzx/changeerpzhzx/changeerpzhzx_edit");
+		mv.setViewName("changegrcxtbg/changeerpzhzx/changeerpzhzx_edit");
 		mv.addObject("msg", "edit");
 		mv.addObject("pd", pd);
+		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
+		JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0",zdepartmentPdList));
+		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
 		return mv;
 	}	
 	 /**打印

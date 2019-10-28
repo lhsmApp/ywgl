@@ -69,6 +69,9 @@ public class ChangeGrcQxbgService implements ChangeGrcQxbgManager{
 	public PageData findById(PageData pd)throws Exception{
 		return (PageData)dao.findForObject("ChangeGrcQxbgMapper.findById", pd);
 	}
+	public PageData findByBillCode(PageData pd)throws Exception{
+		return (PageData)dao.findForObject("ChangeGrcQxbgMapper.findByBillCode", pd);
+	}
 	
 	/**批量删除
 	 * @param ArrayDATA_IDS

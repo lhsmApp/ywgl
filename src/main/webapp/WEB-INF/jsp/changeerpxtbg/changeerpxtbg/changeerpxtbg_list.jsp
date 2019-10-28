@@ -350,7 +350,7 @@
 					top.jzts();
 					var url = "<%=basePath%>changeerpxtbg/delete.do?BILL_CODE="+encodeURI(Id);
 					$.get(url,function(data){
-						console.log(data);
+						//console.log(data);
 						//nextPage(${page.currentPage});
 						initList();
 					});
@@ -466,7 +466,7 @@
 		            	var html = '';
 		      		     html += setDetail(datas);
 		      			$('#detail-tab').html(html);
-		      		    console.log(datas.APPROVAL_STATE);
+		      		    //console.log(datas.APPROVAL_STATE);
                       //2为退回状态
 		      		  if(datas.APPROVAL_STATE==2)
 		    			{
