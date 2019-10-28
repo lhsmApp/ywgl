@@ -20,9 +20,7 @@
 		DELETE_FMIS_ROLES,	
 		CHANGE_USER_GROUP,	
 		CHANGE_PERSON_COUNT,	
-		STATE,	
-		BILL_USER,	
-		BILL_DATE	
+		STATE
 	</sql>
 	
 	<!-- 字段值 -->
@@ -38,9 +36,7 @@
 		#{DELETE_FMIS_ROLES},	
 		#{CHANGE_USER_GROUP},	
 		#{CHANGE_PERSON_COUNT},	
-		#{STATE},	
-		#{BILL_USER},	
-		#{BILL_DATE}	
+		#{STATE}	
 	</sql>
 	
 	<!-- 新增-->
@@ -70,9 +66,7 @@
 			DELETE_FMIS_ROLES = #{DELETE_FMIS_ROLES},
 			CHANGE_USER_GROUP = #{CHANGE_USER_GROUP},
 			CHANGE_PERSON_COUNT = #{CHANGE_PERSON_COUNT},
-			STATE = #{STATE},
-			BILL_USER = #{BILL_USER},
-			BILL_DATE = #{BILL_DATE}
+			STATE = #{STATE}
 		where 
 		ID = #{ID}
 	</update>
@@ -91,9 +85,7 @@
 			NEW_FMIS_ROLES,	
 			DELETE_FMIS_ROLES,	
 			CHANGE_USER_GROUP,	
-			CHANGE_PERSON_COUNT,	
-			BILL_USER,	
-			BILL_DATE	
+			CHANGE_PERSON_COUNT	
 		from 
 		<include refid="tableName"></include>
 		where STATE = 1
@@ -156,9 +148,7 @@
 					#{item.DELETE_FMIS_ROLES},	
 					#{item.CHANGE_USER_GROUP},	
 					#{item.CHANGE_PERSON_COUNT},	
-					"1",	
-					#{item.BILL_USER},	
-					#{item.BILL_DATE}
+					"1"
 				);
 		</foreach>
 	</update>

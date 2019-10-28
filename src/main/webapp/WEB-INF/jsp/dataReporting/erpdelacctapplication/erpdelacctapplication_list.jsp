@@ -14,6 +14,14 @@
 <base href="<%=basePath%>">
 <!-- 下拉框 -->
 <link rel="stylesheet" href="static/ace/css/chosen.css" />
+<!-- 树形下拉框start -->
+<script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
+<script type="text/javascript" src="plugins/selectZtree/selectTree.js"></script>
+<script type="text/javascript" src="plugins/selectZtree/framework.js"></script>
+<link rel="stylesheet" type="text/css" href="plugins/selectZtree/import_fh.css" />
+<script type="text/javascript" src="plugins/selectZtree/ztree/ztree.js"></script>
+<link type="text/css" rel="stylesheet" href="plugins/selectZtree/ztree/ztree.css"></link>
+<!-- 树形下拉框end -->
 <!-- jsp文件头和头部 -->
 <%@ include file="../../system/index/top.jsp"%>
 <!--自由拉动  -->
@@ -25,15 +33,13 @@
 </style>
 </head>
 <body class="no-skin">
-
 	<!-- /section:basics/navbar.layout -->
 	<div class="main-container" id="main-container">
 		<!-- /section:basics/sidebar -->
 		<div class="main-content">
 			<div class="main-content-inner">
 				<div class="page-content">
-					<div class="row">
-						<div class="col-xs-12">
+					<div class="page-header">
 						<table style="width:100%;">
 								<tbody>
 								<tr>
@@ -58,6 +64,8 @@
 									</tr>
 								</tbody>
 							</table>
+						</div>
+						<div class="row" style="width:100%;overflow: auto;">
 						<!-- 检索  -->
 						<form action="erpdelacctapplication/list.do" method="post" name="Form" id="Form">
 						<table style="margin-top:0px;">
@@ -90,7 +98,7 @@
 							</tr>
 						</table>
 						<!-- 检索  -->
-						<table id="simple-table" class="mtable" style="margin-top:5px;">	
+						<table id="simple-table" class="mtable" style="margin-top:5px;width: 1170px;">	
 							<thead style="height: 40px">
 								<tr>
 									<th class="center" style="width:35px; background-color: #BEBEC5;">
@@ -135,7 +143,7 @@
 									</c:forEach>
 							</tbody>
 						</table>
-						<div class="page-header position-relative">
+						<div class="position-relative">
 						<table style="width:100%;">
 							<tr>
 								<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
@@ -143,8 +151,6 @@
 						</table>
 						</div>
 						</form>
-					
-						</div>
 						<!-- /.col -->
 					</div>
 					<!-- /.row -->
@@ -198,15 +204,25 @@
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 	<!-- 自由拉动 -->
+	<script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>	
 	<script type="text/javascript" src="static/ace/js/jquery-ui.js"></script>
-	<script type="text/javascript">
+<script type="text/javascript" >
 	$(top.hangge());//关闭加载状态
 	
 	/* 复选框全选控制 */
 	$(function() {
-		$("th").resizable(); //调用方法，实现可自由调整
+		//table自由拉动
+		var tablewidth = 0;
+		$("th").resizable({
+			start:function(event,ui){
+				tablewidth = $("#simple-table").width()-ui.size.width;
+			},resize:function(event,ui){
+				$("#simple-table").css("width",tablewidth+ui.size.width+"px")
+			},stop:function(event,ui){
+				$("#simple-table").css("width",tablewidth+ui.size.width+"px")
+			}
+		})
 		$("th > div:last-child").removeClass();
-		
 		var active_class = 'active';
 		$('#simple-table > thead > tr > th input[type=checkbox]').eq(0).on('click', function(){
 			var th_checked = this.checked;//checkbox inside "TH" table header
@@ -399,13 +415,25 @@
            diag.show();
 	}		
 			
-	
-//导出excel
+	//导出excel
 	function toExcel(){
 		window.location.href='<%=basePath%>erpdelacctapplication/excel.do';
 	}
+	//下拉树
+	var defaultNodes = {"treeNodes":${zTreeNodes}};
+	function initComplete(){
+		//绑定change事件
+		$("#selectTree").bind("change",function(){
+			$("#SelectedDepartCode").val("");
+			if($(this).attr("relValue")){
+				$("#SelectedDepartCode").val($(this).attr("relValue"));
+		    }
+		});
+		//赋给data属性
+		$("#selectTree").data("data",defaultNodes);  
+		$("#selectTree").render();
+		$("#selectTree2_input").val("请选择单位");
+	}
 	</script>
-
-
 </body>
 </html>

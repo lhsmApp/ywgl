@@ -17,7 +17,9 @@
 <!-- jsp文件头和头部 -->
 <%@ include file="../../system/index/top.jsp"%>
 <!--自由拉动  -->
- <link rel="stylesheet" href="static/ace/css/jquery-ui.css" />
+<script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
+<link rel="stylesheet" href="static/ace/css/jquery-ui.css" />
+ 
  <style>
     .mtable{width:auto;border-collapse:collapse;border:1px solid black;}
     .mtable th, .mtable td{height:30px;text-align:center;border:1px solid black;}
@@ -32,11 +34,11 @@
 		<div class="main-content">
 			<div class="main-content-inner">
 				<div class="page-content">
-					<div class="row">
+					<div class="row" style="width:100%;overflow: auto;">
 						<div class="col-xs-12">
 						<!-- 检索  -->
 						<form action="permissionchangestatistics/list.do" method="post" name="Form" id="Form">
-						<table style="margin-top:5px;">
+						<table style="margin-top:15px;">
 							<tr>
 								<td>
 									<div class="nav-search">
@@ -66,7 +68,7 @@
 							</tr>
 						</table>
 						<!-- 检索  -->
-						<table id="simple-table" class="mtable" style="margin-top:5px;">		
+						<table id="simple-table" class="mtable" style="margin-top:10px;">		
 							<thead style="height: 40px">
 								<tr>
 									<th class="center" style="width:35px;">
@@ -108,7 +110,7 @@
 									</c:forEach>
 							</tbody>
 						</table>
-						<div class="page-header position-relative">
+						<div class="position-relative">
 						<table style="width:100%;">
 							<tr>
 								<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
@@ -171,9 +173,17 @@
 $(top.hangge());//关闭加载状态
 	/* 复选框全选控制 */
 	$(function() {
-		$("th").resizable(); //调用方法，实现可自由调整
-		$("th > div:last-child").removeClass();
-		
+		//table自由拉动
+		var tablewidth = 0;
+		$("th").resizable({
+			start:function(event,ui){
+				tablewidth = $("#simple-table").width()-ui.size.width;
+			},resize:function(event,ui){
+				$("#simple-table").css("width",tablewidth+ui.size.width+"px")
+			},stop:function(event,ui){
+				$("#simple-table").css("width",tablewidth+ui.size.width+"px")
+			}
+		})
 		var active_class = 'active';
 		$('#simple-table > thead > tr > th input[type=checkbox]').eq(0).on('click', function(){
 			var th_checked = this.checked;//checkbox inside "TH" table header

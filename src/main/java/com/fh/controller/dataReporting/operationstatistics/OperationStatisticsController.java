@@ -23,12 +23,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fh.controller.base.BaseController;
 import com.fh.controller.common.Common;
+import com.fh.controller.common.DictsUtil;
 import com.fh.entity.CommonBase;
 import com.fh.entity.Page;
 import com.fh.entity.TableColumns;
 import com.fh.entity.TmplConfigDetail;
 import com.fh.exception.CustomException;
 import com.fh.service.dataReporting.operationstatistics.OperationStatisticsManager;
+import com.fh.service.fhoa.department.impl.DepartmentService;
 import com.fh.service.tmplconfig.tmplconfig.impl.TmplConfigService;
 import com.fh.util.Jurisdiction;
 import com.fh.util.ObjectExcelView;
@@ -52,6 +54,8 @@ public class OperationStatisticsController extends BaseController {
 	private OperationStatisticsManager operationstatisticsService;
 	@Resource(name="tmplconfigService")
 	private TmplConfigService tmplconfigService;
+	@Resource(name="departmentService")
+	private DepartmentService departmentService;
 	
 	String TableNameDetail = "TB_DI_OPERATION_STATISTICS"; //表名tb_di_operation_statistics
 	Map<String, TableColumns> Map_HaveColumnsList = new LinkedHashMap<String, TableColumns>();
@@ -117,6 +121,14 @@ public class OperationStatisticsController extends BaseController {
 		}
 		page.setPd(pd);
 		List<PageData>	varList = operationstatisticsService.list(page);	//列出OperationStatistics列表
+		String DepartmentSelectTreeSource=DictsUtil.getDepartmentSelectTreeSource(departmentService);
+		if(DepartmentSelectTreeSource.equals("0"))
+		{
+			pd.put("departTreeSource", DepartmentSelectTreeSource);
+		} else {
+			pd.put("departTreeSource", 1);
+		}
+		mv.addObject("zTreeNodes", DepartmentSelectTreeSource);
 		mv.setViewName("dataReporting/operationstatistics/operationstatistics_list");
 		mv.addObject("varList", varList);
 		mv.addObject("pd", pd);

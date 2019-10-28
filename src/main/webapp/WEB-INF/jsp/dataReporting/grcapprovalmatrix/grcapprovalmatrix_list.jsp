@@ -17,7 +17,8 @@
 <!-- jsp文件头和头部 -->
 <%@ include file="../../system/index/top.jsp"%>
 <!--自由拉动  -->
- <link rel="stylesheet" href="static/ace/css/jquery-ui.css" />
+<script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
+<link rel="stylesheet" href="static/ace/css/jquery-ui.css" />
 <style>
     .mtable{width:auto;border-collapse:collapse;border:1px solid black;}
     .mtable th, .mtable td{height:30px;text-align:center;border:1px solid black;}
@@ -25,115 +26,104 @@
 </style>
 </head>
 <body class="no-skin">
-
-	<!-- /section:basics/navbar.layout -->
 	<div class="main-container" id="main-container">
-		<!-- /section:basics/sidebar -->
 		<div class="main-content">
 			<div class="main-content-inner">
 				<div class="page-content">
-					<div class="row">
-						<div class="col-xs-12">
-							<table style="width:100%;">
+					<div class="page-header">
+						<table style="width:100%;">
 							<tbody>
 								<tr>
 									<td>
 										<div class="pull-right">
 											<span class="green middle bolder">填报类型: &nbsp;</span>
-												<div class="btn-toolbar inline middle no-margin">
-													<div data-toggle="buttons" class="btn-group no-margin">
-														<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toGRCPerson()">
-															<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>GRC人员信息</span>
-														</button>
-														<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toGRCApprovalMatrix()">
+											<div class="btn-toolbar inline middle no-margin">
+												<div data-toggle="buttons" class="btn-group no-margin">
+													<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toGRCPerson()">
+														<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>GRC人员信息</span>
+													</button>
+													<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toGRCApprovalMatrix()">
 															<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>GRC审批矩阵</span>
-														</button>
-													</div>
+													</button>
 												</div>
 											</div>
-										</td>
-									</tr>
+										</div>
+									</td>
+								</tr>
 							</tbody>
 						</table>
-						<!-- 检索  -->
-						<form action="grcapprovalmatrix/list.do" method="post" name="Form" id="Form">
-						<table style="margin-top:0px;">
-							<tr>
-								<td>
-									<div class="nav-search">
-										<span class="input-icon">
-											<input type="text" placeholder="这里输入关键词" class="nav-search-input" id="nav-search-input" autocomplete="off" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词"/>
-											<i class="ace-icon fa fa-search nav-search-icon"></i>
-										</span>
-									</div>
-								</td>
-						<td style="vertical-align:top;padding-left:2px;">
-						<a class="btn btn-info btn-sm" onclick="tosearch()"><i class="ace-icon fa fa-search bigger-110"></i></a>
-						<a class="btn btn-white btn-info btn-bold" onclick="addRows()"><span class="ace-icon fa fa-plus-circle purple"></span>添加</a>						
-						<a class="btn btn-white btn-info btn-bold" onclick="edit()"><span class="ace-icon fa fa-pencil-square-o purple"></span>编辑</a>
-						<a class="btn btn-white btn-info btn-bold" onclick="save()"><i class="ace-icon fa fa-floppy-o bigger-120 blue"></i>保存</a>
-						<a class="btn btn-white btn-info btn-bold" onclick="makeAll('确定要删除选中的数据吗?');" title="批量删除" ><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>删除</a>
-						<a class="btn btn-white btn-info btn-bold" onclick="importExcel()"><span class="ace-icon fa fa-cloud-upload"></span>导入</a>
-						<a class="btn btn-white btn-info btn-bold" onclick="toExcel()"><span class="ace-icon fa fa-cloud-download"></span>导出</a>
-							</tr>
-						</table>
-						<!-- 检索  -->
-					
-						<table id="simple-table" class="mtable" style="margin-top:5px;">	
-							<thead style="height: 40px">
-								<tr>
-									<th class="center" style="width:35px; background-color: #BEBEC5;">
-									<label class="pos-rel"><input type="checkbox" class="ace" id="zcheckbox" /><span class="lbl"></span></label>
-									</th>
-									<th style="width:150px; background-color: #BEBEC5; text-align: center;">业务模块</th>
-									<th style="width:150px; background-color: #BEBEC5; text-align: center;">申请人员工编号</th>
-									<th style="width:150px; background-color: #BEBEC5; text-align: center;">申请人员工姓名</th>
-									<th style="width:150px; background-color: #BEBEC5; text-align: center;">一级审批人员工编号</th>
-									<th style="width:150px; background-color: #BEBEC5; text-align: center;">一级审批人员工姓名</th>
-								</tr>
-							</thead>
-													
-							<tbody id="copyTable">
-							<!-- 开始循环 -->	
-									<c:forEach items="${varList}" var="var" varStatus="vs">
-										<tr>
-											<td class='center'>
-												<label class="pos-rel"><input type='checkbox' name='ids' value="${var.ID}" class="ace" /><span class="lbl"></span></label>
-											</td>
-											<th><input type="text" name="BUSINESS_MODULE" id="BUSINESS_MODULE" readonly="readonly" value="${var.BUSINESS_MODULE}" maxlength="50" title="业务模块" style="width:100%;"/></th>
-											<th><input type="text" name="STAFF_CODE" id="STAFF_CODE" readonly="readonly" value="${var.STAFF_CODE}" maxlength="30" title="申请人员工编号" style="width:100%;"/></th>
-											<th><input type="text" name="STAFF_NAME" id="STAFF_NAME" readonly="readonly" value="${var.STAFF_NAME}" maxlength="30" title="申请人员工姓名" style="width:100%;"/></th>
-											<th><input type="text" name="STAFF_CODE_APPROVAL1" id="STAFF_CODE_APPROVAL1" readonly="readonly" value="${var.STAFF_CODE_APPROVAL1}" maxlength="30" title="一级审批人员工编号" style="width:100%;"/></th>
-											<th><input type="text" name="STAFF_NAME_APPROVAL1" id="STAFF_NAME_APPROVAL1" readonly="readonly" value="${var.STAFF_NAME_APPROVAL1}" maxlength="30" title="一级审批人员工姓名" style="width:100%;"/></th>
-										</tr>
-									</c:forEach>
-								</tbody>
-						</table>
-						<!-- 分页 -->
-						<div class="page-header position-relative">
-						<table style="width:100%;">
-							<tr>
-								<td style="vertical-align:top;"><div class="pagination" style="padding-left: 495px;margin-top: 0px;">${page.pageStr}</div></td>
-							</tr>
-						</table>
-						</div>
-						<!-- 分页结束 -->
-						</form>
-						</div>
-						<!-- /.col -->
 					</div>
-					<!-- /.row -->
+						<div class="row" style="width: 100%;overflow: auto;">
+						<form action="grcapprovalmatrix/list.do" method="post" name="Form" id="Form">					
+							
+							<table style="margin-top:0px;">
+								<tr>
+									<td>
+										<div class="nav-search">
+											<span class="input-icon">
+												<input type="text" placeholder="这里输入关键词" class="nav-search-input" id="nav-search-input" autocomplete="off" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词"/>
+												<i class="ace-icon fa fa-search nav-search-icon"></i>
+											</span>
+										</div>
+									</td>
+								<td style="vertical-align:top;padding-left:2px;">
+								<a class="btn btn-info btn-sm" onclick="tosearch()"><i class="ace-icon fa fa-search bigger-110"></i></a>
+								<a class="btn btn-white btn-info btn-bold" onclick="addRows()"><span class="ace-icon fa fa-plus-circle purple"></span>添加</a>						
+								<a class="btn btn-white btn-info btn-bold" onclick="edit()"><span class="ace-icon fa fa-pencil-square-o purple"></span>编辑</a>
+								<a class="btn btn-white btn-info btn-bold" onclick="save()"><i class="ace-icon fa fa-floppy-o bigger-120 blue"></i>保存</a>
+								<a class="btn btn-white btn-info btn-bold" onclick="makeAll('确定要删除选中的数据吗?');" title="批量删除" ><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>删除</a>
+								<a class="btn btn-white btn-info btn-bold" onclick="importExcel()"><span class="ace-icon fa fa-cloud-upload"></span>导入</a>
+								<a class="btn btn-white btn-info btn-bold" onclick="toExcel()"><span class="ace-icon fa fa-cloud-download"></span>导出</a>
+								</tr>
+							</table>
+							<table id="simple-table" class="mtable" style="margin-top:5px;">	
+								<thead style="height: 40px">
+									<tr>
+										<th class="center" style="width:35px; background-color: #BEBEC5;">
+										<label class="pos-rel"><input type="checkbox" class="ace" id="zcheckbox" /><span class="lbl"></span></label>
+										</th>
+										<th style="width:150px; background-color: #BEBEC5; text-align: center;">业务模块</th>
+										<th style="width:150px; background-color: #BEBEC5; text-align: center;">申请人员工编号</th>
+										<th style="width:150px; background-color: #BEBEC5; text-align: center;">申请人员工姓名</th>
+										<th style="width:150px; background-color: #BEBEC5; text-align: center;">一级审批人员工编号</th>
+										<th style="width:150px; background-color: #BEBEC5; text-align: center;">一级审批人员工姓名</th>
+									</tr>
+								</thead>
+								<tbody id="copyTable">
+								<!-- 开始循环 -->	
+										<c:forEach items="${varList}" var="var" varStatus="vs">
+											<tr>
+												<td class='center'>
+													<label class="pos-rel"><input type='checkbox' name='ids' value="${var.ID}" class="ace" /><span class="lbl"></span></label>
+												</td>
+												<th><input type="text" name="BUSINESS_MODULE" id="BUSINESS_MODULE" readonly="readonly" value="${var.BUSINESS_MODULE}" maxlength="50" title="业务模块" style="width:100%;"/></th>
+												<th><input type="text" name="STAFF_CODE" id="STAFF_CODE" readonly="readonly" value="${var.STAFF_CODE}" maxlength="30" title="申请人员工编号" style="width:100%;"/></th>
+												<th><input type="text" name="STAFF_NAME" id="STAFF_NAME" readonly="readonly" value="${var.STAFF_NAME}" maxlength="30" title="申请人员工姓名" style="width:100%;"/></th>
+												<th><input type="text" name="STAFF_CODE_APPROVAL1" id="STAFF_CODE_APPROVAL1" readonly="readonly" value="${var.STAFF_CODE_APPROVAL1}" maxlength="30" title="一级审批人员工编号" style="width:100%;"/></th>
+												<th><input type="text" name="STAFF_NAME_APPROVAL1" id="STAFF_NAME_APPROVAL1" readonly="readonly" value="${var.STAFF_NAME_APPROVAL1}" maxlength="30" title="一级审批人员工姓名" style="width:100%;"/></th>
+											</tr>
+										</c:forEach>
+								</tbody>
+							</table>
+							<!-- 分页 -->
+							<div class="position-relative">
+								<table style="width:100%;">
+									<tr>
+										<td style="vertical-align:top;"><div class="pagination" style="padding-left: 495px;margin-top: 0px;">${page.pageStr}</div></td>
+									</tr>
+								</table>
+							</div>
+							<!-- 分页结束 -->
+						</form>
+					</div>
 				</div>
-				<!-- /.page-content -->
 			</div>
 		</div>
-		<!-- /.main-content -->
-
-		<!-- 返回顶部 -->
-		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
-			<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
-		</a>
 	</div>
+	<!-- 返回顶部 -->
+	<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+		<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+	</a>
 	<!-- 复制用空表格 -->
 	<div id="hideTable" style="display: none;">
 		<table>
@@ -151,9 +141,6 @@
 			</tbody>
 		</table>
 	</div>
-	<!-- /.main-container -->
-
-	<!-- basic scripts -->
 	<!-- 页面底部js¨ -->
 	<%@ include file="../../system/index/foot.jsp"%>
 	<!-- 删除时确认窗口 -->
@@ -169,7 +156,17 @@
 	<script type="text/javascript">
 		/* 关闭加载状态 */
 		$(top.hangge());
-		
+		//table自由拉动
+		var tablewidth = 0;
+		$("th").resizable({
+			start:function(event,ui){
+				tablewidth = $("#simple-table").width()-ui.size.width;
+			},resize:function(event,ui){
+				$("#simple-table").css("width",tablewidth+ui.size.width+"px")
+			},stop:function(event,ui){
+				$("#simple-table").css("width",tablewidth+ui.size.width+"px")
+			}
+		})
 		/* 复选框全选控制 */
 		$(function() {
 			$("th").resizable(); //调用方法，实现可自由调整
@@ -234,8 +231,6 @@
 						STAFF_NAME = document.getElementsByName('STAFF_NAME')[i].value;
 						STAFF_CODE_APPROVAL1 = document.getElementsByName('STAFF_CODE_APPROVAL1')[i].value;
 						STAFF_NAME_APPROVAL1 = document.getElementsByName('STAFF_NAME_APPROVAL1')[i].value;
-						BILL_USER = document.getElementsByName('BILL_USER')[i].value;
-						BILL_DATE = document.getElementsByName('BILL_DATE')[i].value;
 						
 						listData.push(ID);
 						listData.push(BUSINESS_MODULE);

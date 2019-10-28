@@ -31,7 +31,7 @@
 		margin:5px 0px 0px 5px;
 		width:170px;
 	}
-	.course-box:hover{
+	.high-font:hover{
     	color:red;
 	}
 </style>
@@ -49,16 +49,8 @@
 											<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords}" placeholder="请输入课件名称" />
 										</span>
 									<span style="margin-left:-15px;"> 
-										<select class="chosen-select form-control" name="FMISACC" id="FMISACC" data-placeholder="请选择课件名称" style="vertical-align: top; height: 32px; width: 150px;">
-												<option value="">课件名称</option>
-												<%-- <c:forEach items="" var=""></c:forEach> --%>
-													<option value="">1</option>
-													<option value="">2</option>
-													<option value="">3</option>
-												
-										</select>
 									</span>
-									<button style="margin-bottom:3px;" class="btn btn-info btn-sm" onclick="searchs();" title="检索">
+									<button style="margin-bottom:3px;" class="btn btn-info btn-sm" onclick="search();" title="检索">
 											<i class="ace-icon fa fa-search bigger-110"></i>
 									</button>
 									<div class="pull-right">
@@ -84,18 +76,9 @@
 												</div>
 												<div class="widget-body">
 													<div class="widget-main padding-8">
-														<div class="nav-search" style="margin:10px 0px;">
-															<span class="input-icon">
-																<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="" placeholder="请输入知识结构名称">
-																<i class="ace-icon fa fa-search nav-search-icon"></i>
-															</span>
-															<button style="margin-bottom:3px;" class="btn btn-light btn-minier" onclick="searchs();" title="检索">
-																<i id="nav-search-icon" class="ace-icon fa fa-search bigger-120 nav-search-icon blue"></i>
-																<!-- <i class="ace-icon fa fa-signal icon-only bigger-150"></i> -->
-															</button>
-														</div>
 														<div>
 															<ul id="leftTree" class="ztree"></ul>
+															<input id="SelectedDepartCode" type="hidden"></input>
 														</div>
 													</div>
 												</div>
@@ -104,27 +87,21 @@
 									</div>
 								</div>
 							</div>
-							<div class="col-xs-9">
+							<div id="changeDiv" class="col-xs-9">
 							<!-- 循环遍历 -->
 								<c:forEach items="${varList}" var="pd">
 									<div class="col-xs-9 course-box"><!-- 整体 -->
 										<div style="width:170px;height:170px;">
 											<a href="static/html_UI/assets/images/gallery/thumb-3.jpg" data-rel="colorbox" class="cboxElement">
-												<img width="170" height="170" alt="200x200" src="static/html_UI/assets/images/gallery/thumb-3.jpg">
-											<!-- 	<div class="text">
-													<div class="inner"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">悬停时的示例字幕</font></font></div>
-												</div> -->
+												<img width="170" height="170" alt="200x200" src="${pd.COURSE_COVER}">
 											</a>
-										
 										</div>
-					
-					
 										<div>
 											<div class="title-box">
 												<span class="list-item-value-title">${pd.COURSE_NAME}</span>
 											</div>		
 											<div class="title-box">
-												<span class="list-item-info">${pd.COURSE_NOTE}</span>
+												<a class="list-item-info fyhoverflow high-font" target="_blank" href="" title="${pd.COURSE_NOTE}">${pd.COURSE_NOTE}</a>
 											</div>
 											<div class="title-box">
 												<span class="list-item-info">${pd.COURSE_TAG}</span>
@@ -140,18 +117,17 @@
 												<a style="float:right;" class="btn btn-mini btn-danger" title="删除" onclick="del('${pd.COURSE_ID}');">删除<i class="ace-icon fa fa-trash-o bigger-130"></i></a>
 											</div>					
 										</div>
+									
 									</div>
-								
-								
 								</c:forEach>
 							</div>							
-							<%-- <div class="col-xs-9 page-header position-relative">
+							 <div class="col-xs-9 position-relative">
 								<table style="width:100%;">
 									<tr>
 										<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
 									</tr>
 								</table>
-							</div> --%>
+							</div>
 								<!-- 分页 -->
 							</div>
 						</form>
@@ -186,13 +162,26 @@
 	<script type="text/javascript" src="plugins/zTree/3.5/jquery.ztree.excheck.js"></script>
 	<script type="text/javascript">
 		$(top.hangge());//关闭加载状态
+		
 		var zTreeObj={};
 		var setting = {
 			    showLine: true,
-			    checkable: false
+			    checkable: false,
+			    callback:{
+			    	onClick: zTreeBeforeClick
+			    }
 			};
-		//页面加载生成树
+		
 		$(function(){
+			//限制字符个数
+            $(".fyhoverflow").each(function() {
+                var maxwidth = 11;
+                if ($(this).text().length > maxwidth) {
+                    $(this).text($(this).text().substring(0, maxwidth));
+                    $(this).html($(this).html() + '...');
+                }
+            });
+			 //页面加载生成树
 			$.ajax({
 				type: "POST",
 				url: '<%=basePath%>coursebase/treeList.do?tm='+new Date().getTime(),
@@ -204,12 +193,70 @@
 					console.log(response.message);
 					initZtree(response.message);
 				}
-			});		
-			
+			}); 		
 		});
-		//回调函数
+		
+		 //回调函数
 		function initZtree(data){
-			zTreeObj = $.fn.zTree.init($("#leftTree"), setting, eval(data));	
+			$.fn.zTree.init($("#leftTree"), setting, eval(data));
+		} 
+		
+		function zTreeBeforeClick(event, treeId, treeNode){
+			console.log(treeNode.id);
+			//通过id树查询数据
+			$.ajax({
+				type: "POST",
+				url: '<%=basePath%>coursebase/listById.do?tm='+new Date().getTime(),
+		    	data: {"COURSE_TYPE":treeNode.id},
+				dataType:'json',
+				cache: false,
+				success: function(response){
+					$(top.hangge());//关闭加载状态
+					//动态加载变更数据
+					getchangeDiv(eval(response.message));
+				}
+			});		
+		}
+		
+		function getchangeDiv(data){
+			var html = '';
+			//先清空后赋值
+			for(var i = 0;i<data.length;i++){
+		        html += setDiv(data[i]);
+			}
+			console.log(html);
+			//$('#changeDiv').remove();
+			$('#changeDiv').html(html);
+		}
+		
+		function setDiv(data){//上传以后这里动态回显
+					
+			var div = '<div class="col-xs-9 course-box">'
+					+ '<div style="width:170px;height:170px;"><a href="static/html_UI/assets/images/gallery/thumb-3.jpg" data-rel="colorbox" class="cboxElement">'
+					
+					+ '<img width="170" height="170" alt="200x200" src="static/html_UI/assets/images/gallery/thumb-3.jpg"></a></div>'
+					
+					+'<div class="title-box"><span class="list-item-value-title">' + data.COURSE_NAME + '</span></div>'
+					
+					+'<div class="title-box"><span class="list-item-info fyhoverflow">' + data.COURSE_NOTE +'</span></div>'
+					
+					+'<div class="title-box"><span class="list-item-info">' + data.COURSE_TAG + '</span></div>'
+				
+					+'<div class="title-box"><i class="ace-icon fa fa-clock-o"></i><span class="list-item-info">'+ data.CREATE_DATE +'</span>'
+					
+					+'<i style="padding-left: 6%" class="ace-icon glyphicon glyphicon-user"></i><span class="list-item-info">'+ data.COURSE_TEACHER +'</span></div>'
+					
+					+'<div class="btm-box"><a class="btn btn-mini btn-info" title="编辑" onclick="edit(\''+data.COURSE_ID+'\');"><i class="ace-icon fa fa-pencil-square-o bigger-130"></i>编辑</a>'
+					
+					+'<a style="float:right;" class="btn btn-mini btn-danger" title="删除" onclick="edit(\''+data.COURSE_ID+'\');">删除<i class="ace-icon fa fa-trash-o bigger-130"></i></a></div>'
+					+'</div>';
+			return div;
+		}
+		
+		//检索数据
+		function search(){
+			top.jzts();
+			$("#Form").submit();
 		}
 		
 		//删除
@@ -244,68 +291,18 @@
 			 diag.Title ="编辑";
 			 diag.URL = '<%=basePath%>coursebase/goEdit.do?COURSE_ID='+COURSE_ID;
 			 diag.Width = 600;
-			 diag.Height = 380;
+			 diag.Height = 410;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮 
 			 diag.CancelEvent = function(){ //关闭事件
 				 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
-					 nextPage(${page.currentPage});
+					 history.go(0); //刷新页面
 				}
 				diag.close();
 			 };
 			 diag.show();
 		}
-	</script>
-
-
-	
-	<script type="text/javascript">
-<%-- 		$(top.hangge());//关闭加载状态
-		//检索
-		function tosearch(){
-			top.jzts();
-			$("#Form").submit();
-		}
-		$(function() {
-			//下拉框
-			if(!ace.vars['touch']) {
-				$('.chosen-select').chosen({allow_single_deselect:true}); 
-				$(window)
-				.off('resize.chosen')
-				.on('resize.chosen', function() {
-					$('.chosen-select').each(function() {
-						 var $this = $(this);
-						 $this.next().css({'width': $this.parent().width()});
-					});
-				}).trigger('resize.chosen');
-				$(document).on('settings.ace.chosen', function(e, event_name, event_val) {
-					if(event_name != 'sidebar_collapsed') return;
-					$('.chosen-select').each(function() {
-						 var $this = $(this);
-						 $this.next().css({'width': $this.parent().width()});
-					});
-				});
-				$('#chosen-multiple-style .btn').on('click', function(e){
-					var target = $(this).find('input[type=radio]');
-					var which = parseInt(target.val());
-					if(which == 2) $('#form-field-select-4').addClass('tag-input-style');
-					 else $('#form-field-select-4').removeClass('tag-input-style');
-				});
-			}
-			
-			
-			//复选框全选控制
-			var active_class = 'active';
-			$('#simple-table > thead > tr > th input[type=checkbox]').eq(0).on('click', function(){
-				var th_checked = this.checked;//checkbox inside "TH" table header
-				$(this).closest('table').find('tbody > tr').each(function(){
-					var row = this;
-					if(th_checked) $(row).addClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', true);
-					else $(row).removeClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', false);
-				});
-			});
-		});
 		
 		//新增
 		function add(){
@@ -314,8 +311,8 @@
 			 diag.Drag=true;
 			 diag.Title ="新增";
 			 diag.URL = '<%=basePath%>coursebase/goAdd.do';
-			 diag.Width = 450;
-			 diag.Height = 355;
+			 diag.Width = 600;
+			 diag.Height = 410;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮
@@ -325,7 +322,7 @@
 						 top.jzts();
 						 setTimeout("self.location=self.location",100);
 					 }else{
-						 nextPage(${page.currentPage});
+						 history.go(0); //刷新页面
 					 }
 				}
 				diag.close();
@@ -333,58 +330,6 @@
 			 diag.show();
 		}
 		
-		
-		
-	
-		
-		//批量操作
-		function makeAll(msg){
-			bootbox.confirm(msg, function(result) {
-				if(result) {
-					var str = '';
-					for(var i=0;i < document.getElementsByName('ids').length;i++){
-					  if(document.getElementsByName('ids')[i].checked){
-					  	if(str=='') str += document.getElementsByName('ids')[i].value;
-					  	else str += ',' + document.getElementsByName('ids')[i].value;
-					  }
-					}
-					if(str==''){
-						bootbox.dialog({
-							message: "<span class='bigger-110'>您没有选择任何内容!</span>",
-							buttons: 			
-							{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
-						});
-						$("#zcheckbox").tips({
-							side:1,
-				            msg:'点这里全选',
-				            bg:'#AE81FF',
-				            time:8
-				        });
-						return;
-					}else{
-						if(msg == '确定要删除选中的数据吗?'){
-							top.jzts();
-							$.ajax({
-								type: "POST",
-								url: '<%=basePath%>coursebase/deleteAll.do?tm='+new Date().getTime(),
-						    	data: {DATA_IDS:str},
-								dataType:'json',
-								//beforeSend: validateData,
-								cache: false,
-								success: function(data){
-									 $.each(data.list, function(i, list){
-											nextPage(${page.currentPage});
-									 });
-								}
-							});
-						}
-					}
-				}
-			});
-		}; --%>
-		
 	</script>
-
-
 </body>
 </html>

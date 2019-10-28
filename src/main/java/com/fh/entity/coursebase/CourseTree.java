@@ -11,8 +11,6 @@ public class CourseTree {
 	private CourseTree treelist;
 	private List<CourseTree> subTreeList;
 	private boolean hasTreeList = false;
-	private String treeurl;
-
 	public String getCOURSE_TYPE_ID() {
 		return COURSE_TYPE_ID;
 	}
@@ -67,13 +65,5 @@ public class CourseTree {
 
 	public void setHasTreeList(boolean hasTreeList) {
 		this.hasTreeList = hasTreeList;
-	}
-
-	public String getTreeurl() {
-		return treeurl;
-	}
-
-	public void setTreeurl(String treeurl) {
-		this.treeurl = treeurl;
 	}
 }

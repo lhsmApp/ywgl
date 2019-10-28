@@ -20,12 +20,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import com.fh.controller.base.BaseController;
 import com.fh.controller.common.Common;
+import com.fh.controller.common.DictsUtil;
 import com.fh.entity.CommonBase;
 import com.fh.entity.Page;
 import com.fh.entity.TableColumns;
 import com.fh.entity.TmplConfigDetail;
 import com.fh.exception.CustomException;
 import com.fh.service.dataReporting.erpdelacctapplication.ERPDelAcctApplicationManager;
+import com.fh.service.fhoa.department.impl.DepartmentService;
 import com.fh.service.tmplconfig.tmplconfig.impl.TmplConfigService;
 import com.fh.util.Jurisdiction;
 import com.fh.util.ObjectExcelView;
@@ -48,6 +50,8 @@ public class ERPDelAcctApplicationController extends BaseController {
 	private ERPDelAcctApplicationManager erpdelacctapplicationService;
 	@Resource(name="tmplconfigService")
 	private TmplConfigService tmplconfigService;
+	@Resource(name="departmentService")
+	private DepartmentService departmentService;
 	
 	String TableNameDetail = "TB_DI_ERP_DAA"; // 表名  tb_di_erp_daa
 	Map<String, TableColumns> Map_HaveColumnsList = new LinkedHashMap<String, TableColumns>();
@@ -118,6 +122,14 @@ public class ERPDelAcctApplicationController extends BaseController {
 		}
 		page.setPd(pd);
 		List<PageData>	varList = erpdelacctapplicationService.list(page);	//列出ERPDelAcctApplication列表
+		String DepartmentSelectTreeSource=DictsUtil.getDepartmentSelectTreeSource(departmentService);
+		if(DepartmentSelectTreeSource.equals("0"))
+		{
+			pd.put("departTreeSource", DepartmentSelectTreeSource);
+		} else {
+			pd.put("departTreeSource", 1);
+		}
+		mv.addObject("zTreeNodes", DepartmentSelectTreeSource);
 		mv.setViewName("dataReporting/erpdelacctapplication/erpdelacctapplication_list");
 		mv.addObject("varList", varList);
 		mv.addObject("pd", pd);

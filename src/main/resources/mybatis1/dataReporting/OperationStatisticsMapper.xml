@@ -16,9 +16,7 @@
 		ERP_OPER_NUM,	
 		CLOUD_OPER_NUM,	
 		TOTAL_OPER_NUM,	
-		STATE,	
-		BILL_USER,	
-		BILL_DATE	
+		STATE	
 	</sql>
 	
 	<!-- 字段值 -->
@@ -30,9 +28,7 @@
 		#{ERP_OPER_NUM},	
 		#{CLOUD_OPER_NUM},	
 		#{TOTAL_OPER_NUM},	
-		#{STATE},	
-		#{BILL_USER},	
-		#{BILL_DATE}
+		#{STATE}
 	</sql>
 	
 	<!-- 新增-->
@@ -57,9 +53,7 @@
 			SECURITY_OPER_NUM = #{SECURITY_OPER_NUM},
 			ERP_OPER_NUM = #{ERP_OPER_NUM},
 			CLOUD_OPER_NUM = #{CLOUD_OPER_NUM},
-			TOTAL_OPER_NUM = #{TOTAL_OPER_NUM},
-			BILL_USER = #{BILL_USER},
-			BILL_DATE = #{BILL_DATE}
+			TOTAL_OPER_NUM = #{TOTAL_OPER_NUM}
 		where 
 			ID = #{ID}
 	</update>
@@ -74,9 +68,7 @@
 			SECURITY_OPER_NUM,	
 			ERP_OPER_NUM,	
 			CLOUD_OPER_NUM,	
-			TOTAL_OPER_NUM,	
-			BILL_USER,	
-			BILL_DATE
+			TOTAL_OPER_NUM
 		from 
 		<include refid="tableName"></include>
 		where STATE = 1
@@ -134,9 +126,7 @@
 					#{item.ERP_OPER_NUM},	
 					#{item.CLOUD_OPER_NUM},	
 					#{item.TOTAL_OPER_NUM},	
-					"1",	
-					#{item.BILL_USER},	
-					#{item.BILL_DATE}
+					"1"
 				);
 		</foreach>
 	</update>

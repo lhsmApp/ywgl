@@ -1,17 +1,16 @@
-package com.fh.service.coursemanagement.coursebase;
+package com.fh.service.trainBase;
 
 import java.util.List;
 import com.fh.entity.Page;
-import com.fh.entity.coursebase.CourseTree;
 import com.fh.util.PageData;
 
 /** 
- * 说明： 课程列表处理类接口
+ * 说明： 培训负责人接口
  * 创建人：jiachao
- * 创建时间：2019-10-14
+ * 创建时间：2019-10-23
  * @version
  */
-public interface CourseBaseManager{
+public interface TrainLeaderManager{
 
 	/**新增
 	 * @param pd
@@ -37,6 +36,12 @@ public interface CourseBaseManager{
 	 */
 	public List<PageData> list(Page page)throws Exception;
 	
+	/**列表(全部)
+	 * @param pd
+	 * @throws Exception
+	 */
+	public List<PageData> listAll(PageData pd)throws Exception;
+	
 	/**通过id获取数据
 	 * @param pd
 	 * @throws Exception
@@ -48,28 +53,6 @@ public interface CourseBaseManager{
 	 * @throws Exception
 	 */
 	public void deleteAll(String[] ArrayDATA_IDS)throws Exception;
-	
-	/**
-	 * 显示树列表
-	 * @throws Exception
-	 */
-	public List<CourseTree> listTree(String parentId)throws Exception;
-	
-	/**
-	 * 通过id获取子级列表
-	 * @param parentId
-	 * @return
-	 * @throws Exception
-	 */
-	public List<CourseTree> listByParentId(String parentId) throws Exception;
-	
-	/**
-	 * 通过id获取分类数据集合
-	 * @param pd
-	 * @return
-	 * @throws Exception
-	 */
-	public List<PageData> listById(PageData pd) throws Exception;
 	
 }
 

@@ -22,9 +22,7 @@
 		APPLY_DATE,	
 		ACCOUNT_DELETE_REASON,	
 		NOTE,
-		STATE,	
-		BILL_USER,	
-		BILL_DATE
+		STATE
 	</sql>
 	
 	<!-- 字段值 -->
@@ -42,9 +40,7 @@
 		#{APPLY_DATE},	
 		#{ACCOUNT_DELETE_REASON},	
 		#{NOTE},	
-		#{STATE},	
-		#{BILL_USER},	
-		#{BILL_DATE}	
+		#{STATE}	
 	</sql>
 	
 	<!-- 新增-->
@@ -75,9 +71,7 @@
 			PERMISSION_CHANGE = #{PERMISSION_CHANGE},
 			APPLY_DATE = #{APPLY_DATE},
 			ACCOUNT_DELETE_REASON = #{ACCOUNT_DELETE_REASON},
-			NOTE = #{NOTE},
-			BILL_USER = #{BILL_USER},
-			BILL_DATE = #{BILL_DATE}
+			NOTE = #{NOTE}
 		where 
 		ID = #{ID}
 	</update>
@@ -98,9 +92,7 @@
 			PERMISSION_CHANGE,	
 			APPLY_DATE,	
 			ACCOUNT_DELETE_REASON,	
-			NOTE,
-			BILL_USER,	
-			BILL_DATE
+			NOTE
 		from 
 		<include refid="tableName"></include>
 		where  STATE=1
@@ -164,9 +156,7 @@
 				#{item.APPLY_DATE},	
 				#{item.ACCOUNT_DELETE_REASON},	
 				#{item.NOTE},	
-				"1",	
-				#{item.BILL_USER},	
-				#{item.BILL_DATE}
+				"1"
 			);
 		</foreach>
 	</update>
