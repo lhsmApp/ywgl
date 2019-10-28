@@ -1,4 +1,4 @@
-package com.fh.controller.mbp;
+package com.fh.controller.trainBase;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -26,24 +26,20 @@ import com.fh.util.PageData;
 import com.fh.util.StringUtil;
 import com.fh.util.Jurisdiction;
 import com.fh.util.Tools;
-import com.fh.service.fhoa.department.DepartmentManager;
-import com.fh.service.mbp.ProblemTypeManager;
+import com.fh.service.trainBase.TrainDepartManager;
 
 /** 
- * 说明：知识类别
+ * 说明：培训基础
  * 创建人：jiachao
- * 创建时间：2019-10-10
+ * 创建时间：2019-10-23
  */
 @Controller
-@RequestMapping(value="/problemtype")
-public class ProblemTypeController extends BaseController {
+@RequestMapping(value="/traindepart")
+public class TrainDepartController extends BaseController {
 	
-	String menuUrl = "problemtype/list.do"; //菜单地址(权限用)
-	@Resource(name="problemtypeService")
-	private ProblemTypeManager problemtypeService;
-	
-	@Resource(name="departmentService")
-	private DepartmentManager departmentService;
+	String menuUrl = "traindepart/list.do"; //菜单地址(权限用)
+	@Resource(name="traindepartService")
+	private TrainDepartManager traindepartService;
 	
 	/**保存
 	 * @param
@@ -54,10 +50,10 @@ public class ProblemTypeController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		if(StringUtil.isEmpty(pd.getString("PRO_TYPE_PARENT_ID"))){
-			pd.put("PRO_TYPE_PARENT_ID", "0");
+		if(StringUtil.isEmpty(pd.getString("DEPART_PARENT_CODE"))){
+			pd.put("DEPART_PARENT_CODE", "0");
 		}
-		problemtypeService.save(pd);
+		traindepartService.save(pd);
 		mv.addObject("msg","success");
 		mv.setViewName("save_result");
 		return mv;
@@ -69,15 +65,15 @@ public class ProblemTypeController extends BaseController {
 	 */
 	@RequestMapping(value="/delete")
 	@ResponseBody
-	public Object delete(@RequestParam String PROBLEMTYPE_ID) throws Exception{
+	public Object delete(@RequestParam String TRAINDEPART_ID) throws Exception{					//校验权限
 		Map<String,String> map = new HashMap<String,String>();
 		PageData pd = new PageData();
-		pd.put("PROBLEMTYPE_ID", PROBLEMTYPE_ID);
+		pd.put("TRAINDEPART_ID", TRAINDEPART_ID);
 		String errInfo = "success";
-		if(problemtypeService.listByParentId(PROBLEMTYPE_ID).size() > 0){		//判断是否有子级，是：不允许删除
+		if(traindepartService.listByParentId(TRAINDEPART_ID).size() > 0){		//判断是否有子级，是：不允许删除
 			errInfo = "false";
 		}else{
-			problemtypeService.delete(pd);	//执行删除
+			traindepartService.delete(pd);	//执行删除
 		}
 		map.put("result", errInfo);
 		return AppUtil.returnObject(new PageData(), map);
@@ -92,7 +88,7 @@ public class ProblemTypeController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		problemtypeService.edit(pd);
+		traindepartService.edit(pd);
 		mv.addObject("msg","success");
 		mv.setViewName("save_result");
 		return mv;
@@ -111,17 +107,18 @@ public class ProblemTypeController extends BaseController {
 		if(null != keywords && !"".equals(keywords)){
 			pd.put("keywords", keywords.trim());
 		}
-		String PROBLEMTYPE_ID = null == pd.get("PROBLEMTYPE_ID")?"":pd.get("PROBLEMTYPE_ID").toString();
+		String TRAINDEPART_ID = null == pd.get("TRAINDEPART_ID")?"":pd.get("TRAINDEPART_ID").toString();
 		if(null != pd.get("id") && !"".equals(pd.get("id").toString())){
-			PROBLEMTYPE_ID = pd.get("id").toString();
+			TRAINDEPART_ID = pd.get("id").toString();
 		}
-		pd.put("PROBLEMTYPE_ID", PROBLEMTYPE_ID);					//上级ID
+		pd.put("TRAINDEPART_ID", TRAINDEPART_ID);					//上级ID
+		pd.put("DEPART_CODE", TRAINDEPART_ID);                      //上级ID,返回按钮用
 		page.setPd(pd);
-		List<PageData>	varList = problemtypeService.list(page);			//列出ProblemType列表
-		mv.setViewName("mbp/problemtype/problemtype_list");
-		mv.addObject("pd", problemtypeService.findById(pd));				//传入上级所有信息
-		mv.addObject("PROBLEMTYPE_ID", PROBLEMTYPE_ID);			//上级ID
-		mv.addObject("varList", varList);
+		List<PageData>	varList = traindepartService.list(page);			//列出TrainDepart列表
+		mv.setViewName("trainBase/traindepart/traindepart_list");
+		mv.addObject("pd", traindepartService.findByCode(pd));				//传入上级所有信息
+		mv.addObject("TRAINDEPART_ID", TRAINDEPART_ID);			//上级ID
+		mv.addObject("varList", varList);							//按钮权限
 		return mv;
 	}
 
@@ -131,18 +128,18 @@ public class ProblemTypeController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value="/listTree")
-	public ModelAndView listTree(Model model,String PROBLEMTYPE_ID)throws Exception{
+	public ModelAndView listTree(Model model,String TRAINDEPART_ID)throws Exception{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		try{
-			JSONArray arr = JSONArray.fromObject(problemtypeService.listTree("0"));
+			JSONArray arr = JSONArray.fromObject(traindepartService.listTree("0"));
 			String json = arr.toString();
-			json = json.replaceAll("PROBLEMTYPE_ID", "id").replaceAll("PARENT_ID", "pId").replaceAll("NAME", "name").replaceAll("subProblemType", "nodes").replaceAll("hasProblemType", "checked").replaceAll("treeurl", "url");
+			json = json.replaceAll("TRAINDEPART_ID", "id").replaceAll("PARENT_ID", "pId").replaceAll("NAME", "name").replaceAll("subTrainDepart", "nodes").replaceAll("hasTrainDepart", "checked").replaceAll("treeurl", "url");
 			model.addAttribute("zTreeNodes", json);
-			mv.addObject("PROBLEMTYPE_ID",PROBLEMTYPE_ID);
+			mv.addObject("TRAINDEPART_ID",TRAINDEPART_ID);
 			mv.addObject("pd", pd);	
-			mv.setViewName("mbp/problemtype/problemtype_tree");
+			mv.setViewName("trainBase/traindepart/traindepart_tree");
 		} catch(Exception e){
 			logger.error(e.toString(), e);
 		}
@@ -158,16 +155,12 @@ public class ProblemTypeController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		String PROBLEMTYPE_ID = null == pd.get("PROBLEMTYPE_ID")?"":pd.get("PROBLEMTYPE_ID").toString();
-		pd.put("PROBLEMTYPE_ID", PROBLEMTYPE_ID);					//上级ID
-		mv.addObject("pds",problemtypeService.findById(pd));				//传入上级所有信息
-		mv.addObject("PROBLEMTYPE_ID", PROBLEMTYPE_ID);			//传入ID，作为子级ID用
-		mv.setViewName("mbp/problemtype/problemtype_edit");
+		String TRAINDEPART_ID = null == pd.get("TRAINDEPART_ID")?"":pd.get("TRAINDEPART_ID").toString();
+		pd.put("DEPART_CODE", TRAINDEPART_ID);					//上级ID
+		mv.addObject("pds",traindepartService.findByCode(pd));				//传入上级所有信息
+		mv.addObject("TRAINDEPART_ID", TRAINDEPART_ID);			//传入ID，作为子级ID用
+		mv.setViewName("trainBase/traindepart/traindepart_edit");
 		mv.addObject("msg", "save");
-		
-		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
-		JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0",zdepartmentPdList));
-		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
 		return mv;
 	}	
 	
@@ -180,28 +173,16 @@ public class ProblemTypeController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		String PROBLEMTYPE_ID = pd.getString("PROBLEMTYPE_ID");
-		pd = problemtypeService.findById(pd);							//根据ID读取		
+		String TRAINDEPART_ID = pd.getString("TRAINDEPART_ID");
+		pd = traindepartService.findById(pd);							//根据ID读取		
 		mv.addObject("pd", pd);													//放入视图容器
-		pd.put("PROBLEMTYPE_ID",pd.get("PRO_TYPE_PARENT_ID").toString());			//用作上级信息
-		mv.addObject("pds",problemtypeService.findById(pd));				//传入上级所有信息
-		mv.addObject("PROBLEMTYPE_ID", pd.get("PRO_TYPE_PARENT_ID").toString());	//传入上级ID，作为子ID用
-		pd.put("PROBLEMTYPE_ID",PROBLEMTYPE_ID);					//复原本ID
-		pd = problemtypeService.findById(pd);							//根据ID读取
-		mv.setViewName("mbp/problemtype/problemtype_edit");
+		pd.put("TRAINDEPART_ID",pd.get("DEPART_PARENT_CODE").toString());			//用作上级信息
+		mv.addObject("pds",traindepartService.findById(pd));				//传入上级所有信息
+		mv.addObject("TRAINDEPART_ID", pd.get("DEPART_PARENT_CODE").toString());	//传入上级ID，作为子ID用
+		pd.put("TRAINDEPART_ID",TRAINDEPART_ID);					//复原本ID
+		pd = traindepartService.findById(pd);							//根据ID读取
+		mv.setViewName("trainBase/traindepart/traindepart_edit");
 		mv.addObject("msg", "edit");
-		
-		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
-		JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0",zdepartmentPdList));
-		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
-		
-		PageData pdDepartResult=new PageData();
-		pdDepartResult.put("DEPARTMENT_CODE", pd.getString("DEPART_CODE"));
-	    pdDepartResult=departmentService.findByBianma(pdDepartResult);
-	    if(pdDepartResult!=null)
-			mv.addObject("proTypeName", pdDepartResult.getString("NAME"));
-		else
-			mv.addObject("proTypeName", null);
 		return mv;
 	}	
 	
@@ -211,7 +192,7 @@ public class ProblemTypeController extends BaseController {
 	 */
 	@RequestMapping(value="/excel")
 	public ModelAndView exportExcel() throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"导出ProblemType到excel");
+		logBefore(logger, Jurisdiction.getUsername()+"导出TrainDepart到excel");
 		if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;}
 		ModelAndView mv = new ModelAndView();
 		PageData pd = new PageData();
@@ -225,16 +206,16 @@ public class ProblemTypeController extends BaseController {
 		titles.add("备注5");	//5
 		titles.add("备注6");	//6
 		dataMap.put("titles", titles);
-		List<PageData> varOList = problemtypeService.listAll(pd);
+		List<PageData> varOList = traindepartService.listAll(pd);
 		List<PageData> varList = new ArrayList<PageData>();
 		for(int i=0;i<varOList.size();i++){
 			PageData vpd = new PageData();
-			vpd.put("var1", varOList.get(i).get("PRO_TYPE_ID").toString());	//1
-			vpd.put("var2", varOList.get(i).getString("PRO_TYPE_NAME"));	    //2
-			vpd.put("var3", varOList.get(i).get("PRO_TYPE_PARENT_ID").toString());	//3
-			vpd.put("var4", varOList.get(i).getString("DEPART_CODE"));	    //4
-			vpd.put("var5", varOList.get(i).get("STATE").toString());	//5
-			vpd.put("var6", varOList.get(i).getString("PRO_TYPE_CONTENT"));	    //6
+			vpd.put("var1", varOList.get(i).get("DEPART_ID").toString());	//1
+			vpd.put("var2", varOList.get(i).getString("DEPART_CODE"));	    //2
+			vpd.put("var3", varOList.get(i).getString("DEPART_NAME"));	    //3
+			vpd.put("var4", varOList.get(i).getString("DEPART_PARENT_CODE"));	    //4
+			vpd.put("var5", varOList.get(i).getString("LEADER"));	    //5
+			vpd.put("var6", varOList.get(i).getString("STATE"));	    //6
 			varList.add(vpd);
 		}
 		dataMap.put("varList", varList);
