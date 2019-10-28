@@ -34,23 +34,23 @@
 							    <div class="widget-box" >
 								    <div class="widget-body">
 									    <div class="widget-main">
-										    <form class="form-inline">
+									    <label class="pull-left" style="padding: 5px;">选择业务类型：</label>
 										    <span class="pull-left" style="margin-right: 5px;"> 
 												<select
 													class="chosen-select form-control" name="BUSINESS_TYPE"
 													id=BUSINESS_TYPE data-placeholder="请选择业务类型"
 													style="vertical-align: top; height: 32px; width: 150px;">
-														<option value="">请选择业务类型</option>
+<!-- 														<option value="">请选择业务类型</option> -->
 														<option  value="1">系统变更</option>
 														<option  value="2">角色变更</option>
 														<option  value="3">GRC帐号新增</option>
-														<option  value="4">GRC帐号变更</option>
+														<option  value="4">GRC权限变更</option>
 														<option  value="5">GRC帐号撤销</option>
 												</select>
 											</span>		
 												<span class="input-icon pull-left" style="margin-right: 5px;">
 													<input id="SelectedBillCode" class="nav-search-input" autocomplete="off" type="text" name="keywords" value="${pd.keywords }" placeholder="在已有申请中搜索"> 
-													<i class="ace-icon fa fa-search nav-search-icon"></i>
+<!-- 													<i class="ace-icon fa fa-search nav-search-icon"></i> -->
 												</span>																			 
 												<button type="button" class="btn btn-info btn-sm" onclick="tosearch();">
 												    <i class="ace-icon fa fa-search bigger-110"></i>
@@ -62,7 +62,6 @@
 												            <label class="btn btn-sm btn-primary" onclick="returnApproval()">
 													        <i class="ace-icon fa fa-undo bigger-160"></i>审批退回
 												            </label>									
-										    </form>
 									    </div>
 								    </div>
 							    </div>
@@ -219,6 +218,8 @@
 			top.jzts();
 			$("#Form").submit();
 		}
+		
+
 		$(function() {
 			var data=${varList};
 			showDetail(data[0].BILL_CODE,data[0].CURRENT_LEVEL,data[0].NEXT_LEVEL);
@@ -374,18 +375,17 @@
 			});
 		};
 		var data=${varList};
-		console.log(data);
 		//循环加载到页面
 		function getChangeData(){
 		    var html = '';
 		    for(var i = 0;i<data.length;i++){
-		        html += setDiv(data[i]);
+		        html += setDiv1(data[i]);
 		    }
 		    //document.getElementById("tasks").innerHTML = html;
 			$('#tasks').html(html);
 		}		
 		//动态加载变更数据
-		function setDiv(item){
+		function setDiv1(item){
 		    var div = '<li  class="item-grey clearfix" onclick="showDetail(\''+item.BILL_CODE+'\',\''+item.CURRENT_LEVEL+'\',\''+item.NEXT_LEVEL+'\');"><div><label class="inline" style="margin-bottom:5px;"><span class="list-item-value-title">'
 		        + item.BG_NAME
 		        + '</span></label></div><div><label class="inline"><span class="list-item-info">单号:&nbsp;</span><span class="list-item-value">'
@@ -403,24 +403,76 @@
 		        +'</span></label></div></li>';
 		    return div;
 		}
+		//GRC帐号新增
+		function setDiv3(item){
+		    var div = '<li  class="item-grey clearfix" onclick="showDetail(\''+item.BILL_CODE+'\',\''+item.CURRENT_LEVEL+'\',\''+item.NEXT_LEVEL+'\');"><div><label class="inline" style="margin-bottom:5px;"><span class="list-item-value-title">'
+		        + "GRC帐号新增"
+		        + '</span></label></div><div><label class="inline"><span class="list-item-info">单号:&nbsp;</span><span class="list-item-value">'
+		        + item.BILL_CODE
+		        +'</span></label><label class="inline pull-right"><span class="list-item-info">科室：</span><span class="list-item-value">'
+		        + item.DEPT_CODE
+		        +'</span></label></div><div><label class="inline"><span class="list-item-info">状态:&nbsp;</span><span class="list-item-value">'
+		        + item.APPROVAL_STATE
+		        +'</span></label><label class="inline pull-right"><span class="list-item-info">单位:&nbsp;</span><span class="list-item-value">'
+		        + item.UNIT_CODE
+		        +'</span></label></div><div><label class="inline"><span class="list-item-info">新增帐号原因:&nbsp;</span><span class="list-item-value">'
+		        + item.ACCOUNT_REASON
+		        +'</span></label><label class="inline pull-right"><span class="list-item-info">申请日期:&nbsp;'
+		        + item.ENTRY_DATE
+		        +'</span></label></div></li>';
+		    return div;
+		}
+		function setDiv4(item){
+		    var div = '<li  class="item-grey clearfix" onclick="showDetail(\''+item.BILL_CODE+'\',\''+item.CURRENT_LEVEL+'\',\''+item.NEXT_LEVEL+'\');"><div><label class="inline" style="margin-bottom:5px;"><span class="list-item-value-title">'
+		    + "GRC权限变更"
+	        + '</span></label></div><div><label class="inline"><span class="list-item-info">单号:&nbsp;</span><span class="list-item-value">'
+	        + item.BILL_CODE
+	        +'</span></label><label class="inline pull-right"><span class="list-item-info">科室：</span><span class="list-item-value">'
+	        + item.DEPT_CODE
+	        +'</span></label></div><div><label class="inline"><span class="list-item-info">状态:&nbsp;</span><span class="list-item-value">'
+	        + item.APPROVAL_STATE
+	        +'</span></label><label class="inline pull-right"><span class="list-item-info">单位:&nbsp;</span><span class="list-item-value">'
+	        + item.UNIT_CODE
+	        +'</span></label></div><div><label class="inline"><span class="list-item-info">账号撤销原因:&nbsp;</span><span class="list-item-value">'
+	        + item.BG_REASON
+	        +'</span></label><label class="inline pull-right"><span class="list-item-info">申请日期:&nbsp;'
+	        + item.ENTRY_DATE
+	        +'</span></label></div></li>';
+		    return div;
+		}
+		function setDiv5(item){
+		    var div = '<li  class="item-grey clearfix" onclick="showDetail(\''+item.BILL_CODE+'\',\''+item.CURRENT_LEVEL+'\',\''+item.NEXT_LEVEL+'\');"><div><label class="inline" style="margin-bottom:5px;"><span class="list-item-value-title">'
+		        + "账号撤销"
+		        + '</span></label></div><div><label class="inline"><span class="list-item-info">单号:&nbsp;</span><span class="list-item-value">'
+		        + item.BILL_CODE
+		        +'</span></label><label class="inline pull-right"><span class="list-item-info">科室：</span><span class="list-item-value">'
+		        + item.DEPT_CODE
+		        +'</span></label></div><div><label class="inline"><span class="list-item-info">状态:&nbsp;</span><span class="list-item-value">'
+		        + item.APPROVAL_STATE
+		        +'</span></label><label class="inline pull-right"><span class="list-item-info">单位:&nbsp;</span><span class="list-item-value">'
+		        + item.UNIT_CODE
+		        +'</span></label></div><div><label class="inline"><span class="list-item-info">账号撤销原因:&nbsp;</span><span class="list-item-value">'
+		        + item.CANCLE_REASON
+		        +'</span></label><label class="inline pull-right"><span class="list-item-info">申请日期:&nbsp;'
+		        + item.ENTRY_DATE
+		        +'</span></label></div></li>';
+		    return div;
+		}
 		function showDetail(code,current,next){
 			bill_code=code;
 		 	current_level=current;//当前审批级别
-		    next_level=next;//下一审批级别	  
-		    console.log(current_level);
-		    console.log(next_level);
+		    next_level=next;//下一审批级别	 
+			var businessType= $("#BUSINESS_TYPE").val();//业务类型
 			  $.ajax({
 				  	type: "POST",
 		            //提交的网址
-		           	url: '<%=basePath%>changeerpxtbg/showDetail.do?BILL_CODE='+code,		      
+		           	url: '<%=basePath%>approvalconfig/showDetail.do?BILL_CODE='+code+'&BUSINESS_CODE='+businessType,		      
 		            //返回数据的格式
 		        	dataType:'json',		          
 		            success:function(datas){
-
 		            	var html = '';
 		      		     html += setDetail(datas);
 		      			$('#detail-tab').html(html);
-// 		      		    console.log(datas);
 		      		    if(datas.APPROVAL_STATE==2)
 		    			{
 		    			$("#step1").removeClass('active');
@@ -446,8 +498,22 @@
 		}
 		//动态加载变更单详情
 		function setDetail(item){
+			var title=undefined;
+			var reason=undefined;
+			var value= $("#BUSINESS_TYPE").val();
+			if(value==1||value==2||value==4){
+				title=item.BG_NAME;
+				reason=item.BG_REASON;
+			}else if(value==3){
+				title='GRC帐号新增';
+				reason=item.ACCOUNT_REASON;
+				
+			}else{
+				title='GRC帐号撤销';
+				reason=item.CANCLE_REASON;
+			}
 		    var div = '<div class="profile-user-info"><div class="profile-info-row"><div class="profile-info-name">变更名称：</div><div class="profile-info-value"><span>'
-		        + item.BG_NAME
+		    	+title
 		        + '</span></div></div><div class="profile-info-row"><div class="profile-info-name">申请单号：</div><div class="profile-info-value"><i class="fa fa-map-marker light-orange bigger-110"></i><span>'
 		        + item.BILL_CODE		       
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请单位： </div><div class="profile-info-value"><span>'
@@ -455,7 +521,7 @@
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请部门： </div><div class="profile-info-value"><span>'
 		        +item.DEPT_CODE
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 变更原因 ：</div><div class="profile-info-value"><span>'
-		        +item.BG_REASON
+		        +reason
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人部门： </div><div class="profile-info-value"><span>'
 		        +item.USER_DEPT
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人： </div><div class="profile-info-value"><span>'
@@ -490,8 +556,7 @@
 	
 		//审批通过
 		function passApproval(){
-			var businessType= $("#BUSINESS_TYPE").val()
-// 			console.log(businessType);
+			var businessType= $("#BUSINESS_TYPE").val();
 			  $.ajax({
 				  	type: "POST",
 		            //提交的网址
@@ -515,10 +580,11 @@
 		}
 		//审批退回
 		function returnApproval(){
+			var businessType= $("#BUSINESS_TYPE").val();
 			  $.ajax({
 				  	type: "POST",
 		            //提交的网址
-		           	url: '<%=basePath%>approvalconfig/returnApproval.do?BILL_CODE='+encodeURI(bill_code)+'&CURRENT_LEVEL='+current_level+'&NEXT_LEVEL='+next_level,	
+		           	url: '<%=basePath%>approvalconfig/returnApproval.do?BILL_CODE='+encodeURI(bill_code)+'&CURRENT_LEVEL='+current_level+'&NEXT_LEVEL='+next_level+'&BUSINESS_TYPE='+businessType,	
 		            //返回数据的格式
 		        	dataType:'json',		          
 		            success:function(datas){
@@ -530,6 +596,51 @@
 		
 		         });
 		}
+		 //监听选中事件
+        $('#BUSINESS_TYPE').change(function(data){
+        	$("#tasks li").remove(); 
+			top.jzts();
+			var keywords = $("#keywords").val();
+            //获取选中项的值
+            var value = $("#BUSINESS_TYPE option:selected").attr("value");
+            $.ajax({
+				type: "POST",
+				url: '<%=basePath%>approvalconfig/getPageList.do?BUSINESS_CODE='+value,
+		    	data: {keywords:keywords},
+				dataType:'json',
+				cache: false,
+				success: function(data){
+// 		        	$("#detail-tab").remove(); 
+// 					var html = '';
+// 	      		     html += setDetail(data[0]);
+// 	      			$('#detail-tab').html(html);
+// 					console.log(data[0]);
+					if(data.length>0){
+						$.each(data, function(i, item){
+						    var html = '';
+						    if(value==1||value==2){
+						    	console.log(111111);
+						    	html += setDiv1(item);
+						    }else if(value==3){
+						    	html += setDiv3(item);
+			
+						    }else if(value==4){
+						    	html += setDiv4(item);		
+						    }else{
+						    	html += setDiv5(item);	
+						    }
+						        
+							$("#tasks").append(html);
+					 	});
+						
+					}
+					else{
+						addEmpty();
+					}
+					top.hangge();
+				}
+			});
+        });
 		/**
 		 * 初始化列表信息
 		 */
@@ -537,9 +648,11 @@
 			$("#tasks li").remove(); 
 			top.jzts();
 			var keywords = $("#keywords").val();
+			 //获取选中项的值
+            var value = $("#BUSINESS_TYPE option:selected").attr("value");
 			$.ajax({
 					type: "POST",
-					url: '<%=basePath%>approvalconfig/getPageList.do',
+					url: '<%=basePath%>approvalconfig/getPageList.do?BUSINESS_CODE='+value,
 			    	data: {keywords:keywords},
 					dataType:'json',
 					cache: false,
@@ -547,7 +660,17 @@
 						if(data.length>0){
 							$.each(data, function(i, item){
 							    var html = '';
-							        html += setDiv(item);
+							    if(value==1||value==2){
+							    	console.log(111111);
+							    	html += setDiv1(item);
+							    }else if(value==3){
+							    	html += setDiv3(item);
+				
+							    }else if(value==4){
+							    	html += setDiv4(item);		
+							    }else{
+							    	html += setDiv5(item);	
+							    }
 								$("#tasks").append(html);
 						 	});
 						}
@@ -563,9 +686,11 @@
 			$("#tasks li").remove(); 
 			top.jzts();
 			var keywords = $("#SelectedBillCode").val();
+			 //获取选中项的值
+            var value = $("#BUSINESS_TYPE option:selected").attr("value");
 			$.ajax({
 					type: "POST",
-					url: '<%=basePath%>approvalconfig/getPageList.do',
+					url: '<%=basePath%>approvalconfig/getPageList.do?BUSINESS_CODE='+value,
 			    	data: {keywords:keywords},
 					dataType:'json',
 					cache: false,
@@ -573,7 +698,7 @@
 						if(data.length>0){
 							$.each(data, function(i, item){
 							    var html = '';
-							        html += setDiv(item);
+							        html += setDiv1(item);
 								$("#tasks").append(html);
 						 	});
 						}

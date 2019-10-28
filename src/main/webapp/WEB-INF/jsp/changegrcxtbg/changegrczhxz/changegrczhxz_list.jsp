@@ -410,11 +410,38 @@
 			 diag.CancelEvent = function(){ //关闭事件
 				if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
 					console.log('gggg');
-				 	getProAttachment(type);
+					addItemAttachment();
 				}
 				diag.close();
 			 };
 			 diag.show();
+		}
+		/**
+		 * 增加附件tr
+		 */
+		function addItemAttachment(item,index){
+			var href='<%=basePath%>/attachment/download.do?ATTACHMENT_ID='+item.ATTACHMENT_ID;
+			var ext=item.ATTACHMENT_PATH.substring(19,item.ATTACHMENT_PATH.length);
+			console.log(ext);
+			var htmlLog='<tr>'
+				+'<td class="center" style="width: 30px;">'+index+'</td>'
+				+'<td class="center">'+item.ATTACHMENT_NAME+ext+'</td>'
+				+'<td class="center">'+item.ATTACHMENT_MEMO+'</td>'
+				+'<td class="center">'+item.ATTACHMENT_SIZE+'&nbsp;KB</td>'
+				+'<td class="center">'+item.CREATE_USER+'</td>'
+				+'<td class="center">'+item.CREATE_DATE+'</td>'
+				+'<td class="center">'
+					+'<div class="hidden-sm hidden-xs btn-group">'
+						+'<a class="btn btn-xs btn-success" onclick=window.location.href="'+href+'">'
+							+'<i class="ace-icon fa fa-cloud-download bigger-120" title="下载"></i>'
+						+'</a>'
+						+'<a class="btn btn-xs btn-danger" onclick=delProAttachment("'+item.ATTACHMENT_ID+'")>'
+							+'<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>'
+						+'</a>'
+					+'</div>'
+				+'</td>'
+			+'</tr>';
+			return htmlLog;
 		}
 		//删除
 		function del(Id){
@@ -524,7 +551,7 @@
 		        + item.APPROVAL_STATE
 		        +'</span></label><label class="inline pull-right"><span class="list-item-info">单位:&nbsp;</span><span class="list-item-value">'
 		        + item.UNIT_CODE
-		        +'</span></label></div><div><label class="inline"><span class="list-item-info">账号撤销原因:&nbsp;</span><span class="list-item-value">'
+		        +'</span></label></div><div><label class="inline"><span class="list-item-info">新增帐号原因:&nbsp;</span><span class="list-item-value">'
 		        + item.ACCOUNT_REASON
 		        +'</span></label><label class="inline pull-right"><span class="list-item-info">申请日期:&nbsp;'
 		        + item.ENTRY_DATE

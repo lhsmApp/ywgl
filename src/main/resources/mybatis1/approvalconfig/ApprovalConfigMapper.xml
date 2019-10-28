@@ -548,7 +548,195 @@
 				)
 		</if>
 	</select>
-	
+	<!-- 角色变更-->
+	<select id="datalistPageJsbg" parameterType="page" resultType="pd">
+		SELECT * FROM	(SELECT 
+			a.BUSINESS_CODE,	
+			a.BILL_CODE,	
+			a.CURRENT_LEVEL,	
+			a.NEXT_LEVEL,	
+			a.ACTIVE_FLAG,	
+			a.UNIT_CODE AS SPUNIT_CODE,	
+			a.DEPART_CODE,	
+			a.APPROVAL_STATE,	
+			a.ROLE_CODE,	
+			a.APPROVAL_USER,	
+			a.APPROVAL_DATE,	
+			a.APPROVAL_ADVICE,	
+			b.UNIT_CODE AS UNIT_CODE,	
+			b.DEPT_CODE,	
+			b.ENTRY_DATE,	
+			b.SERIAL_NUM,	
+			b.USER_CODE,	
+			b.USER_DEPT,	
+			b.USER_JOB,	
+			b.USER_CONTACT,	
+			b.BG_NAME,	
+			b.SYSTEM,	
+			b.BG_TYPE,	
+			b.BG_REASON,	
+			b.BILL_STATE,	
+			b.BILL_USER,	
+			b.BILL_DATE,
+			b.ADD_ROLE,
+			b.DEL_ROLE
+		FROM
+			  tb_approval_detail a, tb_change_erp_jsbg b 
+		WHERE a.ACTIVE_FLAG =#{pd.ACTIVE_FLAG}
+			  AND a.UNIT_CODE = #{pd.UNIT_CODE}
+<!-- 			  AND a.ROLE_CODE = #{ROLE_CODE} -->
+			  AND a.APPROVAL_STATE = #{pd.APPROVAL_STATE}
+			AND a.BILL_CODE = b.BILL_CODE ) AS T
+		WHERE 1=1
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+				BG_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+
+				)
+		</if>
+	</select>
+	<!-- GRC帐号新增 -->
+	<select id="datalistPageGrcZhxz" parameterType="page" resultType="pd">
+		SELECT * FROM	(SELECT 
+			a.BUSINESS_CODE,	
+			a.BILL_CODE,	
+			a.CURRENT_LEVEL,	
+			a.NEXT_LEVEL,	
+			a.ACTIVE_FLAG,	
+			a.UNIT_CODE AS SPUNIT_CODE,	
+			a.DEPART_CODE,	
+			a.APPROVAL_STATE,	
+			a.ROLE_CODE,	
+			a.APPROVAL_USER,	
+			a.APPROVAL_DATE,	
+			a.APPROVAL_ADVICE,	
+			b.UNIT_CODE AS UNIT_CODE,	
+			b.DEPT_CODE,	
+			b.ENTRY_DATE,	
+			b.SERIAL_NUM,	
+			b.USER_CODE,	
+			b.USER_DEPT,	
+			b.USER_JOB,	
+			b.USER_CONTACT,	
+			b.EFFECTIVE_DATE,	
+			b.SYSTEM,	
+			b.ACCOUNT_NEW,
+			b.ACCOUNT_VALIDITY,
+			b.ACCOUNT_REASON,
+			b.ACCOUNT_ROLES,
+			b.BILL_STATE,	
+			b.BILL_USER,	
+			b.BILL_DATE
+		FROM
+			  tb_approval_detail a, tb_change_grc_zhxz b 
+		WHERE a.ACTIVE_FLAG =#{pd.ACTIVE_FLAG}
+			  AND a.UNIT_CODE = #{pd.UNIT_CODE}
+<!-- 			  AND a.ROLE_CODE = #{ROLE_CODE} -->
+			  AND a.APPROVAL_STATE = #{pd.APPROVAL_STATE}
+			AND a.BILL_CODE = b.BILL_CODE ) AS T
+		WHERE 1=1
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+				ACCOUNT_REASON LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+
+				)
+		</if>
+	</select>
+		<!-- GRC帐号注销 -->
+	<select id="datalistPageGrcZhzx" parameterType="page" resultType="pd">
+		SELECT * FROM	(SELECT 
+			a.BUSINESS_CODE,	
+			a.BILL_CODE,	
+			a.CURRENT_LEVEL,	
+			a.NEXT_LEVEL,	
+			a.ACTIVE_FLAG,	
+			a.UNIT_CODE AS SPUNIT_CODE,	
+			a.DEPART_CODE,	
+			a.APPROVAL_STATE,	
+			a.ROLE_CODE,	
+			a.APPROVAL_USER,	
+			a.APPROVAL_DATE,	
+			a.APPROVAL_ADVICE,	
+			b.UNIT_CODE,	
+			b.DEPT_CODE,	
+			b.ENTRY_DATE,	
+			b.SERIAL_NUM,	
+			b.USER_CODE,	
+			b.USER_DEPT,	
+			b.USER_JOB,	
+			b.USER_CONTACT,	
+			b.EFFECTIVE_DATE,	
+			b.SYSTEM,	
+			b.ACCOUNT_NAME,
+			b.CANCLE_REASON,
+			b.BILL_STATE,	
+			b.BILL_USER,	
+			b.BILL_DATE
+		FROM
+			  tb_approval_detail a, tb_change_grc_zhzx b 
+		WHERE a.ACTIVE_FLAG =#{pd.ACTIVE_FLAG}
+			  AND a.UNIT_CODE = #{pd.UNIT_CODE}
+<!-- 			  AND a.ROLE_CODE = #{ROLE_CODE} -->
+			  AND a.APPROVAL_STATE = #{pd.APPROVAL_STATE}
+			AND a.BILL_CODE = b.BILL_CODE ) AS T
+		WHERE 1=1
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+				CANCLE_REASON LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+
+				)
+		</if>
+	</select>
+		<!-- GRC帐号注销 -->
+	<select id="datalistPageGrcQxbg" parameterType="page" resultType="pd">
+		SELECT * FROM	(SELECT 
+			a.BUSINESS_CODE,	
+			a.BILL_CODE,	
+			a.CURRENT_LEVEL,	
+			a.NEXT_LEVEL,	
+			a.ACTIVE_FLAG,	
+			a.UNIT_CODE AS SPUNIT_CODE,	
+			a.DEPART_CODE,	
+			a.APPROVAL_STATE,	
+			a.ROLE_CODE,	
+			a.APPROVAL_USER,	
+			a.APPROVAL_DATE,	
+			a.APPROVAL_ADVICE,	
+			b.UNIT_CODE,	
+			b.DEPT_CODE,	
+			b.ENTRY_DATE,	
+			b.SERIAL_NUM,	
+			b.USER_CODE,	
+			b.USER_DEPT,	
+			b.USER_JOB,	
+			b.USER_CONTACT,	
+			b.EFFECTIVE_DATE,	
+			b.SYSTEM,	
+			b.BG_REASON,
+			b.ADD_ROLES,
+			b.DELETE_ROLES,
+			b.BILL_STATE,	
+			b.BILL_USER,	
+			b.BILL_DATE
+		FROM
+			  tb_approval_detail a, tb_change_grc_qxbg b 
+		WHERE a.ACTIVE_FLAG =#{pd.ACTIVE_FLAG}
+			  AND a.UNIT_CODE = #{pd.UNIT_CODE}
+<!-- 			  AND a.ROLE_CODE = #{ROLE_CODE} -->
+			  AND a.APPROVAL_STATE = #{pd.APPROVAL_STATE}
+			AND a.BILL_CODE = b.BILL_CODE ) AS T
+		WHERE 1=1
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+				BG_REASON LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+
+				)
+		</if>
+	</select>
 	<!-- 列表(全部) -->
 	<select id="listAllScheme" parameterType="pd" resultType="pd">
 		select

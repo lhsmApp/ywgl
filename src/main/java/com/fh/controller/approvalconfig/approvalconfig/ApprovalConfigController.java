@@ -113,17 +113,37 @@ public class ApprovalConfigController extends BaseController {
 		mv.setViewName("save_result");
 		return mv;
 	}
-	/**列表
+	/**显示表单详细信息
 	 * @param page
 	 * @throws Exception
 	 */
-//	@RequestMapping(value="/showDetail")
-//	public @ResponseBody PageData showDetail() throws Exception{
-//		PageData pd = new PageData();
-//		pd = this.getPageData();
-//		pd = approvalconfigService.findById(pd);	//根据ID读取
-//		return pd;
-//	}
+	@RequestMapping(value="/showDetail")
+	public @ResponseBody PageData showDetail() throws Exception{
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		switch(pd.getString("BUSINESS_CODE")){
+		case "1":   //系统变更;	 
+			pd = changeerpxtbgService.findById(pd);	//根据ID读取
+		    break;
+		case "2": //角色变更;		   
+			pd = changeerpjsbgService.findById(pd);	//根据ID读取
+		    break;	
+		case "3": //GRC帐号新增;		   
+			pd = changegrczhxzService.findById(pd);
+		    break;
+		case "4": //GRC权限变更;		   
+			pd = changegrcqxbgService.findById(pd);
+		    break;
+		case "5": //GRC账号撤销;		   
+			pd = changegrczhzxService.findById(pd);
+		    break;
+		default:
+			
+		    break;
+		}	
+	
+		return pd;
+	}
 	/**列表
 	 * @param page
 	 * @throws Exception
@@ -167,7 +187,28 @@ public class ApprovalConfigController extends BaseController {
 			pd.put("keywords", keywords.trim());
 		}
 		page.setPd(pd);
-		List<PageData> varList = approvalconfigService.listScheme(page);
+		List<PageData> varList=null;
+		switch(pd.getString("BUSINESS_CODE")){
+		case "1":   //系统变更;	 
+			varList = approvalconfigService.listByBusiness(page,"datalistPageScheme");
+		    break;
+		case "2": //角色变更;		   
+			varList = approvalconfigService.listByBusiness(page,"datalistPageJsbg");
+		    break;	
+		case "3": //GRC帐号新增;		   
+			varList = approvalconfigService.listByBusiness(page,"datalistPageGrcZhxz");
+		    break;
+		case "4": //GRC权限变更;		   
+			varList = approvalconfigService.listByBusiness(page,"datalistPageGrcQxbg");
+		    break;
+		case "5": //GRC账号撤销;		   
+			varList = approvalconfigService.listByBusiness(page,"datalistPageGrcZhzx");
+		    break;
+		default:
+			
+		    break;
+		}	
+
 		for(PageData p:varList){
 			if(null!=p.getString("APPROVAL_STATE")&&!"".equals(p.getString("APPROVAL_STATE"))){
 				if(p.getString("APPROVAL_STATE").equals("0")){
@@ -215,7 +256,7 @@ public class ApprovalConfigController extends BaseController {
 				p.put("APPROVAL_STATE", "未上报");
 			}		
 		} 	
-		mv.setViewName("approvalconfig/approvalconfig/xtbgapproval_list");
+		mv.setViewName("approvalconfig/approvalconfig/approval_list");
 		mv.addObject("varList", JSON.toJSONString(varList));
 		mv.addObject("msg", "edit");
 		mv.addObject("pd", pd);
