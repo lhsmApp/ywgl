@@ -34,6 +34,7 @@ import com.fh.util.Tools;
 import com.fh.util.date.DateUtils;
 import com.fh.util.enums.BillNumType;
 import com.fh.util.enums.ProPriority;
+import com.fh.util.enums.ProState;
 
 import net.sf.json.JSONArray;
 
@@ -114,6 +115,43 @@ public class KnowledgeController extends BaseController {
 		// commonBase.setMessage("当前删除的信息含有业务关联字段，不能删除");
 		return commonBase;
 	}
+	
+	/**查询
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/queryKnowledgeInfo")
+	public ModelAndView queryKnowledgeInfo(Page page) throws Exception{
+		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = this.getPageData();
+		/*User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		String userId = user.getUSER_ID();
+		pd.put("BILL_USER", userId);*/
+		
+		String keywords = pd.getString("keywords");				//关键词检索条件
+		if(null != keywords && !"".equals(keywords)){
+			pd.put("keywords", keywords.trim());
+		}
+		page.setPd(pd);
+		List<PageData> varList = knowledgeService.list(page);
+		
+		
+		mv.addObject("pd", pd);
+		List<Dictionaries> dicKnowledgeType=DictsUtil.getDictsByParentBianma(dictionariesService, "KNOWLEDGE");
+		mv.addObject("knowledgeTypeList", dicKnowledgeType);//系统类型
+		mv.addObject("varList", varList);//问题状态
+		
+		mv.setViewName("knowledge/knowledge_query");
+		return mv;
+		/**此处放当前页面初始化时用到的一些数据，例如搜索的下拉列表数据，所需的字典数据、权限数据等等。
+		mv.addObject("pd", pd);
+		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
+		 * 
+		 * 
+		 */
+	}
+	
 	
 	/**列表
 	 * @param page
