@@ -501,11 +501,15 @@
 			var title=undefined;
 			var reason=undefined;
 			var value= $("#BUSINESS_TYPE").val();
-			if(value==1||value==2||value==4){
+			if(value==1||value==2){
 				title=item.BG_NAME;
 				reason=item.BG_REASON;
 			}else if(value==3){
 				title='GRC帐号新增';
+				reason=item.ACCOUNT_REASON;
+				
+			}else if(value==4){
+				title='GRC权限变更';
 				reason=item.ACCOUNT_REASON;
 				
 			}else{
