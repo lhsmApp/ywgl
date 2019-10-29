@@ -131,6 +131,20 @@ public class AttachmentController extends BaseController {
 		return mv;
 	}
 	
+	/**去查看页面
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/goView")
+	public ModelAndView goView()throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		mv.setViewName("attachment/attachment/attachment_view");
+		mv.addObject("pd", pd);
+		return mv;
+	}	
+	
 	/**去新增页面
 	 * @param
 	 * @throws Exception

@@ -4,7 +4,7 @@ import java.util.List;
 
 /** 
  * 说明：培训基础 实体类
- * 创建人：FH Q313596790
+ * 创建人：jiachao
  * 创建时间：2019-10-23
  */
 public class TrainDepart{ 
