@@ -3,9 +3,9 @@
 <mapper namespace="HouseFundDetailMapper">
 	
 <!-- 
- * 说明： 公积金明细
- * 创建人：zhangxiaoliu
- * 创建时间：2017-06-19
+ * 说明： 考核导入
+ * 创建人：jiachao
+ * 创建时间：2019-10-30
  * @version
  -->
  
@@ -13,17 +13,6 @@
 	<sql id="tableName">
 		tb_house_fund_detail
 	</sql>
-	
-	<!-- 获取单号下拉列表数据源 -->
-	<select id="getBillCodeList" parameterType="pd" resultType="String">
-		select distinct BILL_CODE
-		from <include refid="tableName"></include>
-		where BUSI_DATE = '${SystemDateTime}'
-		and DEPT_CODE = '${SelectedDepartCode}'
-	    and CUST_COL7 = '${SelectedCustCol7}'
-	    ${CanOperate}
-		order by BILL_CODE
-	</select>
 	
 	<!-- 列表 -->
 	<select id="datalistJqPage" parameterType="jqPage" resultType="pd">
@@ -68,16 +57,6 @@
 		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
 		        ${pd.QueryFeild}
 		    </if>
-	</select>
-	
-    <!-- 通过流水号获取流水号，用于判断数据是否变更 -->
-	<select id="getSerialNoBySerialNo" parameterType="pd" resultType="pd">
-		select ${SelectFeildName}
-		from <include refid="tableName"></include>
-		where BUSI_DATE = '${SystemDateTime}'
-		<if test="QueryFeild!= null and QueryFeild != ''">
-		    ${QueryFeild}
-		</if>
 	</select>
 	
 	<!-- 导出列表 -->

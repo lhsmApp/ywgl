@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fh.controller.base.BaseController;
-import com.fh.controller.common.CheckSystemDateTime;
 import com.fh.controller.common.Common;
 import com.fh.controller.common.Corresponding;
 import com.fh.controller.common.DictsUtil;
@@ -49,7 +48,6 @@ import com.fh.util.excel.TransferSbcDbc;
 import net.sf.json.JSONArray;
 
 import com.fh.service.fhoa.department.impl.DepartmentService;
-import com.fh.service.staffRemitInfo.staffRemitInfo.StaffRemitInfoManager;
 import com.fh.service.sysConfig.sysconfig.SysConfigManager;
 import com.fh.service.system.dictionaries.impl.DictionariesService;
 import com.fh.service.system.user.impl.UserService;
@@ -110,8 +108,8 @@ public class TaxStaffDetailController extends BaseController {
 	//底行显示的求和字段
     StringBuilder SqlUserdata = new StringBuilder();    
     //StaffRemitRestDeptCode 不能操作银川、武汉责任中心
-    List<String> SysConfigStaffRemitRestDeptCode = Arrays.asList("01009", "01017");
-    List<String> SysConfigStaffPut = Arrays.asList("PUT03", "PUT04");
+    //List<String> SysConfigStaffRemitRestDeptCode = Arrays.asList("01009", "01017");
+    //List<String> SysConfigStaffPut = Arrays.asList("PUT03", "PUT04");
 
 
 	/**列表
@@ -299,10 +297,10 @@ public class TaxStaffDetailController extends BaseController {
 			commonBase.setCode(2);
 			commonBase.setMessage("当前登录人责任中心为空，请联系管理员！");
 		}
-		if (CurrentDepartCode != null && !CurrentDepartCode.equals(DictsUtil.DepartShowAll_01001)){
+		/*if (CurrentDepartCode != null && !CurrentDepartCode.equals(DictsUtil.DepartShowAll_01001)){
 			commonBase.setCode(3);
 			commonBase.setMessage("当前登录人责任中心非机关人员，不能导入！");
-		}
+		}*/
 		
 
 		PageData getPd = this.getPageData();
@@ -406,29 +404,22 @@ public class TaxStaffDetailController extends BaseController {
 								pdAdd.put("CUST_COL7", SelectedCustCol7);
 								getBILL_OFF = SelectedCustCol7;
 							}
-							/*if(!SelectedCustCol7.equals(getBILL_OFF)){
-								if(!sbRetFeild.contains("导入账套和当前账套必须一致！")){
-									sbRetFeild.add("导入账套和当前账套必须一致！");
-								}
-							}*/
 							
-							String getUserCatg = (String) pdAdd.get("USER_CATG");
+							/*String getUserCatg = (String) pdAdd.get("USER_CATG");
 							if(SysConfigStaffPut.contains(getUserCatg)){
 								pdAdd.put("CUST_COL7", DictsUtil.BillOffOld);
 							}else{
 								pdAdd.put("CUST_COL7", DictsUtil.BillOffNew);
-							}
+							}*/
+							
 							
 							String getDEPT_CODE = (String) pdAdd.get("UNITS_CODE");
-							if(SysConfigStaffRemitRestDeptCode.contains(getDEPT_CODE)){
-								/*if(!sbRetFeild.contains("不能导入责任中心为银川和武汉的记录！")){
-									sbRetFeild.add("不能导入责任中心为银川和武汉的记录！");
-									//sbRetFeild.add("只能导入除了特定责任中心的记录！");
-								}*/
+							pdAdd.put("DEPT_CODE", getDEPT_CODE);
+							/*if(SysConfigStaffRemitRestDeptCode.contains(getDEPT_CODE)){
 								pdAdd.put("DEPT_CODE", getDEPT_CODE);
 							}else{
 								pdAdd.put("DEPT_CODE", DictsUtil.DepartShowAll_01001);
-							}
+							}*/
 							/*
 							String getUNITS_CODE = (String) pdAdd.get("UNITS_CODE");
 							if(!(getUNITS_CODE!=null && !getUNITS_CODE.trim().equals(""))){
@@ -445,13 +436,6 @@ public class TaxStaffDetailController extends BaseController {
 							
 							//haveColumnsList和map_SetColumnsList，设置保存的数据列及对应值
 							Common.setModelDefault(pdAdd, map_HaveColumnsList, map_SetColumnsList, MustNotEditList);
-				    		/*String strCanDel = "";
-				    		if(SysConfigStaffRemitRestDeptCode.contains(getDEPT_CODE)){
-				    			strCanDel = " and DEPT_CODE not in (" + QueryFeildString.tranferListValueToSqlInString(SysConfigStaffRemitRestDeptCode) + ") ";
-				    		} else {
-				    			strCanDel = " and 1 != 1 ";
-				    		}
-				    		pdAdd.put("CanDel", strCanDel);*/
 							listAdd.add(pdAdd);
 						}
 					}

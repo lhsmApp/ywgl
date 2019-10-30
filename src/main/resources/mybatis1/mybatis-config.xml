@@ -20,8 +20,6 @@
 		<typeAlias type="com.fh.entity.TrainDepart" alias="TrainDepart"/>
 		<typeAlias type="com.fh.entity.CourseType" alias="CourseType"/>
 		<typeAlias type="com.fh.entity.coursebase.CourseTree" alias="CourseTree"/>
-		<!-- 这里添加生成的实体类 -->
-		<typeAlias type="com.fh.entity.instframe.Instframe" alias="Instframe"/>
 		
 		
 		<typeAlias type="com.fh.util.PageData" alias="pd"/>

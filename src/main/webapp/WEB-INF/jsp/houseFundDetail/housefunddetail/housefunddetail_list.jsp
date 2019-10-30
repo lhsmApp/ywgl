@@ -50,10 +50,10 @@
 				    <div class="page-content">
 					    <!-- /section:settings.box -->
 					    <div class="page-header">
-								    <span class="label label-xlg label-success arrowed-right">人工成本</span>
+								    <span class="label label-xlg label-success arrowed-right">考核管理</span>
 									<!-- arrowed-in-right --> 
 									<span class="label label-xlg label-yellow arrowed-in arrowed-right"
-									    id="subTitle" style="margin-left: 2px;">公积金数据导入</span> 
+									    id="subTitle" style="margin-left: 2px;">考核数据导入</span> 
                                     <span style="border-left: 1px solid #e2e2e2; margin: 0px 10px;">&nbsp;</span>
 								
 									<button id="btnQuery" class="btn btn-white btn-info btn-sm"
@@ -73,8 +73,8 @@
 								    <div class="widget-body">
 									    <div class="widget-main">
 										    <form class="form-inline">
-											    <span class="pull-left" style="margin-right: 5px;">
-												    <select class="chosen-select form-control"
+											    <span class="pull-left " style="margin-right: 5px;">
+												    <%-- <select class="chosen-select form-control"
 													    name="SelectedCustCol7" id="SelectedCustCol7"
 													    data-placeholder="请选择帐套" onchange="getSelectBillCodeOptions()"
 													    style="vertical-align: top; height:32px;width: 150px;">
@@ -83,14 +83,15 @@
 													    	<option value="${each.DICT_CODE}" 
 														        <c:if test="${pd.SelectedCustCol7==each.DICT_CODE}">selected</c:if>>${each.NAME}</option>
 													    </c:forEach>
-											    	</select>
+											    	</select> --%>
+											    	<input id="SelectedCustCol7" value="9870" class="hidden" type="text">
 											    </span>
 											    <span class="pull-left" style="margin-right: 5px;" <c:if test="${pd.departTreeSource=='0'}">hidden</c:if>>
 											    	<div class="selectTree" id="selectTree" multiMode="false"
 												        allSelectable="false" noGroup="false"></div>
 											        <input id="SelectedDepartCode" type="hidden"></input>
 											    </span>
-											    <span class="pull-left" style="margin-right: 5px;">
+											    <!-- <span class="pull-left" style="margin-right: 5px;">
 											    	<select class="chosen-select form-control"
 											    		name="SelectedBillCode" id="SelectedBillCode"
 											    		style="vertical-align: top; height:32px;width: 160px;">
@@ -98,7 +99,7 @@
 											    </span>
 											    <button type="button" class="btn btn-info btn-sm" onclick="getSelectBillCodeOptions();">
 												    <i class="ace-icon fa fa-refresh bigger-110"></i>
-											    </button>
+											    </button> -->
 											    <button type="button" class="btn btn-info btn-sm" onclick="tosearch();">
 											    	<i class="ace-icon fa fa-search bigger-110"></i>
 											    </button>
@@ -172,52 +173,6 @@
 
 		//当前期间,取自tb_system_config的SystemDateTime字段
 	    var SystemDateTime = '';
-
-        function getSelectBillCodeOptions(){
-        	console.log("getSelectBillCodeOptions()");
-            var SelectedDepartCode = $("#SelectedDepartCode").val();
-            var SelectedCustCol7 = $("#SelectedCustCol7").val();
-    		setSelectBillCodeOptions(InitBillCodeOptions);
-			top.jzts();
-			$.ajax({
-				type: "POST",
-				url: '<%=basePath%>housefunddetail/getBillCodeList.do?'
-                    +'SelectedDepartCode='+SelectedDepartCode
-                    +'&SelectedCustCol7='+SelectedCustCol7
-                    +'&DepartTreeSource='+DepartTreeSource
-    	            + '&SystemDateTime='+SystemDateTime,
-				dataType:'json',
-				cache: false,
-				success: function(response){
-					if(response.code==0){
-						$(top.hangge());//关闭加载状态
-						setSelectBillCodeOptions(response.message);
-					}else{
-						$(top.hangge());//关闭加载状态
-						$("#subTitle").tips({
-							side:3,
-				            msg:'获取单号列表失败,'+response.message,
-				            bg:'#cc0033',
-				            time:3
-				        });
-					}
-				},
-		    	error: function(response) {
-					$(top.hangge());//关闭加载状态
-					$("#subTitle").tips({
-						side:3,
-			            msg:'获取单号列表出错:'+response.responseJSON.message,
-			            bg:'#cc0033',
-			            time:3
-			        });
-		    	}
-			});
-        }
-    
-        function setSelectBillCodeOptions(selectBillCodeOptions){
-            $("#SelectedBillCode").empty();   //先清空
-            $("#SelectedBillCode").append(selectBillCodeOptions);  //再赋值
-        }
     
 	    $(document).ready(function () {
 			$(top.hangge());//关闭加载状态
@@ -226,16 +181,15 @@
 		    SystemDateTime = '${SystemDateTime}';
 			//当前登录人所在二级单位
 		    var DepartName = '${DepartName}';
-		    $("#showDur").text('当前期间：' + SystemDateTime + ' 登录人责任中心：' + DepartName);
+		    $("#showDur").text('当前期间：' + SystemDateTime + ' 登录人单位：' + DepartName);
 		    //$("#showDept").text('当前单位：' + DepartName);
 			//部门是否是最末层节点，是否显示
 			DepartTreeSource = '${pd.departTreeSource}';
-			//单号下拉列表
-			//SelectNoBillCodeShowOption =  "${pd.SelectNoBillCodeShow}";
-			InitBillCodeOptions = "${pd.InitBillCodeOptions}";
-			setSelectBillCodeOptions(InitBillCodeOptions);
+
 			//前端数据表格界面字段,动态取自tb_tmpl_config_detail，根据当前单位编码及表名获取字段配置信息
 		    jqGridColModel = "[]";
+			
+		    tosearch();
 		});
 	
 	    //双击编辑行
@@ -634,7 +588,7 @@
 				if($(this).attr("relValue")){
 					$("#SelectedDepartCode").val($(this).attr("relValue"));
 			    }
-				getSelectBillCodeOptions();
+				//getSelectBillCodeOptions();
 			});
 			//赋给data属性
 			$("#selectTree").data("data",defaultNodes);  

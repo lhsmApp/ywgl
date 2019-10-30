@@ -47,10 +47,10 @@
 						<table>
 							<tr>
 								<td><span
-									class="label label-xlg label-success arrowed-right">东部管道</span>
+									class="label label-xlg label-success arrowed-right">考核管理</span>
 									<!-- arrowed-in-right --> <span
 									class="label label-xlg label-yellow arrowed-in arrowed-right"
-									id="subTitle" style="margin-left: 2px;">数据配置</span> <span
+									id="subTitle" style="margin-left: 2px;">指标维护</span> <span
 									style="border-left: 1px solid #e2e2e2; margin: 0px 10px;">&nbsp;</span>
 
 									<button id="btnQuery" class="btn btn-white btn-info btn-sm"
@@ -87,7 +87,7 @@
 												</select>
 											</span>
 											<span class="pull-left" style="margin-right: 5px;"> 
-												<select
+												<%-- <select
 													class="chosen-select form-control" name="BILL_OFF"
 													id="BILL_OFF" data-placeholder="请选择帐套"
 													style="vertical-align: top; height: 32px; width: 150px;">
@@ -95,7 +95,9 @@
 														<c:forEach items="${fmisacc}" var="fmi">
 															<option value="${fmi.DICT_CODE}">${fmi.NAME}</option>
 														</c:forEach>
-												</select>
+												</select> --%>
+												
+												<input id="BILL_OFF" value="9870" class="hidden" type="text">
 											</span>
 											<span class="pull-left" style="margin-right: 5px;">
 												<div class="selectTree" id="selectTree" multiMode="false"
@@ -178,13 +180,13 @@
 			 colModel: [
 				//隐藏where条件
 				{ label: '期间', name: 'RPT_DUR', width: 60,hidden : true,editable: true,},
-				{ label: '帐套', name: 'BILL_OFF', width: 60,hidden : true,editable: true,},
+				/* { label: '帐套', name: 'BILL_OFF', width: 60,hidden : true,editable: true,}, */
 				{ label: '单位编码', name: 'DEPT_CODE', width: 60,hidden : true,editable: true,},
 				{ label: '表编码', name: 'TABLE_CODE', width: 60,hidden : true,editable: true,},
 				{ label: '列编码', name: 'COL_CODE', width: 60,hidden : true,editable: true,},
 				
 				{ label: '业务期间',name:'RPT_DUR', width:60}, 
-				{ label: '帐套', name: 'BILL_OFF', width: 80,align:'center',editable: true,edittype: 'select',formatter:'select',formatteroptions:{value:"${dictBillOffString}"},editoptions:{value:"${dictBillOffString}"}},
+				/* { label: '帐套', name: 'BILL_OFF', width: 80,align:'center',editable: true,edittype: 'select',formatter:'select',formatteroptions:{value:"${dictBillOffString}"},editoptions:{value:"${dictBillOffString}"}}, */
 				{ label: '单位',name:'DNAME', width:100}, 
 				{ label: '表名', name: 'TABLE_NAME', width: 90},
 				{ label: '列编码', name: 'COL_CODE', width: 60},
@@ -193,8 +195,8 @@
 				{ label: '字典翻译', name: 'DICT_TRANS', width: 80,align:'center',editable: true,edittype: 'select',formatter:'select',formatteroptions:{value:"${dictString}"},editoptions:{value:"${dictString}"}},                  
 				{ label: '列显示', name: 'COL_HIDE', width: 80, editable: true,align:'center',edittype:"checkbox",editoptions: {value:"1:0"},unformat: aceSwitch,formatter: customFmatterState},                   
 				{ label: '列汇总', name: 'COL_SUM', width: 80, editable: true,align:'center',edittype:"checkbox",editoptions: {value:"1:0"},unformat: aceSwitch,formatter: customFmatterState},                   
-				{ label: '列平均值', name: 'COL_AVE', width: 80, editable: true,align:'center',edittype:"checkbox",editoptions: {value:"1:0"},unformat: aceSwitch,formatter: customFmatterState},
-				{ label: '是否传输', name: 'COL_TRANSFER', width: 80, editable: true,align:'center',edittype:"checkbox",editoptions: {value:"1:0"},unformat: aceSwitch,formatter: customFmatterState}
+				{ label: '列平均值', name: 'COL_AVE', width: 80, editable: true,align:'center',edittype:"checkbox",editoptions: {value:"1:0"},unformat: aceSwitch,formatter: customFmatterState}
+				/* { label: '是否传输', name: 'COL_TRANSFER', width: 80, editable: true,align:'center',edittype:"checkbox",editoptions: {value:"1:0"},unformat: aceSwitch,formatter: customFmatterState} */
 			],
 			reloadAfterSubmit: true, 
 			//viewrecords: true, // show the current page, data rang and total records on the toolbar

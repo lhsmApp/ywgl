@@ -7,15 +7,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.fh.entity.CommonBase;
-import com.fh.entity.SysStruMapping;
 import com.fh.entity.TableColumns;
 import com.fh.entity.TmplConfigDetail;
-import com.fh.entity.TmplInputTips;
 import com.fh.entity.system.Department;
 import com.fh.entity.system.Dictionaries;
-import com.fh.service.detailimportcommon.detailimportcommon.impl.DetailImportCommonService;
 import com.fh.service.fhoa.department.DepartmentManager;
-import com.fh.service.sysStruMapping.sysStruMapping.impl.SysStruMappingService;
 import com.fh.service.system.dictionaries.DictionariesManager;
 import com.fh.service.system.user.UserManager;
 import com.fh.service.tmplConfigDict.tmplconfigdict.TmplConfigDictManager;
@@ -101,36 +97,6 @@ public class Common {
 		return m_sqlUserdata;
 	}
 
-	//String pzType, String tableName, String busiDate, String billOff
-	public static StringBuilder GetSqlUserdata(String pzType, String struTableName, String struMappingName, String busiDate, String billOff, 
-			SysStruMappingService sysStruMappingService, Boolean bol) throws Exception{
-		//底行显示的求和与平均值字段
-		StringBuilder m_sqlUserdata = new StringBuilder();
-		List<SysStruMapping> getSysStruMappingList = SysStruMappingList.getSysStruMappingList(pzType, struTableName, struMappingName, busiDate, billOff, sysStruMappingService, bol);
-		if (getSysStruMappingList != null && getSysStruMappingList.size() > 0) {
-			for (int i = 0; i < getSysStruMappingList.size(); i++) {
-				// 底行显示的求和与平均值字段
-				// 1汇总 0不汇总,默认0
-				if (Integer.parseInt(getSysStruMappingList.get(i).getCOL_SUM()) == 1) {
-					if (m_sqlUserdata != null && !m_sqlUserdata.toString().trim().equals("")) {
-						m_sqlUserdata.append(", ");
-					}
-					m_sqlUserdata.append(" sum(" + getSysStruMappingList.get(i).getCOL_MAPPING_CODE() + ") "
-							+ getSysStruMappingList.get(i).getCOL_MAPPING_CODE());
-				}
-				// 0不计算 1计算 默认0
-				else if (Integer.parseInt(getSysStruMappingList.get(i).getCOL_AVE()) == 1) {
-					if (m_sqlUserdata != null && !m_sqlUserdata.toString().trim().equals("")) {
-						m_sqlUserdata.append(", ");
-					}
-					m_sqlUserdata.append(" round(avg(" + getSysStruMappingList.get(i).getCOL_MAPPING_CODE() + "), 2) "
-							+ getSysStruMappingList.get(i).getCOL_MAPPING_CODE());
-				}
-			}
-		}
-		return m_sqlUserdata;
-	}
-
 	public static Map<String, Object> GetDicList(String tableNo, String departCode, String billOff, 
 			TmplConfigManager tmplconfigService,
 			TmplConfigDictManager tmplConfigDictService, DictionariesManager dictionariesService, 
@@ -154,33 +120,7 @@ public class Common {
 		return m_DicList;
 	}
 
-	public static Map<String, TmplInputTips> GetCheckTmplInputTips(String tableNo, String SystemDateTime, String billOff, String departCode,
-			TmplConfigManager tmplconfigService) throws Exception{
-		Map<String, TmplInputTips> m_retList = new LinkedHashMap<String, TmplInputTips>();
-		String tableCodeTmpl = getTableCodeTmpl(tableNo, tmplconfigService);
-
-		PageData pd=new PageData();
-		pd.put("ShowStruTableCode", tableCodeTmpl);
-		pd.put("ShowStruBillOff", billOff);
-		pd.put("ShowStruRptDur", SystemDateTime);
-		
-		String strShowDepartCode = Common.getShowColumnDepart(tableCodeTmpl, billOff, departCode, tmplconfigService);
-		pd.put("ShowStruDepartCode", strShowDepartCode);
-
-		pd.put("SelectedDepartCode", departCode);
-		List<TmplInputTips> m_columnsList = tmplconfigService.getCheckTmplInputTips(pd);
-		if (!(m_columnsList != null && m_columnsList.size() > 0)) {
-			String rootDeptCode=Tools.readTxtFile(Const.ROOT_DEPT_CODE);
-			pd.put("SelectedDepartCode", rootDeptCode);
-			m_columnsList = tmplconfigService.getCheckTmplInputTips(pd);
-		}
-		if (m_columnsList != null && m_columnsList.size() > 0) {
-			for (int i = 0; i < m_columnsList.size(); i++) {
-				m_retList.put(m_columnsList.get(i).getCOL_CODE().trim().toUpperCase(), m_columnsList.get(i));
-			}
-		}
-		return m_retList;
-	}
+	
 
 	public static Map<String, TableColumns> GetHaveColumnsList(String tableNo, TmplConfigManager tmplconfigService) throws Exception{
 		String tableCodeTmpl = getTableCodeTmpl(tableNo, tmplconfigService);
@@ -636,64 +576,6 @@ public class Common {
 		return strRet;
 	}
 	
-	public static void checkTmplInputTipsListAll(Map<String, TmplInputTips> TmplInputTipsListAll,
-			Map<String, TmplInputTips> TmplInputTipsListDic,
-			Map<String, TmplInputTips> TmplInputTipsListNull,
-			Map<String, Object> DicList, CommonBase commonBase) {
-        if(TmplInputTipsListAll!=null && TmplInputTipsListAll.size()>0){
-        	for(String key : TmplInputTipsListAll.keySet()){
-				TmplInputTips tip = TmplInputTipsListAll.get(key);
-				String getDICT_TRANS = tip.getDICT_TRANS();
-				String getCOL_NULL = tip.getCOL_NULL();
-				String getCOL_COND = tip.getCOL_COND();
-				String getCOL_MAPPING = tip.getCOL_MAPPING();
-				if(String.valueOf(1).equals(getDICT_TRANS)){
-					TmplInputTipsListDic.put(key, tip);
-				}
-				if(String.valueOf(1).equals(getCOL_NULL)){
-					TmplInputTipsListNull.put(key, tip);
-				}
-				if(getCOL_COND!=null && !getCOL_COND.trim().equals("")){
-					String[] listCOL_COND = getCOL_COND.replace(" ", "").replace("，", ",").split(",");
-					if(listCOL_COND!=null && listCOL_COND.length>0){
-						TmplInputTipsListNull.put(key, tip);
-						String strDICT_TRANS_DETAIL = tip.getDICT_TRANS_DETAIL();
-						String strColName = tip.getCOL_NAME();
-						
-						String strCOND_PREFIX = tip.getCOND_PREFIX();
-						String strCOND_SUFFIX = tip.getCOND_SUFFIX();
-						String strCondMessage = checkDicContainsValue(listCOL_COND, strDICT_TRANS_DETAIL,
-								DicList, strColName, strCOND_PREFIX, strCOND_SUFFIX, Message.TmplInputTipsCoudMapNotHaveDic);
-						if(strCondMessage!=null && !strCondMessage.trim().equals("")){
-                			commonBase.setCode(2);
-                			commonBase.setMessage(Message.TmplInputTipsSet + strCondMessage);
-                			break;
-						}
-						if(getCOL_MAPPING!=null && !getCOL_MAPPING.trim().equals("")){
-							String[] listCOL_MAPPING = getCOL_MAPPING.replace(" ", "").replace("，", ",").split(",");
-							if(listCOL_MAPPING!=null && listCOL_MAPPING.length>0){
-								String strMAPPING_PREFIX = tip.getMAPPING_PREFIX();
-								String strMAPPING_SUFFIX = tip.getMAPPING_SUFFIX();
-								String strMapMessage = checkDicContainsValue(listCOL_MAPPING, strDICT_TRANS_DETAIL,
-										DicList, strColName, strMAPPING_PREFIX, strMAPPING_SUFFIX, Message.TmplInputTipsCoudMapNotHaveDic);
-								if(strMapMessage!=null && !strMapMessage.trim().equals("")){
-		                			commonBase.setCode(2);
-		                			commonBase.setMessage(Message.TmplInputTipsSet + strMapMessage);
-		                			break;
-								}
-		                        if(listCOL_COND.length != listCOL_MAPPING.length){
-		                			commonBase.setCode(2);
-		                			commonBase.setMessage(Message.TmplInputTipsCoudMapNotSameNum);
-		                			break;
-		                        }
-							}
-						}
-					}
-				}
-			}
-        }
-	}
-	
 	public static int getColumnLength(String Column_type, String Data_type) {
 		int ret = 0;
 		String[] listLength = Column_type.replace(Data_type, "").replace("(", "").replace(")", "").split(",");
@@ -896,20 +778,6 @@ public class Common {
 			}
 		}
 		return strReturn;
-	}
-	
-	public static Boolean checkHaveItemList(String strBillCode, String TableNameFirstItem, 
-			DetailImportCommonService detailimportcommonService) throws Exception{
-		Boolean bolHaveItemList = false;
-		PageData pdCode = new PageData();
-		String QueryFeild = " and BILL_CODE = '" + strBillCode + "' ";
-	    pdCode.put("QueryFeild", QueryFeild);
-	    pdCode.put("TableName", TableNameFirstItem);
-		List<PageData> varList = detailimportcommonService.getDetailList(pdCode);	//列出Betting列表
-		if(varList!=null && varList.size()>0){
-			bolHaveItemList = true;
-		}
-		return bolHaveItemList;
 	}
 }
 	

@@ -29,7 +29,6 @@ import com.fh.util.AppUtil;
 import com.fh.util.PageData;
 import com.fh.util.Jurisdiction;
 import com.fh.service.fhoa.department.DepartmentManager;
-import com.fh.service.sysChangevalueMapping.sysChangevalueMapping.SysChangevalueMappingManager;
 
 /**
  * 组织机构
@@ -46,8 +45,6 @@ public class DepartmentController extends BaseController {
 	String menuUrl = "department/list.do"; //菜单地址(权限用)
 	@Resource(name="departmentService")
 	private DepartmentManager departmentService;
-	@Resource(name="sysChangevalueMappingService")
-	private SysChangevalueMappingManager sysChangevalueMappingService;
 	
 	/**保存
 	 * @param
@@ -166,7 +163,7 @@ public class DepartmentController extends BaseController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value="/listAllDepartmentCopy")
+	/*@RequestMapping(value="/listAllDepartmentCopy")
 	public ModelAndView listAllDepartmentCopy(Model model,String DEPARTMENT_CODE)throws Exception{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
@@ -192,7 +189,7 @@ public class DepartmentController extends BaseController {
 			logger.error(e.toString(), e);
 		}
 		return mv;
-	}
+	}*/
 	
 	/**去新增页面
 	 * @param

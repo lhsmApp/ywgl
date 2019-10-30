@@ -50,10 +50,10 @@
 				<div class="page-content">
 					<!-- /section:settings.box -->
 					<div class="page-header">
-								    <span class="label label-xlg label-success arrowed-right">人工成本</span>
+								    <span class="label label-xlg label-success arrowed-right">考核管理</span>
 									<!-- arrowed-in-right --> 
 									<span class="label label-xlg label-yellow arrowed-in arrowed-right"
-									    id="subTitle" style="margin-left: 2px;">月度工资及个税导入</span> 
+									    id="subTitle" style="margin-left: 2px;">数据导入</span> 
                                     <span style="border-left: 1px solid #e2e2e2; margin: 0px 10px;">&nbsp;</span>
 								
 									<button id="btnQuery" class="btn btn-white btn-info btn-sm"
@@ -78,7 +78,7 @@
 												  placeholder="请输入业务区间"> 
 												<i class="ace-icon fa fa-calendar blue"></i>
 											</span>
-											<span class="pull-left" style="margin-right: 5px;">
+											<%-- <span class="pull-left" style="margin-right: 5px;">
 													<select class="chosen-select form-control"
 														name="SelectedCustCol7" id="SelectedCustCol7"
 														style="vertical-align: top; height:32px;width: 150px;">
@@ -87,7 +87,8 @@
 															<option value="${each.DICT_CODE}">${each.NAME}</option>
 														</c:forEach>
 													</select>
-											</span>
+											</span> --%>
+											<input id="SelectedCustCol7" value="9870" class="hidden" type="text">
 											<button type="button" class="btn btn-info btn-sm" onclick="tosearch();">
 												<i class="ace-icon fa fa-search bigger-110"></i>
 											</button>
@@ -169,7 +170,7 @@
 			ShowDataBusiDate = SystemDateTime;
 			//当前登录人所在二级单位
 		    var DepartName = '${DepartName}';
-		    $("#showDur").text('当前期间：' + SystemDateTime + ' 登录人责任中心：' + DepartName);
+		    $("#showDur").text('当前期间：' + SystemDateTime + ' 登录人单位：' + DepartName);
 			
 	        //前端数据表格界面字段,动态取自tb_tmpl_config_detail，根据当前单位编码及表名获取字段配置信息
 	        jqGridColModel = "[]";
