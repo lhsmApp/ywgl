@@ -14,7 +14,9 @@
 <base href="<%=basePath%>">
 <!-- 下拉框 -->
 <link rel="stylesheet" href="static/ace/css/chosen.css" />
-<link type="text/css" rel="stylesheet" href="plugins/zTree/3.5/zTreeStyle.css"/>
+<script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
+<link type="text/css" rel="stylesheet" href="plugins/zTree/2.6/zTreeStyle.css"/>
+<script type="text/javascript" src="plugins/zTree/2.6/jquery.ztree-2.6.min.js"></script>
 <!-- jsp文件头和头部 -->
 <%@ include file="../../system/index/top.jsp"%>
 <style type="text/css">
@@ -54,15 +56,15 @@
 											<i class="ace-icon fa fa-search bigger-110"></i>
 									</button>
 									<div class="pull-right">
-									<button id="btnSave" class="btn btn-info btn-xs" onclick="add()">
+									<a id="btnSave" class="btn btn-info btn-xs" onclick="add()">
 										<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>新增</span>
-									</button>
+									</a>
 								</div>
 							</div>
 						<div class="row">
 							<div class="col-xs-3">
-								<div class="widget-box transparent">
-									<div class="widget-body">
+								<div class="widget-box transparent" style="width:100%;height: 100%">
+									<div class="widget-body" style="width:100%;height: 600px;">
 										<div class="widget-main no-padding">
 											<!-- TODO -->
 											<div class="widget-box">
@@ -77,7 +79,7 @@
 												<div class="widget-body">
 													<div class="widget-main padding-8">
 														<div>
-															<ul id="leftTree" class="ztree"></ul>
+															<ul id="leftTree" class="tree"></ul>
 															<input id="SelectedDepartCode" type="hidden"></input>
 														</div>
 													</div>
@@ -92,8 +94,8 @@
 								<c:forEach items="${varList}" var="pd">
 									<div class="col-xs-9 course-box"><!-- 整体 -->
 										<div style="width:170px;height:170px;">
-											<a href="static/html_UI/assets/images/gallery/thumb-3.jpg" data-rel="colorbox" class="cboxElement">
-												<img width="170" height="170" alt="200x200" src="${pd.COURSE_COVER}">
+											<a href="<%=basePath%>coursedetail/list.do?COURSE_ID=${pd.COURSE_ID}" data-rel="colorbox" class="cboxElement" title="${pd.COURSE_NOTE}">
+												<img width="170" height="170" alt="请上传图片" src="${pd.COURSE_COVER}">
 											</a>
 										</div>
 										<div>
@@ -101,7 +103,7 @@
 												<span class="list-item-value-title">${pd.COURSE_NAME}</span>
 											</div>		
 											<div class="title-box">
-												<a class="list-item-info fyhoverflow high-font" target="_blank" href="" title="${pd.COURSE_NOTE}">${pd.COURSE_NOTE}</a>
+												<a class="list-item-info fyhoverflow high-font" href="<%=basePath%>coursedetail/list.do?COURSE_ID=${pd.COURSE_ID}" title="${pd.COURSE_NOTE}">${pd.COURSE_NOTE}</a>
 											</div>
 											<div class="title-box">
 												<span class="list-item-info">${pd.COURSE_TAG}</span>
@@ -117,7 +119,6 @@
 												<a style="float:right;" class="btn btn-mini btn-danger" title="删除" onclick="del('${pd.COURSE_ID}');">删除<i class="ace-icon fa fa-trash-o bigger-130"></i></a>
 											</div>					
 										</div>
-									
 									</div>
 								</c:forEach>
 							</div>							
@@ -156,23 +157,21 @@
 	<script src="static/ace/js/chosen.jquery.js"></script>
 	<!--提示框-->
 	<script src="static/js/jquery.tips.js"></script>
-	<!-- 树形菜单 -->
-	<script type="text/javascript" src="plugins/zTree/3.5/jquery-1.4.4.min.js"></script>
-	<script type="text/javascript" src="plugins/zTree/3.5/jquery.ztree.core.js"></script>
-	<script type="text/javascript" src="plugins/zTree/3.5/jquery.ztree.excheck.js"></script>
 	<script type="text/javascript">
 		$(top.hangge());//关闭加载状态
-		
-		var zTreeObj={};
-		var setting = {
+		var zTree;
+		$(document).ready(function(){
+			var setting = {
 			    showLine: true,
 			    checkable: false,
 			    callback:{
+			    	beforeClick: getCurrentNode,
 			    	onClick: zTreeBeforeClick
 			    }
 			};
-		
-		$(function(){
+			var zn = '${zTreeNodes}';
+			var zTreeNodes = eval(zn);
+			zTree = $("#leftTree").zTree(setting, zTreeNodes);
 			//限制字符个数
             $(".fyhoverflow").each(function() {
                 var maxwidth = 11;
@@ -181,28 +180,13 @@
                     $(this).html($(this).html() + '...');
                 }
             });
-			 //页面加载生成树
-			$.ajax({
-				type: "POST",
-				url: '<%=basePath%>coursebase/treeList.do?tm='+new Date().getTime(),
-		    	//data: {"listData":JSON.stringify(e)},
-				dataType:'json',
-				cache: false,
-				success: function(response){
-					$(top.hangge());//关闭加载状态
-					console.log(response.message);
-					initZtree(response.message);
-				}
-			}); 		
 		});
+		function getCurrentNode(leftTree, treeNode) {
+            curNode = treeNode;
+            zTreeBeforeClick(curNode);
+        }
 		
-		 //回调函数
-		function initZtree(data){
-			$.fn.zTree.init($("#leftTree"), setting, eval(data));
-		} 
-		
-		function zTreeBeforeClick(event, treeId, treeNode){
-			console.log(treeNode.id);
+		function zTreeBeforeClick(treeNode){
 			//通过id树查询数据
 			$.ajax({
 				type: "POST",
@@ -220,25 +204,24 @@
 		
 		function getchangeDiv(data){
 			var html = '';
-			//先清空后赋值
 			for(var i = 0;i<data.length;i++){
 		        html += setDiv(data[i]);
 			}
-			console.log(html);
 			//$('#changeDiv').remove();
 			$('#changeDiv').html(html);
 		}
 		
 		function setDiv(data){//上传以后这里动态回显
-					
+			var id = data.COURSE_ID;
+			var url = '<%=basePath%>coursedetail/list.do?COURSE_ID='+id;
 			var div = '<div class="col-xs-9 course-box">'
-					+ '<div style="width:170px;height:170px;"><a href="static/html_UI/assets/images/gallery/thumb-3.jpg" data-rel="colorbox" class="cboxElement">'
+					+ '<div style="width:170px;height:170px;"><a href="'+ url + '" data-rel="colorbox" class="cboxElement" title="'+ data.COURSE_NOTE +'">'
 					
-					+ '<img width="170" height="170" alt="200x200" src="static/html_UI/assets/images/gallery/thumb-3.jpg"></a></div>'
+					+ '<img width="170" height="170" alt="请上传图片" src="'+ data.COURSE_COVER +'"></a></div>'
 					
 					+'<div class="title-box"><span class="list-item-value-title">' + data.COURSE_NAME + '</span></div>'
 					
-					+'<div class="title-box"><span class="list-item-info fyhoverflow">' + data.COURSE_NOTE +'</span></div>'
+					+'<div class="title-box"><a class="list-item-info fyhoverflow" href="'+ url +'" title="'+ data.COURSE_NOTE +'">' + data.COURSE_NOTE +'</a></div>'
 					
 					+'<div class="title-box"><span class="list-item-info">' + data.COURSE_TAG + '</span></div>'
 				
@@ -248,8 +231,8 @@
 					
 					+'<div class="btm-box"><a class="btn btn-mini btn-info" title="编辑" onclick="edit(\''+data.COURSE_ID+'\');"><i class="ace-icon fa fa-pencil-square-o bigger-130"></i>编辑</a>'
 					
-					+'<a style="float:right;" class="btn btn-mini btn-danger" title="删除" onclick="edit(\''+data.COURSE_ID+'\');">删除<i class="ace-icon fa fa-trash-o bigger-130"></i></a></div>'
-					+'</div>';
+					+'<a style="float:right;" class="btn btn-mini btn-danger" title="删除" onclick="del(\''+data.COURSE_ID+'\');">删除<i class="ace-icon fa fa-trash-o bigger-130"></i></a></div>'
+					+'</div></div>';
 			return div;
 		}
 		
@@ -318,12 +301,7 @@
 		     diag.ShowMinButton = true;		//最小化按钮
 			 diag.CancelEvent = function(){ //关闭事件
 				 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
-					 if('${page.currentPage}' == '0'){
-						 top.jzts();
-						 setTimeout("self.location=self.location",100);
-					 }else{
 						 history.go(0); //刷新页面
-					 }
 				}
 				diag.close();
 			 };

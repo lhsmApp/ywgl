@@ -34,6 +34,7 @@ public class Const {
 	public static final String WEBSOCKET = "admin/config/WEBSOCKET.txt";	//WEBSOCKET配置路径
 	public static final String LOGINEDIT = "admin/config/LOGIN.txt";		//登录页面配置
 	public static final String FILEPATHIMG = "uploadFiles/uploadImgs/";		//图片上传路径
+	public static final String FILEPATHVIDEO = "uploadFiles/uploadVideo/";  //视频上传路径
 	public static final String FILEPATHFILE = "uploadFiles/file/";			//文件上传路径
 	public static final String FILEPATHFILEOA = "uploadFiles/uploadFile/";	//文件上传路径(oa管理)
 	public static final String FILEPATHTWODIMENSIONCODE = "uploadFiles/twoDimensionCode/"; //二维码存放路径

@@ -17,17 +17,14 @@
 	<!-- 图片上传 -->
 	<script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
 	<script type="text/javascript" src="static/ace/js/jquery.form.js"></script>
+	<link rel="stylesheet" href="static/ace/css/bootstrap.css" />
 	<!-- 日期框 -->
 	<link rel="stylesheet" href="static/ace/css/datepicker.css" />
 	<link rel="stylesheet" href="static/ace/assets/css/ace.css" class="ace-main-stylesheet" id="main-ace-style" />
 	<link rel="stylesheet" href="static/ace/assets/css/bootstrap-editable.css" />
 	
 	<!-- bootstrap & fontawesome -->
-		<link rel="stylesheet" href="static/ace/css/bootstrap.css" />
-		<link rel="stylesheet" href="static/ace/css/bootstrap-editable.css" />
-		<script src="static/ace/js/ace-extra.js"></script>
-		<!-- text fonts -->
-		<link rel="stylesheet" href="static/ace/css/ace-fonts.css" />
+		
 </head>
 <body class="no-skin">
 <!-- /section:basics/navbar.layout -->
@@ -38,9 +35,9 @@
 			<div class="page-content">
 				<div class="row">
 					<form action="coursebase/${msg}.do" name="Form" id="Form" method="post">
+						<div id="zhongxin" style="padding-top: 13px;" class="form-inline">
 						<div class="col-xs-6" style="padding-left:0px; margin-bottom:-15px;">
 						<input type="hidden" name="COURSE_ID" id="COURSE_ID" value="${pd.COURSE_ID}"/>
-						<div id="zhongxin" style="padding-top: 13px;" class="form-inline">
 						<table id="table_report" class="table table-bordered table-hover">
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">课程名称:</td>
@@ -66,8 +63,6 @@
 								<td><input type="text" name="COURSE_TAG" id="COURSE_TAG" value="${pd.COURSE_TAG}" maxlength="50" placeholder="请输入课程标签" title="请输入课程标签" style="width:99%;"/></td>
 							</tr>
 						</table>
-						</div>
-						<div id="zhongxin2" class="center" style="display:none"><br/><br/><br/><br/><br/><img src="static/images/jiazai.gif" /><br/><h4 class="lighter block green">提交中...</h4></div>
 					</div>
 					<div id="uploadPic" class="col-xs-6" style="text-align:center; padding-top:10%;">
 						<input id="pic" name="pic" type="file">
@@ -85,6 +80,8 @@
 								</td>
 							</tr> 
 					</table>
+					</div>
+					<div id="zhongxin2" class="center" style="display:none"><br/><br/><br/><br/><br/><img src="static/images/jiazai.gif" /><br/><h4 class="lighter block green">提交中...</h4></div>
 					</form>
 					<!-- /.col -->
 				</div>
@@ -104,18 +101,14 @@
 	<script src="static/ace/js/chosen.jquery.js"></script>
 	<!-- 日期框 -->
 	<script src="static/ace/js/date-time/bootstrap-datepicker.js"></script>
-	
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 	<script type="text/javascript" src="static/ace/js/ace/ace.js"></script>
 	<script type="text/javascript" src="static/ace/js/x-editable/bootstrap-editable.js"></script>
 	<script type="text/javascript" src="static/ace/js/x-editable/ace-editable.js"></script>
-		
-		<!-- ace scripts -->
-		<script src="static/ace/js/ace/elements.fileinput.js"></script>
-		<script src="static/ace/js/ace/ace.js"></script>
-		<script type="text/javascript">
-		</script>
+	<!--图片上传-->
+	<script src="static/ace/js/ace/elements.fileinput.js"></script>
+	<script src="static/ace/js/ace/ace.js"></script>
 	<script type="text/javascript">
 		$(top.hangge());
 		jQuery(function($){
