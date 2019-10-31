@@ -139,11 +139,11 @@
 								</h4>
 		
 								<div class="widget-toolbar no-border">
-									<ul class="nav nav-tabs" id="recent-tab">
-										<li class="active">
+								<ul class="nav nav-tabs" id="zhxz-tab">
+										<li class="active"  tag="detail-tab">
 											<a data-toggle="tab" href="#detail-tab">详情</a>
 										</li>
-										<li>
+										<li tag="report-tab">
 											<a data-toggle="tab" href="#report-tab">提报</a>
 										</li>
 									</ul>
@@ -153,86 +153,62 @@
 							<div class="widget-body">
 								<div class="widget-main padding-4">
 									<div class="tab-content padding-8">
-										<div id="assigh-tab" class="tab-pane">
-											<!-- <h4 class="smaller lighter green">
-												<i class="ace-icon fa fa-list"></i>
-												Sortable Lists
-											</h4> -->
-											<form action="problemAssign/savaProblemAssign.do" name="problemAssignForm" id="problemAssignForm" method="post">
-												<input type="hidden" name="problemID" id="problemID" value="${pd.PROBLEM_ID }"/>
-												<div id="zhongxin" style="padding-top: 13px;">
-													<div style="margin:10px 0px;">
-														<label for="form-field-select-1">受理人</label>
-														<select class="form-control" id="form-field-select-1">
-															<option value=""></option>
-															<option value="AL">Alabama</option>
-															<option value="AK">Alaska</option>
-														</select>
-														<%-- <select class="chosen-select form-control" name="ROLE_ID" id="role_id" data-placeholder="请选择角色" style="vertical-align:top;" style="width:98%;" >
-															<option value=""></option>
-															<c:forEach items="${roleList}" var="role">
-																<option value="${role.ROLE_ID }" <c:if test="${role.ROLE_ID == pd.ROLE_ID }">selected</c:if>>${role.ROLE_NAME }</option>
-															</c:forEach>
-														</select> --%>
-													</div>
-													
-													<div style="margin:10px 0px;">
-														<label for="form-field-select-2">提问系统</label>
-														<select class="form-control" id="form-field-select-2">
-															<option value=""></option>
-															<option value="AL">ERP系统</option>
-															<option value="AK">财务系统</option>
-														</select>
-													</div>
-													
-													<div style="margin:10px 0px;">
-														<label for="form-field-select-3">优先级</label>
-														<select class="form-control" id="form-field-select-3">
-															<option value=""></option>
-															<option value="AL">紧急</option>
-															<option value="AK">一般</option>
-														</select>
-													</div>
-													<%-- <input type="number" name="PHONE" id="PHONE"  value="${pd.PHONE }"  maxlength="32" placeholder="这里输入手机号" title="手机号" style="width:98%;"/> --%>
-													<div style="margin:20px 0px;">
-														<span>分配人：</span><span>张三</span>
-														<span style="margin-left:30px;">分配时间：</span><span>2019-05-23</span>
-													</div>
-													<hr />
-													<div>
-														<a class="btn btn-mini btn-primary" onclick="save();">保存</a>
-														<a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">取消</a>
-													</div>		
-												</div>
-												<div id="zhongxin2" class="center" style="display:none"><br/><br/><br/><br/><img src="static/images/jiazai.gif" /><br/><h4 class="lighter block green"></h4></div>
-											</form>
-										</div>
+									
 										<div id="detail-tab" class="tab-pane active">
 											
 										</div>
 											<div id="report-tab" class="tab-pane">
 											<form action="" name="problemAssignForm" id="problemAssignForm" method="post">
-												<input type="hidden" name="xtbgID" id="xtbgID" value="${pd.BILL_CODE }"/>
-												<div id="zhongxin" style="padding-top: 13px;">													
-													<div style="margin:10px 0px;">
-														<label for="form-field-select-1">申请人</label>
-														<input type="text" name="zhxz_uesr" id="zhxz_uesr" class="form-control" placeholder="请输入申请人"/>
-													</div>
-												    <div style="margin:10px 0px;">
-														<label for="form-field-select-1">申请人单位</label>
-														<input type="text" name="zhxz_unit" id="zhxz_unit" class="form-control" placeholder="请输入申请人单位"/>
+												<input type="hidden" name="BILL_CODE" id="BILL_CODE" value="${pd.BILL_CODE }"/>
+												<div id="zhongxin" style="padding-top: 13px;">		
+												 <div style="margin:10px 0px;">
+														<label for="form-field-xtbg-report-depart">单位</label>
+														<input type="text" name="UNIT_CODE" id="UNIT_CODE" class="form-control" placeholder="请输入申请人单位"/>
 													</div>
 													   <div style="margin:10px 0px;">
-														<label for="form-field-select-1">申请人部门</label>
-														<input type="text" name="zhxz_depart" id="zhxz_depart" class="form-control" placeholder="请输入申请人部门"/>
+														<label for="form-field-xtbg-report-dept">部门</label>
+														<input type="text" name="DEPT_CODE" id="DEPT_CODE" class="form-control" placeholder="请输入申请人部门"/>
+													</div>											
+													<div style="margin:10px 0px;">
+														<label for="form-field-xtbg-report-user">申请人</label>
+															<select class="form-control" name="USER_CODE" id="USER_CODE">
+																	<option value=""></option>
+																	<c:forEach items="${userList}" var="user">
+																	<option value="${user.USER_ID}">${user.USERNAME}</option>
+																	</c:forEach>
+																</select>
+													</div>
+												    <div style="margin:10px 0px;">
+														<label for="form-field-xtbg-report-depart">申请人部门</label>
+														<input type="text" name="USER_DEPT" id="USER_DEPT" class="form-control" placeholder="请输入申请人单位"/>
+													</div>
+										   			<div style="margin:10px 0px;">
+														<label for="form-field-xtbg-report-job">申请人岗位</label>
+														<input type="text" name="USER_JOB" id="USER_JOB" class="form-control" placeholder="请输入申请人部门"/>
 													</div>
 													<div style="margin:10px 0px;">
-														<label for="form-field-select-1">帐号撤销原因</label>
-														<input type="text" name="zhxz_reason" id="zhxz_reason" class="form-control" placeholder="请输入变更内容及原因"/>
+														<label for="form-field-xtbg-report-contact">联系方式</label>
+														<input type="text" name="USER_CONTACT" id="USER_CONTACT" class="form-control" placeholder="请输入联系方式"/>
 													</div>
 													<div style="margin:10px 0px;">
-														<label for="form-field-select-1">联系方式</label>
-														<input type="text" name="zhxz_contact" id="zhxz_contact" class="form-control" placeholder="请输入联系方式"/>
+														<label for="form-field-xtbg-report-contact">新增帐号</label>
+														<input type="text" name="ACCOUNT_NEW" id="ACCOUNT_NEW" class="form-control" placeholder="请输入联系方式"/>
+													</div>
+													<div style="margin:10px 0px;">
+														<label for="form-field-xtbg-report-contact">帐号有效期</label>
+														<input type="text" name="ACCOUNT_VALIDITY" id="ACCOUNT_VALIDITY" class="form-control" placeholder="请输入联系方式"/>
+													</div>
+													<div style="margin:10px 0px;">
+														<label for="form-field-xtbg-report-contact">新增帐号原因</label>
+														<input type="text" name="ACCOUNT_REASON" id="ACCOUNT_REASON" class="form-control" placeholder="请输入联系方式"/>
+													</div>
+													<div style="margin:10px 0px;">
+														<label for="form-field-xtbg-report-contact">帐号角色</label>
+														<input type="text" name="ACCOUNT_ROLES" id="ACCOUNT_ROLES" class="form-control" placeholder="请输入联系方式"/>
+													</div>
+													<div style="margin:10px 0px;">
+														<label for="form-field-xtbg-report-contact">申请生效日期</label>
+														<input type="text" name="EFFECTIVE_DATE" id="EFFECTIVE_DATE" class="form-control" placeholder="请输入联系方式"/>
 													</div>
 													<hr />
 													<div class="row">
@@ -288,6 +264,8 @@
 			    <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
 		    </a>
 	    </div>
+	  </div>
+	</div>
 	<!-- /.main-container -->
 
 	<!-- basic scripts -->
@@ -358,31 +336,93 @@
 				});
 			});
 		});
-		
+		//保存
+		function save(){
+			top.jzts();
+			//$("#xtbgForm").submit();
+			var unitCode=$("#UNIT_CODE").val();//单位
+			var deptCode=$("#DEPT_CODE").val();//部门
+			var uesrCode=$("#USER_CODE").val();//申请人
+			var uesrDept=$("#USER_DEPT").val();//申请人部门
+			var uesrJob=$("#USER_JOB").val();//申请人岗位
+			var uesrContact=$("#USER_CONTACT").val();//联系方式
+			var sqsxDate=$("#EFFECTIVE_DATE").val();//申请生效日期			
+			var accountNew=$("#ACCOUNT_NEW").val();//新增帐号
+			var zhyxq=$("#ACCOUNT_VALIDITY").val();//帐号有效期
+			var accountReason=$("#ACCOUNT_REASON").val();//新增帐号原因
+			var accountRoles=$("#ACCOUNT_ROLES").val();//帐号角色	
+			var billCode=$("#BILL_CODE").val();//申请单号
+			$.ajax({
+				type: "POST",
+				url: '<%=basePath%>changegrczhxz/save.do',
+				data:{UNIT_CODE:unitCode,DEPT_CODE:deptCode,USER_CODE:uesrCode,USER_DEPT:uesrDept,USER_JOB:uesrJob,USER_CONTACT:uesrContact,EFFECTIVE_DATE:sqsxDate,ACCOUNT_NEW:accountNew,ACCOUNT_VALIDITY:zhyxq,ACCOUNT_REASON:accountReason,ACCOUNT_ROLES:accountRoles,BILL_CODE:billCode},
+		    	dataType:'json',
+				cache: false,
+				success: function(response){
+					if(response.code==0){
+						$(top.hangge());//关闭加载状态
+						bootbox.dialog({
+							message: "<span class='bigger-110'>保存成功</span>",
+						});		
+						initList();
+					}else{
+						$(top.hangge());//关闭加载状态
+						bootbox.dialog({
+							message: "<span class='bigger-110'>保存失败</span>",
+						});		
+					}
+				},
+		    	error: function(response) {
+		    		var msgObj=JSON.parse(response.responseText);
+		    		$(top.hangge());//关闭加载状态
+		    		bootbox.dialog({
+						message: "<span class='bigger-110'>保存失败"+msgObj.message+"</span>",
+					});		
+		    	}
+			});
+			$("#zhxz-tab li[tag='detail-tab'] a").click();
+		}
 		//新增
 		function add(){
-			 top.jzts();
-			 var diag = new top.Dialog();
-			 diag.Drag=true;
-			 diag.Title ="新增";
-			 diag.URL = '<%=basePath%>changegrczhxz/goAdd.do';
-			 diag.Width = 750;
-			 diag.Height = 455;
-			 diag.Modal = true;				//有无遮罩窗口
-			 diag. ShowMaxButton = true;	//最大化按钮
-		     diag.ShowMinButton = true;		//最小化按钮
-			 diag.CancelEvent = function(){ //关闭事件
-				 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
-					 if('${page.currentPage}' == '0'){
-						 top.jzts();
-						 setTimeout("self.location=self.location",100);
-					 }else{
-						 //nextPage(${page.currentPage});
-					 }
-				}
-				diag.close();
-			 };
-			 diag.show();
+			//点击新增按钮，弹到提报tab页
+			$("#zhxz-tab li[tag='report-tab'] a").click();
+			//新增清空文本框
+			$("#UNIT_CODE").val("");//单位
+			$("#DEPT_CODE").val("");//部门
+			$("#USER_CODE").val("");//申请人
+			$("#USER_DEPT").val("");//申请人部门
+			$("#USER_JOB").val("");//申请人岗位
+			$("#USER_CONTACT").val("");//联系方式
+			$("#ACCOUNT_NEW").val("");//新增帐号
+			$("#ACCOUNT_VALIDITY").val("");//帐号有效期
+			$("#ACCOUNT_REASON").val("");//新增帐号原因
+			$("#ACCOUNT_ROLES").val("");//帐号角色
+			$("#EFFECTIVE_DATE").val("");//申请生效日期
+			$("#BILL_CODE").val("");//申请单号
+
+			
+// 			 top.jzts();
+// 			 var diag = new top.Dialog();
+// 			 diag.Drag=true;
+// 			 diag.Title ="新增";
+<%-- 			 diag.URL = '<%=basePath%>changegrczhxz/goAdd.do'; --%>
+// 			 diag.Width = 750;
+// 			 diag.Height = 455;
+// 			 diag.Modal = true;				//有无遮罩窗口
+// 			 diag. ShowMaxButton = true;	//最大化按钮
+// 		     diag.ShowMinButton = true;		//最小化按钮
+// 			 diag.CancelEvent = function(){ //关闭事件
+// 				 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
+// 					 if('${page.currentPage}' == '0'){
+// 						 top.jzts();
+// 						 setTimeout("self.location=self.location",100);
+// 					 }else{
+// 						 //nextPage(${page.currentPage});
+// 					 }
+// 				}
+// 				diag.close();
+// 			 };
+// 			 diag.show();
 		}
 		/**
 		 * 上传附件
@@ -453,23 +493,7 @@
 		
 		//修改
 		function edit(Id){
-			 top.jzts();
-			 var diag = new top.Dialog();
-			 diag.Drag=true;
-			 diag.Title ="编辑";
-			 diag.URL = '<%=basePath%>changegrczhxz/goEdit.do?BILL_CODE='+encodeURI(Id);
-			 diag.Width = 750;
-			 diag.Height = 455;
-			 diag.Modal = true;				//有无遮罩窗口
-			 diag. ShowMaxButton = true;	//最大化按钮
-		     diag.ShowMinButton = true;		//最小化按钮 
-			 diag.CancelEvent = function(){ //关闭事件
-				 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
-					 //nextPage(${page.currentPage});
-				}
-				diag.close();
-			 };
-			 diag.show();
+			$("#zhxz-tab li[tag='report-tab'] a").click();
 		}
 		
 		//批量操作
@@ -508,7 +532,7 @@
 								cache: false,
 								success: function(data){
 									 $.each(data.list, function(i, list){
-											nextPage(${page.currentPage});
+ 											//nextPage(${page.currentPage});
 									 });
 								}
 							});
@@ -557,7 +581,18 @@
 		            success:function(datas){
 		            	//全局变量存放当前点击的变更申请单号
 		            	bill_code=datas.BILL_CODE;
-		            	//console.log(bill_code);
+		            	$("#BILL_CODE").val(datas.BILL_CODE);//单号
+		            	$("#UNIT_CODE").val(datas.UNIT_CODE);//单位
+		    			$("#DEPT_CODE").val(datas.DEPT_CODE);//部门
+		    			$("#USER_CODE").val(datas.USER_CODE);//申请人
+		    			$("#USER_DEPT").val(datas.USER_DEPT);//申请人部门
+		    			$("#USER_JOB").val(datas.USER_JOB);//申请人岗位
+		    			$("#USER_CONTACT").val(datas.USER_CONTACT);//联系方式
+		    			$("#ACCOUNT_NEW").val(datas.ACCOUNT_NEW);//新增帐号
+		    			$("#ACCOUNT_VALIDITY").val(datas.ACCOUNT_VALIDITY);//帐号有效期
+		    			$("#ACCOUNT_REASON").val(datas.ACCOUNT_REASON);//新增帐号原因
+		    			$("#ACCOUNT_ROLES").val(datas.ACCOUNT_ROLES);//帐号角色
+		    			$("#EFFECTIVE_DATE").val(datas.EFFECTIVE_DATE);//申请生效日期
 		            	var html = '';
 		      		     html += setDetail(datas);
 			            //console.log(html);
@@ -588,9 +623,7 @@
 		}
 		//动态加载变更单详情
 		function setDetail(item){
-		    var div = '<div class="profile-user-info"><div class="profile-info-row"><div class="profile-info-name">问题：</div><div class="profile-info-value"><span>'
-		    	+ "GRC帐号新增"
-		    	  + '</span></div></div><div class="profile-info-row"><div class="profile-info-name">申请单号：</div><div class="profile-info-value"><i class="fa fa-map-marker light-orange bigger-110"></i><span>'
+		    var div = '<div class="profile-user-info"><div class="profile-info-row"><div class="profile-info-name">申请单号：</div><div class="profile-info-value"><i class="fa fa-map-marker light-orange bigger-110"></i><span>'
 			        + item.BILL_CODE		       
 			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请单位： </div><div class="profile-info-value"><span>'
 			        + item.UNIT_CODE
@@ -665,6 +698,7 @@
 						top.hangge();
 					}
 			});
+			$("#zhxz-tab li[tag='detail-tab'] a").click();
 		}
 		//上报
 		function report(billCode){
@@ -738,6 +772,7 @@
 						top.hangge();
 					}
 			});
+			$("#zhxz-tab li[tag='detail-tab'] a").click();
 		}
 		
 		/**

@@ -122,7 +122,7 @@
 											
 										</div>
 										<div id="report-tab" class="tab-pane">
-												<div class="row">
+										<div class="row">
 											<div class="col-xs-5">
 												<input type="hidden" name="BILL_CODE" id="BILL_CODE" />
 												<div id="zhongxin" style="padding-top: 13px;">
@@ -446,9 +446,10 @@
 		      			$("#BILL_CODE").val(datas.BILL_CODE);//申请单号
 		      			$("#BG_NAME").val(datas.BG_NAME);//变更名称
 		    			$("#BG_REASON").val(datas.BG_REASON);//变更原因
+		    			$("#UNIT_CODE").val(datas.UNIT_CODE);//单位
+		    			$("#DEPT_CODE").val(datas.DEPT_CODE);//部门
 		    			$("#USER_CODE").val(datas.USER_CODE);//申请人
-		    			$("#UNIT_CODE").val(datas.UNIT_CODE);//申请人单位
-		    			$("#DEPT_CODE").val(datas.DEPT_CODE);//申请人部门
+		    			$("#USER_DEPT").val(datas.USER_DEPT);//申请人部门
 		    			$("#USER_JOB").val(datas.USER_JOB);//申请人岗位
 		    			$("#USER_CONTACT").val(datas.USER_CONTACT);//联系方式
 		    			$("#EFFECTIVE_DATE").val(datas.EFFECTIVE_DATE);//变更预期时间

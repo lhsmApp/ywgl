@@ -20,6 +20,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
 import com.fh.controller.base.BaseController;
+import com.fh.controller.common.BillnumUtil;
+import com.fh.controller.common.DictsUtil;
+import com.fh.entity.CommonBase;
 import com.fh.entity.Page;
 import com.fh.entity.system.User;
 import com.fh.util.AppUtil;
@@ -28,12 +31,15 @@ import com.fh.util.ObjectExcelView;
 import com.fh.util.PageData;
 import com.fh.util.Jurisdiction;
 import com.fh.util.Tools;
+import com.fh.util.date.DateUtils;
+import com.fh.util.enums.BillNumType;
 
 import net.sf.json.JSONArray;
 
 import com.fh.service.billnum.BillNumManager;
 import com.fh.service.changegrcxtbg.changegrczhxz.ChangeGrcZhxzManager;
 import com.fh.service.fhoa.department.DepartmentManager;
+import com.fh.service.system.user.UserManager;
 
 /** 
  * 说明：changeGrcZhxz
@@ -54,20 +60,38 @@ public class ChangeGrcZhxzController extends BaseController {
 	@Resource(name = "billnumService")
 	private BillNumManager billNumService;
 	
+	@Resource(name = "userService")
+	private UserManager userService;
+	
 	/**保存
 	 * @param
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/save")
-	public ModelAndView save() throws Exception{
-		ModelAndView mv = this.getModelAndView();
+	public @ResponseBody CommonBase save() throws Exception{
+		CommonBase commonBase = new CommonBase();
+		commonBase.setCode(-1);
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		pd.put("CHANGEGRCZHXZ_ID", this.get32UUID());	//主键
-		changegrczhxzService.save(pd);
-		mv.addObject("msg","success");
-		mv.setViewName("save_result");
-		return mv;
+		if(null==pd.getString("BILL_CODE")||pd.getString("BILL_CODE").trim().equals("")){
+			User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		    String userId=user.getUSER_ID();
+		    pd.put("BILL_USER", userId);	
+		    pd.put("BILL_DATE", DateUtils.getCurrentTime());//创建日期
+		    pd.put("ENTRY_DATE", DateUtils.getCurrentTime());//填表日期
+			String billCode=BillnumUtil.getBillnum(billNumService, BillNumType.ERP_ZHXZ, pd.getString("UNIT_CODE"), "");
+			pd.put("BILL_CODE", billCode);
+			changegrczhxzService.save(pd);
+			commonBase.setCode(0);
+		}else{
+			pd.put("UPDATE_DATE", DateUtils.getCurrentTime());
+			changegrczhxzService.edit(pd);
+			commonBase.setCode(0);
+		}	
+		if(commonBase.getCode()==0){
+			BillnumUtil.updateBillnum(billNumService, BillNumType.ERP_ZHXZ);
+		}
+		return commonBase;
 	}
 	
 	/**删除
@@ -129,6 +153,7 @@ public class ChangeGrcZhxzController extends BaseController {
 				p.put("APPROVAL_STATE", "未上报");
 			}		
 		} 	
+		mv.addObject("userList", DictsUtil.getSysUserDic(userService));//用户
 		mv.setViewName("changegrcxtbg/changegrczhxz/changegrczhxz_list");
 		//mv.addObject("varList", varList);		
 		mv.addObject("varList", JSON.toJSONString(varList));

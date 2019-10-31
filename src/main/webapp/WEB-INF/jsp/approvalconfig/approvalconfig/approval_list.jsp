@@ -34,34 +34,52 @@
 							    <div class="widget-box" >
 								    <div class="widget-body">
 									    <div class="widget-main">
-									    <label class="pull-left" style="padding: 5px;">选择业务类型：</label>
-										    <span class="pull-left" style="margin-right: 5px;"> 
-												<select
-													class="chosen-select form-control" name="BUSINESS_TYPE"
-													id=BUSINESS_TYPE data-placeholder="请选择业务类型"
-													style="vertical-align: top; height: 32px; width: 150px;">
-<!-- 														<option value="">请选择业务类型</option> -->
-														<option  value="1">系统变更</option>
-														<option  value="2">角色变更</option>
-														<option  value="3">GRC帐号新增</option>
-														<option  value="4">GRC权限变更</option>
-														<option  value="5">GRC帐号撤销</option>
-												</select>
-											</span>		
+<!-- 									    <label class="pull-left" style="padding: 5px;">选择业务类型：</label> -->
+<!-- 										    <span class="pull-left" style="margin-right: 5px;">  -->
+<!-- 												<select -->
+<!-- 													class="chosen-select form-control" name="BUSINESS_TYPE" -->
+<!-- 													id=BUSINESS_TYPE data-placeholder="请选择业务类型" -->
+<!-- 													style="vertical-align: top; height: 32px; width: 150px;"> -->
+<!-- 														<option  value="1">系统变更</option> -->
+<!-- 														<option  value="2">角色变更</option> -->
+<!-- 														<option  value="3">GRC帐号新增</option> -->
+<!-- 														<option  value="4">GRC权限变更</option> -->
+<!-- 														<option  value="5">GRC帐号撤销</option> -->
+<!-- 												</select> -->
+<!-- 											</span>		 -->
+								<div class="btn-group" data-toggle="buttons" >
+									<label class="btn btn-info">
+									<input type="radio" class="level_select"  name="level_select" value="1">系统变更
+									</label>
+									<label class="btn btn-info">
+									<input type="radio" class="level_select" name="level_select" value="2">角色变更
+									</label>
+									<label class="btn btn-info">
+									<input type="radio" class="level_select" name="level_select" value="3">GRC帐号新增
+									</label>
+									<label class="btn btn-info">
+									<input type="radio" class="level_select" name="level_select" value="4">GRC权限变更
+									</label>
+									<label class="btn btn-info">
+									<input type="radio" class="level_select" name="level_select" value="5">GRC帐号撤销
+									</label>
+									</div> 		
 												<span class="input-icon pull-left" style="margin-right: 5px;">
 													<input id="SelectedBillCode" class="nav-search-input" autocomplete="off" type="text" name="keywords" value="${pd.keywords }" placeholder="在已有申请中搜索"> 
-<!-- 													<i class="ace-icon fa fa-search nav-search-icon"></i> -->
-												</span>																			 
+													<i class="ace-icon fa fa-search nav-search-icon"></i>
+												</span>		
+																																							 
 												<button type="button" class="btn btn-info btn-sm" onclick="tosearch();">
 												    <i class="ace-icon fa fa-search bigger-110"></i>
-												</button>																					       
+												</button>																			       
 												            <label class="btn btn-sm btn-primary"onclick="passApproval()"> 
 <!-- 												        <span  class="bigger-110">上报</span>  -->
-												    	    <i class="ace-icon fa fa-share bigger-160"></i>审批通过
+												    	    <i class="ace-icon fa fa-share bigger-110"></i>审批通过
 												            </label>
 												            <label class="btn btn-sm btn-primary" onclick="returnApproval()">
-													        <i class="ace-icon fa fa-undo bigger-160"></i>审批退回
-												            </label>									
+													        <i class="ace-icon fa fa-undo bigger-110"></i>审批退回
+												            </label>
+															
 									    </div>
 								    </div>
 							    </div>
@@ -462,7 +480,11 @@
 			bill_code=code;
 		 	current_level=current;//当前审批级别
 		    next_level=next;//下一审批级别	 
-			var businessType= $("#BUSINESS_TYPE").val();//业务类型
+// 			var businessType= $("#BUSINESS_TYPE").val();//业务类型
+            var businessType= $(".level_select:checked").val();
+            if(null==businessType||businessType==''){
+            	businessType='1';
+            }
 			  $.ajax({
 				  	type: "POST",
 		            //提交的网址
@@ -560,7 +582,7 @@
 	
 		//审批通过
 		function passApproval(){
-			var businessType= $("#BUSINESS_TYPE").val();
+		      var businessType= $(".level_select:checked").val();
 			  $.ajax({
 				  	type: "POST",
 		            //提交的网址
@@ -584,7 +606,7 @@
 		}
 		//审批退回
 		function returnApproval(){
-			var businessType= $("#BUSINESS_TYPE").val();
+		      var businessType= $(".level_select:checked").val();
 			  $.ajax({
 				  	type: "POST",
 		            //提交的网址
@@ -600,60 +622,16 @@
 		
 		         });
 		}
-		 //监听选中事件
-        $('#BUSINESS_TYPE').change(function(data){
-        	$("#tasks li").remove(); 
-			top.jzts();
-			var keywords = $("#keywords").val();
-            //获取选中项的值
-            var value = $("#BUSINESS_TYPE option:selected").attr("value");
-            $.ajax({
-				type: "POST",
-				url: '<%=basePath%>approvalconfig/getPageList.do?BUSINESS_CODE='+value,
-		    	data: {keywords:keywords},
-				dataType:'json',
-				cache: false,
-				success: function(data){
-// 		        	$("#detail-tab").remove(); 
-// 					var html = '';
-// 	      		     html += setDetail(data[0]);
-// 	      			$('#detail-tab').html(html);
-// 					console.log(data[0]);
-					if(data.length>0){
-						$.each(data, function(i, item){
-						    var html = '';
-						    if(value==1||value==2){
-						    	console.log(111111);
-						    	html += setDiv1(item);
-						    }else if(value==3){
-						    	html += setDiv3(item);
-			
-						    }else if(value==4){
-						    	html += setDiv4(item);		
-						    }else{
-						    	html += setDiv5(item);	
-						    }
-						        
-							$("#tasks").append(html);
-					 	});
-						
-					}
-					else{
-						addEmpty();
-					}
-					top.hangge();
-				}
-			});
-        });
+		
 		/**
 		 * 初始化列表信息
 		 */
 		function initList(){
 			$("#tasks li").remove(); 
 			top.jzts();
-			var keywords = $("#keywords").val();
+			var keywords = $("#SelectedBillCode").val();
 			 //获取选中项的值
-            var value = $("#BUSINESS_TYPE option:selected").attr("value");
+            var value=$(".level_select:checked").val();
 			$.ajax({
 					type: "POST",
 					url: '<%=basePath%>approvalconfig/getPageList.do?BUSINESS_CODE='+value,
@@ -690,27 +668,48 @@
 			$("#tasks li").remove(); 
 			top.jzts();
 			var keywords = $("#SelectedBillCode").val();
-			 //获取选中项的值
-            var value = $("#BUSINESS_TYPE option:selected").attr("value");
-			$.ajax({
-					type: "POST",
-					url: '<%=basePath%>approvalconfig/getPageList.do?BUSINESS_CODE='+value,
-			    	data: {keywords:keywords},
-					dataType:'json',
-					cache: false,
-					success: function(data){
-						if(data.length>0){
-							$.each(data, function(i, item){
-							    var html = '';
-							        html += setDiv1(item);
-								$("#tasks").append(html);
-						 	});
-						}
-						else{
-							addEmpty();
-						}
-						top.hangge();
+            //获取选中项的值
+//             var value = $("#BUSINESS_TYPE option:selected").attr("value");
+            var value=$(".level_select:checked").val();
+            if(null==value||value==''){
+            	value='1';
+            }
+// 			console.log(value);
+            $.ajax({
+				type: "POST",
+				url: '<%=basePath%>approvalconfig/getPageList.do?BUSINESS_CODE='+value,
+		    	data: {keywords:keywords},
+				dataType:'json',
+				cache: false,
+				success: function(data){
+// 		        	$("#detail-tab").remove(); 
+// 					var html = '';
+// 	      		     html += setDetail(data[0]);
+// 	      			$('#detail-tab').html(html);
+// 					console.log(data[0]);
+					if(data.length>0){
+						$.each(data, function(i, item){
+						    var html = '';
+						    if(value==1||value==2){
+						    	html += setDiv1(item);
+						    }else if(value==3){
+						    	html += setDiv3(item);
+			
+						    }else if(value==4){
+						    	html += setDiv4(item);		
+						    }else{
+						    	html += setDiv5(item);	
+						    }
+						        
+							$("#tasks").append(html);
+					 	});
+						
 					}
+					else{
+						addEmpty();
+					}
+					top.hangge();
+				}
 			});
 		}
 		/**
