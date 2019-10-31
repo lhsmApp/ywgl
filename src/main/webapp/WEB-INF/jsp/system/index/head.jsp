@@ -59,11 +59,11 @@
 								</a></li>
 							</ul>
 						</li>
-						<li class="dropdown-footer">
+						<!-- <li class="dropdown-footer">
 							<a href="http://www.pjtycp.com" target="_blank" style="cursor:pointer;text-align:left;">
 								<img style="height:30px;width:150px;" src="static/images/caipiao.png" />
 							</a>
-						</li>
+						</li> -->
 					</ul> 
 				</li>
 				<li title="即时聊天" class="purple"  onclick="creatw1();">
