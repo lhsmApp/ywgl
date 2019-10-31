@@ -39,6 +39,8 @@
 	<!-- 新增-->
 	<insert id="save" parameterType="pd">
 		insert into 
+		<include refid="tableName"></include>
+		(	
 			COURSE_NAME,	
 			COURSE_TYPE,	
 			COURSE_TEACHER,	
@@ -48,9 +50,7 @@
 			STATE,
 			CREATE_USER,
 			CREATE_DATE	
-		(
-			<include refid="Field"></include>
-		) values (
+		) value (
 			#{COURSE_NAME},	
 			#{COURSE_TYPE},	
 			#{COURSE_TEACHER},	

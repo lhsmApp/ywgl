@@ -68,7 +68,7 @@ public class CourseBaseController extends BaseController {
 		pd = this.getPageData();
 		pd.put("STATE", "1");
 		pd.put("CREATE_USER",user.getUSER_ID());
-		pd.put("CREATE_TIME",DateUtils.getCurrentTime(DateFormatUtils.DATE_FORMAT1)); //YYYY-MM-dd
+		pd.put("CREATE_DATE",DateUtils.getCurrentTime(DateFormatUtils.DATE_FORMAT1)); //YYYY-MM-dd
 		coursebaseService.save(pd);
 		mv.addObject("msg","success");
 		mv.setViewName("save_result");
