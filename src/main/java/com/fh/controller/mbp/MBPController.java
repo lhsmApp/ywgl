@@ -103,7 +103,132 @@ public class MBPController extends BaseController {
 		return mv;
 	}
 	
-	/**列表
+	/**问题提报
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/problemReport")
+	public ModelAndView problemReport(Page page) throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		mv.setViewName("mbp/problemManage/problem_report");
+
+		PageData pd=new PageData();
+		/*User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		String userName=user.getNAME();
+		pd.put("USER_NAME", userName);
+		pd.put("CURRENT_DATE", DateUtils.getCurrentTime());*/
+		mv.addObject("pd",pd);
+		mv.addObject("systemList", DictsUtil.getDictsByParentBianma(dictionariesService, "SYSTEM"));//系统类型
+		mv.addObject("userList", DictsUtil.getSysUserDic(userService));//用户
+		mv.addObject("proPriorityList", ProPriority.values());//优先级
+		
+		List<PageData> zproblemTypePdList = new ArrayList<PageData>();
+		JSONArray arr = JSONArray.fromObject(problemtypeService.listAllProblemTypeToSelect("0",zproblemTypePdList));
+		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
+		return mv;
+	}
+	
+	/**问题领取
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/problemGet")
+	public ModelAndView problemGet(Page page) throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		mv.setViewName("mbp/problemManage/problem_get");
+
+		PageData pd=new PageData();
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		String userName=user.getNAME();
+		pd.put("USER_NAME", userName);
+		pd.put("CURRENT_DATE", DateUtils.getCurrentTime());
+		mv.addObject("pd",pd);
+		mv.addObject("systemList", DictsUtil.getDictsByParentBianma(dictionariesService, "SYSTEM"));//系统类型
+		mv.addObject("userList", DictsUtil.getSysUserDic(userService));//用户
+		mv.addObject("proPriorityList", ProPriority.values());//优先级
+		
+		List<PageData> zproblemTypePdList = new ArrayList<PageData>();
+		JSONArray arr = JSONArray.fromObject(problemtypeService.listAllProblemTypeToSelect("0",zproblemTypePdList));
+		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
+		return mv;
+	}
+	
+	/**问题分配
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/problemAssign")
+	public ModelAndView problemAssign(Page page) throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		mv.setViewName("mbp/problemManage/problem_assign");
+
+		PageData pd=new PageData();
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		String userName=user.getNAME();
+		pd.put("USER_NAME", userName);
+		pd.put("CURRENT_DATE", DateUtils.getCurrentTime());
+		mv.addObject("pd",pd);
+		mv.addObject("systemList", DictsUtil.getDictsByParentBianma(dictionariesService, "SYSTEM"));//系统类型
+		mv.addObject("userList", DictsUtil.getSysUserDic(userService));//用户
+		mv.addObject("proPriorityList", ProPriority.values());//优先级
+		
+		List<PageData> zproblemTypePdList = new ArrayList<PageData>();
+		JSONArray arr = JSONArray.fromObject(problemtypeService.listAllProblemTypeToSelect("0",zproblemTypePdList));
+		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
+		return mv;
+	}
+	
+	/**问题回复
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/problemAnswer")
+	public ModelAndView problemAnswer(Page page) throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		mv.setViewName("mbp/problemManage/problem_answer");
+
+		/*PageData pd=new PageData();
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		String userName=user.getNAME();
+		pd.put("USER_NAME", userName);
+		pd.put("CURRENT_DATE", DateUtils.getCurrentTime());
+		mv.addObject("pd",pd);
+		mv.addObject("systemList", DictsUtil.getDictsByParentBianma(dictionariesService, "SYSTEM"));//系统类型
+		mv.addObject("userList", DictsUtil.getSysUserDic(userService));//用户
+		mv.addObject("proPriorityList", ProPriority.values());//优先级
+		
+		List<PageData> zproblemTypePdList = new ArrayList<PageData>();
+		JSONArray arr = JSONArray.fromObject(problemtypeService.listAllProblemTypeToSelect("0",zproblemTypePdList));
+		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));*/
+		return mv;
+	}
+	
+	/**问题关闭
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/problemClose")
+	public ModelAndView problemClose(Page page) throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		mv.setViewName("mbp/problemManage/problem_close");
+
+		/*PageData pd=new PageData();
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		String userName=user.getNAME();
+		pd.put("USER_NAME", userName);
+		pd.put("CURRENT_DATE", DateUtils.getCurrentTime());
+		mv.addObject("pd",pd);
+		mv.addObject("systemList", DictsUtil.getDictsByParentBianma(dictionariesService, "SYSTEM"));//系统类型
+		mv.addObject("userList", DictsUtil.getSysUserDic(userService));//用户
+		mv.addObject("proPriorityList", ProPriority.values());//优先级
+		
+		List<PageData> zproblemTypePdList = new ArrayList<PageData>();
+		JSONArray arr = JSONArray.fromObject(problemtypeService.listAllProblemTypeToSelect("0",zproblemTypePdList));
+		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));*/
+		return mv;
+	}
+	
+	/**查询问题信息
 	 * @param page
 	 * @throws Exception
 	 */
