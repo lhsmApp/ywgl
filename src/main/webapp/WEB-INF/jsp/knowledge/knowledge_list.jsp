@@ -101,8 +101,8 @@
 													<select class="form-control" name="KNOWLEDGE_TYPE" id="form-field-knowledge-type">
 														<option value=""></option>
 														<c:forEach items="${knowledgeTypeList}" var="knowledge">
-															<%-- <option value="${knowledge.DICT_CODE }" <c:if test="${knowledge.DICT_CODE == pd.DICT_CODE }">selected</c:if>>${knowledge.NAME }</option> --%>
-															<option value="${knowledge.DICT_CODE}">${knowledge.NAME}</option>
+															<option value="${knowledge.KNOWLEDGE_TYPE_ID }" <c:if test="${knowledge.KNOWLEDGE_TYPE_ID == pd.KNOWLEDGE_TYPE }">selected</c:if>>${knowledge.KNOWLEDGE_TYPE_NAME }</option>
+															<%-- <option value="${knowledge.KNOWLEDGE_TYPE_ID}">${knowledge.KNOWLEDGE_TYPE_NAME}</option> --%>
 														</c:forEach>
 													</select>
 												</div>
