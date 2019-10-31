@@ -1,6 +1,5 @@
 package com.fh.controller.knowledge;
 
-import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -8,7 +7,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.Resource;
+
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
@@ -16,30 +17,20 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
 import com.fh.controller.base.BaseController;
-import com.fh.controller.common.BillnumUtil;
-import com.fh.controller.common.DictsUtil;
 import com.fh.entity.CommonBase;
 import com.fh.entity.Page;
-import com.fh.entity.PageResult;
 import com.fh.entity.PageResult2;
-import com.fh.entity.system.Dictionaries;
 import com.fh.entity.system.User;
+import com.fh.service.knowledge.KnowledgeManager;
+import com.fh.service.knowledge.KnowledgeTypeManager;
 import com.fh.util.AppUtil;
 import com.fh.util.Const;
+import com.fh.util.Jurisdiction;
 import com.fh.util.ObjectExcelView;
 import com.fh.util.PageData;
-import com.fh.util.Jurisdiction;
-import com.fh.util.Tools;
 import com.fh.util.date.DateUtils;
-import com.fh.util.enums.BillNumType;
-import com.fh.util.enums.ProPriority;
-import com.fh.util.enums.ProState;
-
-import net.sf.json.JSONArray;
-
-import com.fh.service.knowledge.KnowledgeManager;
-import com.fh.service.system.dictionaries.DictionariesManager;
 
 /** 
  * 说明：知识库
@@ -54,8 +45,8 @@ public class KnowledgeController extends BaseController {
 	@Resource(name="knowledgeService")
 	private KnowledgeManager knowledgeService;
 	
-	@Resource(name = "dictionariesService")
-	private DictionariesManager dictionariesService;
+	@Resource(name="knowledgetypeService")
+	private KnowledgeTypeManager knowledgetypeService;
 	
 	/**
 	 * 保存问题提报信息
@@ -138,8 +129,9 @@ public class KnowledgeController extends BaseController {
 		
 		
 		mv.addObject("pd", pd);
-		List<Dictionaries> dicKnowledgeType=DictsUtil.getDictsByParentBianma(dictionariesService, "KNOWLEDGE");
-		mv.addObject("knowledgeTypeList", dicKnowledgeType);//系统类型
+		//List<Dictionaries> dicKnowledgeType=DictsUtil.getDictsByParentBianma(dictionariesService, "KNOWLEDGE");
+		List<PageData> KnowledgeTypeList=knowledgetypeService.listAll(null);
+		mv.addObject("knowledgeTypeList", KnowledgeTypeList);//系统类型
 		mv.addObject("varList", varList);//问题状态
 		
 		mv.setViewName("knowledge/knowledge_query");
@@ -169,8 +161,9 @@ public class KnowledgeController extends BaseController {
 		 * 
 		 * 
 		 */
-		List<Dictionaries> dicKnowledgeType=DictsUtil.getDictsByParentBianma(dictionariesService, "KNOWLEDGE");
-		mv.addObject("knowledgeTypeList", dicKnowledgeType);//系统类型
+		//List<Dictionaries> dicKnowledgeType=DictsUtil.getDictsByParentBianma(dictionariesService, "KNOWLEDGE");
+		List<PageData> KnowledgeTypeList=knowledgetypeService.listAll(null);
+		mv.addObject("knowledgeTypeList", KnowledgeTypeList);//系统类型
 		
 		/*List<PageData> zproblemTypePdList = new ArrayList<PageData>();
 		JSONArray arr = JSONArray.fromObject(problemtypeService.listAllProblemTypeToSelect("0",zproblemTypePdList));

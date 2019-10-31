@@ -57,13 +57,13 @@
 							
 							<span class="pull-left" style="margin-right: 5px;margin-left:-10px;"> 
 								<select
-									class="chosen-select form-control" name="PRO_STATE"
-									id="PRO_STATE" data-placeholder="请选择知识类别"
+									class="chosen-select form-control" name="KNOWLEDGE_TYPE"
+									id="KNOWLEDGE_TYPE" data-placeholder="请选择知识类别"
 									style="vertical-align: top; height: 32px; width: 150px;">
 										<option value="">请选择知识类别</option>
 										<c:forEach items="${knowledgeTypeList}" var="knowledgeType">
-											<option value="${knowledgeType.DICT_CODE}"
-												<c:if test="${pd.KNOWLEDGE_TYPE==knowledgeType.DICT_CODE}">selected</c:if>>${knowledgeType.NAME}
+											<option value="${knowledgeType.KNOWLEDGE_TYPE_ID}"
+												<c:if test="${pd.KNOWLEDGE_TYPE==knowledgeType.KNOWLEDGE_TYPE_ID}">selected</c:if>>${knowledgeType.KNOWLEDGE_TYPE_NAME}
 											</option>
 										</c:forEach>
 								</select>

@@ -116,11 +116,11 @@
 	
 	<!-- 列表 -->
 	<select id="datalistPage" parameterType="page" resultType="pd">
-		select A.*,dic.NAME KNOWLEDGE_TYPE_NAME 
+		select A.*,B.KNOWLEDGE_TYPE_NAME 
 		from 
 		<include refid="tableName"></include> A
-		LEFT JOIN (SELECT DICT_CODE,NAME FROM sys_dictionaries WHERE PARENT_CODE = 'KNOWLEDGE' ) dic 
-    	ON A.KNOWLEDGE_TYPE = dic.DICT_CODE 
+		LEFT JOIN tb_knowledge_type B 
+    	ON A.KNOWLEDGE_TYPE = B.KNOWLEDGE_TYPE_ID 
     	
 		<where>
 		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
