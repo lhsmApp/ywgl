@@ -39,11 +39,27 @@
 	<!-- 新增-->
 	<insert id="save" parameterType="pd">
 		insert into 
-			<include refid="tableName"></include>
+			COURSE_NAME,	
+			COURSE_TYPE,	
+			COURSE_TEACHER,	
+			COURSE_TAG,	
+			COURSE_NOTE,
+			COURSE_COVER,
+			STATE,
+			CREATE_USER,
+			CREATE_DATE	
 		(
 			<include refid="Field"></include>
 		) values (
-			<include refid="FieldValue"></include>
+			#{COURSE_NAME},	
+			#{COURSE_TYPE},	
+			#{COURSE_TEACHER},	
+			#{COURSE_TAG},	
+			#{COURSE_NOTE},
+			#{COURSE_COVER},
+			#{STATE},
+			#{CREATE_USER},
+			#{CREATE_DATE}	
 		)
 	</insert>
 	
@@ -93,22 +109,23 @@
 	<!-- 列表 -->
 	<select id="datalistPage" parameterType="page" resultType="pd">
 		select
-			COURSE_ID,
-			COURSE_NAME,	
-			COURSE_TYPE,	
-			COURSE_TEACHER,	
-			COURSE_TAG,	
-			COURSE_NOTE,	
-			COURSE_COVER,	
-			CREATE_USER,	
-			CREATE_DATE	
+			a.COURSE_ID,
+			a.COURSE_NAME,	
+			a.COURSE_TYPE,	
+			a.COURSE_TEACHER,	
+			a.COURSE_TAG,	
+			a.COURSE_NOTE,	
+			a.COURSE_COVER,	
+			a.CREATE_DATE,	
+			b.USERNAME AS CREATE_USER	
 		from 
-		<include refid="tableName"></include>
-		where STATE = 1
+			tb_course_base AS a 
+			LEFT JOIN sys_user AS b ON a.CREATE_USER = b.USER_ID
+		where a.STATE = 1
 		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
 			and
 				(
-					COURSE_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					a.COURSE_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 				)
 		</if>
 	</select>

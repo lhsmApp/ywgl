@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CourseDetailMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		tb_course_detail
+	</sql>
+	
+	<resultMap type="CourseDetail" id="courseDetailResultMap">
+		<id column="CHAPTER_ID" property="CHAPTER_ID"/>
+		<id column="CHAPTER_NAME" property="CHAPTER_NAME"/>
+		<id column="CHAPTER_PARENT_ID" property="CHAPTER_PARENT_ID"/>
+	</resultMap>
+	
+	<select id="listByParentId" parameterType="pd" resultMap="courseDetailResultMap">
+		select
+			CHAPTER_ID,
+			CHAPTER_NAME,
+			CHAPTER_PARENT_ID
+		from
+			<include refid="tableName"></include>
+		where
+			STATE = 1
+		and
+			CHAPTER_PARENT_ID = #{parentId}
+		and
+			COURSE_ID = #{COURSE_ID}
+	</select>
+
+	<!-- 新增章节 -->
+	<insert id="saveChapter" parameterType="pd">
+		insert into
+			<include refid="tableName"></include>
+			(
+				CHAPTER_NAME,
+				COURSE_ID,
+				CHAPTER_PARENT_ID,
+				CHAPTER_TYPE,
+				STATE,
+				CREATE_USER,
+				CREATE_TIME
+			) values (
+				#{CHAPTER_NAME},	
+				#{COURSE_ID},	
+				#{CHAPTER_PARENT_ID},	
+				#{CHAPTER_TYPE},	
+				#{STATE},	
+				#{CREATE_USER},	
+				#{CREATE_TIME}	
+			)
+	</insert>
+	
+	<!-- 新增小节 -->
+	<insert id="saveSection" parameterType="pd">
+			insert into
+			<include refid="tableName"></include>
+			(
+				CHAPTER_NAME,
+				COURSE_ID,
+				CHAPTER_PARENT_ID,
+				CHAPTER_TYPE,
+				VIDEO_COVER,
+				VIDEO_ADDRESS,
+				STATE,
+				CREATE_USER,
+				CREATE_TIME
+			) values (
+				#{CHAPTER_NAME},	
+				#{COURSE_ID},	
+				#{CHAPTER_PARENT_ID},	
+				#{CHAPTER_TYPE},
+				#{VIDEO_COVER},
+				#{VIDEO_ADDRESS},	
+				#{STATE},	
+				#{CREATE_USER},	
+				#{CREATE_TIME}	
+			)
+	</insert>
+	
+	<!-- 删除-->
+	<update id="delete" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+			STATE = 0
+		where 
+			CHAPTER_ID = #{CHAPTER_ID}
+	</update>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			CHAPTER_NAME = #{CHAPTER_NAME},
+			CHAPTER_TYPE = #{CHAPTER_TYPE},
+			VIDEO_COVER = #{VIDEO_COVER},
+			VIDEO_ADDRESS = #{VIDEO_ADDRESS}
+		where 
+			CHAPTER_ID = #{CHAPTER_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			CHAPTER_ID,
+			CHAPTER_NAME,
+			COURSE_ID,
+			CHAPTER_PARENT_ID,
+			CHAPTER_TYPE,
+			VIDEO_COVER,
+			VIDEO_ADDRESS
+		from 
+		<include refid="tableName"></include>
+		where 
+			CHAPTER_ID = #{CHAPTER_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+			a.CHAPTER_ID,
+			a.CHAPTER_NAME,	
+			a.CHAPTER_PARENT_ID,
+			a.CHAPTER_TYPE,	
+			a.VIDEO_DURATION,
+			a.VIDEO_COVER,
+			a.VIDEO_ADDRESS,	
+			a.CREATE_TIME,
+			b.USERNAME AS CREATE_USER
+		from 
+			tb_course_detail AS a 
+			LEFT JOIN sys_user AS b ON a.CREATE_USER = b.USER_ID
+		where
+			a.STATE = 1
+		and
+			a.COURSE_ID = #{pd.COURSE_ID}
+		and
+			a.CHAPTER_PARENT_ID != 0
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+			a.CHAPTER_ID,
+			a.CHAPTER_NAME,	
+			a.CHAPTER_PARENT_ID,
+			a.CHAPTER_TYPE,	
+			a.VIDEO_DURATION,
+			a.VIDEO_COVER,
+			a.VIDEO_ADDRESS,	
+			a.CREATE_TIME,
+			b.USERNAME AS CREATE_USER
+		from 
+			tb_course_detail AS a 
+			LEFT JOIN sys_user AS b ON a.CREATE_USER = b.USER_ID
+		where
+			a.STATE = 1
+		and
+			a.COURSE_ID = #{COURSE_ID}
+		<if test="null != CHAPTER_PARENT_ID and CHAPTER_PARENT_ID != ''">
+		and
+			a.CHAPTER_PARENT_ID = #{CHAPTER_PARENT_ID}
+		</if> 
+	</select>
+	
+	<!-- 获取小节数 -->
+	<select id="countByParentId" parameterType="Integer" resultType="Integer">
+		select 
+			count(CHAPTER_ID)
+		from
+			<include refid="tableName"></include>
+		where 
+			CHAPTER_PARENT_ID = #{parentId}
+		and 
+			STATE = 1
+	</select>
+</mapper>

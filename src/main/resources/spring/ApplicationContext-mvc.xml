@@ -39,10 +39,10 @@
 	
 	<bean id="exceptionResolver" class="com.fh.resolver.MyExceptionResolver"></bean>
 	
-	<!-- 上传拦截，如最大上传值及最小上传值 -->
+	<!-- 上传拦截，如最大上传值及最小上传值 max:2GB min:4kb-->
 	  <bean id="multipartResolver"   class="org.springframework.web.multipart.commons.CommonsMultipartResolver" >   
 		  <property name="maxUploadSize">    
-	          <value>104857600</value>    
+	          <value>2147483648</value>    
 	       </property>   
 	        <property name="maxInMemorySize">    
 	            <value>4096</value>    

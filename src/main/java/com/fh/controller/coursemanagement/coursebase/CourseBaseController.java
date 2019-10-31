@@ -1,6 +1,5 @@
 package com.fh.controller.coursemanagement.coursebase;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,9 +16,7 @@ import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -28,14 +25,17 @@ import com.fh.controller.base.BaseController;
 import com.fh.entity.CommonBase;
 import com.fh.entity.Page;
 import com.fh.entity.coursebase.CourseTree;
+import com.fh.entity.system.User;
 import com.fh.service.coursemanagement.coursebase.CourseBaseManager;
+import com.fh.service.trainBase.CourseTypeManager;
 import com.fh.util.AppUtil;
 import com.fh.util.Const;
 import com.fh.util.FileUpload;
-import com.fh.util.FileUtil;
 import com.fh.util.Jurisdiction;
 import com.fh.util.PageData;
 import com.fh.util.PathUtil;
+import com.fh.util.date.DateFormatUtils;
+import com.fh.util.date.DateUtils;
 
 import net.sf.json.JSONArray;
 
@@ -51,6 +51,8 @@ public class CourseBaseController extends BaseController {
 	String menuUrl = "coursebase/list.do"; //菜单地址(权限用)
 	@Resource(name="coursebaseService")
 	private CourseBaseManager coursebaseService;
+	@Resource(name="coursetypeService")
+	private CourseTypeManager coursetypeService;
 	
 	/**保存
 	 * @param
@@ -59,11 +61,14 @@ public class CourseBaseController extends BaseController {
 	@RequestMapping(value="/save")
 	public ModelAndView save() throws Exception{
 		logBefore(logger, Jurisdiction.getUsername()+"新增CourseBase");
-		if(!Jurisdiction.buttonJurisdiction(menuUrl, "add")){return null;} //校验权限
+	//	if(!Jurisdiction.buttonJurisdiction(menuUrl, "add")){return null;} //校验权限
 		ModelAndView mv = this.getModelAndView();
+		User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USER);
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd.put("STATE", "1");
+		pd.put("CREATE_USER",user.getUSER_ID());
+		pd.put("CREATE_TIME",DateUtils.getCurrentTime(DateFormatUtils.DATE_FORMAT1)); //YYYY-MM-dd
 		coursebaseService.save(pd);
 		mv.addObject("msg","success");
 		mv.setViewName("save_result");
@@ -108,13 +113,18 @@ public class CourseBaseController extends BaseController {
 		return mv;
 	}
 	
+	/**
+	 * 获取左侧下拉树结构
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value="/treeList")
 	@ResponseBody
 	public CommonBase treeList() throws Exception{
 		CommonBase commonBase = new CommonBase();
-		JSONArray arr = JSONArray.fromObject(coursebaseService.listTree("0"));
+		JSONArray arr = JSONArray.fromObject(coursetypeService.listTree("0"));
 		String json = arr.toString();
-		json = json.replaceAll("COURSE_TYPE_ID", "id").replaceAll("COURSE_TYPE_PARENT_ID", "pid").replaceAll("COURSE_TYPE_NAME", "name").replaceAll("subTreeList", "nodes").replaceAll("treeurl", "url");
+		json = json.replaceAll("COURSETYPE_ID", "id").replaceAll("PARENT_ID", "pId").replaceAll("NAME", "name").replaceAll("subCourseType", "nodes").replaceAll("hasCourseType", "checked");
 		commonBase.setMessage(json);
 		commonBase.setCode(0);
 		return commonBase;
@@ -137,14 +147,24 @@ public class CourseBaseController extends BaseController {
 		}
 		page.setPd(pd);
 		List<PageData>	varList = coursebaseService.list(page);	//列出CourseBase列表
+		JSONArray arr = JSONArray.fromObject(coursetypeService.listTree("0"));
+		String json = arr.toString();
+		json = json.replaceAll("COURSETYPE_ID", "id").replaceAll("PARENT_ID", "pId").replaceAll("NAME", "name")
+				.replaceAll("subCourseType", "nodes").replaceAll("hasCourseType", "checked");		
 		mv.addObject("varList", varList);
 		mv.addObject("pd", pd);
+		mv.addObject("zTreeNodes",json);
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		mv.setViewName("coursemanagement/coursebase/coursebase_list");
 		return mv;
 		
 	}
 	
+	/**
+	 * 通过id获取其子课程
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value="/listById")
 	@ResponseBody
 	public CommonBase listById() throws Exception{
@@ -219,8 +239,9 @@ public class CourseBaseController extends BaseController {
 		map.put("list", pdList);
 		return AppUtil.returnObject(pd, map);
 	}
+	
 	/**
-	 *  图片上传上传
+	 *  图片上传
 	 * @param pic
 	 * @param response
 	 * @throws Exception
