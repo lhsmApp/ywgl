@@ -21,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSON;
 import com.fh.controller.base.BaseController;
 import com.fh.controller.common.BillnumUtil;
+import com.fh.controller.common.DictsUtil;
 import com.fh.controller.common.QueryFeildString;
 import com.fh.controller.common.TmplUtil;
 import com.fh.entity.CommonBase;
@@ -35,7 +36,9 @@ import com.fh.util.PageData;
 import com.fh.util.SqlTools;
 import com.fh.util.Jurisdiction;
 import com.fh.util.Tools;
+import com.fh.util.date.DateUtils;
 import com.fh.util.enums.BillNumType;
+import com.fh.util.enums.ProPriority;
 import com.fh.util.enums.ProState;
 
 import net.sf.json.JSONArray;
@@ -43,6 +46,8 @@ import net.sf.json.JSONArray;
 import com.fh.service.billnum.BillNumManager;
 import com.fh.service.changeerpxtbg.changeerpxtbg.ChangeErpXtbgManager;
 import com.fh.service.fhoa.department.DepartmentManager;
+import com.fh.service.system.dictionaries.DictionariesManager;
+import com.fh.service.system.user.UserManager;
 
 /** 
  * 说明：changeManage
@@ -63,21 +68,43 @@ public class ChangeErpXtbgController extends BaseController {
 	@Resource(name = "billnumService")
 	private BillNumManager billNumService;
 	
+	@Resource(name = "dictionariesService")
+	private DictionariesManager dictionariesService;
+	
+	@Resource(name = "userService")
+	private UserManager userService;
+	
 	/**保存
 	 * @param
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/save")
-	public ModelAndView save() throws Exception{
-		ModelAndView mv = this.getModelAndView();
+	public @ResponseBody CommonBase save() throws Exception{
+		CommonBase commonBase = new CommonBase();
+		commonBase.setCode(-1);
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		String billCode=BillnumUtil.getBillnum(billNumService, BillNumType.ERP_XTBG, pd.getString("PRO_DEPART"), "");
-		pd.put("BILL_CODE", billCode);
-		changeerpxtbgService.save(pd);
-		mv.addObject("msg","success");
-		mv.setViewName("save_result");
-		return mv;
+		if(null==pd.getString("BILL_CODE")||pd.getString("BILL_CODE").trim().equals("")){
+			User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		    String userId=user.getUSER_ID();
+		    pd.put("BILL_USER", userId);	
+		    pd.put("BILL_DATE", DateUtils.getCurrentTime());//创建日期
+		    pd.put("ENTRY_DATE", DateUtils.getCurrentTime());//填表日期
+			String billCode=BillnumUtil.getBillnum(billNumService, BillNumType.ERP_XTBG, pd.getString("UNIT_CODE"), "");
+			pd.put("BILL_CODE", billCode);
+			changeerpxtbgService.save(pd);
+			commonBase.setCode(0);
+		}else{
+			pd.put("UPDATE_DATE", DateUtils.getCurrentTime());
+			changeerpxtbgService.edit(pd);
+			commonBase.setCode(0);
+		}
+		
+		
+		if(commonBase.getCode()==0){
+			BillnumUtil.updateBillnum(billNumService, BillNumType.ERP_XTBG);
+		}
+		return commonBase;
 	}
 	
 	/**删除
@@ -116,8 +143,6 @@ public class ChangeErpXtbgController extends BaseController {
 	 */
 	@RequestMapping(value="/list")
 	public ModelAndView list(Page page) throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"列表changeerpxtbg");
-		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
@@ -143,6 +168,10 @@ public class ChangeErpXtbgController extends BaseController {
 				p.put("APPROVAL_STATE", "未上报");
 			}		
 		} 	
+		mv.addObject("userList", DictsUtil.getSysUserDic(userService));//用户
+		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
+		JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0",zdepartmentPdList));
+		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
 		mv.setViewName("changeerpxtbg/changeerpxtbg/changeerpxtbg_list");
 		mv.addObject("varList", JSON.toJSONString(varList));
 		mv.addObject("pd", pd);
@@ -270,7 +299,7 @@ public class ChangeErpXtbgController extends BaseController {
 		pd = changeerpxtbgService.findById(pd);	//根据ID读取
 		JSONArray json = JSONArray.fromObject(pd); 
 		mv.setViewName("changeerpxtbg/changeerpxtbg/PrintReport");
-		mv.addObject("ReportURL", "static/js/gridReport/grf/erpSystemChange.grf");
+		mv.addObject("ReportURL", "static/js/gridReport/grf/changeErpXtbg.grf");
 		mv.addObject("DataURL", "changeerpxtbg/PrintXtbg.do?BILL_CODE="+pd.getString("BILL_CODE"));
 		mv.addObject("msg", "edit");
 		mv.addObject("pd", pd);

@@ -21,10 +21,7 @@
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
 </head>
 <body class="no-skin">
-
-	<!-- /section:basics/navbar.layout -->
 	<div class="main-container" id="main-container">
-		<!-- /section:basics/sidebar -->
 		<div class="main-content">
 			<div class="main-content-inner">
 				<div class="page-content">
@@ -39,27 +36,27 @@
 													<input id="SelectedBillCode" class="nav-search-input" autocomplete="off" type="text" name="SelectedBillCode" value="${pd.keywords }" placeholder="请输入变更申请名称"> 
 													<i class="ace-icon fa fa-search nav-search-icon"></i>
 												</span>																			 
-												<button type="button" class="btn btn-info btn-sm" onclick="tosearch();">
+												<button type="button" class="btn btn-info btn-xs" onclick="tosearch();">
 												    <i class="ace-icon fa fa-search bigger-110"></i>
 												</button>									
-												            <label class="btn btn-sm btn-danger " onclick="add()"> 
-												    	          <i class="ace-icon fa  glyphicon-plus bigger-160"></i>新增
+												            <label id="btnAdd" class="btn btn-sm btn-danger " onclick="add()"> 
+												    	          <i class="ace-icon fa  glyphicon-plus bigger-110"></i>新增
 												            </label> 
 												            <label class="btn btn-sm btn-primary" onclick="edit(bill_code)"> 
-												            <i class="ace-icon fa fa-pencil-square-o bigger-160"></i>编辑
+												            <i class="ace-icon fa fa-pencil-square-o bigger-110"></i>编辑
 												            </label> 
 												            <label class="btn btn-sm btn-success" onclick="del(bill_code)"> 	
-												            <i class="ace-icon fa fa-trash-o bigger-160"></i>删除
+												            <i class="ace-icon fa fa-trash-o bigger-110"></i>删除
 												            </label>
 												            <label class="btn btn-sm btn-purple" onclick="report(bill_code)"> 
 <!-- 												        <span  class="bigger-110">上报</span>  -->
-												    	    <i class="ace-icon fa fa-share bigger-160"></i>上报
+												    	    <i class="ace-icon fa fa-share bigger-110"></i>上报
 												            </label>
 												            <label class="btn btn-sm btn-warning" onclick="cancleXtbgReport(bill_code)">
-													        <i class="ace-icon fa fa-undo bigger-160"></i>撤销上报
+													        <i class="ace-icon fa fa-undo bigger-110"></i>撤销上报
 												            </label>
 												             <label class="btn btn-sm btn-pink" onclick="printf(bill_code)">
-												             <i class="ace-icon fa fa-print bigger-160"></i>
+												             <i class="ace-icon fa fa-print bigger-110"></i>
 															打印
 												            </label>										
 										    </form>
@@ -71,26 +68,13 @@
 					    </div>	
 					<div class="row">
 						<div class="col-xs-4">
-						<!-- 检索  -->
-						<form style="margin:5px;" action="user/listUsers.do" method="post" name="userForm" id="userForm">
-<!-- 							<div class="nav-search" style="margin:10px 0px;"> -->
-<!-- 								<span class="input-icon" style="width:86%"> -->
-<%-- 									<input style="width:100%" class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词" /> --%>
-<!-- 									<i class="ace-icon fa fa-search nav-search-icon"></i> -->
-<!-- 								</span> -->
-<!-- 								<button style="margin-bottom:3px;" class="btn btn-light btn-minier" onclick="searchs();"  title="检索"> -->
-<!-- 									<i id="nav-search-icon" class="ace-icon fa fa-search bigger-120 nav-search-icon blue"></i> -->
-<!-- 									<i class="ace-icon fa fa-signal icon-only bigger-150"></i> -->
-<!-- 								</button> -->
-<!-- 							</div> -->
-							
 							
 							<ul id="tasks" class="item-list">
 							
 							</ul>						
 	
 				
-						</form>
+
 					</div>
 					
 					<div class="col-xs-8">
@@ -117,19 +101,12 @@
 								</h4>
 		
 								<div class="widget-toolbar no-border">
-									<ul class="nav nav-tabs" id="recent-tab">
-										<li class="active">
+									<ul class="nav nav-tabs" id="xtbg-tab">
+										<li class="active"  tag="detail-tab">
 											<a data-toggle="tab" href="#detail-tab">详情</a>
 										</li>
-										<li>
+										<li tag="report-tab">
 											<a data-toggle="tab" href="#report-tab">提报</a>
-										</li>
-										<li>
-											<a data-toggle="tab" href="#assigh-tab">分配</a>
-										</li>
-		
-										<li>
-											<a data-toggle="tab" href="#comment-tab">关闭</a>
 										</li>
 									</ul>
 								</div>
@@ -138,85 +115,55 @@
 							<div class="widget-body">
 								<div class="widget-main padding-4">
 									<div class="tab-content padding-8">
-										<div id="assigh-tab" class="tab-pane">
-											<!-- <h4 class="smaller lighter green">
-												<i class="ace-icon fa fa-list"></i>
-												Sortable Lists
-											</h4> -->
-											<form action="" name="xtbgAssignForm" id="xtbgAssignForm" method="post">
-												<input type="hidden" name="xtbgID" id="xtbgID" value="${pd.BILL_CODE }"/>
-												<div id="zhongxin" style="padding-top: 13px;">
-													<div style="margin:10px 0px;">
-														<label for="form-field-select-1">受理人</label>
-														<select class="form-control" id="form-field-select-1">
-															<option value=""></option>
-															<option value="AL">Alabama</option>
-															<option value="AK">Alaska</option>
-														</select>
-													</div>
-													
-													<div style="margin:10px 0px;">
-														<label for="form-field-select-2">提问系统</label>
-														<select class="form-control" id="form-field-select-2">
-															<option value=""></option>
-															<option value="AL">ERP系统</option>
-															<option value="AK">财务系统</option>
-														</select>
-													</div>
-													
-													<div style="margin:10px 0px;">
-														<label for="form-field-select-3">优先级</label>
-														<select class="form-control" id="form-field-select-3">
-															<option value=""></option>
-															<option value="AL">紧急</option>
-															<option value="AK">一般</option>
-														</select>
-													</div>
-													<%-- <input type="number" name="PHONE" id="PHONE"  value="${pd.PHONE }"  maxlength="32" placeholder="这里输入手机号" title="手机号" style="width:98%;"/> --%>
-													<div style="margin:20px 0px;">
-														<span>分配人：</span><span>张三</span>
-														<span style="margin-left:30px;">分配时间：</span><span>2019-05-23</span>
-													</div>
-													<hr />
-													<div>
-														<a class="btn btn-mini btn-primary" onclick="save();">保存</a>
-														<a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">取消</a>
-													</div>		
-												</div>
-												<div id="zhongxin2" class="center" style="display:none"><br/><br/><br/><br/><img src="static/images/jiazai.gif" /><br/><h4 class="lighter block green"></h4></div>
-											</form>
-										</div>
 										<div id="detail-tab" class="tab-pane active">
-											
+																					
 										</div>
 										<div id="report-tab" class="tab-pane">
-													<form action="" name="problemAssignForm" id="problemAssignForm" method="post">
-												<input type="hidden" name="xtbgID" id="xtbgID" value="${pd.BILL_CODE }"/>
+										<div class="row">
+											<div class="col-xs-5">
+<!-- 											<form action="changeerpxtbg/save.do" name="xtbgForm" id="xtbgForm" method="post"> -->
+												<input type="hidden" name="BILL_CODE" id="BILL_CODE"/>
 												<div id="zhongxin" style="padding-top: 13px;">
 													<div style="margin:10px 0px;">
-														<label for="form-field-select-1">系统变更名称</label>
-														<input type="text" name="xtbg_title" id="xtbg_title" class="form-control" placeholder="请输入系统变更名称"/>
+														<label for="form-field-xtbg-report-bgname">系统变更名称</label>
+														<input type="text" name="BG_NAME" id="BG_NAME" class="form-control" placeholder="请输入系统变更名称"/>
 													</div>
-													
-													<div style="margin:10px 0px;">
-														<label for="form-field-select-1">申请人</label>
-														<input type="text" name="xtbg_uesr" id="xtbg_uesr" class="form-control" placeholder="请输入申请人"/>
+														<div style="margin:10px 0px;">
+														<label for="form-field-xtbg-report-reason">变更原因</label>
+														<input type="text" name="BG_REASON" id="BG_REASON" class="form-control" placeholder="请输入变更内容及原因"/>
 													</div>
-												    <div style="margin:10px 0px;">
-														<label for="form-field-select-1">申请人单位</label>
-														<input type="text" name="xtbg_unit" id="xtbg_unit" class="form-control" placeholder="请输入申请人单位"/>
+													    <div style="margin:10px 0px;">
+														<label for="form-field-xtbg-report-depart">单位</label>
+														<input type="text" name="UNIT_CODE" id="UNIT_CODE" class="form-control" placeholder="请输入申请人单位"/>
 													</div>
 													   <div style="margin:10px 0px;">
-														<label for="form-field-select-1">申请人部门</label>
-														<input type="text" name="xtbg_depart" id="xtbg_depart" class="form-control" placeholder="请输入申请人部门"/>
+														<label for="form-field-xtbg-report-dept">部门</label>
+														<input type="text" name="DEPT_CODE" id="DEPT_CODE" class="form-control" placeholder="请输入申请人部门"/>
 													</div>
 													<div style="margin:10px 0px;">
-														<label for="form-field-select-1">变更内容及原因</label>
-														<input type="text" name="xtbg_reason" id="xtbg_reason" class="form-control" placeholder="请输入变更内容及原因"/>
+														<label for="form-field-xtbg-report-user">申请人</label>
+															<select class="form-control" name="USER_CODE" id="USER_CODE">
+																	<option value=""></option>
+																	<c:forEach items="${userList}" var="user">
+																	<option value="${user.USER_ID}">${user.USERNAME}</option>
+																	</c:forEach>
+																</select>
+													</div>
+												    <div style="margin:10px 0px;">
+														<label for="form-field-xtbg-report-depart">申请人部门</label>
+														<input type="text" name="USER_DEPT" id="USER_DEPT" class="form-control" placeholder="请输入申请人单位"/>
+													</div>
+										   			<div style="margin:10px 0px;">
+														<label for="form-field-xtbg-report-job">申请人岗位</label>
+														<input type="text" name="USER_JOB" id="USER_JOB" class="form-control" placeholder="请输入申请人部门"/>
 													</div>
 													<div style="margin:10px 0px;">
-														<label for="form-field-select-1">联系方式</label>
-														<input type="text" name="xtbg_contact" id="xtbg_contact" class="form-control" placeholder="请输入联系方式"/>
+														<label for="form-field-xtbg-report-contact">联系方式</label>
+														<input type="text" name="USER_CONTACT" id="USER_CONTACT" class="form-control" placeholder="请输入联系方式"/>
+													</div>
+													<div style="margin:10px 0px;">
+														<label for="form-field-select-1">变更预期时间</label>
+														<input type="text" name="EFFECTIVE_DATE" id="EFFECTIVE_DATE" class="form-control" placeholder="请输入联系方式"/>
 													</div>
 													<hr />
 													<div>
@@ -224,7 +171,9 @@
 														<a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">取消</a>
 													</div>		
 												</div>											
-											</form>
+<!-- 											</form> -->
+										</div>
+								     </div>
 										</div>
 									</div>
 								</div>
@@ -245,6 +194,8 @@
 			    <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
 		    </a>
 	    </div>
+	  </div>
+ </div>
 	<!-- /.main-container -->
 
 	<!-- basic scripts -->
@@ -264,11 +215,6 @@
 	    var bill_code=undefined;
 	    //var unit_Code=undefined;
 		$(top.hangge());//关闭加载状态
-// 		//检索
-// 		function tosearch(){
-// 			top.jzts();
-// 			$("#Form").submit();
-// 		}
 		$(function() {
 			var data=${varList};
 			showDetail(data[0].BILL_CODE);
@@ -319,28 +265,41 @@
 		
 		//新增
 		function add(){
-			 top.jzts();
-			 var diag = new top.Dialog();
-			 diag.Drag=true;
-			 diag.Title ="新增";
-			 diag.URL = '<%=basePath%>changeerpxtbg/goAdd.do';
-			 diag.Width = 750;
-			 diag.Height = 455;
-			 diag.Modal = true;				//有无遮罩窗口
-			 diag. ShowMaxButton = true;	//最大化按钮
-		     diag.ShowMinButton = true;		//最小化按钮
-			 diag.CancelEvent = function(){ //关闭事件
-				 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
-					 if('${page.currentPage}' == '0'){
-						 top.jzts();
-						 setTimeout("self.location=self.location",100);
-					 }else{
-						 //nextPage(${page.currentPage});
-					 }
-				}
-				diag.close();
-			 };
-			 diag.show();
+			//点击新增按钮，弹到提报tab页
+			$("#xtbg-tab li[tag='report-tab'] a").click();
+			//新增清空文本框
+			$("#BG_NAME").val("");//变更名称
+			$("#BG_REASON").val("");//变更原因
+			$("#UNIT_CODE").val("");//单位
+			$("#DEPT_CODE").val("");//部门
+			$("#USER_CODE").val("");//申请人
+			$("#USER_DEPT").val("");//申请人部门
+			$("#USER_JOB").val("");//申请人岗位
+			$("#USER_CONTACT").val("");//联系方式
+			$("#EFFECTIVE_DATE").val("");//变更预期时间
+			$("#BILL_CODE").val("");//申请单号
+// 			 top.jzts();
+// 			 var diag = new top.Dialog();
+// 			 diag.Drag=true;
+// 			 diag.Title ="新增";
+<%-- 			 diag.URL = '<%=basePath%>changeerpxtbg/goAdd.do'; --%>
+// 			 diag.Width = 750;
+// 			 diag.Height = 455;
+// 			 diag.Modal = true;				//有无遮罩窗口
+// 			 diag. ShowMaxButton = true;	//最大化按钮
+// 		     diag.ShowMinButton = true;		//最小化按钮
+// 			 diag.CancelEvent = function(){ //关闭事件
+// 				 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
+// 					 if('${page.currentPage}' == '0'){
+// 						 top.jzts();
+// 						 setTimeout("self.location=self.location",100);
+// 					 }else{
+// 						 //nextPage(${page.currentPage});
+// 					 }
+// 				}
+// 				diag.close();
+// 			 };
+// 			 diag.show();
 		}
 		
 		//删除
@@ -350,7 +309,6 @@
 					top.jzts();
 					var url = "<%=basePath%>changeerpxtbg/delete.do?BILL_CODE="+encodeURI(Id);
 					$.get(url,function(data){
-						//console.log(data);
 						//nextPage(${page.currentPage});
 						initList();
 					});
@@ -360,70 +318,54 @@
 		
 		//修改
 		function edit(Id){
-			 top.jzts();
-			 var diag = new top.Dialog();
-			 diag.Drag=true;
-			 diag.Title ="编辑";
-			 diag.URL = '<%=basePath%>changeerpxtbg/goEdit.do?BILL_CODE='+encodeURI(Id);
-			 diag.Width = 750;
-			 diag.Height = 455;
-			 diag.Modal = true;				//有无遮罩窗口
-			 diag. ShowMaxButton = true;	//最大化按钮
-		     diag.ShowMinButton = true;		//最小化按钮 
-			 diag.CancelEvent = function(){ //关闭事件
-				 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
-					 //nextPage(${page.currentPage});
-				}
-				diag.close();
-			 };
-			 diag.show();
+			//点击新增按钮，弹到提报tab页
+			$("#xtbg-tab li[tag='report-tab'] a").click();
+
 		}
-		
-		//批量操作
-		function makeAll(msg){
-			bootbox.confirm(msg, function(result) {
-				if(result) {
-					var str = '';
-					for(var i=0;i < document.getElementsByName('ids').length;i++){
-					  if(document.getElementsByName('ids')[i].checked){
-					  	if(str=='') str += document.getElementsByName('ids')[i].value;
-					  	else str += ',' + document.getElementsByName('ids')[i].value;
-					  }
-					}
-					if(str==''){
+		//保存
+		function save(){
+			top.jzts();
+			//$("#xtbgForm").submit();
+			var bgName=$("#BG_NAME").val();//变更名称
+			var bgReason=$("#BG_REASON").val();//变更原因
+			var unitCode=$("#UNIT_CODE").val();//单位
+			var deptCode=$("#DEPT_CODE").val();//部门
+			var uesrCode=$("#USER_CODE").val();//申请人
+			var uesrDept=$("#USER_DEPT").val();//申请人部门
+			var uesrJob=$("#USER_JOB").val();//申请人岗位
+			var uesrContact=$("#USER_CONTACT").val();//联系方式
+			var bgyqDate=$("#EFFECTIVE_DATE").val();//变更预期时间
+			var billCode=$("#BILL_CODE").val();//申请单号
+			$.ajax({
+				type: "POST",
+				url: '<%=basePath%>changeerpxtbg/save.do',
+				data:{BG_NAME:bgName,BG_REASON:bgReason,UNIT_CODE:unitCode,DEPT_CODE:deptCode,USER_CODE:uesrCode,USER_DEPT:uesrDept,USER_JOB:uesrJob,USER_CONTACT:uesrContact,EFFECTIVE_DATE:bgyqDate,BILL_CODE:billCode},
+		    	dataType:'json',
+				cache: false,
+				success: function(response){
+					if(response.code==0){
+						$(top.hangge());//关闭加载状态
 						bootbox.dialog({
-							message: "<span class='bigger-110'>您没有选择任何内容!</span>",
-							buttons: 			
-							{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
-						});
-						$("#zcheckbox").tips({
-							side:1,
-				            msg:'点这里全选',
-				            bg:'#AE81FF',
-				            time:8
-				        });
-						return;
+							message: "<span class='bigger-110'>保存成功</span>",
+						});		
+						initList();
 					}else{
-						if(msg == '确定要删除选中的数据吗?'){
-							top.jzts();
-							$.ajax({
-								type: "POST",
-								url: '<%=basePath%>changeerpxtbg/deleteAll.do?tm='+new Date().getTime(),
-						    	data: {DATA_IDS:str},
-								dataType:'json',
-								//beforeSend: validateData,
-								cache: false,
-								success: function(data){
-									 $.each(data.list, function(i, list){
-											nextPage(${page.currentPage});
-									 });
-								}
-							});
-						}
+						$(top.hangge());//关闭加载状态
+						bootbox.dialog({
+							message: "<span class='bigger-110'>保存失败</span>",
+						});		
 					}
-				}
+				},
+		    	error: function(response) {
+		    		var msgObj=JSON.parse(response.responseText);
+		    		$(top.hangge());//关闭加载状态
+		    		bootbox.dialog({
+						message: "<span class='bigger-110'>保存失败"+msgObj.message+"</span>",
+					});		
+		    	}
 			});
-		};
+			$("#xtbg-tab li[tag='detail-tab'] a").click();
+		}
 		var data=${varList};
 		//循环加载到页面
 		function getChangrData(){
@@ -445,7 +387,7 @@
 		        +'</span></label></div><div><label class="inline"><span class="list-item-info">状态:&nbsp;</span><span class="list-item-value">'
 		        + item.APPROVAL_STATE
 		        +'</span></label><label class="inline pull-right"><span class="list-item-info">单位:&nbsp;</span><span class="list-item-value">'
-		        + item.UNIT_CODE
+		        + item.UNIT_NAME
 		        +'</span></label></div><div><label class="inline"><span class="list-item-info">变更原因:&nbsp;</span><span class="list-item-value">'
 		        + item.BG_REASON
 		        +'</span></label><label class="inline pull-right"><span class="list-item-info">申请日期:&nbsp;'
@@ -466,7 +408,15 @@
 		            	var html = '';
 		      		     html += setDetail(datas);
 		      			$('#detail-tab').html(html);
-		      		    //console.log(datas.APPROVAL_STATE);
+		      			$("#BILL_CODE").val(datas.BILL_CODE);//申请单号
+		      			$("#BG_NAME").val(datas.BG_NAME);//变更名称
+		    			$("#BG_REASON").val(datas.BG_REASON);//变更原因
+		    			$("#USER_CODE").val(datas.USER_CODE);//申请人
+		    			$("#UNIT_CODE").val(datas.UNIT_CODE);//申请人单位
+		    			$("#DEPT_CODE").val(datas.DEPT_CODE);//申请人部门
+		    			$("#USER_JOB").val(datas.USER_JOB);//申请人岗位
+		    			$("#USER_CONTACT").val(datas.USER_CONTACT);//联系方式
+		    			$("#EFFECTIVE_DATE").val(datas.EFFECTIVE_DATE);//变更预期时间
                       //2为退回状态
 		      		  if(datas.APPROVAL_STATE==2)
 		    			{
@@ -498,13 +448,13 @@
 		        + '</span></div></div><div class="profile-info-row"><div class="profile-info-name">申请单号：</div><div class="profile-info-value"><i class="fa fa-map-marker light-orange bigger-110"></i><span>'
 		        + item.BILL_CODE		       
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请单位： </div><div class="profile-info-value"><span>'
-		        + item.UNIT_CODE
+		        + item.UNIT_NAME
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请部门： </div><div class="profile-info-value"><span>'
 		        +item.DEPT_CODE
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 变更原因 ：</div><div class="profile-info-value"><span>'
 		        +item.BG_REASON
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人部门： </div><div class="profile-info-value"><span>'
-		        +item.USER_DEPT
+		        +item.DEPT_CODE
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人： </div><div class="profile-info-value"><span>'
 		        +item.USER_CODE
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人岗位： </div><div class="profile-info-value"><span>'
@@ -524,12 +474,13 @@
 			 diag.Title ="系统变更申请单打印";
 			 diag.URL = '<%=basePath%>changeerpxtbg/goPrint.do?BILL_CODE='+encodeURI(Id);
 			 diag.Width = 800;
-			 diag.Height = 650;
+			 diag.Height = 550;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮 
 			 diag.show();
 		}
+		
 		//导出excel
 		function toExcel(){
 			window.location.href='<%=basePath%>changeerpxtbg/excel.do';

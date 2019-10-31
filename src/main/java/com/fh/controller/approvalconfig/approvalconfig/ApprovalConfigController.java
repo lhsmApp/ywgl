@@ -321,7 +321,7 @@ public class ApprovalConfigController extends BaseController {
 				p.put("BILL_CODE",billCode);//业务单据编号
 				int level= (int)p.get("APPROVAL_LEVEL");//获取审批级别配置表中审批级别
 				p.put("CURRENT_LEVEL",level);//当前审批级别
-				p.put("APPROVAL_STATE","0");//当前审批级别
+				p.put("APPROVAL_STATE","0");//审批状态
 				//当审批级别等于方案配置的级别数量时，无下一审批级别，即下一审批级别为0
 				if(level==list.size()){
 					p.put("NEXT_LEVEL", 0);

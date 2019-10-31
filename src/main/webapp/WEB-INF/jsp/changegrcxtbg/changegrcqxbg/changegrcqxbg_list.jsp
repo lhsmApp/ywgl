@@ -61,27 +61,27 @@
 													<input id="SelectedBusiDate" class="nav-search-input" autocomplete="off" type="text" name="keywords" value="${pd.keywords }" placeholder="在已有申请中搜索"> 
 													<i class="ace-icon fa fa-search nav-search-icon"></i>
 												</span>																			 
-												<button type="button" class="btn btn-info btn-sm" onclick="tosearch();">
+												<button type="button" class="btn btn-info btn-xs" onclick="tosearch();">
 												    <i class="ace-icon fa fa-search bigger-110"></i>
 												</button>									
 												            <label class="btn btn-sm btn-danger " onclick="add()"> 
-												    	          <i class="ace-icon fa  glyphicon-plus bigger-160"></i>新增
+												    	          <i class="ace-icon fa  glyphicon-plus bigger-110"></i>新增
 												            </label> 
 												            <label class="btn btn-sm btn-primary" onclick="edit(bill_code)"> 
-												            <i class="ace-icon fa fa-pencil-square-o bigger-160"></i>编辑
+												            <i class="ace-icon fa fa-pencil-square-o bigger-110"></i>编辑
 												            </label> 
 												            <label class="btn btn-sm btn-success" onclick="del(bill_code)"> 	
-												            <i class="ace-icon fa fa-trash-o bigger-160"></i>删除
+												            <i class="ace-icon fa fa-trash-o bigger-110"></i>删除
 												            </label>
 												            <label class="btn btn-sm btn-purple" onclick="report(bill_code)"> 
 <!-- 												        <span  class="bigger-110">上报</span>  -->
-												    	    <i class="ace-icon fa fa-share bigger-160"></i>上报
+												    	    <i class="ace-icon fa fa-share bigger-110"></i>上报
 												            </label>
 												            <label class="btn btn-sm btn-warning" onclick="cancleReport(bill_code)">
-													        <i class="ace-icon fa fa-undo bigger-160"></i>撤销上报
+													        <i class="ace-icon fa fa-undo bigger-110"></i>撤销上报
 												            </label>
 												             <label class="btn btn-sm btn-pink"onclick="printf(bill_code)">
-												             <i class="ace-icon fa fa-print bigger-160"></i>
+												             <i class="ace-icon fa fa-print bigger-110"></i>
 															打印
 												            </label>										
 										    </form>
@@ -143,13 +143,8 @@
 										<li class="active">
 											<a data-toggle="tab" href="#detail-tab">详情</a>
 										</li>
-		
 										<li>
-											<a data-toggle="tab" href="#assigh-tab">分配</a>
-										</li>
-		
-										<li>
-											<a data-toggle="tab" href="#comment-tab">关闭</a>
+											<a data-toggle="tab" href="#report-tab">提报</a>
 										</li>
 									</ul>
 								</div>
@@ -214,6 +209,43 @@
 										</div>
 										<div id="detail-tab" class="tab-pane active">
 											
+										</div>
+										<div id="report-tab" class="tab-pane">
+													<form action="" name="problemAssignForm" id="problemAssignForm" method="post">
+												<input type="hidden" name="xtbgID" id="xtbgID" value="${pd.BILL_CODE }"/>
+												<div id="zhongxin" style="padding-top: 13px;">
+													<div style="margin:10px 0px;">
+														<label for="form-field-select-1">系统变更名称</label>
+														<input type="text" name="xtbg_title" id="xtbg_title" class="form-control" placeholder="请输入系统变更名称"/>
+													</div>
+													
+													<div style="margin:10px 0px;">
+														<label for="form-field-select-1">申请人</label>
+														<input type="text" name="xtbg_uesr" id="xtbg_uesr" class="form-control" placeholder="请输入申请人"/>
+													</div>
+												    <div style="margin:10px 0px;">
+														<label for="form-field-select-1">申请人单位</label>
+														<input type="text" name="xtbg_unit" id="xtbg_unit" class="form-control" placeholder="请输入申请人单位"/>
+													</div>
+													   <div style="margin:10px 0px;">
+														<label for="form-field-select-1">申请人部门</label>
+														<input type="text" name="xtbg_depart" id="xtbg_depart" class="form-control" placeholder="请输入申请人部门"/>
+													</div>
+													<div style="margin:10px 0px;">
+														<label for="form-field-select-1">变更内容及原因</label>
+														<input type="text" name="xtbg_reason" id="xtbg_reason" class="form-control" placeholder="请输入变更内容及原因"/>
+													</div>
+													<div style="margin:10px 0px;">
+														<label for="form-field-select-1">联系方式</label>
+														<input type="text" name="xtbg_contact" id="xtbg_contact" class="form-control" placeholder="请输入联系方式"/>
+													</div>
+													<hr />
+													<div>
+														<a class="btn btn-mini btn-primary" onclick="save();">保存</a>
+														<a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">取消</a>
+													</div>		
+												</div>											
+											</form>
 										</div>
 									</div>
 								</div>
@@ -573,7 +605,6 @@
 			            //返回数据的格式
 			        	dataType:'json',		          
 			            success:function(datas){
-			            	console.log(datas.msg);
 			            		bootbox.dialog({
 									message: "<span class='bigger-110'>"+datas.msg+"</span>",
 								});			            					            	

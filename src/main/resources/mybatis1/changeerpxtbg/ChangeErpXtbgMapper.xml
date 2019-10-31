@@ -25,6 +25,7 @@
 		BILL_STATE,	
 		BILL_USER,	
 		BILL_DATE,	
+		EFFECTIVE_DATE,
 		CUS_COLUMN1,	
 		CUS_COLUMN2,	
 		CUS_COLUMN3,	
@@ -50,6 +51,7 @@
 		#{BILL_STATE},	
 		#{BILL_USER},	
 		#{BILL_DATE},	
+		#{EFFECTIVE_DATE},	
 		#{CUS_COLUMN1},	
 		#{CUS_COLUMN2},	
 		#{CUS_COLUMN3},	
@@ -97,6 +99,7 @@
 			BILL_STATE = #{BILL_STATE},
 			BILL_USER = #{BILL_USER},
 			BILL_DATE = #{BILL_DATE},
+			EFFECTIVE_DATE = #{EFFECTIVE_DATE},
 			CUS_COLUMN1 = #{CUS_COLUMN1},
 			CUS_COLUMN2 = #{CUS_COLUMN2},
 			CUS_COLUMN3 = #{CUS_COLUMN3},
@@ -108,7 +111,10 @@
 
 	<!-- 通过ID获取数据 -->
 	<select id="findById" parameterType="pd" resultType="pd">
-			SELECT 
+	SELECT t.*,
+		u.NAME AS UNIT_NAME,
+		v.USERNAME FROM 
+			(SELECT 
 				a.BILL_CODE AS BILL_CODE,	
 				a.UNIT_CODE AS UNIT_CODE,		
 				a.DEPT_CODE AS DEPT_CODE,	
@@ -125,13 +131,16 @@
 				a.BILL_STATE AS BILL_STATE,	
 				a.BILL_USER AS BILL_USER,	
 				a.BILL_DATE AS BILL_DATE,
+				a.EFFECTIVE_DATE AS EFFECTIVE_DATE,
 				b.APPROVAL_STATE AS APPROVAL_STATE
 			FROM
 				tb_change_erp_xtbg a  left join tb_approval_main b		
 			on
-			a.BILL_CODE=b.BILL_CODE
-			where
-			a.BILL_CODE=#{BILL_CODE}
+			a.BILL_CODE=b.BILL_CODE) AS t,  oa_department u, sys_user v 
+		WHERE u.DEPARTMENT_CODE = t.UNIT_CODE
+		AND t.USER_CODE=v.USER_ID
+		AND
+			t.BILL_CODE=#{BILL_CODE}
 	</select>
 	<!-- 根据BILL_CODE获取表单信息以及表单上申请人所在的单位及部门名称-->
 	<select id="findByBillCode" parameterType="pd" resultType="pd">
@@ -144,13 +153,15 @@
 		a.USER_DEPT,	
 		a.USER_JOB,	
 		a.USER_CONTACT,	
+		a.EFFECTIVE_DATE,
 		a.BG_NAME,	
 		a.SYSTEM,	
 		a.BG_TYPE,	
 		a.BG_REASON,	
 		a.BILL_STATE,	
 		a.BILL_USER,	
-		a.BILL_DATE,	
+		a.BILL_DATE,
+		a.EFFECTIVE_DATE,	
 		b.NAME AS UNIT_CODE,
 		c.USERNAME
 		FROM
@@ -162,6 +173,68 @@
 	</select>
 	<!-- 列表 -->
 	<select id="datalistPage" parameterType="page" resultType="pd">
+	SELECT * FROM (SELECT 
+				t.BILL_CODE BILL_CODE,	
+				t.UNIT_CODE UNIT_CODE,		
+				t.DEPT_CODE DEPT_CODE,	
+				t.ENTRY_DATE ENTRY_DATE,	
+				t.SERIAL_NUM SERIAL_NUM,	
+				t.USER_CODE USER_CODE,	
+				t.USER_DEPT USER_DEPT,	
+				t.USER_JOB USER_JOB,	
+				t.USER_CONTACT USER_CONTACT,	
+				t.BG_NAME BG_NAME,	
+				t.SYSTEM SYSTEM,	
+				t.BG_TYPE BG_TYPE,	
+				t.BG_REASON BG_REASON,	
+				t.BILL_STATE BILL_STATE,	
+				t.BILL_USER BILL_USER,	
+				t.BILL_DATE BILL_DATE,
+				t.EFFECTIVE_DATE,
+				t.APPROVAL_STATE APPROVAL_STATE,
+				u.NAME AS UNIT_NAME,
+				v.USERNAME
+				
+			FROM 
+			(SELECT
+				a.BILL_CODE BILL_CODE,	
+				a.UNIT_CODE UNIT_CODE,		
+				a.DEPT_CODE DEPT_CODE,	
+				a.ENTRY_DATE ENTRY_DATE,	
+				a.SERIAL_NUM SERIAL_NUM,	
+				a.USER_CODE USER_CODE,	
+				a.USER_DEPT USER_DEPT,	
+				a.USER_JOB USER_JOB,	
+				a.USER_CONTACT USER_CONTACT,	
+				a.BG_NAME BG_NAME,	
+				a.SYSTEM SYSTEM,
+				a.BG_TYPE BG_TYPE,	
+				a.BG_REASON BG_REASON,	
+				a.BILL_STATE BILL_STATE,	
+				a.BILL_USER BILL_USER,	
+				a.BILL_DATE BILL_DATE,
+				a.EFFECTIVE_DATE EFFECTIVE_DATE,
+				b.APPROVAL_STATE APPROVAL_STATE
+				FROM 
+				tb_change_erp_xtbg a LEFT JOIN tb_approval_main b
+				ON a.BILL_CODE=b.BILL_CODE)  AS t,oa_department u, sys_user v 
+				WHERE u.DEPARTMENT_CODE = t.UNIT_CODE
+		AND t.USER_CODE=v.USER_ID) AS h
+		<where>
+			(BILL_USER=#{pd.BILL_USER}
+			or
+			USER_CODE=#{pd.BILL_USER})
+<!-- 		 AND -->
+<!-- 		(APPROVAL_STATE='2' OR  APPROVAL_STATE='' OR APPROVAL_STATE IS NULL) -->
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+				BG_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				)
+		</if>
+		</where>
+	</select>
+	<select id="datalistPage1" parameterType="page" resultType="pd">
 		SELECT * FROM 
 			(SELECT
 				a.BILL_CODE BILL_CODE,	
@@ -180,6 +253,7 @@
 				a.BILL_STATE BILL_STATE,	
 				a.BILL_USER BILL_USER,	
 				a.BILL_DATE BILL_DATE,
+				a.EFFECTIVE_DATE EFFECTIVE_DATE,
 				b.APPROVAL_STATE APPROVAL_STATE
 				FROM 
 				tb_change_erp_xtbg a LEFT JOIN tb_approval_main b
@@ -194,16 +268,10 @@
 			and
 				(
 				BG_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
-				<!--	根据需求自己加检索条件
-					字段1 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
-					 or 
-					字段2 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
-				-->
 				)
 		</if>
 		</where>
 	</select>
-	
 	<!-- 列表(全部) -->
 	<select id="listAll" parameterType="pd" resultType="pd">
 		select

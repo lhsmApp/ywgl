@@ -35,9 +35,9 @@
 									<div class="nav-search">
 										<span class="input-icon">
 										<input type="text" placeholder="这里输入关键词" class="nav-search-input" id="nav-search-input" autocomplete="off" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词"/>
-<!-- 										<i class="ace-icon fa fa-search nav-search-icon"></i> -->
+										<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
-										<button type="button" class="btn btn-info btn-sm" onclick="tosearch();">
+										<button type="button" class="btn btn-info btn-xs" onclick="tosearch();">
 											<i class="ace-icon fa fa-search bigger-110"></i>
 										</button>
 									</div>
@@ -104,7 +104,9 @@
 								</c:choose>
 							</tbody>
 						</table>
-					
+						<div class="page-header position-relative">
+								<div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div>	
+							</div>
 						</div>
 						<!-- /.col -->
 					</div>

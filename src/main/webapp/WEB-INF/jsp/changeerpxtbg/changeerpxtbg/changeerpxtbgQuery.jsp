@@ -20,35 +20,30 @@
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
 </head>
 <body class="no-skin">
-
-	<!-- /section:basics/navbar.layout -->
 	<div class="main-container" id="main-container">
-		<!-- /section:basics/sidebar -->
 		<div class="main-content">
 			<div class="main-content-inner">
 				<div class="page-content">
-					<div class="row">
-						<div class="col-xs-12">
-							
+					<div class="page-header">
 						<!-- 检索  -->
 						<form action="changeerpxtbg/queryList.do" method="post" name="xtbgForm" id="xtbgForm">
 							<div class="nav-search">
 								<span class="input-icon">
 									<input type="text" placeholder="这里输入关键词" class="nav-search-input" id="nav-search-input" autocomplete="off" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词"/>
-<!-- 										<i class="ace-icon fa fa-search nav-search-icon"></i> -->
+										<i class="ace-icon fa fa-search nav-search-icon"></i>
 								</span>
-								<button type="button" class="btn btn-info btn-sm" onclick="tosearch();">
+								<button type="button" class="btn btn-info btn-xs" onclick="tosearch();">
 										<i class="ace-icon fa fa-search bigger-110"></i>
 								</button>
-									</div>
+							</div>
+						</form>
+					</div>
 						<!-- 检索  -->
-					
+				<div class="row">
+					<div class="col-xs-12">
 						<table id="simple-table" class="table table-striped table-bordered table-hover" style="margin-top:5px;">	
 							<thead>
 								<tr>
-<!-- 									<th class="center" style="width:35px;"> -->
-<!-- 									<label class="pos-rel"><input type="checkbox" class="ace" id="zcheckbox" /><span class="lbl"></span></label> -->
-<!-- 									</th> -->
 									<th class="center" style="width:50px;">序号</th>
 									<th class="center">变更单号</th>
 									<th class="center">变更名称</th>
@@ -108,19 +103,15 @@
 								</c:choose>
 							</tbody>
 						</table>
-
-						</form>
-					
+							<div class="page-header position-relative">
+								<div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div>	
+							</div>				
 						</div>
-						<!-- /.col -->
 					</div>
-					<!-- /.row -->
 				</div>
-				<!-- /.page-content -->
 			</div>
 		</div>
-		<!-- /.main-content -->
-
+	</div>
 		<!-- 返回顶部 -->
 		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
 			<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>

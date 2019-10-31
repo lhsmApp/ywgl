@@ -61,27 +61,27 @@
 													<input id="SelectedBillCode" class="nav-search-input" autocomplete="off" type="text" name="keywords" value="${pd.keywords }" placeholder="在已有申请中搜索"> 
 													<i class="ace-icon fa fa-search nav-search-icon"></i>
 												</span>																			 
-												<button type="button" class="btn btn-info btn-sm" onclick="tosearch();">
+												<button type="button" class="btn btn-info btn-xs" onclick="tosearch();">
 												    <i class="ace-icon fa fa-search bigger-110"></i>
 												</button>									
 												            <label class="btn btn-sm btn-danger " onclick="add()"> 
-												    	          <i class="ace-icon fa  glyphicon-plus bigger-160"></i>新增
+												    	          <i class="ace-icon fa  glyphicon-plus bigger-110"></i>新增
 												            </label> 
 												            <label class="btn btn-sm btn-primary" onclick="edit(bill_code)"> 
-												            <i class="ace-icon fa fa-pencil-square-o bigger-160"></i>编辑
+												            <i class="ace-icon fa fa-pencil-square-o bigger-110"></i>编辑
 												            </label> 
 												            <label class="btn btn-sm btn-success" onclick="del(bill_code)"> 	
-												            <i class="ace-icon fa fa-trash-o bigger-160"></i>删除
+												            <i class="ace-icon fa fa-trash-o bigger-110"></i>删除
 												            </label>
 												            <label class="btn btn-sm btn-purple" onclick="report(bill_code)"> 
 <!-- 												        <span  class="bigger-110">上报</span>  -->
-												    	    <i class="ace-icon fa fa-share bigger-160"></i>上报
+												    	    <i class="ace-icon fa fa-share bigger-110"></i>上报
 												            </label>
 												            <label class="btn btn-sm btn-warning" onclick="cancleReport(bill_code)">
-													        <i class="ace-icon fa fa-undo bigger-160"></i>撤销上报
+													        <i class="ace-icon fa fa-undo bigger-110"></i>撤销上报
 												            </label>
 												             <label class="btn btn-sm btn-pink" onclick="printf(bill_code)">
-												             <i class="ace-icon fa fa-print bigger-160"></i>
+												             <i class="ace-icon fa fa-print bigger-110"></i>
 															打印
 												            </label>										
 										    </form>
@@ -145,13 +145,6 @@
 										</li>
 										<li>
 											<a data-toggle="tab" href="#report-tab">提报</a>
-										</li>
-										<li>
-											<a data-toggle="tab" href="#assigh-tab">分配</a>
-										</li>
-		
-										<li>
-											<a data-toggle="tab" href="#comment-tab">关闭</a>
 										</li>
 									</ul>
 								</div>
@@ -396,7 +389,6 @@
 		 */
 		function addProAttachmentByType(type){
 			 var proCode=0;
-			 console.log(type);
 			 top.jzts();
 			 var diag = new top.Dialog();
 			 diag.Drag=true;
@@ -409,7 +401,6 @@
 		     diag.ShowMinButton = true;		//最小化按钮
 			 diag.CancelEvent = function(){ //关闭事件
 				if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
-					console.log('gggg');
 					addItemAttachment();
 				}
 				diag.close();
@@ -422,7 +413,6 @@
 		function addItemAttachment(item,index){
 			var href='<%=basePath%>/attachment/download.do?ATTACHMENT_ID='+item.ATTACHMENT_ID;
 			var ext=item.ATTACHMENT_PATH.substring(19,item.ATTACHMENT_PATH.length);
-			console.log(ext);
 			var htmlLog='<tr>'
 				+'<td class="center" style="width: 30px;">'+index+'</td>'
 				+'<td class="center">'+item.ATTACHMENT_NAME+ext+'</td>'
@@ -445,7 +435,6 @@
 		}
 		//删除
 		function del(Id){
-			console.log(Id);
 			bootbox.confirm("确定要删除吗?", function(result) {
 				if(result) {
 					top.jzts();

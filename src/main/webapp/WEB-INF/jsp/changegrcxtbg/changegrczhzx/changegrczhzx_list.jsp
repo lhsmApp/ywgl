@@ -39,27 +39,27 @@
 													<input id="SelectedBillCode" class="nav-search-input" autocomplete="off" type="text" name="SelectedBillCode" value="${pd.keywords }" placeholder="请输入变更申请名称"> 
 													<i class="ace-icon fa fa-search nav-search-icon"></i>
 												</span>																			 
-												<button type="button" class="btn btn-info btn-sm" onclick="tosearch();">
+												<button type="button" class="btn btn-info btn-xs" onclick="tosearch();">
 												    <i class="ace-icon fa fa-search bigger-110"></i>
 												</button>									
 												            <label class="btn btn-sm btn-danger " onclick="add()"> 
-												    	          <i class="ace-icon fa  glyphicon-plus bigger-160"></i>新增
+												    	          <i class="ace-icon fa  glyphicon-plus bigger-110"></i>新增
 												            </label> 
 												            <label class="btn btn-sm btn-primary" onclick="edit(bill_code)"> 
-												            <i class="ace-icon fa fa-pencil-square-o bigger-160"></i>编辑
+												            <i class="ace-icon fa fa-pencil-square-o bigger-110"></i>编辑
 												            </label> 
 												            <label class="btn btn-sm btn-success" onclick="del(bill_code)"> 	
-												            <i class="ace-icon fa fa-trash-o bigger-160"></i>删除
+												            <i class="ace-icon fa fa-trash-o bigger-110"></i>删除
 												            </label>
 												            <label class="btn btn-sm btn-purple" onclick="report(bill_code)"> 
 <!-- 												        <span  class="bigger-110">上报</span>  -->
-												    	    <i class="ace-icon fa fa-share bigger-160"></i>上报
+												    	    <i class="ace-icon fa fa-share bigger-110"></i>上报
 												            </label>
 												            <label class="btn btn-sm btn-warning" onclick="cancleReport(bill_code)">
-													        <i class="ace-icon fa fa-undo bigger-160"></i>撤销上报
+													        <i class="ace-icon fa fa-undo bigger-110"></i>撤销上报
 												            </label>
 												             <label class="btn btn-sm btn-pink" onclick="printf(bill_code)">
-												             <i class="ace-icon fa fa-print bigger-160"></i>
+												             <i class="ace-icon fa fa-print bigger-110"></i>
 															打印
 												            </label>										
 										    </form>
@@ -123,13 +123,6 @@
 										</li>
 										<li>
 											<a data-toggle="tab" href="#report-tab">提报</a>
-										</li>
-										<li>
-											<a data-toggle="tab" href="#assigh-tab">分配</a>
-										</li>
-		
-										<li>
-											<a data-toggle="tab" href="#comment-tab">关闭</a>
 										</li>
 									</ul>
 								</div>
@@ -462,7 +455,6 @@
 		            	var html = '';
 		      		     html += setDetail(datas);
 		      			$('#detail-tab').html(html);
-		      		    console.log(datas.APPROVAL_STATE);
                       //2为退回状态
 		      		  if(datas.APPROVAL_STATE==2)
 		    			{

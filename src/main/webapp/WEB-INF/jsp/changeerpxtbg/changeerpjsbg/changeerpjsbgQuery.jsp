@@ -21,27 +21,26 @@
 </head>
 <body class="no-skin">
 
-	<!-- /section:basics/navbar.layout -->
 	<div class="main-container" id="main-container">
-		<!-- /section:basics/sidebar -->
 		<div class="main-content">
 			<div class="main-content-inner">
 				<div class="page-content">
-					<div class="row">
-						<div class="col-xs-12">
-							
+					<div class="page-header">
 						<!-- 检索  -->
 						<form class="form-inline" action="changeerpjsbg/queryList.do" id="jsbgForm" name="jsbgForm">
 									<div class="nav-search">
 										<span class="input-icon">
 										<input type="text" placeholder="这里输入关键词" class="nav-search-input" id="nav-search-input" autocomplete="off" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词"/>
-<!-- 										<i class="ace-icon fa fa-search nav-search-icon"></i> -->
+										<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
-										<button type="button" class="btn btn-info btn-sm" onclick="tosearch();">
+										<button type="button" class="btn btn-info btn-xs" onclick="tosearch();">
 											<i class="ace-icon fa fa-search bigger-110"></i>
 										</button>
 									</div>
 						</form>
+					</div>
+				<div class="row">
+					<div class="col-xs-12">
 						<table id="simple-table" class="table table-striped table-bordered table-hover" style="margin-top:5px;">	
 							<thead>
 								<tr>
@@ -104,15 +103,15 @@
 								</c:choose>
 							</tbody>
 						</table>
-					
+						<div class="page-header position-relative">
+								<div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div>	
 						</div>
-						<!-- /.col -->
 					</div>
-					<!-- /.row -->
 				</div>
-				<!-- /.page-content -->
 			</div>
 		</div>
+	</div>
+</div>
 		<!-- /.main-content -->
 
 		<!-- 返回顶部 -->

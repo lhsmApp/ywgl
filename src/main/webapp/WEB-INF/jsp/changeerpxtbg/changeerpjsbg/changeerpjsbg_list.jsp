@@ -39,27 +39,27 @@
 													<input id="SelectedBillCode" class="nav-search-input" autocomplete="off" type="text" name="SelectedBillCode" value="${pd.keywords }" placeholder="请输入变更申请名称"> 
 													<i class="ace-icon fa fa-search nav-search-icon"></i>
 												</span>																			 
-												<button type="button" class="btn btn-info btn-sm" onclick="tosearch();">
+												<button type="button" class="btn btn-info btn-xs" onclick="tosearch();">
 												    <i class="ace-icon fa fa-search bigger-110"></i>
 												</button>									
 												            <label class="btn btn-sm btn-danger " onclick="add()"> 
-												    	          <i class="ace-icon fa  glyphicon-plus bigger-160"></i>新增
+												    	          <i class="ace-icon fa  glyphicon-plus bigger-110"></i>新增
 												            </label> 
 												            <label class="btn btn-sm btn-primary" onclick="edit(bill_code)"> 
-												            <i class="ace-icon fa fa-pencil-square-o bigger-160"></i>编辑
+												            <i class="ace-icon fa fa-pencil-square-o bigger-110"></i>编辑
 												            </label> 
 												            <label class="btn btn-sm btn-success" onclick="del(bill_code)"> 	
-												            <i class="ace-icon fa fa-trash-o bigger-160"></i>删除
+												            <i class="ace-icon fa fa-trash-o bigger-110"></i>删除
 												            </label>
 												            <label class="btn btn-sm btn-purple" onclick="report(bill_code)"> 
 <!-- 												        <span  class="bigger-110">上报</span>  -->
-												    	    <i class="ace-icon fa fa-share bigger-160"></i>上报
+												    	    <i class="ace-icon fa fa-share bigger-110"></i>上报
 												            </label>
 												            <label class="btn btn-sm btn-warning" onclick="cancleXtbgReport(bill_code)">
-													        <i class="ace-icon fa fa-undo bigger-160"></i>撤销上报
+													        <i class="ace-icon fa fa-undo bigger-110"></i>撤销上报
 												            </label>
 												             <label class="btn btn-sm btn-pink" onclick="printf(bill_code)">
-												             <i class="ace-icon fa fa-print bigger-160"></i>
+												             <i class="ace-icon fa fa-print bigger-110"></i>
 															打印
 												            </label>										
 										    </form>
@@ -104,17 +104,12 @@
 								</h4>
 		
 								<div class="widget-toolbar no-border">
-									<ul class="nav nav-tabs" id="recent-tab">
-										<li class="active">
+									<ul class="nav nav-tabs" id="jsbg-tab">
+										<li class="active" tag="detail-tab">
 											<a data-toggle="tab" href="#detail-tab">详情</a>
-										</li>
-		
-										<li>
-											<a data-toggle="tab" href="#assigh-tab">分配</a>
-										</li>
-		
-										<li>
-											<a data-toggle="tab" href="#comment-tab">关闭</a>
+										</li>		
+										<li  tag="report-tab">
+											<a data-toggle="tab" href="#report-tab">提报</a>
 										</li>
 									</ul>
 								</div>
@@ -122,63 +117,72 @@
 		
 							<div class="widget-body">
 								<div class="widget-main padding-4">
-									<div class="tab-content padding-8">
-										<div id="assigh-tab" class="tab-pane">
-											<!-- <h4 class="smaller lighter green">
-												<i class="ace-icon fa fa-list"></i>
-												Sortable Lists
-											</h4> -->
-											<form action="" name="problemAssignForm" id="problemAssignForm" method="post">
-												<input type="hidden" name="problemID" id="problemID" value="${pd.BILL_CODE }"/>
+									<div class="tab-content padding-8">							
+										<div id="detail-tab" class="tab-pane active">
+											
+										</div>
+										<div id="report-tab" class="tab-pane">
+												<div class="row">
+											<div class="col-xs-5">
+												<input type="hidden" name="BILL_CODE" id="BILL_CODE" />
 												<div id="zhongxin" style="padding-top: 13px;">
 													<div style="margin:10px 0px;">
-														<label for="form-field-select-1">受理人</label>
-														<select class="form-control" id="form-field-select-1">
-															<option value=""></option>
-															<option value="AL">Alabama</option>
-															<option value="AK">Alaska</option>
-														</select>
-														<%-- <select class="chosen-select form-control" name="ROLE_ID" id="role_id" data-placeholder="请选择角色" style="vertical-align:top;" style="width:98%;" >
-															<option value=""></option>
-															<c:forEach items="${roleList}" var="role">
-																<option value="${role.ROLE_ID }" <c:if test="${role.ROLE_ID == pd.ROLE_ID }">selected</c:if>>${role.ROLE_NAME }</option>
-															</c:forEach>
-														</select> --%>
+														<label for="form-field-jsbg-report-bgname">角色变更名称</label>
+														<input type="text" name="BG_NAME" id="BG_NAME" class="form-control" placeholder="请输入角色变更名称"/>
 													</div>
-													
+														<div style="margin:10px 0px;">
+														<label for="form-field-jsbg-report-reason">变更原因</label>
+														<input type="text" name="BG_REASON" id="BG_REASON" class="form-control" placeholder="请输入变更内容及原因"/>
+													</div>
+													    <div style="margin:10px 0px;">
+														<label for="form-field-jsbg-report-depart">单位</label>
+														<input type="text" name="UNIT_CODE" id="UNIT_CODE" class="form-control" placeholder="请输入申请人单位"/>
+													</div>
+													   <div style="margin:10px 0px;">
+														<label for="form-field-jsbg-report-dept">部门</label>
+														<input type="text" name="DEPT_CODE" id="DEPT_CODE" class="form-control" placeholder="请输入申请人部门"/>
+													</div>
 													<div style="margin:10px 0px;">
-														<label for="form-field-select-2">提问系统</label>
-														<select class="form-control" id="form-field-select-2">
-															<option value=""></option>
-															<option value="AL">ERP系统</option>
-															<option value="AK">财务系统</option>
-														</select>
+														<label for="form-field-jsbg-report-user">申请人</label>
+															<select class="form-control" name="USER_CODE" id="USER_CODE">
+																	<option value=""></option>
+																	<c:forEach items="${userList}" var="user">
+																	<option value="${user.USER_ID}">${user.USERNAME}</option>
+																	</c:forEach>
+																</select>
 													</div>
-													
+												    <div style="margin:10px 0px;">
+														<label for="form-field-jsbg-report-depart">申请人部门</label>
+														<input type="text" name="USER_DEPT" id="USER_DEPT" class="form-control" placeholder="请输入申请人单位"/>
+													</div>
+										   			<div style="margin:10px 0px;">
+														<label for="form-field-jsbg-report-job">申请人岗位</label>
+														<input type="text" name="USER_JOB" id="USER_JOB" class="form-control" placeholder="请输入申请人部门"/>
+													</div>
 													<div style="margin:10px 0px;">
-														<label for="form-field-select-3">优先级</label>
-														<select class="form-control" id="form-field-select-3">
-															<option value=""></option>
-															<option value="AL">紧急</option>
-															<option value="AK">一般</option>
-														</select>
+														<label for="form-field-jsbg-report-addrole">新增角色</label>
+														<input type="text" name="ADD_ROLE" id="ADD_ROLE" class="form-control" placeholder="请输入新增角色"/>
 													</div>
-													<%-- <input type="number" name="PHONE" id="PHONE"  value="${pd.PHONE }"  maxlength="32" placeholder="这里输入手机号" title="手机号" style="width:98%;"/> --%>
-													<div style="margin:20px 0px;">
-														<span>分配人：</span><span>张三</span>
-														<span style="margin-left:30px;">分配时间：</span><span>2019-05-23</span>
+													<div style="margin:10px 0px;">
+														<label for="form-field-jsbg-report-delrole">删除角色</label>
+														<input type="text" name="DEL_ROLE" id="DEL_ROLE" class="form-control" placeholder="请输入新增角色"/>
+													</div>
+													<div style="margin:10px 0px;">
+														<label for="form-field-jsbg-report-contact">联系方式</label>
+														<input type="text" name="USER_CONTACT" id="USER_CONTACT" class="form-control" placeholder="请输入联系方式"/>
+													</div>
+													<div style="margin:10px 0px;">
+														<label for="form-field-select-1">变更预期时间</label>
+														<input type="text" name="EFFECTIVE_DATE" id="EFFECTIVE_DATE" class="form-control" placeholder="请输入联系方式"/>
 													</div>
 													<hr />
 													<div>
 														<a class="btn btn-mini btn-primary" onclick="save();">保存</a>
 														<a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">取消</a>
 													</div>		
-												</div>
-												<div id="zhongxin2" class="center" style="display:none"><br/><br/><br/><br/><img src="static/images/jiazai.gif" /><br/><h4 class="lighter block green"></h4></div>
-											</form>
+												</div>											
 										</div>
-										<div id="detail-tab" class="tab-pane active">
-											
+								     </div>
 										</div>
 									</div>
 								</div>
@@ -273,28 +277,21 @@
 		
 		//新增
 		function add(){
-			 top.jzts();
-			 var diag = new top.Dialog();
-			 diag.Drag=true;
-			 diag.Title ="新增";
-			 diag.URL = '<%=basePath%>changeerpjsbg/goAdd.do';
-			 diag.Width = 750;
-			 diag.Height = 455;
-			 diag.Modal = true;				//有无遮罩窗口
-			 diag. ShowMaxButton = true;	//最大化按钮
-		     diag.ShowMinButton = true;		//最小化按钮
-			 diag.CancelEvent = function(){ //关闭事件
-				 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
-					 if('${page.currentPage}' == '0'){
-						 top.jzts();
-						 setTimeout("self.location=self.location",100);
-					 }else{
-						 //nextPage(${page.currentPage});
-					 }
-				}
-				diag.close();
-			 };
-			 diag.show();
+			//点击新增按钮，弹到提报tab页
+			$("#jsbg-tab li[tag='report-tab'] a").click();
+			//新增清空文本框
+			$("#BG_NAME").val("");//变更名称
+			$("#BG_REASON").val("");//变更原因
+			$("#UNIT_CODE").val("");//单位
+			$("#DEPT_CODE").val("");//部门
+			$("#USER_CODE").val("");//申请人
+			$("#USER_DEPT").val("");//申请人部门
+			$("#USER_JOB").val("");//申请人岗位
+			$("#USER_CONTACT").val("");//联系方式
+			$("#EFFECTIVE_DATE").val("");//变更预期时间
+			$("#BILL_CODE").val("");//申请单号
+			$("#ADD_ROLE").val("");//新增角色
+			$("#DEL_ROLE").val("");//删除角色
 		}
 		
 		//删除
@@ -304,7 +301,6 @@
 					top.jzts();
 					var url = "<%=basePath%>changeerpjsbg/delete.do?BILL_CODE="+encodeURI(Id);
 					$.get(url,function(data){
-						console.log(data);
 						//nextPage(${page.currentPage});
 						initList();
 					});
@@ -314,25 +310,55 @@
 		
 		//修改
 		function edit(Id){
-			 top.jzts();
-			 var diag = new top.Dialog();
-			 diag.Drag=true;
-			 diag.Title ="编辑";
-			 diag.URL = '<%=basePath%>changeerpjsbg/goEdit.do?BILL_CODE='+encodeURI(Id);
-			 diag.Width = 750;
-			 diag.Height = 455;
-			 diag.Modal = true;				//有无遮罩窗口
-			 diag. ShowMaxButton = true;	//最大化按钮
-		     diag.ShowMinButton = true;		//最小化按钮 
-			 diag.CancelEvent = function(){ //关闭事件
-				 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
-					 //nextPage(${page.currentPage});
-				}
-				diag.close();
-			 };
-			 diag.show();
+			//点击新增按钮，弹到提报tab页
+			$("#jsbg-tab li[tag='report-tab'] a").click();
 		}
-		
+		//保存
+		function save(){
+			top.jzts();
+			//$("#xtbgForm").submit();
+			var bgName=$("#BG_NAME").val();//变更名称
+			var bgReason=$("#BG_REASON").val();//变更原因
+			var unitCode=$("#UNIT_CODE").val();//单位
+			var deptCode=$("#DEPT_CODE").val();//部门
+			var uesrCode=$("#USER_CODE").val();//申请人
+			var uesrDept=$("#USER_DEPT").val();//申请人部门
+			var uesrJob=$("#USER_JOB").val();//申请人岗位
+			var uesrContact=$("#USER_CONTACT").val();//联系方式
+			var bgyqDate=$("#EFFECTIVE_DATE").val();//变更预期时间
+			var billCode=$("#BILL_CODE").val();//申请单号
+			var addRole=$("#ADD_ROLE").val();//新增角色
+			var delRole=$("#DEL_ROLE").val();//删除角色
+			$.ajax({
+				type: "POST",
+				url: '<%=basePath%>changeerpjsbg/save.do',
+				data:{BG_NAME:bgName,BG_REASON:bgReason,UNIT_CODE:unitCode,DEPT_CODE:deptCode,USER_CODE:uesrCode,USER_DEPT:uesrDept,USER_JOB:uesrJob,USER_CONTACT:uesrContact,EFFECTIVE_DATE:bgyqDate,BILL_CODE:billCode,ADD_ROLE:addRole,DEL_ROLE:delRole},
+		    	dataType:'json',
+				cache: false,
+				success: function(response){
+					if(response.code==0){
+						$(top.hangge());//关闭加载状态
+						bootbox.dialog({
+							message: "<span class='bigger-110'>保存成功</span>",
+						});		
+						initList();
+					}else{
+						$(top.hangge());//关闭加载状态
+						bootbox.dialog({
+							message: "<span class='bigger-110'>保存失败</span>",
+						});		
+					}
+				},
+		    	error: function(response) {
+		    		var msgObj=JSON.parse(response.responseText);
+		    		$(top.hangge());//关闭加载状态
+		    		bootbox.dialog({
+						message: "<span class='bigger-110'>保存失败"+msgObj.message+"</span>",
+					});		
+		    	}
+			});
+			$("#jsbg-tab li[tag='detail-tab'] a").click();
+		}
 		//批量操作
 		function makeAll(msg){
 			bootbox.confirm(msg, function(result) {
@@ -368,7 +394,7 @@
 								cache: false,
 								success: function(data){
 									 $.each(data.list, function(i, list){
-											nextPage(${page.currentPage});
+// 											nextPage(${page.currentPage});
 									 });
 								}
 							});
@@ -378,7 +404,6 @@
 			});
 		};
 		var data=${varList};
-		console.log(data);
 		//循环加载到页面
 		function getChangrData(){
 		    var html = '';
@@ -417,10 +442,21 @@
 		            success:function(datas){
 		            	//全局变量存放当前点击的变更申请单号
 		            	bill_code=datas.BILL_CODE;
+		            	$('#detail-tab').html(html);
+		      			$("#BILL_CODE").val(datas.BILL_CODE);//申请单号
+		      			$("#BG_NAME").val(datas.BG_NAME);//变更名称
+		    			$("#BG_REASON").val(datas.BG_REASON);//变更原因
+		    			$("#USER_CODE").val(datas.USER_CODE);//申请人
+		    			$("#UNIT_CODE").val(datas.UNIT_CODE);//申请人单位
+		    			$("#DEPT_CODE").val(datas.DEPT_CODE);//申请人部门
+		    			$("#USER_JOB").val(datas.USER_JOB);//申请人岗位
+		    			$("#USER_CONTACT").val(datas.USER_CONTACT);//联系方式
+		    			$("#EFFECTIVE_DATE").val(datas.EFFECTIVE_DATE);//变更预期时间
+		    			$("#ADD_ROLE").val(datas.ADD_ROLE);//新增角色
+		    			$("#DEL_ROLE").val(datas.DEL_ROLE);//删除角色
 		            	var html = '';
 		      		     html += setDetail(datas);
 		      			$('#detail-tab').html(html);
-		      		    //console.log(datas.APPROVAL_STATE);
                       //2为退回状态
 		      		  if(datas.APPROVAL_STATE==2)
 		    			{

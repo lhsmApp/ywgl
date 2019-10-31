@@ -219,7 +219,8 @@
 		<!-- 根据BILL_CODE获取表单信息以及表单上申请人所在的单位及部门名称-->
 	<select id="findByBillCode" parameterType="pd" resultType="pd">
 		SELECT 
-		a.BILL_CODE,		
+		a.BILL_CODE,
+		a.UNIT_CODE,		
 		a.DEPT_CODE,	
 		a.ENTRY_DATE,	
 		a.SERIAL_NUM,	
@@ -237,7 +238,7 @@
 		a.ADD_ROLE,	
 		a.DEL_ROLE,	
 		a.EFFECTIVE_DATE,
-		b.NAME AS UNIT_CODE,
+		b.NAME AS UNIT_NAME,
 		c.USERNAME
 		FROM
 		  TB_CHANGE_ERP_JSBG a,

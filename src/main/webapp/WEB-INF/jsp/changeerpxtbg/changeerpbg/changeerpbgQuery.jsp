@@ -20,62 +20,66 @@
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
 </head>
 <body class="no-skin">
-
 	<div class="main-container" id="main-container">
 		<div class="main-content">
 			<div class="main-content-inner">
 				<div class="page-content">
 					<div class="page-header">
 						<!-- 检索  -->
-						<form class="form-inline" action="changegrczhxz/queryList.do" id="grczhxzForm" name="grczhxzForm">
-									<div class="nav-search">
-										<span class="input-icon">
-										<input type="text" placeholder="这里输入关键词" class="nav-search-input" id="nav-search-input" autocomplete="off" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词"/>
+						<form action="changeerpxtbg/queryList.do" method="post" name="xtbgForm" id="xtbgForm">
+							<div class="nav-search">
+								<span class="input-icon">
+									<input type="text" placeholder="这里输入关键词" class="nav-search-input" id="nav-search-input" autocomplete="off" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词"/>
 										<i class="ace-icon fa fa-search nav-search-icon"></i>
-										</span>
-										<button type="button" class="btn btn-info btn-xs" onclick="tosearch();">
-											<i class="ace-icon fa fa-search bigger-110"></i>
-										</button>
-									</div>
+								</span>
+								<button type="button" class="btn btn-info btn-xs" onclick="tosearch();">
+										<i class="ace-icon fa fa-search bigger-110"></i>
+								</button>					
+									<div data-toggle="buttons" class="btn-group no-margin">
+									<label class="btn btn-sm btn-primary active"> <span
+										class="bigger-110">系统变更</span> <input type="radio" value="1" />
+									</label>
+									<label class="btn btn-sm btn-primary"> <span
+										class="bigger-110">角色变更</span> <input type="radio" value="2" />
+									</label>									
+								</div>
+							</div>
 						</form>
 					</div>
-					<div class="row">
-						<div class="col-xs-12">
-							<table id="simple-table" class="table table-striped table-bordered table-hover" style="margin-top:5px;">	
-								<thead>
-									<tr>
-										<th class="center" style="width:50px;">序号</th>
-										<th class="center">申请单号</th>
-										<th class="center">申请单位</th>
-										<th class="center">申请部门</th>
-										<th class="center">帐号</th>
-										<th class="center">帐号有效期</th>
-										<th class="center">帐号角色</th>
-										<th class="center">新增帐号原因</th>
-										<th class="center">申请人</th>
-										<th class="center">申请人部门</th>
-										<th class="center">申请人岗位</th>
-										<th class="center">联系方式</th>
-										<th class="center">申请日期</th>	
-										<th class="center">处理状态</th>	
-										<th class="center">单据状态</th>								
-										<th class="center">操作</th>
-									</tr>
-								</thead>													
-								<tbody>							
-								<!-- 开始循环 -->	
+						<!-- 检索  -->
+				<div class="row">
+					<div class="col-xs-12">
+						<table id="simple-table" class="table table-striped table-bordered table-hover" style="margin-top:5px;">	
+							<thead>
+								<tr>
+									<th class="center" style="width:50px;">序号</th>
+									<th class="center">变更单号</th>
+									<th class="center">变更名称</th>
+									<th class="center">申请单位</th>
+									<th class="center">申请部门</th>
+									<th class="center">变更原因</th>
+									<th class="center">申请人</th>
+									<th class="center">申请人部门</th>
+									<th class="center">申请人岗位</th>
+									<th class="center">联系方式</th>
+									<th class="center">申请日期</th>	
+									<th class="center">处理状态</th>
+									<th class="center">单据状态</th>								
+									<th class="center">操作</th>
+								</tr>
+							</thead>													
+							<tbody>							
+							<!-- 开始循环 -->	
 								<c:choose>
 									<c:when test="${not empty varList}">
 										<c:forEach items="${varList}" var="var" varStatus="vs">	
 											<tr>
 											<td class='center' style="width: 30px;">${vs.index+1}</td>
 											<td class='center'>${var.BILL_CODE}</td>
+											<td class='center'>${var.BG_NAME}</td>
 											<td class='center'>${var.UNIT_CODE}</td>
 											<td class='center'>${var.DEPT_CODE}</td>
-											<td class='center'>${var.ACCOUNT_NEW}</td>
-											<td class='center'>${var.ACCOUNT_VALIDITY}</td>
-											<td class='center'>${var.ACCOUNT_ROLES}</td>
-											<td class='center'>${var.ACCOUNT_REASON}</td>					
+											<td class='center'>${var.BG_REASON}</td>					
 											<td class='center'>${var.USER_CODE}</td>
 											<td class='center'>${var.USER_DEPT}</td>
 											<td class='center'>${var.USER_JOB}</td>
@@ -107,8 +111,9 @@
 								</c:choose>
 							</tbody>
 						</table>
-						<div class="page-header position-relative">
+							<div class="page-header position-relative">
 								<div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div>	
+							</div>				
 						</div>
 					</div>
 				</div>
@@ -141,7 +146,7 @@
 		//检索
 		function tosearch(){
 			top.jzts();
-			$("#grczhxzForm").submit();
+			$("#xtbgForm").submit();
 		}
 		$(function() {
 		
@@ -188,15 +193,14 @@
 				});
 			});
 		});
-		
-
-		//显示详情
+				
+		//修改
 		function showDetail(Id){
 			 top.jzts();
 			 var diag = new top.Dialog();
 			 diag.Drag=true;
-			 diag.Title ="GRC帐号新增单"+Id+"详情";
-			 diag.URL = '<%=basePath%>changegrczhxz/detailView.do?BILL_CODE='+Id;
+			 diag.Title ="系统变更单"+Id+"详情";
+			 diag.URL = '<%=basePath%>changeerpxtbg/detailView.do?BILL_CODE='+Id;
 			 diag.Width = 800;
 			 diag.Height = 405;			
 			 diag.CancelEvent = function(){ //关闭事件
@@ -204,7 +208,80 @@
 			 };
 			 diag.show();
 		}
-
+		function showXtbg(){
+			$("#tasks li").remove(); 
+			top.jzts();
+			var keywords = $("#SelectedBillCode").val();
+			$.ajax({
+					type: "POST",
+					url: '<%=basePath%>changeerpxtbg/getPageList.do',
+			    	data: {keywords:keywords},
+					dataType:'json',
+					cache: false,
+					success: function(data){
+						if(data.length>0){
+							$.each(data, function(i, item){
+							    var html = '';
+							        html += setDiv(item);
+								$("#tasks").append(html);
+						 	});
+						}
+						else{
+							addEmpty();
+						}
+						top.hangge();
+					}
+			});
+		}
+		function showJsbg(){
+			
+		}
+		//批量操作
+		function makeAll(msg){
+			bootbox.confirm(msg, function(result) {
+				if(result) {
+					var str = '';
+					for(var i=0;i < document.getElementsByName('ids').length;i++){
+					  if(document.getElementsByName('ids')[i].checked){
+					  	if(str=='') str += document.getElementsByName('ids')[i].value;
+					  	else str += ',' + document.getElementsByName('ids')[i].value;
+					  }
+					}
+					if(str==''){
+						bootbox.dialog({
+							message: "<span class='bigger-110'>您没有选择任何内容!</span>",
+							buttons: 			
+							{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+						});
+						$("#zcheckbox").tips({
+							side:1,
+				            msg:'点这里全选',
+				            bg:'#AE81FF',
+				            time:8
+				        });
+						return;
+					}else{
+						if(msg == '确定要删除选中的数据吗?'){
+							top.jzts();
+							$.ajax({
+								type: "POST",
+								url: '<%=basePath%>changeerpxtbg/deleteAll.do?tm='+new Date().getTime(),
+						    	data: {DATA_IDS:str},
+								dataType:'json',
+								//beforeSend: validateData,
+								cache: false,
+								success: function(data){
+									 $.each(data.list, function(i, list){
+// 											nextPage(${page.currentPage});
+									 });
+								}
+							});
+						}
+					}
+				}
+			});
+		};
+		
 		//导出excel
 		function toExcel(){
 			window.location.href='<%=basePath%>changeerpxtbg/excel.do';
