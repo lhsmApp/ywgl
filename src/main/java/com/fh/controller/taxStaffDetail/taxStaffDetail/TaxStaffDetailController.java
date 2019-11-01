@@ -47,6 +47,7 @@ import com.fh.util.excel.TransferSbcDbc;
 
 import net.sf.json.JSONArray;
 
+import com.fh.service.assess.KPIManager;
 import com.fh.service.fhoa.department.impl.DepartmentService;
 import com.fh.service.sysConfig.sysconfig.SysConfigManager;
 import com.fh.service.system.dictionaries.impl.DictionariesService;
@@ -80,6 +81,9 @@ public class TaxStaffDetailController extends BaseController {
 	private DepartmentService departmentService;
 	@Resource(name="userService")
 	private UserService userService;
+	
+	@Resource(name="kpiService")
+	private KPIManager kpiService;
 	
 	//表名
 	String TableName = "TB_TAX_STAFF_DETAIL";
@@ -134,8 +138,10 @@ public class TaxStaffDetailController extends BaseController {
 		String DepartName = user.getDEPARTMENT_NAME();
 		mv.addObject("DepartName", DepartName);
 		//CUST_COL7 FMISACC 帐套字典
-		mv.addObject("FMISACC", DictsUtil.getDictsByParentCode(dictionariesService, "FMISACC"));
-
+		//mv.addObject("FMISACC", DictsUtil.getDictsByParentCode(dictionariesService, "FMISACC"));
+		List<PageData> listKpi=kpiService.listAll(null);
+		mv.addObject("listKPI", listKpi);
+		
 		// 员工组 必须执行，用来设置汇总和传输上报类型
  		String SelectedTableNo = Corresponding.getWhileValue(getPd.getString("SelectedTableNo"), DefaultWhile);
 		 		

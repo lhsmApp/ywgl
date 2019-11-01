@@ -1,62 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="AttachmentMapper">
+<mapper namespace="KPIMapper">
 	
 	<!--表名 -->
 	<sql id="tableName">
-		TB_ATTACHMENT
+		tb_assess_kpi
 	</sql>
 	
 	<!-- 字段 -->
 	<sql id="Field">
-		ATTACHMENT_ID,	
-		BUSINESS_TYPE,	
-		BILL_CODE,	
-		ATTACHMENT_NAME,
-		ATTACHMENT_MEMO,	
-		ATTACHMENT_TYPE,	
-		ATTACHMENT_SIZE,	
-		ATTACHMENT_PATH,	
-		CREATE_USER,	
-		CREATE_DATE,	
-		STATE,	
+		KPI_ID,	
+		KPI_TYPE,	
+		KPI_CODE,	
+		KPI_EFFECT,	
+		ASSESS_OBJECT,	
+		KPI_NAME,	
+		JUDGEMENT_STANDARD,	
+		FORMULA,	
 		CUST1,	
-		CUST2,	
-		CUST3
+		CUST2
 	</sql>
 	
 	<!-- 字段 -->
-	<sql id="insertField">	
-		BUSINESS_TYPE,	
-		BILL_CODE,	
-		ATTACHMENT_NAME,
-		ATTACHMENT_MEMO,	
-		ATTACHMENT_TYPE,	
-		ATTACHMENT_SIZE,	
-		ATTACHMENT_PATH,	
-		CREATE_USER,	
-		CREATE_DATE,	
-		STATE,	
+	<sql id="InsertField">
+		KPI_TYPE,	
+		KPI_CODE,	
+		KPI_EFFECT,	
+		ASSESS_OBJECT,	
+		KPI_NAME,	
+		JUDGEMENT_STANDARD,	
+		FORMULA,	
 		CUST1,	
-		CUST2,	
-		CUST3
+		CUST2
 	</sql>
 	
 	<!-- 字段值 -->
 	<sql id="FieldValue">	
-		#{BUSINESS_TYPE},	
-		#{BILL_CODE},	
-		#{ATTACHMENT_NAME},
-		#{ATTACHMENT_MEMO},	
-		#{ATTACHMENT_TYPE},	
-		#{ATTACHMENT_SIZE},	
-		#{ATTACHMENT_PATH},	
-		#{CREATE_USER},	
-		#{CREATE_DATE},	
-		#{STATE},	
+		#{KPI_TYPE},	
+		#{KPI_CODE},	
+		#{KPI_EFFECT},	
+		#{ASSESS_OBJECT},	
+		#{KPI_NAME},	
+		#{JUDGEMENT_STANDARD},	
+		#{FORMULA},	
 		#{CUST1},	
-		#{CUST2},	
-		#{CUST3}
+		#{CUST2}
 	</sql>
 	
 	<!-- 新增-->
@@ -64,7 +52,7 @@
 		insert into 
 	<include refid="tableName"></include>
 		(
-	<include refid="insertField"></include>
+	<include refid="InsertField"></include>
 		) values (
 	<include refid="FieldValue"></include>
 		)
@@ -75,7 +63,7 @@
 		delete from
 		<include refid="tableName"></include>
 		where 
-			ATTACHMENT_ID = #{ATTACHMENT_ID}
+			KPI_ID = #{KPI_ID}
 	</delete>
 	
 	<!-- 修改 -->
@@ -83,19 +71,17 @@
 		update
 		<include refid="tableName"></include>
 		set 
-			BUSINESS_TYPE = #{BUSINESS_TYPE},
-			BILL_CODE = #{BILL_CODE},
-			ATTACHMENT_NAME = #{ATTACHMENT_NAME},
-			ATTACHMENT_MEMO = #{ATTACHMENT_MEMO},
-			ATTACHMENT_TYPE = #{ATTACHMENT_TYPE},
-			ATTACHMENT_SIZE = #{ATTACHMENT_SIZE},
-			ATTACHMENT_PATH = #{ATTACHMENT_PATH},
-			STATE = #{STATE},
+			KPI_TYPE = #{KPI_TYPE},
+			KPI_CODE = #{KPI_CODE},
+			KPI_EFFECT = #{KPI_EFFECT},
+			ASSESS_OBJECT = #{ASSESS_OBJECT},
+			KPI_NAME = #{KPI_NAME},
+			JUDGEMENT_STANDARD = #{JUDGEMENT_STANDARD},
+			FORMULA = #{FORMULA},
 			CUST1 = #{CUST1},
-			CUST2 = #{CUST2},
-			CUST3 = #{CUST3}
+			CUST2 = #{CUST2}
 		where 
-		ATTACHMENT_ID = #{ATTACHMENT_ID}
+		KPI_ID = #{KPI_ID}
 	</update>
 	
 	<!-- 通过ID获取数据 -->
@@ -105,32 +91,21 @@
 		from 
 		<include refid="tableName"></include>
 		where 
-			ATTACHMENT_ID = #{ATTACHMENT_ID}
-	</select>
-	
-	<!-- 根据附件类型获取附件列表 -->
-	<select id="getAttachmentByType" parameterType="pd" resultType="pd">
-		select 
-		<include refid="Field"></include>
-		from 
-		<include refid="tableName"></include>
-		where 
-			BUSINESS_TYPE = #{BUSINESS_TYPE}
-			AND BILL_CODE=#{BILL_CODE}
+			KPI_ID = #{KPI_ID}
 	</select>
 	
 	<!-- 列表 -->
 	<select id="datalistPage" parameterType="page" resultType="pd">
-		select A.*,B.NAME CREATE_USER_NAME from 
-		<include refid="tableName"></include> A
-		left join sys_user B
-		on A.CREATE_USER=B.USER_ID
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
 		<where>
 			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
 				and
 					(
 					
-						ATTACHMENT_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+						KPI_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 						<!--	根据需求自己加检索条件
 						 or 
 						字段2 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
@@ -153,7 +128,7 @@
 		delete from
 		<include refid="tableName"></include>
 		where 
-			ATTACHMENT_ID in
+			KPI_ID in
 		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
                  #{item}
 		</foreach>

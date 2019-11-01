@@ -32,6 +32,7 @@ import com.fh.util.PathUtil;
 import com.fh.util.Jurisdiction;
 import com.fh.util.Tools;
 import com.fh.util.date.DateUtils;
+import com.fh.util.enums.AttachmentType;
 import com.fh.service.attachment.AttachmentManager;
 
 /** 
@@ -124,6 +125,11 @@ public class AttachmentController extends BaseController {
 		}
 		page.setPd(pd);
 		List<PageData>	varList = attachmentService.list(page);	//列出Attachment列表
+		for (PageData pageData : varList) {
+			if(pageData.get("BUSINESS_TYPE")!=null){
+				pageData.put("BUSINESS_TYPE_NAME", AttachmentType.getValueByKey(pageData.getString("BUSINESS_TYPE")));
+			}
+		}
 		mv.setViewName("attachment/attachment/attachment_list");
 		mv.addObject("varList", varList);
 		mv.addObject("pd", pd);
