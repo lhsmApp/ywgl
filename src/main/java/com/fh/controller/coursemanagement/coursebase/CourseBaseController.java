@@ -194,7 +194,17 @@ public class CourseBaseController extends BaseController {
 		mv.addObject("pd", pd);
 		return mv;
 	}	
-	
+	/**根据课程分类获取课程信息
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/getCourse")
+	public @ResponseBody List<PageData> getCourse()throws Exception{
+		PageData pd = new PageData();
+		pd = this.getPageData();		
+		List<PageData> varList = coursebaseService.listById(pd);
+		return varList;
+	}
 	 /**去修改页面
 	 * @param
 	 * @throws Exception

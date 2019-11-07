@@ -53,6 +53,10 @@ public interface TrainStudentManager{
 	 * @throws Exception
 	 */
 	public void deleteAll(String[] ArrayDATA_IDS)throws Exception;
-	
+	/**根据用户ID批量获取培训学员
+	 * @param ArrayDATA_IDS
+	 * @throws Exception
+	 */
+	public List<PageData> listChoiceStudent(String[] ArrayDATA_IDS)throws Exception;
 }
 

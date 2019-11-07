@@ -124,6 +124,26 @@
 		<include refid="tableName"></include>
 	</select>
 	
+	<select id="listChoiceStudent" parameterType="String"  resultType="pd">
+		select A.*,unit.DEPART_NAME UNIT_NAME,depart.DEPART_NAME DEPART_NAME,user.USERNAME ACCOUNT_NAME
+		from 
+		<include refid="tableName"></include> A
+		
+		LEFT JOIN tb_train_depart unit
+		ON A.UNIT_CODE=unit.DEPART_CODE
+		
+		LEFT JOIN tb_train_depart depart
+		ON A.DEPART_CODE=depart.DEPART_CODE
+		
+		LEFT JOIN sys_user user
+		ON A.ACCOUNT=user.USER_ID
+		where 
+			A.STUDENT_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+		
+	</select>
 	<!-- 批量删除 -->
 	<delete id="deleteAll" parameterType="String">
 		delete from

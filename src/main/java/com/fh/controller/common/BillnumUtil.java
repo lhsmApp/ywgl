@@ -1,5 +1,9 @@
 package com.fh.controller.common;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import com.fh.service.billnum.BillNumManager;
 import com.fh.util.PageData;
 import com.fh.util.StringUtil;
@@ -74,17 +78,17 @@ public class BillnumUtil {
 	 * 
 	 * @param billNumManager
 	 * @param billNumType
-	 * @param unitCode
-	 * @param departCode
 	 * @return
 	 * @throws Exception
 	 */
-	public static String getExamBillnum(BillNumManager billNumManager, String billNumType) throws Exception {
-		String currentDate = DateUtils.getCurrentTime();
+	public static synchronized String getExamBillnum(BillNumManager billNumManager, String billNumType) throws Exception {
+		Date date=new Date();
+		DateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
+		String currentDate=format.format(date);//time就是当前时间 
 		String[] nowTime=currentDate.split(" ");
 	    String[]  dates=nowTime[0].split("-");
 	    String[]  times=nowTime[1].split(":");
-		String billCode = billNumType + dates[0]+dates[1]+dates[2]+times[0]+times[1]+times[2] ;
+		String billCode = billNumType + dates[0]+dates[1]+dates[2]+times[0]+times[1]+times[2]+times[3]  ;
 		return billCode;
 	}
 }

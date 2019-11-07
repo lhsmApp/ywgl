@@ -1,4 +1,4 @@
-package com.fh.controller.exam.testpaper;
+package com.fh.controller.trainplan.trainplan;
 
 import java.io.PrintWriter;
 import java.text.DateFormat;
@@ -16,60 +16,96 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.alibaba.fastjson.JSON;
 import com.fh.controller.base.BaseController;
+import com.fh.controller.common.BillnumUtil;
+import com.fh.entity.CommonBase;
 import com.fh.entity.Page;
 import com.fh.entity.system.User;
 import com.fh.util.AppUtil;
 import com.fh.util.Const;
 import com.fh.util.ObjectExcelView;
 import com.fh.util.PageData;
-import com.fh.util.Jurisdiction;
-import com.fh.util.Tools;
 import com.fh.util.date.DateUtils;
-import com.fh.service.exam.testpaper.TestPaperManager;
+import com.fh.util.enums.BillNumType;
+import com.fh.util.enums.ExamBillNum;
+import com.fh.util.Jurisdiction;
+
+import net.sf.json.JSONArray;
+
+import com.fh.service.billnum.BillNumManager;
+import com.fh.service.trainBase.CourseTypeManager;
+import com.fh.service.trainBase.TrainStudentManager;
+import com.fh.service.trainplan.trainplan.TrainPlanManager;
 
 /** 
- * 说明：testpaper
- * 创建人：jiachao
- * 创建时间：2019-11-06
+ * 说明：trainplan
+ * 创建人：liqian
+ * 创建时间：2019-11-01
  */
 @Controller
-@RequestMapping(value="/testpaper")
-public class TestPaperController extends BaseController {
+@RequestMapping(value="/trainplan")
+public class TrainPlanController extends BaseController {
 	
-	String menuUrl = "testpaper/list.do"; //菜单地址(权限用)
-	@Resource(name="testpaperService")
-	private TestPaperManager testpaperService;
+	String menuUrl = "trainplan/list.do"; //菜单地址(权限用)
+	@Resource(name="trainplanService")
+	private TrainPlanManager trainplanService;
 	
+	@Resource(name="coursetypeService")
+	private CourseTypeManager coursetypeService;
+	
+	@Resource(name="trainstudentService")
+	private TrainStudentManager trainstudentService;
+
+	@Resource(name = "billnumService")
+	private BillNumManager billNumService;
 	/**保存
 	 * @param
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/save")
 	public ModelAndView save() throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"新增TestPaper");
-		if(!Jurisdiction.buttonJurisdiction(menuUrl, "add")){return null;} //校验权限
+		logBefore(logger, Jurisdiction.getUsername()+"新增TrainPlan");
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		pd.put("TESTPAPER_ID", this.get32UUID());	//主键
-		testpaperService.save(pd);
+
+		String billCode=BillnumUtil.getExamBillnum(billNumService, ExamBillNum.TRAIN_PLAN);
+		pd.put("TRAIN_PLAN_ID", billCode);	//主键
+		pd.put("COURSE_ID",pd.getString("COURSE_CODE"));//课程ID
+		pd.put("CREATE_DATE", DateUtils.getCurrentDate());
+	
+		trainplanService.save(pd);
 		mv.addObject("msg","success");
 		mv.setViewName("save_result");
 		return mv;
 	}
-	
+
+	/**显示选择的培训人人员信息
+	 * @param page
+	 * @throws Exceptionz
+	 */
+	@RequestMapping(value="/getChoiceStudent")
+	public @ResponseBody List<PageData> getChoiceStudent() throws Exception{
+		PageData pd = new PageData();
+		pd = this.getPageData();	
+		String studentCode=pd.getString("sturentStr");
+		String[] studentArry=studentCode.split(",");		
+		List<PageData> varList = trainstudentService.listChoiceStudent(studentArry);		
+		return varList;
+	}
 	/**删除
 	 * @param out
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/delete")
 	public void delete(PrintWriter out) throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"删除TestPaper");
-		if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return;} //校验权限
+		logBefore(logger, Jurisdiction.getUsername()+"删除TrainPlan");
+//		if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return;} //校验权限
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		testpaperService.delete(pd);
+		trainplanService.delete(pd);
 		out.write("success");
 		out.close();
 	}
@@ -80,12 +116,12 @@ public class TestPaperController extends BaseController {
 	 */
 	@RequestMapping(value="/edit")
 	public ModelAndView edit() throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"修改TestPaper");
+		logBefore(logger, Jurisdiction.getUsername()+"修改TrainPlan");
 		if(!Jurisdiction.buttonJurisdiction(menuUrl, "edit")){return null;} //校验权限
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		testpaperService.edit(pd);
+		trainplanService.edit(pd);
 		mv.addObject("msg","success");
 		mv.setViewName("save_result");
 		return mv;
@@ -97,7 +133,7 @@ public class TestPaperController extends BaseController {
 	 */
 	@RequestMapping(value="/list")
 	public ModelAndView list(Page page) throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"列表TestPaper");
+		//logBefore(logger, Jurisdiction.getUsername()+"列表TrainPlan");
 		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
@@ -107,8 +143,9 @@ public class TestPaperController extends BaseController {
 			pd.put("keywords", keywords.trim());
 		}
 		page.setPd(pd);
-		List<PageData>	varList = testpaperService.list(page);	//列出TestPaper列表
-		mv.setViewName("exam/testpaper/testpaper_list");
+		List<PageData>	varList = trainplanService.list(page);	//列出TrainPlan列表		
+		mv.setViewName("trainplan/trainplan/trainplan_list");
+		mv.addObject("varList", JSON.toJSONString(varList));
 		mv.addObject("varList", varList);
 		mv.addObject("pd", pd);
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
@@ -124,12 +161,14 @@ public class TestPaperController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		mv.setViewName("exam/testpaper/testpaper_edit");
+		mv.setViewName("trainplan/trainplan/trainplan_Create");
+		List<PageData> courseTypePdList = new ArrayList<PageData>();
+		JSONArray arr = JSONArray.fromObject(coursetypeService.listAllCourseTypeToSelect("0",courseTypePdList));
+		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
 		mv.addObject("msg", "save");
 		mv.addObject("pd", pd);
 		return mv;
-	}	
-	
+	}		
 	 /**去修改页面
 	 * @param
 	 * @throws Exception
@@ -139,12 +178,36 @@ public class TestPaperController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		pd = testpaperService.findById(pd);	//根据ID读取
-		mv.setViewName("exam/testpaper/testpaper_edit");
+		pd = trainplanService.findById(pd);	//根据ID读取
+		List<PageData> courseTypePdList = new ArrayList<PageData>();
+		JSONArray arr = JSONArray.fromObject(coursetypeService.listAllCourseTypeToSelect("0",courseTypePdList));
+		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
+		mv.setViewName("trainplan/trainplan/trainplan_Create");
 		mv.addObject("msg", "edit");
 		mv.addObject("pd", pd);
 		return mv;
 	}	
+	/**获取培训人员列表
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/listStudent")
+	public ModelAndView listStudent(Page page) throws Exception{		
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		String keywords = pd.getString("keywords");				//关键词检索条件
+		if(null != keywords && !"".equals(keywords)){
+			pd.put("keywords", keywords.trim());
+		}
+		page.setPd(pd);
+		List<PageData>	varList = trainstudentService.list(page);	//列出TrainStudent列表
+		mv.setViewName("trainplan/trainplan/trainstudent_list");
+		mv.addObject("varList", varList);
+		mv.addObject("pd", pd);
+		
+		return mv;
+	}
 	
 	 /**批量删除
 	 * @param
@@ -153,7 +216,7 @@ public class TestPaperController extends BaseController {
 	@RequestMapping(value="/deleteAll")
 	@ResponseBody
 	public Object deleteAll() throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"批量删除TestPaper");
+		logBefore(logger, Jurisdiction.getUsername()+"批量删除TrainPlan");
 		if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return null;} //校验权限
 		PageData pd = new PageData();		
 		Map<String,Object> map = new HashMap<String,Object>();
@@ -162,7 +225,7 @@ public class TestPaperController extends BaseController {
 		String DATA_IDS = pd.getString("DATA_IDS");
 		if(null != DATA_IDS && !"".equals(DATA_IDS)){
 			String ArrayDATA_IDS[] = DATA_IDS.split(",");
-			testpaperService.deleteAll(ArrayDATA_IDS);
+			trainplanService.deleteAll(ArrayDATA_IDS);
 			pd.put("msg", "ok");
 		}else{
 			pd.put("msg", "no");
@@ -178,7 +241,7 @@ public class TestPaperController extends BaseController {
 	 */
 	@RequestMapping(value="/excel")
 	public ModelAndView exportExcel() throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"导出TestPaper到excel");
+		logBefore(logger, Jurisdiction.getUsername()+"导出TrainPlan到excel");
 		if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;}
 		ModelAndView mv = new ModelAndView();
 		PageData pd = new PageData();
@@ -199,25 +262,29 @@ public class TestPaperController extends BaseController {
 		titles.add("备注12");	//12
 		titles.add("备注13");	//13
 		titles.add("备注14");	//14
+		titles.add("备注15");	//15
+		titles.add("备注16");	//16
 		dataMap.put("titles", titles);
-		List<PageData> varOList = testpaperService.listAll(pd);
+		List<PageData> varOList = trainplanService.listAll(pd);
 		List<PageData> varList = new ArrayList<PageData>();
 		for(int i=0;i<varOList.size();i++){
 			PageData vpd = new PageData();
-			vpd.put("var1", varOList.get(i).get("TEST_PAPER_ID").toString());	//1
-			vpd.put("var2", varOList.get(i).getString("TEST_PAPER_TITLE"));	    //2
-			vpd.put("var3", varOList.get(i).get("COURSE_TYPE_ID").toString());	//3
-			vpd.put("var4", varOList.get(i).getString("TEST_PAPER_TYPE"));	    //4
-			vpd.put("var5", varOList.get(i).getString("TEST_PAPER_DIFFICULTY"));	    //5
-			vpd.put("var6", varOList.get(i).getString("TEST_QUESTION_SOURCE"));	    //6
-			vpd.put("var7", varOList.get(i).get("TEST_QUESTION_NUM").toString());	//7
-			vpd.put("var8", varOList.get(i).getString("TEST_PAPER_SCORE"));	    //8
-			vpd.put("var9", varOList.get(i).get("ANSWER_TIME").toString());	//9
-			vpd.put("var10", varOList.get(i).get("TEST_CHANCE").toString());	//10
-			vpd.put("var11", varOList.get(i).getString("QUALIFIED_SCORE"));	    //11
-			vpd.put("var12", varOList.get(i).getString("STATE"));	    //12
-			vpd.put("var13", varOList.get(i).getString("CREATE_USER"));	    //13
-			vpd.put("var14", varOList.get(i).getString("CREATE_DATE"));	    //14
+			vpd.put("var1", varOList.get(i).get("TRAIN_PLAN_ID").toString());	//1
+			vpd.put("var2", varOList.get(i).get("TRAIN_PLAN_NAME").toString());	//2
+			vpd.put("var3", varOList.get(i).getString("START_DATE"));	    //3
+			vpd.put("var4", varOList.get(i).getString("END_DATE"));	    //4
+			vpd.put("var5", varOList.get(i).get("COURSE_TYPE_ID").toString());	//5
+			vpd.put("var6", varOList.get(i).get("COURSE_ID").toString());	//6
+			vpd.put("var7", varOList.get(i).getString("TRAIN_PLAN_MEMO"));	    //7
+			vpd.put("var8", varOList.get(i).getString("TRAIN_PLAN_PERSONS"));	    //8
+			vpd.put("var9", varOList.get(i).getString("STATE"));	    //9
+			vpd.put("var10", varOList.get(i).getString("CREATE_USER"));	    //10
+			vpd.put("var11", varOList.get(i).getString("CREATE_DATE"));	    //11
+			vpd.put("var12", varOList.get(i).getString("CUST1"));	    //12
+			vpd.put("var13", varOList.get(i).getString("CUST2"));	    //13
+			vpd.put("var14", varOList.get(i).getString("CUST3"));	    //14
+			vpd.put("var15", varOList.get(i).get("CUST4").toString());	//15
+			vpd.put("var16", varOList.get(i).get("CUST5").toString());	//16
 			varList.add(vpd);
 		}
 		dataMap.put("varList", varList);
@@ -231,30 +298,4 @@ public class TestPaperController extends BaseController {
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(format,true));
 	}
-	/**進入答題页面
-	 * @param
-	 * @throws Exception
-	 */
-	@RequestMapping(value="/goExam")
-	public ModelAndView goExam(Page page)throws Exception{
-		ModelAndView mv = this.getModelAndView();
-		PageData pd = new PageData();
-		pd = this.getPageData();
-		pd.put("TEST_PAPER_ID", 1);
-		page.setPd(pd);
-		List<PageData>	varList = testpaperService.listExam(page);	//列出TestPaper列表
-		double score= Double.parseDouble(varList.get(0).get("TEST_PAPER_SCORE").toString());
-		int num=Integer.parseInt(varList.get(0).get("TEST_QUESTION_NUM").toString());
-		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
-	    String userId=user.getUSER_ID();
-		mv.setViewName("exam/testonline/examOnline");
-		mv.addObject("varList", varList);
-		pd.put("TEST_PAPER_SCORE", score);
-		pd.put("TEST_QUESTION_NUM", num);
-		pd.put("TEST_USER", userId);
-		pd.put("EXAM_TIME", DateUtils.getCurrentTime());
-		pd.put("ANSWER_TIME", Integer.parseInt(varList.get(0).get("ANSWER_TIME").toString()));
-		mv.addObject("pd", pd);
-		return mv;
-	}	
 }

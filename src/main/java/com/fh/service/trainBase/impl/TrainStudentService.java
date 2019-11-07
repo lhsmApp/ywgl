@@ -76,7 +76,16 @@ public class TrainStudentService implements TrainStudentManager{
 	 */
 	public void deleteAll(String[] ArrayDATA_IDS)throws Exception{
 		dao.delete("TrainStudentMapper.deleteAll", ArrayDATA_IDS);
+	}	
+	/**根据用户ID批量获取培训学员
+	 * @param ArrayDATA_IDS
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PageData> listChoiceStudent(String[] ArrayDATA_IDS)throws Exception{
+		return (List<PageData>)dao.findForList("TrainStudentMapper.listChoiceStudent", ArrayDATA_IDS);
 	}
+	
 	
 }
 
