@@ -54,5 +54,13 @@ public interface TestMainManager{
 	 */
 	public void deleteAll(String[] ArrayDATA_IDS)throws Exception;
 	
+	/**
+	  *  获取所有考试信息 
+	 * @param page
+	 * @return
+	 * @throws Exception
+	 */
+	public List<PageData> paperListPage(Page page)throws Exception;
+	
 }
 

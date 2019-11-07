@@ -78,5 +78,16 @@ public class TestMainService implements TestMainManager{
 		dao.delete("TestMainMapper.deleteAll", ArrayDATA_IDS);
 	}
 	
+	/**
+	  *  获取所有考试信息 
+	 * @param page
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PageData> paperListPage(Page page) throws Exception {
+		return (List<PageData>)dao.findForList("TestMainMapper.paperListPage", page);
+	}
+	
 }
 

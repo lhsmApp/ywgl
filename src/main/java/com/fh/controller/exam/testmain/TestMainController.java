@@ -8,7 +8,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.Resource;
+
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
@@ -16,18 +18,21 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
 import com.fh.controller.base.BaseController;
 import com.fh.entity.Page;
+import com.fh.entity.system.User;
+import com.fh.service.exam.testmain.TestMainManager;
 import com.fh.util.AppUtil;
+import com.fh.util.Const;
+import com.fh.util.DateUtil;
+import com.fh.util.Jurisdiction;
 import com.fh.util.ObjectExcelView;
 import com.fh.util.PageData;
-import com.fh.util.Jurisdiction;
-import com.fh.util.Tools;
-import com.fh.service.exam.testmain.TestMainManager;
 
 /** 
- * 说明：testmain
- * 创建人：jiachao
+ * 说明：testMain
+ * 创建人：xinyuLo
  * 创建时间：2019-11-06
  */
 @Controller
@@ -92,23 +97,51 @@ public class TestMainController extends BaseController {
 	 * @param page
 	 * @throws Exception
 	 */
-	@RequestMapping(value="/list")
-	public ModelAndView list(Page page) throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"列表TestMain");
-		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
+	@RequestMapping(value = "/list")
+	public ModelAndView list(Page page) throws Exception {
+		logBefore(logger, Jurisdiction.getUsername() + "列表TestMain");
+		// if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;}
+		// //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
+		//初始化参数
 		ModelAndView mv = this.getModelAndView();
+		List<PageData> paperPage = new ArrayList<PageData>();
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USER);
 		PageData pd = new PageData();
+		
 		pd = this.getPageData();
-		String keywords = pd.getString("keywords");				//关键词检索条件
-		if(null != keywords && !"".equals(keywords)){
+		String keywords = pd.getString("keywords"); // 关键词检索条件
+		String userId = user.getUSER_ID();
+		String nowDate = DateUtil.getTime();
+		
+		/*------------------未考试------------------*/
+		List<PageData> paperList = testmainService.paperListPage(page);
+		for (PageData pageData : paperList) {
+			// 先判断时间
+			String endDate = pd.getString("END_DATE");
+			if (DateUtil.compareDate(endDate, nowDate)) {
+				String[] planPerson = pageData.getString("TEST_PLAN_PERSONS").split(",");
+				if (null != planPerson && planPerson.length > 0) {
+					for (int i = 0; i < planPerson.length; i++) {
+						if (userId.equals(planPerson[i])) {// 如果有该考生则添加进map内
+							paperPage.add(pageData);
+						}
+					}
+				}
+			}
+		}
+		
+		/*------------------已考试------------------*/
+		if (null != keywords && !"".equals(keywords)) {
 			pd.put("keywords", keywords.trim());
 		}
 		page.setPd(pd);
-		List<PageData>	varList = testmainService.list(page);	//列出TestMain列表
-		mv.setViewName("exam/testmain/testmain_list");
+		List<PageData> varList = testmainService.list(page); // 列出TestMain列表
+		
 		mv.addObject("varList", varList);
+		mv.addObject("paperList",paperPage);
 		mv.addObject("pd", pd);
-		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
+		mv.setViewName("exam/testmain/testmain_list");
+		mv.addObject("QX", Jurisdiction.getHC()); // 按钮权限
 		return mv;
 	}
 	

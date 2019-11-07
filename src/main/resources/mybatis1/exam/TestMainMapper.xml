@@ -4,7 +4,7 @@
 	
 	<!--表名 -->
 	<sql id="tableName">
-		TESTMAIN
+		tb_test_main
 	</sql>
 	
 	<!-- 字段 -->
@@ -19,8 +19,7 @@
 		TEST_QUESTION_NUM,	
 		STATE,	
 		CREATE_USER,	
-		CREATE_DATE,	
-		TESTMAIN_ID
+		CREATE_DATE
 	</sql>
 	
 	<!-- 字段值 -->
@@ -35,8 +34,7 @@
 		#{TEST_QUESTION_NUM},	
 		#{STATE},	
 		#{CREATE_USER},	
-		#{CREATE_DATE},	
-		#{TESTMAIN_ID}
+		#{CREATE_DATE}
 	</sql>
 	
 	<!-- 新增-->
@@ -89,23 +87,62 @@
 			TESTMAIN_ID = #{TESTMAIN_ID}
 	</select>
 	
+	<select id="paperListPage" parameterType="page" resultType="pd">
+		SELECT
+			a.TEST_PLAN_ID,
+			a.START_DATE,
+			a.END_DATE, 
+			a.TEST_PLAN_PERSONS,
+			b.TEST_PAPER_TITLE,
+			b.COURSE_TYPE_ID,
+			b.TEST_PAPER_TYPE,
+			b.TEST_PAPER_DIFFICULTY,
+			b.TEST_QUESTION_NUM,
+			b.TEST_PAPER_SCORE,
+			b.ANSWER_TIME,
+			b.QUALIFIED_SCORE
+		FROM 
+			tb_test_plan AS a 
+		LEFT JOIN 
+			tb_test_paper AS b
+ 		ON 
+ 			a.TEST_PAPER_ID = b.TEST_PAPER_ID 
+ 		WHERE 
+ 			a.STATE = 1 
+ 		AND 
+ 			b.STATE = 1
+ 		<!-- 关键词检索 -->
+		<if test="pd.keywords!= null and pd.keywords != ''">
+		AND
+				(
+					b.TEST_PAPER_TITLE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					<!-- 根据需求自己加检索条件
+					字段1 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or 
+					字段2 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')  -->
+				
+				)
+		</if> 
+	</select>
+	
 	<!-- 列表 -->
 	<select id="datalistPage" parameterType="page" resultType="pd">
 		select
 		<include refid="Field"></include>
 		from 
 		<include refid="tableName"></include>
-		where 1=1
-		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+		where STATE=1
+		<!-- 关键词检索 -->
+		<if test="pd.keywords!= null and pd.keywords != ''">
 			and
 				(
-				<!--	根据需求自己加检索条件
+					<!-- 根据需求自己加检索条件
 					字段1 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 					 or 
-					字段2 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
-				-->
+					字段2 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')  -->
+				
 				)
-		</if>
+		</if> 
 	</select>
 	
 	<!-- 列表(全部) -->

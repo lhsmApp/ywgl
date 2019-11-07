@@ -230,13 +230,12 @@ public class TestQuestionController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd = testquestionService.findById(pd);	//根据ID读取
+		List<PageData> courseTypePdList = new ArrayList<PageData>(); 
 		List<PageData> listById = testquestionService.listById(pd);
-		JSONArray arr = JSONArray.fromObject(coursetypeService.listTree("0"));
-		String json = arr.toString();
-		json = json.replaceAll("COURSETYPE_ID", "id").replaceAll("PARENT_ID", "pId").replaceAll("NAME", "name").replaceAll("subCourseType", "nodes").replaceAll("hasCourseType", "checked");
+		  JSONArray arr = JSONArray.fromObject(coursetypeService.listAllCourseTypeToSelect("0",courseTypePdList));
+		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
 		mv.setViewName("testquestion/testquestion/testquestion_edit");
 		mv.addObject("msg", "edit");
-		mv.addObject("zTreeNodes", json);
 		mv.addObject("varList",listById);
 		mv.addObject("pd", pd);
 		return mv;
