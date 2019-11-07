@@ -69,4 +69,22 @@ public class BillnumUtil {
 			billNumManager.edit(pdBillNum);
 		}
 	}
+	/**
+	 * 获取培训、考试单据编码
+	 * 
+	 * @param billNumManager
+	 * @param billNumType
+	 * @param unitCode
+	 * @param departCode
+	 * @return
+	 * @throws Exception
+	 */
+	public static String getExamBillnum(BillNumManager billNumManager, String billNumType) throws Exception {
+		String currentDate = DateUtils.getCurrentTime();
+		String[] nowTime=currentDate.split(" ");
+	    String[]  dates=nowTime[0].split("-");
+	    String[]  times=nowTime[1].split(":");
+		String billCode = billNumType + dates[0]+dates[1]+dates[2]+times[0]+times[1]+times[2] ;
+		return billCode;
+	}
 }
