@@ -65,21 +65,34 @@ public class TrainPlanController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/save")
-	public ModelAndView save() throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"新增TrainPlan");
-		ModelAndView mv = this.getModelAndView();
+	public  @ResponseBody CommonBase save() throws Exception{
+		CommonBase commonBase = new CommonBase();
+		commonBase.setCode(-1);
 		PageData pd = new PageData();
 		pd = this.getPageData();
-
-		String billCode=BillnumUtil.getExamBillnum(billNumService, ExamBillNum.TRAIN_PLAN);
-		pd.put("TRAIN_PLAN_ID", billCode);	//主键
-		pd.put("COURSE_ID",pd.getString("COURSE_CODE"));//课程ID
-		pd.put("CREATE_DATE", DateUtils.getCurrentDate());
-	
-		trainplanService.save(pd);
-		mv.addObject("msg","success");
-		mv.setViewName("save_result");
-		return mv;
+		if(null==pd.getString("TRAIN_PLAN_ID")||pd.getString("TRAIN_PLAN_ID").trim().equals("")){
+			String billCode=BillnumUtil.getExamBillnum(billNumService, ExamBillNum.TRAIN_PLAN);
+			pd.put("TRAIN_PLAN_ID", billCode);	//主键
+			pd.put("COURSE_ID",pd.getString("COURSE_CODE"));//课程ID
+			pd.put("CREATE_DATE", DateUtils.getCurrentDate());
+			String trainPersonStr=pd.getString("TRAIN_PLAN_PERSONS");
+			String [] trainPersons=trainPersonStr.split(",");
+			List<PageData> studentList=new ArrayList<PageData>();
+			for(int i=0;i<trainPersons.length;i++){
+				PageData p=new PageData();
+				p.put("TRAIN_PLAN_ID", billCode);
+				p.put("STUDENT_ID", trainPersons[i]);
+				studentList.add(p);
+			}
+			pd.put("varList", studentList);
+			trainplanService.save(pd);
+			commonBase.setCode(0);
+		}else{
+			pd.put("UPDATE_DATE", DateUtils.getCurrentTime());
+			trainplanService.edit(pd);
+			commonBase.setCode(0);
+		}
+		return commonBase;
 	}
 
 	/**显示选择的培训人人员信息
@@ -179,11 +192,27 @@ public class TrainPlanController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd = trainplanService.findById(pd);	//根据ID读取
+		String[] persons =pd.getString("TRAIN_PLAN_PERSONS").split(",");
+		List<PageData> studentList = new ArrayList<PageData>();
+		studentList=trainstudentService.listChoiceStudent(persons);
 		List<PageData> courseTypePdList = new ArrayList<PageData>();
+		String codeStr="";
+		String nameStr="";
+		for(PageData p:studentList){
+			if("".equals(codeStr)) {
+			  codeStr += p.get("STUDENT_ID");
+			  nameStr += p.getString("STUDENT_NAME");
+  		  }else {
+  			codeStr += "," +p.get("STUDENT_ID");
+  			nameStr += "," +p.getString("STUDENT_NAME");
+  		  }
+		}
 		JSONArray arr = JSONArray.fromObject(coursetypeService.listAllCourseTypeToSelect("0",courseTypePdList));
 		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
 		mv.setViewName("trainplan/trainplan/trainplan_Create");
-		mv.addObject("msg", "edit");
+		mv.addObject("studentList", studentList);
+		pd.put("TRAIN_PERSONSNAME", nameStr);
+		pd.put("TRAIN_PERSONSCODE", codeStr);
 		mv.addObject("pd", pd);
 		return mv;
 	}	

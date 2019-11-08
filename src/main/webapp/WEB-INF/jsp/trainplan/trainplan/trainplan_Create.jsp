@@ -39,12 +39,12 @@
 					<div class="row">
 				<div class="col-xs-8">							
 					<form action="trainplan/${msg}.do" name="Form" id="Form" method="post">
-						<input type="hidden" name="TRAINPLAN_ID" id="TRAINPLAN_ID" value="${pd.TRAINPLAN_ID}"/>
+						<input type="hidden" name="TRAINPLAN_ID" id="TRAINPLAN_ID" value="${pd.TRAIN_PLAN_ID}"/>
 						<div id="zhongxin" style="padding-top: 13px;">
 							<table id="table_report" class="table table-striped table-bordered table-hover">
 								<tr>
 									<td width="25%"><span>任务名称：</span></td>
-									<td width="40%"><input type="text" name="TRAIN_PLAN_NAME" id="TRAIN_PLAN_NAME" value="${pd.TRAIN_PLAN_ID}" maxlength="32" placeholder="这里输入任务名称" title="任务名称" /></td>
+									<td width="40%"><input type="text" name="TRAIN_PLAN_NAME" id="TRAIN_PLAN_NAME" value="${pd.TRAIN_PLAN_NAME}" maxlength="32" placeholder="这里输入任务名称" title="任务名称" /></td>
 								<td  width="35%" rowspan="3"><img src="static/images/rw.jpg"></td>
 								</tr>									
 								<tr>
@@ -69,7 +69,7 @@
 								</tr>
 								<tr><td><label> <i class="ace-icon  bigger-110"></i>任务时间范围：</label> </td>
 								<td style="padding-left:10px;"><input class="span10 date-picker" name="START_DATE" id="START_DATE"  value="${pd.START_DATE}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:95%;" placeholder="开始日期" title="开始日期"/></td>
-								<td style="padding-left:10px;"><input class="span10 date-picker" name="END_DATE" name="END_DATE"  value="${pd.END_DATE}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:95%;" placeholder="结束日期" title="结束日期"/></td>
+								<td style="padding-left:10px;"><input class="span10 date-picker" name="END_DATE" id="END_DATE"  value="${pd.END_DATE}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:95%;" placeholder="结束日期" title="结束日期"/></td>
 								</tr>
 								<tr>
 									<td>
@@ -87,7 +87,8 @@
 								</tr>
 								<tr>	
 								<td  colspan="3">
-								<textarea  id="uesrTextarea" name="a" style="width:98%;height:30%;"></textarea>
+								<textarea  id="uesrTextarea" name="uesrTextarea"  style="width:98%;height:30%;">${pd.TRAIN_PERSONSNAME}</textarea>
+								<input type="hidden" style="width:98%; name="TRAIN_PLAN_PERSONS" id="TRAIN_PLAN_PERSONS" value="${pd.TRAIN_PERSONSCODE}" />
 								</td>
 								</tr>
 								<tr>
@@ -96,7 +97,6 @@
 									</td></tr>
 								<tr>
 								<td colspan="3">
-								<input type="hidden" style="width:98%; name="TRAIN_PLAN_PERSONS" id="TRAIN_PLAN_PERSONS" value="${pd.TRAIN_PLAN_PERSONS}" />
 								<table id="simple-table" class="table table-striped table-bordered table-hover" style="margin-top:5px;">	
 							<thead>
 								<tr>
@@ -109,8 +109,20 @@
 							</thead>
 													
 							<tbody id="tobodyUser">
-							<!-- 开始循环 -->									
-	
+							<!-- 开始循环 -->		
+							<c:choose>
+									<c:when test="${not empty studentList}">
+										<c:forEach items="${studentList}" var="var" varStatus="vs">	
+											<tr>
+											<td class='center' style="width: 30px;">${vs.index+1}</td>
+											<td class='center'>${var.STUDENT_CODE}</td>
+											<td class='center'>${var.STUDENT_NAME}</td>
+											<td class='center'>${var.UNIT_CODE}</td>
+											<td class='center'>${var.DEPART_CODE}</td>		
+											</tr>
+										</c:forEach>
+									</c:when>									
+								</c:choose>								
 							</tbody>
 						</table>	
 						</td>							
@@ -119,12 +131,12 @@
 									<td colspan="3"><span>任务描述：</span></td>
 								</tr>
 								<tr>
-									<td colspan="3"><textarea name="a" id="TRAIN_PLAN_MEMO" style="width:98%;height:80px;">请输入任务描述</textarea></td>
+									<td colspan="3"><textarea name="a" id="TRAIN_PLAN_MEMO" style="width:98%;height:80px;">${pd.TRAIN_PLAN_MEMO}</textarea></td>
 								</tr>
 								<tr>
 								<td style="text-align: center;" colspan="10">
 									<a class="btn btn-mini btn-primary" onclick="save();">保存</a>
-									<a class="btn btn-mini btn-danger" onclick="goBack();">取消</a>
+									<a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">取消</a>
 								</td>
 							</table>
 						</div>
@@ -166,18 +178,19 @@
 		}
 		//保存
 		function save(){
-			top.jzts();
+			top.jzts();		
+			var trainID=$("#TRAINPLAN_ID").val();//任务ID
 			var planName=$("#TRAIN_PLAN_NAME").val();//任务名称
 			var couseTypeId=$("#COURSE_TYPE_ID").val();//课程分类
 			var couseCode=$("#COURSE_CODE").val();//课程名称编码
 			var startDate=$("#START_DATE").val();//开始时间
 			var endDate=$("#END_DATE").val();//结束时间
-			var planPersons=$("#TRAIN_PLAN_PERSONS").val();//申请人岗位
-			var planMemo=$("#TRAIN_PLAN_MEMO").val();//联系方式	
+			var planPersons=$("#TRAIN_PLAN_PERSONS").val();//培训人员
+			var planMemo=$("#TRAIN_PLAN_MEMO").val();//	任务描述
 			$.ajax({
 				type: "POST",
 				url: '<%=basePath%>trainplan/save.do',
-				data:{TRAIN_PLAN_NAME:planName,COURSE_TYPE_ID:couseTypeId,COURSE_CODE:couseCode,START_DATE:startDate,END_DATE:endDate,TRAIN_PLAN_PERSONS:planPersons,TRAIN_PLAN_MEMO:planMemo},
+				data:{TRAIN_PLAN_ID:trainID,TRAIN_PLAN_NAME:planName,COURSE_TYPE_ID:couseTypeId,COURSE_CODE:couseCode,START_DATE:startDate,END_DATE:endDate,TRAIN_PLAN_PERSONS:planPersons,TRAIN_PLAN_MEMO:planMemo},
 		    	dataType:'json',
 				cache: false,
 				success: function(response){
@@ -186,7 +199,7 @@
 						bootbox.dialog({
 							message: "<span class='bigger-110'>保存成功</span>",
 						});		
-						initList();
+						init();
 					}else{
 						$(top.hangge());//关闭加载状态
 						bootbox.dialog({
@@ -201,8 +214,18 @@
 						message: "<span class='bigger-110'>保存失败"+msgObj.message+"</span>",
 					});		
 		    	}
-			});
-			$("#grcqxbg-tab li[tag='detail-tab'] a").click();
+			});			
+		}
+		function init(){
+			$("#TRAIN_PLAN_NAME").val('');//任务名称
+			$("#COURSE_CODE").val('');//课程名称编码
+			$("#START_DATE").val('');//开始时间
+			$("#END_DATE").val('');//结束时间
+			$("#TRAIN_PLAN_PERSONS").val('');//申请人岗位
+			$("#TRAIN_PLAN_MEMO").val('');//联系方式
+			$("#uesrTextarea").val('');
+			$("#tobodyUser").html('');
+			initComplete();
 		}
 		$(function() {
 			//日期框
@@ -335,7 +358,6 @@
 							    			  userCodes += ',' + item.STUDENT_ID;
 							    			  userNames += ',' + item.STUDENT_NAME;
 							    		  }
-							    		  	
 										    var html = '';
 										        html += setTable(item,i+1);
 											$("#tobodyUser").append(html);
@@ -347,12 +369,10 @@
 						    		  var userCodes='';
 							    	  var userNames='';
 							    	  var arry = $("#TRAIN_PLAN_PERSONS").val().split(",");
-							    	  console.log(arry.length);
 						    		  var num=0;
 							    	  $.each(data, function(i, item){	
 								    	  if(arry.indexOf(item.STUDENT_ID.toString())==-1){
 								      			num=num+1;
-								      			 console.log(num);
 								    		  userCodes += ',' + item.STUDENT_ID;
 							    			  userNames += ',' + item.STUDENT_NAME;							    		  	
 										    	var html = '';

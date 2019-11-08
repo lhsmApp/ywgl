@@ -55,7 +55,17 @@
 	<include refid="Field"></include>
 		) values (
 	<include refid="FieldValue"></include>
-		)
+		);
+		<foreach item="item" index="index" collection="varList" open=" " separator="; " close=" ">		
+			<if test="item!=null">
+				insert into tb_gl_plan_user
+				(
+					TRAIN_PLAN_ID,	
+					STUDENT_ID
+				) values (#{item.TRAIN_PLAN_ID},
+					#{item.STUDENT_ID})
+					</if>
+		</foreach>
 	</insert>
 	
 	<!-- 删除-->
@@ -114,6 +124,9 @@
 				TRAIN_PLAN_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 				)
 		</if>
+	 	<if test="pd.START_DATE!=null and pd.START_DATE!='' and pd.END_DATE!=null and pd.END_DATE!=''"> 
+			  and (SUBSTRING(CREATE_DATE,1,10) between #{pd.START_DATE} and  #{pd.END_DATE} )
+			 </if>
 	</select>
 	
 	<!-- 列表(全部) -->

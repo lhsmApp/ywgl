@@ -23,7 +23,6 @@
 
 	<!-- /section:basics/navbar.layout -->
 	<div class="main-container" id="main-container">
-		<!-- /section:basics/sidebar -->
 		<div class="main-content">
 			<div class="main-content-inner">
 				<div class="page-content">
@@ -34,8 +33,8 @@
 						<table style="margin-top:5px;">
 							<tr>
 								<td><label> <i class="ace-icon  bigger-110"></i>任务时间范围：</label> </td>
-								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastStart" id="lastStart"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="开始日期" title="开始日期"/></td>
-								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastEnd" name="lastEnd"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="结束日期"/></td>
+								<td style="padding-left:2px;"><input class="span10 date-picker" name="START_DATE" id="START_DATE"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="开始日期" title="开始日期"/></td>
+								<td style="padding-left:2px;"><input class="span10 date-picker" name="END_DATE" name="END_DATE"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="结束日期"/></td>
 								<td style="vertical-align:top;padding-left:2px;">
 								 	<select class="chosen-select form-control" name="name" id="id" data-placeholder="请选择" style="vertical-align:top;width: 120px;">
 									<option value="0">全部</option>
@@ -61,7 +60,7 @@
 <!-- 									<a  onclick="del(bill_code)"> 	 -->
 <!-- 										<i class="ace-icon fa fa-trash-o bigger-110"></i>删除 -->
 <!-- 								</a> -->
-								</td>				
+<!-- 								</td>				 -->
 							</tr>
 						</table>
 					</form>
@@ -123,28 +122,15 @@
 						<div class="page-header position-relative">
 						<table style="width:100%;">
 							<tr>
-<!-- 								<td style="vertical-align:top;"> -->
-<%-- 									<c:if test="${QX.add == 1 }"> --%>
-<!-- 									<a class="btn btn-mini btn-success" onclick="add();">新增</a> -->
-<%-- 									</c:if> --%>
-<%-- 									<c:if test="${QX.del == 1 }"> --%>
-<!-- 									<a class="btn btn-mini btn-danger" onclick="makeAll('确定要删除选中的数据吗?');" title="批量删除" ><i class='ace-icon fa fa-trash-o bigger-120'></i></a> -->
-<%-- 									</c:if> --%>
-<!-- 								</td> -->
 								<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
 							</tr>
 						</table>
+						</div>					
 						</div>
-					
-						</div>
-						<!-- /.col -->
 					</div>
-					<!-- /.row -->
 				</div>
-				<!-- /.page-content -->
 			</div>
 		</div>
-		<!-- /.main-content -->
 
 		<!-- 返回顶部 -->
 		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
@@ -223,22 +209,22 @@
 		
 		//新增
 		function add(){
-// 			 top.jzts();
-// 			 var diag = new top.Dialog();
-// 			 diag.Drag=true;
-// 			 diag.Title ="培训计划维护";
-<%-- 			 diag.URL = '<%=basePath%>trainplan/goAdd.do'; --%>
-// 			 diag.Width = 1000;
-// 			 diag.Height = 550;
-// 			 diag.Modal = true;				//有无遮罩窗口
-// 			 diag. ShowMaxButton = true;	//最大化按钮
-// 		     diag.ShowMinButton = true;		//最小化按钮
-// 			 diag.CancelEvent = function(){ //关闭事件
-// 				diag.close();
-// 				tosearch();
-// 			 };
-// 			 diag.show();
-		window.location.href = '<%=basePath%>trainplan/goAdd.do';
+			 top.jzts();
+			 var diag = new top.Dialog();
+			 diag.Drag=true;
+			 diag.Title ="培训计划维护";
+			 diag.URL = '<%=basePath%>trainplan/goAdd.do';
+			 diag.Width = 1000;
+			 diag.Height = 550;
+			 diag.Modal = true;				//有无遮罩窗口
+			 diag. ShowMaxButton = true;	//最大化按钮
+		     diag.ShowMinButton = true;		//最小化按钮
+			 diag.CancelEvent = function(){ //关闭事件
+				diag.close();
+				tosearch();
+			 };
+			 diag.show();
+<%-- 		window.location.href = '<%=basePath%>trainplan/goAdd.do'; --%>
 				 
 		}
 		//删除
@@ -263,15 +249,16 @@
 			 diag.Title ="编辑";
 			 diag.URL = '<%=basePath%>trainplan/goEdit.do?TRAIN_PLAN_ID='+Id;
 			 diag.Width = 1000;
-			 diag.Height = 500;
+			 diag.Height = 550;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮 
 			 diag.CancelEvent = function(){ //关闭事件
 				 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
-					 nextPage(${page.currentPage});
+					 
 				}
 				diag.close();
+				tosearch();
 			 };
 			 diag.show();
 		}
