@@ -4,7 +4,7 @@
 	
 	<!--表名 -->
 	<sql id="tableName">
-		TESTPAPER
+		tb_test_paper
 	</sql>
 	
 	<!-- 字段 -->
@@ -22,8 +22,7 @@
 		QUALIFIED_SCORE,	
 		STATE,	
 		CREATE_USER,	
-		CREATE_DATE,	
-		TESTPAPER_ID
+		CREATE_DATE	
 	</sql>
 	
 	<!-- 字段值 -->
@@ -41,8 +40,7 @@
 		#{QUALIFIED_SCORE},	
 		#{STATE},	
 		#{CREATE_USER},	
-		#{CREATE_DATE},	
-		#{TESTPAPER_ID}
+		#{CREATE_DATE}
 	</sql>
 	
 	<!-- 新增-->
@@ -61,7 +59,7 @@
 		delete from
 		<include refid="tableName"></include>
 		where 
-			TESTPAPER_ID = #{TESTPAPER_ID}
+			TEST_PAPER_ID = #{TEST_PAPER_ID}
 	</delete>
 	
 	<!-- 修改 -->
@@ -69,7 +67,6 @@
 		update
 		<include refid="tableName"></include>
 		set 
-			TEST_PAPER_ID = #{TEST_PAPER_ID},
 			TEST_PAPER_TITLE = #{TEST_PAPER_TITLE},
 			COURSE_TYPE_ID = #{COURSE_TYPE_ID},
 			TEST_PAPER_TYPE = #{TEST_PAPER_TYPE},
@@ -80,34 +77,66 @@
 			ANSWER_TIME = #{ANSWER_TIME},
 			TEST_CHANCE = #{TEST_CHANCE},
 			QUALIFIED_SCORE = #{QUALIFIED_SCORE},
-			STATE = #{STATE},
-			CREATE_USER = #{CREATE_USER},
-			CREATE_DATE = #{CREATE_DATE},
 		TESTPAPER_ID = TESTPAPER_ID
 		where 
-		TESTPAPER_ID = #{TESTPAPER_ID}
+		TEST_PAPER_ID = #{TEST_PAPER_ID}
 	</update>
 	
 	<!-- 通过ID获取数据 -->
 	<select id="findById" parameterType="pd" resultType="pd">
-		select 
-		<include refid="Field"></include>
+		select
+			b.COURSE_TYPE_NAME,
+			a.TEST_PAPER_ID,	
+			a.TEST_PAPER_TITLE,	
+			a.COURSE_TYPE_ID,	
+			a.TEST_PAPER_TYPE,	
+			a.TEST_PAPER_DIFFICULTY,	
+			a.TEST_QUESTION_SOURCE,	
+			a.TEST_QUESTION_NUM,	
+			a.TEST_PAPER_SCORE,	
+			a.ANSWER_TIME,	
+			a.TEST_CHANCE,	
+			a.QUALIFIED_SCORE,	
+			a.CREATE_DATE
 		from 
-		<include refid="tableName"></include>
+			tb_test_paper AS a
+		left join
+			tb_course_type AS b
+		on
+			a.COURSE_TYPE_ID = b.COURSE_TYPE_ID
 		where 
-			TESTPAPER_ID = #{TESTPAPER_ID}
+			a.STATE = 1 
+		and	
+			TEST_PAPER_ID = #{TEST_PAPER_ID}
 	</select>
 	
 	<!-- 列表 -->
 	<select id="datalistPage" parameterType="page" resultType="pd">
 		select
-		<include refid="Field"></include>
+			b.COURSE_TYPE_NAME,
+			a.TEST_PAPER_ID,	
+			a.TEST_PAPER_TITLE,	
+			a.COURSE_TYPE_ID,	
+			a.TEST_PAPER_TYPE,	
+			a.TEST_PAPER_DIFFICULTY,	
+			a.TEST_QUESTION_SOURCE,	
+			a.TEST_QUESTION_NUM,	
+			a.TEST_PAPER_SCORE,	
+			a.ANSWER_TIME,	
+			a.TEST_CHANCE,	
+			a.QUALIFIED_SCORE,	
+			a.CREATE_DATE
 		from 
-		<include refid="tableName"></include>
-		where 1=1
+			tb_test_paper AS a
+		left join
+			tb_course_type AS b
+		on
+			a.COURSE_TYPE_ID = b.COURSE_TYPE_ID
+		where a.STATE = 1
 		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
 			and
 				(
+					a.TEST_PAPER_TITLE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 				<!--	根据需求自己加检索条件
 					字段1 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 					 or 
@@ -130,7 +159,7 @@
 		delete from
 		<include refid="tableName"></include>
 		where 
-			TESTPAPER_ID in
+			TEST_PAPER_ID in
 		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
                  #{item}
 		</foreach>
