@@ -8,7 +8,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+
 import javax.annotation.Resource;
+
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
@@ -16,18 +19,26 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
 import com.fh.controller.base.BaseController;
+import com.fh.entity.CommonBase;
 import com.fh.entity.Page;
-import com.fh.util.AppUtil;
-import com.fh.util.ObjectExcelView;
-import com.fh.util.PageData;
-import com.fh.util.Jurisdiction;
-import com.fh.util.Tools;
 import com.fh.service.exam.testpaper.TestPaperManager;
+import com.fh.service.testquestion.testquestion.TestQuestionManager;
+import com.fh.service.trainBase.CourseTypeManager;
+import com.fh.util.AppUtil;
+import com.fh.util.Jurisdiction;
+import com.fh.util.PageData;
+import com.fh.util.StringUtil;
+import com.fh.util.enums.PaperType;
+import com.fh.util.enums.QuestionDifficulty;
+import com.fh.util.enums.QuestionType;
+
+import net.sf.json.JSONArray;
 
 /** 
- * 说明：testpaper
- * 创建人：jiachao
+ * 说明：试卷信息处理类
+ * 创建人：xinyuLo
  * 创建时间：2019-11-06
  */
 @Controller
@@ -37,6 +48,10 @@ public class TestPaperController extends BaseController {
 	String menuUrl = "testpaper/list.do"; //菜单地址(权限用)
 	@Resource(name="testpaperService")
 	private TestPaperManager testpaperService;
+	@Resource(name="coursetypeService")
+	private CourseTypeManager coursetypeService;
+	@Resource(name="testquestionService")
+	private TestQuestionManager testquestionService;
 	
 	/**保存
 	 * @param
@@ -105,6 +120,16 @@ public class TestPaperController extends BaseController {
 		}
 		page.setPd(pd);
 		List<PageData>	varList = testpaperService.list(page);	//列出TestPaper列表
+		for (PageData pageData : varList) {
+			String testPaperType = pageData.getString("TEST_PAPER_TYPE");
+			String testQuestionDifficulty = pageData.getString("TEST_PAPER_DIFFICULTY");
+			
+			String enumDifficulty = QuestionDifficulty.getValueByKey(testQuestionDifficulty);
+			String enmuType = PaperType.getValueByKey(testPaperType);
+			
+			pageData.put("TEST_PAPER_TYPE", enmuType);
+			pageData.put("TEST_PAPER_DIFFICULTY", enumDifficulty);
+		}
 		mv.setViewName("exam/testpaper/testpaper_list");
 		mv.addObject("varList", varList);
 		mv.addObject("pd", pd);
@@ -121,6 +146,9 @@ public class TestPaperController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
+		List<PageData> courseTypePdList = new ArrayList<PageData>(); 
+		JSONArray arr = JSONArray.fromObject(coursetypeService.listAllCourseTypeToSelect("0",courseTypePdList));
+		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
 		mv.setViewName("exam/testpaper/testpaper_edit");
 		mv.addObject("msg", "save");
 		mv.addObject("pd", pd);
@@ -137,6 +165,9 @@ public class TestPaperController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd = testpaperService.findById(pd);	//根据ID读取
+		List<PageData> courseTypePdList = new ArrayList<PageData>(); 
+		JSONArray arr = JSONArray.fromObject(coursetypeService.listAllCourseTypeToSelect("0",courseTypePdList));
+		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
 		mv.setViewName("exam/testpaper/testpaper_edit");
 		mv.addObject("msg", "edit");
 		mv.addObject("pd", pd);
@@ -169,58 +200,180 @@ public class TestPaperController extends BaseController {
 		return AppUtil.returnObject(pd, map);
 	}
 	
-	 /**导出到excel
+	/**去新增试题页面
 	 * @param
 	 * @throws Exception
 	 */
-	@RequestMapping(value="/excel")
-	public ModelAndView exportExcel() throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"导出TestPaper到excel");
-		if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;}
-		ModelAndView mv = new ModelAndView();
+	@RequestMapping(value="/goAddQuestion")
+	public ModelAndView goAddQuestion(Page page)throws Exception{
+		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		Map<String,Object> dataMap = new HashMap<String,Object>();
-		List<String> titles = new ArrayList<String>();
-		titles.add("备注1");	//1
-		titles.add("备注2");	//2
-		titles.add("备注3");	//3
-		titles.add("备注4");	//4
-		titles.add("备注5");	//5
-		titles.add("备注6");	//6
-		titles.add("备注7");	//7
-		titles.add("备注8");	//8
-		titles.add("备注9");	//9
-		titles.add("备注10");	//10
-		titles.add("备注11");	//11
-		titles.add("备注12");	//12
-		titles.add("备注13");	//13
-		titles.add("备注14");	//14
-		dataMap.put("titles", titles);
-		List<PageData> varOList = testpaperService.listAll(pd);
-		List<PageData> varList = new ArrayList<PageData>();
-		for(int i=0;i<varOList.size();i++){
-			PageData vpd = new PageData();
-			vpd.put("var1", varOList.get(i).get("TEST_PAPER_ID").toString());	//1
-			vpd.put("var2", varOList.get(i).getString("TEST_PAPER_TITLE"));	    //2
-			vpd.put("var3", varOList.get(i).get("COURSE_TYPE_ID").toString());	//3
-			vpd.put("var4", varOList.get(i).getString("TEST_PAPER_TYPE"));	    //4
-			vpd.put("var5", varOList.get(i).getString("TEST_PAPER_DIFFICULTY"));	    //5
-			vpd.put("var6", varOList.get(i).getString("TEST_QUESTION_SOURCE"));	    //6
-			vpd.put("var7", varOList.get(i).get("TEST_QUESTION_NUM").toString());	//7
-			vpd.put("var8", varOList.get(i).getString("TEST_PAPER_SCORE"));	    //8
-			vpd.put("var9", varOList.get(i).get("ANSWER_TIME").toString());	//9
-			vpd.put("var10", varOList.get(i).get("TEST_CHANCE").toString());	//10
-			vpd.put("var11", varOList.get(i).getString("QUALIFIED_SCORE"));	    //11
-			vpd.put("var12", varOList.get(i).getString("STATE"));	    //12
-			vpd.put("var13", varOList.get(i).getString("CREATE_USER"));	    //13
-			vpd.put("var14", varOList.get(i).getString("CREATE_DATE"));	    //14
-			varList.add(vpd);
+		page.setPd(pd);
+		List<PageData> varList = testquestionService.list(page);
+		//进行数据转换
+		for (PageData pageData : varList) {
+			String testQuestionType = pageData.getString("TEST_QUESTION_TYPE");
+			String testQuestionDifficulty = pageData.getString("TEST_QUESTION_DIFFICULTY");
+			String enmuType = QuestionType.getValueByKey(testQuestionType);
+			String enumDifficulty = QuestionDifficulty.getValueByKey(testQuestionDifficulty);
+			pageData.put("TEST_QUESTION_TYPE", enmuType);
+			pageData.put("TEST_QUESTION_DIFFICULTY", enumDifficulty);
 		}
-		dataMap.put("varList", varList);
-		ObjectExcelView erv = new ObjectExcelView();
-		mv = new ModelAndView(erv,dataMap);
+		mv.addObject("varList",varList);
+		mv.setViewName("exam/testpaper/testpaper_add");
+		mv.addObject("pd", pd);
 		return mv;
+	}	
+	
+	/**
+	  * 通过id查询试题列表
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/listByQuestionId")
+	@ResponseBody
+	public CommonBase listByQuestionId()throws Exception{
+		CommonBase commonBase = new CommonBase();
+		List<PageData> varList = new ArrayList<PageData>();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		String ids = pd.getString("ids");
+		String[] TEST_QUESTION_ID = StringUtil.StrList(ids);
+		for (int i = 0; i < TEST_QUESTION_ID.length; i++) {
+			pd.put("TEST_QUESTION_ID", TEST_QUESTION_ID[i]);
+			PageData pageData = testquestionService.findById(pd);
+			//进行数据转换
+			String testQuestionType = pageData.getString("TEST_QUESTION_TYPE");
+			String testQuestionDifficulty = pageData.getString("TEST_QUESTION_DIFFICULTY");
+			String enmuType = QuestionType.getValueByKey(testQuestionType);
+			String enumDifficulty = QuestionDifficulty.getValueByKey(testQuestionDifficulty);
+			pageData.put("TEST_QUESTION_TYPE", enmuType);
+			pageData.put("TEST_QUESTION_DIFFICULTY", enumDifficulty);
+			varList.add(pageData);
+		}
+		//转换成json数据
+		JSONArray jsonArr = JSONArray.fromObject(varList);
+		commonBase.setCode(1);
+		commonBase.setMessage(StringUtil.toString(jsonArr,""));
+		return commonBase;
+	}
+	
+	/**
+	 * 随机生成试题
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/radomPaper")
+	@ResponseBody
+	public CommonBase radomPaper()throws Exception{
+		CommonBase commonBase = new CommonBase();
+		List<PageData> varList = new ArrayList<PageData>();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		//进行数据初始化
+		long baseNum = 0; //数据库实际题数
+		long num = 0;	  //输入题数
+		int index = 0;    //随机试题索引
+		//先进行数据验证
+		String listData = pd.getString("listData");
+		JSONArray array = JSONArray.fromObject(listData);
+		@SuppressWarnings("unchecked")
+		List<PageData> listTransferData = (List<PageData>) JSONArray.toCollection(array, PageData.class);// 过时方法
+		//先查询是否有该分数试题
+		for (PageData pageData : listTransferData) {
+			//判断题数
+			PageData countQuestion = testquestionService.countQuestion(pageData);
+			baseNum = (long) countQuestion.get("number");
+			num = Long.parseLong(pageData.getString("TEST_QUESTION_NUM"));
+
+			if (baseNum == 0) {
+				commonBase.setCode(0);
+				commonBase.setMessage("当前暂无该条件试题!!!请重新配置生成条件!");
+				return	commonBase;
+			}
+			if(num > baseNum) {//如果为空则返回
+				commonBase.setCode(0);
+				commonBase.setMessage("当前题库数量不足!请重新配置生成条件!!!");
+				return	commonBase;
+			}
+			//校验通过随机试题
+			List<PageData> randomData = testquestionService.randomList(pageData);
+			Random random = new Random();
+			for (long i = 0; i < num; i++) {
+				index = random.nextInt(randomData.size());
+				pd  = randomData.get(index);
+				//进行数据转换
+				String testQuestionType = pd.getString("TEST_QUESTION_TYPE");
+				String testQuestionDifficulty = pd.getString("TEST_QUESTION_DIFFICULTY");
+				String enmuType = QuestionType.getValueByKey(testQuestionType);
+				String enumDifficulty = QuestionDifficulty.getValueByKey(testQuestionDifficulty);
+				pd.put("TEST_QUESTION_TYPE", enmuType);
+				pd.put("TEST_QUESTION_DIFFICULTY", enumDifficulty);
+				varList.add(pd);
+				//添加后去除此id防止重复
+				randomData.remove(index);
+				
+			}
+			
+		}
+		//转换成json数据
+		JSONArray jsonArr = JSONArray.fromObject(varList);
+		commonBase.setCode(1);
+		commonBase.setMessage(StringUtil.toString(jsonArr,""));
+		return commonBase;
+	}	
+	
+	/**
+	  * 通过id查询所有试题数量
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/countQuestion")
+	@ResponseBody
+	public CommonBase countQuestion()throws Exception{
+		CommonBase commonBase = new CommonBase();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		String str = "*目前该分类有";
+		/*
+		  *单选题1、多选题2、简答题3 
+		  * 简单1、中等2、困难3
+		 */
+		for (int i = 1; i <= 3; i++) {
+			pd.put("TEST_QUESTION_TYPE",i);
+			switch (i) {
+				case 1:
+					str += "单选题 :";
+					break;
+				case 2:
+					str += "多选题 :";
+					break;
+				case 3:
+					str += "简答题 :";
+					break;
+			}
+			for (int j = 1; j <=3; j++) {
+				pd.put("TEST_QUESTION_DIFFICULTY",j);
+				PageData pageData = testquestionService.countQuestion(pd);
+				switch (j) {
+					case 1:
+						str += "( 简单:";
+						break;
+					case 2:
+						str += "中等 :";
+						break;
+					case 3:
+						str += "困难 :";
+						break;
+				} 
+				str += pageData.get("number").toString();
+				str +="题 ";
+			}
+			str+=" ) ";
+		}
+		commonBase.setMessage(str);
+		return commonBase;
 	}
 	
 	@InitBinder
