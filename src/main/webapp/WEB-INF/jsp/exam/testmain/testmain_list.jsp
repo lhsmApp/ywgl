@@ -112,9 +112,9 @@
 													           	  <span class="list-item-info" style="padding-left:3px;"><i style="padding-right: 2px;" class="blue ace-icon fa fa-inbox"></i>试题数:${var.TEST_QUESTION_NUM}</span>
 													          </div>
 													          <div class="btm-box">
-														          <button style="width:100%;" class="btn btn-round btn-info" onclick="beginExam('${var.TEST_PLAN_ID}')">
+														          <a style="width:100%;" class="btn btn-round btn-info" onclick="beginExam('${var.TEST_PLAN_ID}','${var.TEST_PAPER_ID}')">
 															          <font style="vertical-align: inherit;">开始考试</font>
-														       	  </button>
+														       	  </a>
 				               								  </div>
 													    </div>
 													</div>
@@ -208,17 +208,14 @@
 		}  	
 		
 		/*开始考试*/
-		function beginExam(Id){
+		function beginExam(planId,paperId){
 			bootbox.confirm("确认要开始进行考试吗?", function(result) {
 				if(result){
 					top.jzts();
 					/*
-					
-						开始考试跳转
-					
-						
+						开始考试跳转	
 					*/
-					
+					window.location.href='<%=basePath%>testpaper/goExam.do?TEST_PLAN_ID='+planId+'&TEST_PAPER_ID='+paperId;
 				}
 			});
 		}

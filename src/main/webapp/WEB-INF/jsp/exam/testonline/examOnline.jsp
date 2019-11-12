@@ -34,18 +34,8 @@
  		.aswer-p:hover {
  			background-color: #FFF;
  		}
- 		input {
-		}
-		.subjectOption {
-			padding-top: 0px;
-		}
-		.hidden_info {
-			display: none;
-		}
-		.currentli {
-            color:#186ecc;
-            background-color:#fff;
-        }
+ 
+
  	</style>
 </head>
 <body  class="no-skin">
@@ -86,6 +76,7 @@
 									</div>
 						<!-- 			页面生成答题序号按钮 -->
 									<div style="width: 100%; height: 100%;margin-top: 10px;">
+									<span id="testPlanId" style="display: none;">${pd.TEST_PLAN_ID}</span>
 										<ul id="answerNo">
 											<c:if test="${varList != null }">
 												<c:set value="1" var="indexAswer"></c:set>
@@ -291,7 +282,7 @@
 			        $.ajax({
 						   type: "POST",
 						   url: '<%=basePath%>testpaper/examResult.do',
-						   data: {'result':JSON.stringify(data),TEST_PAPER_ID:paperId},
+						   data: {'result':JSON.stringify(data),TEST_PAPER_ID:paperId,TEST_PLAN_ID:$("#testPlanId").text()},
 						   dataType:'json',
 						   //beforeSend: validateData,
 						   cache: false,

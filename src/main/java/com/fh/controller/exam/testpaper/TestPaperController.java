@@ -398,18 +398,18 @@ public class TestPaperController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		pd.put("TEST_PAPER_ID","EP20191107144218001");
+		//pd.put("TEST_PAPER_ID","EP20191107144218001");
 		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 	    String userId=user.getUSER_ID();
 		pd.put("TEST_USER", userId);
-		pd.put("TEST_PLAN_ID", "EP20191111113555283");//考试计划
+		//pd.put("TEST_PLAN_ID", "EP20191107150901187");//考试计划
 		//根据考试计划、试卷ID和考试人判断该用户是否已参加过考试
-		List<PageData> userExamList=testmainService.listByUser(pd);
-		if(null!=userExamList&&userExamList.size()>0){
-			mv.setViewName("exam/testonline/Warning");
-			mv.addObject("pd", pd);
-			return mv;
-		}
+//		List<PageData> userExamList=testmainService.listByUser(pd);
+//		if(null!=userExamList&&userExamList.size()>0){
+//			mv.setViewName("exam/testonline/Warning");
+//			mv.addObject("pd", pd);
+//			return mv;
+//		}
 		page.setPd(pd);
 		List<PageData>	varList = testpaperService.listExam(page);	//列出TestPaper列表
 		List<PageData>	answerList = testpaperService.listAnswer(page);	//列出TestPaper列表
@@ -438,13 +438,13 @@ public class TestPaperController extends BaseController {
 		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 	    String userId=user.getUSER_ID();
 		pd.put("TEST_USER", userId);
-		pd.put("TEST_PLAN_ID", "EP20191111113555283");//考试计划
+		//pd.put("TEST_PLAN_ID", "EP20191107150901187");//考试计划
 		//根据考试计划、试卷ID和考试人判断该用户是否已参加过考试
-		List<PageData> userExamList=testmainService.listByUser(pd);
-		if(null!=userExamList&&userExamList.size()>0){
-			pd.put("msg", "该用户已参加过考试，不允许再考！");
-			return pd;
-		}
+//		List<PageData> userExamList=testmainService.listByUser(pd);
+//		if(null!=userExamList&&userExamList.size()>0){
+//			pd.put("msg", "该用户已参加过考试，不允许再考！");
+//			return pd;
+//		}
 		List<PageData> answerList=new ArrayList<PageData>();//答案集合		 
 		JSONObject jsonobject = JSONObject.fromObject(pd.getString("result"));
 		//考试分数
