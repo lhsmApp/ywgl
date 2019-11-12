@@ -111,14 +111,14 @@ public class TestMainController extends BaseController {
 		pd = this.getPageData();
 		String keywords = pd.getString("keywords"); // 关键词检索条件
 		String userId = user.getUSER_ID();
-		String nowDate = DateUtil.getTime();
+		String nowDate = DateUtil.getDays();
 		
 		/*------------------未考试------------------*/
 		List<PageData> paperList = testmainService.paperListPage(page);
 		for (PageData pageData : paperList) {
 			// 先判断时间
-			String endDate = pd.getString("END_DATE");
-			if (DateUtil.compareDate(endDate, nowDate)) {
+			String endDate = pageData.getString("END_DATE");
+			if (DateUtil.compareDates(endDate, nowDate)) {
 				String[] planPerson = pageData.getString("TEST_PLAN_PERSONS").split(",");
 				if (null != planPerson && planPerson.length > 0) {
 					for (int i = 0; i < planPerson.length; i++) {

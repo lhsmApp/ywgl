@@ -153,6 +153,10 @@
 				-->
 				)
 		</if>
+		<if test="pd.COURSE_TYPE_ID != null and pd.COURSE_TYPE_ID != ''"><!-- 去新增试题页面检索条件 -->
+		and
+			a.COURSE_TYPE_ID = #{pd.COURSE_TYPE_ID}
+		</if>
 	</select>
 	<!-- 列表(全部) -->
 	<select id="listAll" parameterType="pd" resultType="pd">
@@ -175,7 +179,6 @@
 	<!-- 根据试题id查询所有答案 -->
 	<select id="listById" parameterType="pd" resultType="pd">
 		select
-			TEST_QUESTION_ITEM_ID,
 			TEST_QUESTION_ID,
 			TEST_QUESTION_ITEM_TITLE,
 			TEST_QUESTION_ITEM_CONTENT
@@ -193,4 +196,55 @@
 		where 
 			TEST_QUESTION_ID = #{TEST_QUESTION_ID}
 	</delete>
+	<!-- 根据试题id查询所有答案 -->
+	<select id="countQuestion" parameterType="pd" resultType="pd">
+		select
+			COUNT(TEST_QUESTION_ID) AS number
+		from
+			<include refid="tableName"></include>
+		where
+			COURSE_TYPE_ID = #{COURSE_TYPE_ID}
+		and
+			TEST_QUESTION_TYPE = #{TEST_QUESTION_TYPE}		
+		and
+			TEST_QUESTION_DIFFICULTY = #{TEST_QUESTION_DIFFICULTY}
+		and
+			STATE = 1
+		<if test="TEST_QUESTION_SCORE != null and TEST_QUESTION_SCORE != ''">
+		and
+			TEST_QUESTION_SCORE =#{TEST_QUESTION_SCORE}
+		</if>
+	</select>
+	
+	<select id="randomList" parameterType="pd" resultType="pd">
+		select 
+			a.TEST_QUESTION_ID,	
+			a.TEST_QUESTION_TITLE,	
+			a.COURSE_TYPE_ID,
+			b.COURSE_TYPE_NAME,	
+			a.TEST_QUESTION_TYPE,	
+			a.TEST_QUESTION_DIFFICULTY,	
+			a.TEST_QUESTION_SCORE,	
+			a.TEST_QUESTION_ANSWER,	
+			a.TEST_ANSWER_NOTE,	
+			a.CREATE_USER,	
+			a.CREATE_DATE
+		from 
+			tb_test_question AS a
+		left join
+			tb_course_type AS b
+		on 
+			a.COURSE_TYPE_ID = b.COURSE_TYPE_ID
+		where
+			a.COURSE_TYPE_ID = #{COURSE_TYPE_ID}
+		and
+			a.TEST_QUESTION_TYPE = #{TEST_QUESTION_TYPE}		
+		and
+			a.TEST_QUESTION_DIFFICULTY = #{TEST_QUESTION_DIFFICULTY}
+		and
+			a.STATE = 1
+		and
+			a.TEST_QUESTION_SCORE =#{TEST_QUESTION_SCORE}
+	</select>
+	
 </mapper>

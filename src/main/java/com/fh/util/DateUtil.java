@@ -105,6 +105,22 @@ public class DateUtil {
 		}
 		return fomatDate(s).getTime() >=fomatDate(e).getTime();
 	}
+	
+	/**
+	* @Title: compareDate
+	* @Description: TODO(日期比较，如果s>=e 返回true 否则返回false)
+	* @param s 格式:YYYYMMDD
+	* @param e 格式:YYYYMMDD
+	* @return boolean  
+	* @throws
+	* @author fh
+	 */
+	public static boolean compareDates(String s, String e) {
+		if(fomatDates(s)==null||fomatDates(e)==null){
+			return false;
+		}
+		return fomatDates(s).getTime() >=fomatDates(e).getTime();
+	}
 
 	/**
 	 * 格式化日期
@@ -112,6 +128,20 @@ public class DateUtil {
 	 */
 	public static Date fomatDate(String date) {
 		DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			return fmt.parse(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	/**
+	 * 格式化日期
+	 * @return
+	 */
+	public static Date fomatDates(String date) {
+		DateFormat fmt = new SimpleDateFormat("yyyyMMdd");
 		try {
 			return fmt.parse(date);
 		} catch (ParseException e) {

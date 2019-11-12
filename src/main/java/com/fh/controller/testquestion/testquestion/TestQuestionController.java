@@ -210,11 +210,10 @@ public class TestQuestionController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		JSONArray arr = JSONArray.fromObject(coursetypeService.listTree("0"));
-		String json = arr.toString();
-		json = json.replaceAll("COURSETYPE_ID", "id").replaceAll("PARENT_ID", "pId").replaceAll("NAME", "name").replaceAll("subCourseType", "nodes").replaceAll("hasCourseType", "checked");
+		List<PageData> courseTypePdList = new ArrayList<PageData>(); 
+		JSONArray arr = JSONArray.fromObject(coursetypeService.listAllCourseTypeToSelect("0",courseTypePdList));
+		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
 		mv.setViewName("testquestion/testquestion/testquestion_edit");
-		mv.addObject("zTreeNodes", json);
 		mv.addObject("msg", "save");
 		mv.addObject("pd", pd);
 		return mv;
@@ -232,7 +231,7 @@ public class TestQuestionController extends BaseController {
 		pd = testquestionService.findById(pd);	//根据ID读取
 		List<PageData> courseTypePdList = new ArrayList<PageData>(); 
 		List<PageData> listById = testquestionService.listById(pd);
-		  JSONArray arr = JSONArray.fromObject(coursetypeService.listAllCourseTypeToSelect("0",courseTypePdList));
+		JSONArray arr = JSONArray.fromObject(coursetypeService.listAllCourseTypeToSelect("0",courseTypePdList));
 		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
 		mv.setViewName("testquestion/testquestion/testquestion_edit");
 		mv.addObject("msg", "edit");
@@ -271,7 +270,7 @@ public class TestQuestionController extends BaseController {
 	 * 获取当前时间到秒加3位随机数字组成17位ID
 	 * @return ID
 	 */
-   private String getId(){
+   private synchronized String getId(){
         String id = null;
         Random random = new Random();
         SimpleDateFormat sdfTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

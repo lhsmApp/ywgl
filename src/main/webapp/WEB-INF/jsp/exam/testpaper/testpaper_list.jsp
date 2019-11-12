@@ -27,37 +27,24 @@
 		<div class="main-content">
 			<div class="main-content-inner">
 				<div class="page-content">
+					<form action="testpaper/list.do" method="post" name="Form" id="Form">
+						<div class="page-header">
+							<!-- 检索  -->
+							<label class="pull-left" style="padding: 5px;">筛选条件：</label>
+							<span class="input-icon nav-search" style="margin-left: 14px;">
+								<i class="ace-icon fa fa-search nav-search-icon"></i>
+								<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords}" placeholder="请输入课件名称" />
+							</span>
+							<span style="margin-left:-15px;"> 
+							</span>
+							<button style="margin-bottom:3px;" class="btn btn-light btn-minier" onclick="search();" title="检索">
+								<i id="nav-search-icon" class="ace-icon fa fa-search bigger-120 nav-search-icon blue"></i>
+							</button>
+						</div>
 					<div class="row">
 						<div class="col-xs-12">
 							
-						<!-- 检索  -->
-						<form action="testpaper/list.do" method="post" name="Form" id="Form">
-						<table style="margin-top:5px;">
-							<tr>
-								<td>
-									<div class="nav-search">
-										<span class="input-icon">
-											<input type="text" placeholder="这里输入关键词" class="nav-search-input" id="nav-search-input" autocomplete="off" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词"/>
-											<i class="ace-icon fa fa-search nav-search-icon"></i>
-										</span>
-									</div>
-								</td>
-								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastStart" id="lastStart"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="开始日期" title="开始日期"/></td>
-								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastEnd" name="lastEnd"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="结束日期"/></td>
-								<td style="vertical-align:top;padding-left:2px;">
-								 	<select class="chosen-select form-control" name="name" id="id" data-placeholder="请选择" style="vertical-align:top;width: 120px;">
-									<option value=""></option>
-									<option value="">全部</option>
-									<option value="">1</option>
-									<option value="">2</option>
-								  	</select>
-								</td>
-								<c:if test="${QX.cha == 1 }">
-								<td style="vertical-align:top;padding-left:2px"><a class="btn btn-light btn-xs" onclick="tosearch();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
-								</c:if>
-								<c:if test="${QX.toExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="toExcel();" title="导出到EXCEL"><i id="nav-search-icon" class="ace-icon fa fa-download bigger-110 nav-search-icon blue"></i></a></td></c:if>
-							</tr>
-						</table>
+						
 						<!-- 检索  -->
 					
 						<table id="simple-table" class="table table-striped table-bordered table-hover" style="margin-top:5px;">	
@@ -67,20 +54,15 @@
 									<label class="pos-rel"><input type="checkbox" class="ace" id="zcheckbox" /><span class="lbl"></span></label>
 									</th>
 									<th class="center" style="width:50px;">序号</th>
-									<th class="center">备注1</th>
-									<th class="center">备注2</th>
-									<th class="center">备注3</th>
-									<th class="center">备注4</th>
-									<th class="center">备注5</th>
-									<th class="center">备注6</th>
-									<th class="center">备注7</th>
-									<th class="center">备注8</th>
-									<th class="center">备注9</th>
-									<th class="center">备注10</th>
-									<th class="center">备注11</th>
-									<th class="center">备注12</th>
-									<th class="center">备注13</th>
-									<th class="center">备注14</th>
+									<th class="center">试卷名称</th>
+									<th class="center">试卷分类</th>
+									<th class="center">试卷类型</th>
+									<th class="center">试卷难度</th>
+									<th class="center">题目数量</th>
+									<th class="center">试卷分数</th>
+									<th class="center">答题时间</th>
+									<th class="center">合格分数</th>
+									<th class="center">创建日期</th>
 									<th class="center">操作</th>
 								</tr>
 							</thead>
@@ -89,42 +71,29 @@
 							<!-- 开始循环 -->	
 							<c:choose>
 								<c:when test="${not empty varList}">
-									<c:if test="${QX.cha == 1 }">
 									<c:forEach items="${varList}" var="var" varStatus="vs">
 										<tr>
 											<td class='center'>
-												<label class="pos-rel"><input type='checkbox' name='ids' value="${var.TESTPAPER_ID}" class="ace" /><span class="lbl"></span></label>
+												<label class="pos-rel"><input type='checkbox' name='ids' value="${var.TEST_PAPER_ID}" class="ace" /><span class="lbl"></span></label>
 											</td>
 											<td class='center' style="width: 30px;">${vs.index+1}</td>
-											<td class='center'>${var.TEST_PAPER_ID}</td>
 											<td class='center'>${var.TEST_PAPER_TITLE}</td>
-											<td class='center'>${var.COURSE_TYPE_ID}</td>
+											<td class='center'>${var.COURSE_TYPE_NAME}</td>
 											<td class='center'>${var.TEST_PAPER_TYPE}</td>
 											<td class='center'>${var.TEST_PAPER_DIFFICULTY}</td>
-											<td class='center'>${var.TEST_QUESTION_SOURCE}</td>
-											<td class='center'>${var.TEST_QUESTION_NUM}</td>
-											<td class='center'>${var.TEST_PAPER_SCORE}</td>
-											<td class='center'>${var.ANSWER_TIME}</td>
-											<td class='center'>${var.TEST_CHANCE}</td>
-											<td class='center'>${var.QUALIFIED_SCORE}</td>
-											<td class='center'>${var.STATE}</td>
-											<td class='center'>${var.CREATE_USER}</td>
+											<td class='center'>${var.TEST_QUESTION_NUM}题</td>
+											<td class='center'>${var.TEST_PAPER_SCORE}分</td>
+											<td class='center'>${var.ANSWER_TIME}分钟</td>
+											<td class='center'>${var.QUALIFIED_SCORE}分</td>
 											<td class='center'>${var.CREATE_DATE}</td>
 											<td class="center">
-												<c:if test="${QX.edit != 1 && QX.del != 1 }">
-												<span class="label label-large label-grey arrowed-in-right arrowed-in"><i class="ace-icon fa fa-lock" title="无权限"></i></span>
-												</c:if>
 												<div class="hidden-sm hidden-xs btn-group">
-													<c:if test="${QX.edit == 1 }">
-													<a class="btn btn-xs btn-success" title="编辑" onclick="edit('${var.TESTPAPER_ID}');">
+													<a class="btn btn-xs btn-success" title="编辑" onclick="edit('${var.TEST_PAPER_ID}');">
 														<i class="ace-icon fa fa-pencil-square-o bigger-120" title="编辑"></i>
 													</a>
-													</c:if>
-													<c:if test="${QX.del == 1 }">
-													<a class="btn btn-xs btn-danger" onclick="del('${var.TESTPAPER_ID}');">
+													<a class="btn btn-xs btn-danger" onclick="del('${var.TEST_PAPER_ID}');">
 														<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
 													</a>
-													</c:if>
 												</div>
 												<div class="hidden-md hidden-lg">
 													<div class="inline pos-rel">
@@ -133,24 +102,20 @@
 														</button>
 			
 														<ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
-															<c:if test="${QX.edit == 1 }">
 															<li>
-																<a style="cursor:pointer;" onclick="edit('${var.TESTPAPER_ID}');" class="tooltip-success" data-rel="tooltip" title="修改">
+																<a style="cursor:pointer;" onclick="edit('${var.TEST_PAPER_ID}');" class="tooltip-success" data-rel="tooltip" title="修改">
 																	<span class="green">
 																		<i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
 																	</span>
 																</a>
 															</li>
-															</c:if>
-															<c:if test="${QX.del == 1 }">
 															<li>
-																<a style="cursor:pointer;" onclick="del('${var.TESTPAPER_ID}');" class="tooltip-error" data-rel="tooltip" title="删除">
+																<a style="cursor:pointer;" onclick="del('${var.TEST_PAPER_ID}');" class="tooltip-error" data-rel="tooltip" title="删除">
 																	<span class="red">
 																		<i class="ace-icon fa fa-trash-o bigger-120"></i>
 																	</span>
 																</a>
 															</li>
-															</c:if>
 														</ul>
 													</div>
 												</div>
@@ -158,12 +123,6 @@
 										</tr>
 									
 									</c:forEach>
-									</c:if>
-									<c:if test="${QX.cha == 0 }">
-										<tr>
-											<td colspan="100" class="center">您无权查看</td>
-										</tr>
-									</c:if>
 								</c:when>
 								<c:otherwise>
 									<tr class="main_info">
@@ -177,22 +136,17 @@
 						<table style="width:100%;">
 							<tr>
 								<td style="vertical-align:top;">
-									<c:if test="${QX.add == 1 }">
 									<a class="btn btn-mini btn-success" onclick="add();">新增</a>
-									</c:if>
-									<c:if test="${QX.del == 1 }">
 									<a class="btn btn-mini btn-danger" onclick="makeAll('确定要删除选中的数据吗?');" title="批量删除" ><i class='ace-icon fa fa-trash-o bigger-120'></i></a>
-									</c:if>
 								</td>
 								<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
 							</tr>
 						</table>
 						</div>
-						</form>
-					
 						</div>
 						<!-- /.col -->
 					</div>
+					</form>
 					<!-- /.row -->
 				</div>
 				<!-- /.page-content -->
@@ -229,40 +183,6 @@
 			$("#Form").submit();
 		}
 		$(function() {
-		
-			//日期框
-			$('.date-picker').datepicker({
-				autoclose: true,
-				todayHighlight: true
-			});
-			
-			//下拉框
-			if(!ace.vars['touch']) {
-				$('.chosen-select').chosen({allow_single_deselect:true}); 
-				$(window)
-				.off('resize.chosen')
-				.on('resize.chosen', function() {
-					$('.chosen-select').each(function() {
-						 var $this = $(this);
-						 $this.next().css({'width': $this.parent().width()});
-					});
-				}).trigger('resize.chosen');
-				$(document).on('settings.ace.chosen', function(e, event_name, event_val) {
-					if(event_name != 'sidebar_collapsed') return;
-					$('.chosen-select').each(function() {
-						 var $this = $(this);
-						 $this.next().css({'width': $this.parent().width()});
-					});
-				});
-				$('#chosen-multiple-style .btn').on('click', function(e){
-					var target = $(this).find('input[type=radio]');
-					var which = parseInt(target.val());
-					if(which == 2) $('#form-field-select-4').addClass('tag-input-style');
-					 else $('#form-field-select-4').removeClass('tag-input-style');
-				});
-			}
-			
-			
 			//复选框全选控制
 			var active_class = 'active';
 			$('#simple-table > thead > tr > th input[type=checkbox]').eq(0).on('click', function(){
@@ -277,29 +197,8 @@
 		
 		//新增
 		function add(){
-			 top.jzts();
-			 var diag = new top.Dialog();
-			 diag.Drag=true;
-			 diag.Title ="新增";
-			 diag.URL = '<%=basePath%>testpaper/goAdd.do';
-			 diag.Width = 450;
-			 diag.Height = 355;
-			 diag.Modal = true;				//有无遮罩窗口
-			 diag. ShowMaxButton = true;	//最大化按钮
-		     diag.ShowMinButton = true;		//最小化按钮
-			 diag.CancelEvent = function(){ //关闭事件
-				 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
-					 if('${page.currentPage}' == '0'){
-						 top.jzts();
-						 setTimeout("self.location=self.location",100);
-					 }else{
-						 nextPage(${page.currentPage});
-					 }
-				}
-				diag.close();
-			 };
-			 diag.show();
-		}
+			window.location.href = '<%=basePath%>testpaper/goAdd.do';
+		}		
 		
 		//删除
 		function del(Id){

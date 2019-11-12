@@ -9,7 +9,7 @@
 	
 	<!-- 字段 -->
 	<sql id="Field">
-		TEST_ID,	
+		TEST_PLAN_ID,	
 		TEST_PAPER_ID,	
 		TEST_USER,	
 		TEST_TIME,	
@@ -24,7 +24,7 @@
 	
 	<!-- 字段值 -->
 	<sql id="FieldValue">
-		#{TEST_ID},	
+		#{TEST_PLAN_ID},	
 		#{TEST_PAPER_ID},	
 		#{TEST_USER},	
 		#{TEST_TIME},	
