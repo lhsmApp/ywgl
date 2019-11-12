@@ -134,8 +134,7 @@
 	</delete>
 <!-- 	獲取在線考試試題信息 -->
 	<select id="datalistExam" parameterType="page" resultType="pd">
-		SELECT 
-		    @rank:=@rank + 1 AS rank_no,
+		SELECT 		   
 			t.TEST_PAPER_ID,	
 			t.TEST_PAPER_TITLE,	
 			t.COURSE_TYPE_ID,	
@@ -150,12 +149,7 @@
 			t.STATE,	
 			t.CREATE_USER,	
 			t.CREATE_DATE,
-			t.TEST_QUESTION_ID,
-			f.TEST_QUESTION_ITEM_ID,
-			f.TEST_QUESTION_ITEM_TITLE,
-			f.TEST_QUESTION_ITEM_CONTENT,
-			f.CREATE_USER,
-			f.CREATE_DATE,
+			t.TEST_QUESTION_ID,			
 			d.TEST_QUESTION_TITLE,
 			d.COURSE_TYPE_ID,
 			d.TEST_QUESTION_TYPE,
@@ -169,18 +163,45 @@
 			  FROM
 			    tb_test_paper a,
 			    tb_test_paper_detail b 
-			  WHERE a.TEST_PAPER_ID = b.TEST_PAPER_ID) AS t,
-			  tb_test_question_item f,
-			  tb_test_question d,
-			  (SELECT @rank:= 0) e 
-			WHERE t.TEST_QUESTION_ID = f.TEST_QUESTION_ID 
-			  AND t.TEST_QUESTION_ID = d.TEST_QUESTION_ID 
-			  AND f.TEST_QUESTION_ID = d.TEST_QUESTION_ID 
+			  WHERE a.TEST_PAPER_ID = b.TEST_PAPER_ID) AS t 
+			    LEFT JOIN 
+			  tb_test_question d
+			  ON
+			 t.TEST_QUESTION_ID = d.TEST_QUESTION_ID 
 			  AND T.TEST_PAPER_ID=#{pd.TEST_PAPER_ID}
 			  	 ORDER BY  d.TEST_QUESTION_TYPE,
-			  	 f.TEST_QUESTION_ID
-			  	
-			  		 
+			  	 T.TEST_QUESTION_ID			  		  		 
 	</select>
-	
+	<!-- 	获取试题答案信息 -->
+	<select id="listAnswer" parameterType="page" resultType="pd">
+			SELECT 
+		   t.TEST_PAPER_ID,   
+		   t.TEST_QUESTION_ID,
+		   f.TEST_QUESTION_ITEM_TITLE,
+		   f.TEST_QUESTION_ITEM_CONTENT,
+		   f.IS_RIGHT,
+		   f.ITEM_EXPLAIN,
+		   f.STATE,
+		   f.CREATE_USER,
+		   f.CREATE_DATE,
+		   f.TEST_QUESTION_TYPE
+		   FROM
+		     (SELECT 
+		       a.TEST_PAPER_ID,b.TEST_QUESTION_ID
+		     FROM
+		       tb_test_paper a,
+		       tb_test_paper_detail b 
+		     WHERE a.TEST_PAPER_ID = b.TEST_PAPER_ID) AS t 
+		     LEFT JOIN 
+		     (SELECT  c.*,  d.TEST_QUESTION_TYPE 
+		     FROM 
+		     tb_test_question_item c LEFT JOIN tb_test_question d  
+		     ON  c.TEST_QUESTION_ID=d.TEST_QUESTION_ID) as f
+		 ON t.TEST_QUESTION_ID = f.TEST_QUESTION_ID 
+		 WHERE TEST_PAPER_ID=#{pd.TEST_PAPER_ID}
+		 <if test="pd.IS_RIGHT!= null and pd.IS_RIGHT != ''">
+			and IS_RIGHT=#{pd.IS_RIGHT}				
+		</if>
+		  		  		 
+	</select>
 </mapper>

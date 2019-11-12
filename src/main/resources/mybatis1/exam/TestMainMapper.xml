@@ -9,7 +9,7 @@
 	
 	<!-- 字段 -->
 	<sql id="Field">
-		TEST_ID,	
+		TEST_PLAN_ID,	
 		TEST_PAPER_ID,	
 		TEST_USER,	
 		TEST_TIME,	
@@ -24,7 +24,7 @@
 	
 	<!-- 字段值 -->
 	<sql id="FieldValue">
-		#{TEST_ID},	
+		#{TEST_PLAN_ID},	
 		#{TEST_PAPER_ID},	
 		#{TEST_USER},	
 		#{TEST_TIME},	
@@ -163,4 +163,62 @@
                  #{item}
 		</foreach>
 	</delete>
+	
+	<!--将考试成绩写入主表和明细表-->
+	<insert id="saveExamResult" parameterType="pd">
+	insert into tb_test_main
+	(TEST_PLAN_ID,	
+		TEST_PAPER_ID,	
+		TEST_USER,	
+		TEST_TIME,	
+		TEST_COUNT,	
+		TEST_SCORE,	
+		IF_QUALIFIED,	
+		TEST_QUESTION_NUM,	
+		STATE,	
+		CREATE_USER,	
+		CREATE_DATE)
+	values(
+		#{TEST_PLAN_ID},	
+		#{TEST_PAPER_ID},	
+		#{TEST_USER},	
+		#{TEST_TIME},	
+		#{TEST_COUNT},	
+		#{TEST_SCORE},	
+		#{IF_QUALIFIED},	
+		#{TEST_QUESTION_NUM},	
+		#{STATE},	
+		#{CREATE_USER},	
+		#{CREATE_DATE}
+		);
+		<foreach item="item" index="index" collection="answerList" open=" " separator="; " close=" ">
+			<if test="item!=null">
+				insert into tb_test_detail
+				(
+					TEST_USER,
+					TEST_PAPER_ID,
+					TEST_QUESTION_ID,
+					TEST_TIME,
+					TEST_ANSWER,
+					TEST_CORRECT_ANSWER
+				) values (#{TEST_USER},
+					#{TEST_PAPER_ID},
+					#{item.TEST_QUESTION_ID},
+					#{TEST_TIME},
+					#{item.TEST_ANSWER},
+					#{item.TEST_CORRECT_ANSWER}	
+					)			
+					</if>
+		</foreach>
+	
+	</insert>
+	<select id="listByUser" parameterType="pd" resultType="pd">
+		SELECT * from tb_test_main		
+ 		WHERE 
+ 			TEST_PLAN_ID=#{TEST_PLAN_ID}
+ 		AND 
+ 			TEST_PAPER_ID=#{TEST_PAPER_ID}
+		AND
+			TEST_USER=#{TEST_USER}
+	</select>
 </mapper>
