@@ -17,6 +17,11 @@ public interface TestMainManager{
 	 * @throws Exception
 	 */
 	public void save(PageData pd)throws Exception;
+	/**保存考试结果
+	 * @param pd
+	 * @throws Exception
+	 */
+	public void saveExamResult(PageData pd)throws Exception;
 	
 	/**删除
 	 * @param pd
@@ -36,6 +41,11 @@ public interface TestMainManager{
 	 */
 	public List<PageData> list(Page page)throws Exception;
 	
+	/**查找考试人已考试信息
+	 * @param page
+	 * @throws Exception
+	 */
+	public List<PageData> listByUser(PageData pd)throws Exception;
 	/**列表(全部)
 	 * @param pd
 	 * @throws Exception

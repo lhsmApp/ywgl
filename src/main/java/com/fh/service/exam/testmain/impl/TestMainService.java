@@ -27,7 +27,13 @@ public class TestMainService implements TestMainManager{
 	public void save(PageData pd)throws Exception{
 		dao.save("TestMainMapper.save", pd);
 	}
-	
+	/**保存考试结果
+	 * @param pd
+	 * @throws Exception
+	 */
+	public void saveExamResult(PageData pd)throws Exception{
+		dao.save("TestMainMapper.saveExamResult", pd);
+	}
 	/**删除
 	 * @param pd
 	 * @throws Exception
@@ -51,6 +57,14 @@ public class TestMainService implements TestMainManager{
 	@SuppressWarnings("unchecked")
 	public List<PageData> list(Page page)throws Exception{
 		return (List<PageData>)dao.findForList("TestMainMapper.datalistPage", page);
+	}
+	/**查找考试人已考试信息
+	 * @param page
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PageData> listByUser(PageData pd)throws Exception{
+		return (List<PageData>)dao.findForList("TestMainMapper.listByUser", pd);
 	}
 	
 	/**列表(全部)
