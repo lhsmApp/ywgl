@@ -228,8 +228,9 @@
 			$("#selectTree2_input").val('${pd.COURSE_TYPE_NAME}');
 		}
 		</script>
-		<script type="text/javascript">
 		
+		<script type="text/javascript">
+		$(top.hangge());
 		function change(){
 			var data = $("#TEST_QUESTION_TYPE").val();
 			if(data == 3){
@@ -240,20 +241,19 @@
 				$('input[type="text"],select,textarea',$("#singleAnswer")).prop('readonly',false);
 			}
 		}
-		$(top.hangge());
 			//初始化新增选项索引
 			var charCode= 64 + document.getElementsByName("charCode").length;
 			function beforeAdd(){
-			charCode += 1;
-			var index = String.fromCharCode(charCode);
-			var html = '<div id="'+ index + '"style="margin-top: 5px;"><input type="hidden" name="charCode" id="charCode" value="'+ index +'">' 
+				charCode += 1;
+				var index = String.fromCharCode(charCode);
+				var html = '<div id="'+ index + '"style="margin-top: 5px;"><input type="hidden" name="charCode" id="charCode" value="'+ index +'">' 
 					 
-					 + '<label class="pos-rel"><input type="checkbox" id="ids" name="ids" value="'+ index +'" class="ace" /><span style="margin-right: 3px;" class="lbl">'
+					 	 + '<label class="pos-rel"><input type="checkbox" id="ids" name="ids" value="'+ index +'" class="ace" /><span style="margin-right: 3px;" class="lbl">'
 					 
-					 + '</span></label>选项' + index + ': <input type="text" name="TEST_QUESTION_ITEM_CONTENT" id="TEST_QUESTION_ITEM_CONTENT" value="" maxlength="12" placeholder="请输入选项内容,您最多可以输入200个字符"style="width:90%;"/>'
+					 	 + '</span></label>选项' + index + ': <input type="text" name="TEST_QUESTION_ITEM_CONTENT" id="TEST_QUESTION_ITEM_CONTENT" value="" maxlength="12" placeholder="请输入选项内容,您最多可以输入200个字符"style="width:90%;"/>'
 					 
-					 + '</div>';
-			$("#beforeAdd").append(html);
+					     + '</div>';
+				$("#beforeAdd").append(html);
 		}
 		
 		function del(){

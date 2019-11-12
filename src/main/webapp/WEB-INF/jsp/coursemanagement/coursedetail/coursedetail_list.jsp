@@ -192,7 +192,6 @@
 		//动态回显数据
 		function setSection(data){
 			var html='';
-			console.log(data.length);
 			for(var i = 0;i<data.length;i++){
 		        html += setDiv(data[i]);
 			}

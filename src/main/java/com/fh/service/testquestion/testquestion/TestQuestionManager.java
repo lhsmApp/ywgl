@@ -76,5 +76,21 @@ public interface TestQuestionManager{
 	 */
 	public void deleteItem(String questionId)throws Exception;
 	
+	/**
+	 * 通过id查询所有试题数量
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public PageData countQuestion(PageData pd)throws Exception;
+
+	/**
+	 * 获取所有该条件下的题目数据
+	 * @param pageData
+	 * @return
+	 * @throws Exception
+	 */
+	public List<PageData> randomList(PageData pageData)throws Exception;
+	
 }
 

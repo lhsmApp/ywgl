@@ -101,7 +101,7 @@
 													<div class="item-box inline"><!-- 整体 -->
 											      		<div style="width:185px;height:200px;">
 											        		<a onclick="beginExam('${var.TEST_PLAN_ID}')" data-rel="colorbox" class="cboxElement" title="">
-											          		<img width="230" height="200" alt="请上传图片" src="static/html_UI/assets/images/gallery/image-2.jpg"></a>
+											          		<img width="230" height="200" alt="请上传图片" src="uploadFiles/uploadImgs/ebaeff7ab06b4f6b9c5275f2c5518b82.jpg"></a>
 											      		</div>
 													    <div>
 													        <div class="box-title"><span class="list-item-value-title">${var.TEST_PLAN_NAME}</span></div>

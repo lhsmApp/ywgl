@@ -106,5 +106,25 @@ public class TestQuestionService implements TestQuestionManager{
 		dao.delete("TestQuestionMapper.deleteItem",questionId);
 	}
 	
+	/**
+	 * 通过id查询所有试题数量
+	 * @param pd
+	 * @throws Exception
+	 */
+	public PageData countQuestion(PageData pd) throws Exception {
+		return (PageData)dao.findForObject("TestQuestionMapper.countQuestion", pd);
+	}
+
+	/**
+	 * 获取所有该条件下的题目数据
+	 * @param pageData
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PageData> randomList(PageData pageData) throws Exception {
+		return (List<PageData>)dao.findForList("TestQuestionMapper.randomList", pageData);
+	}
+	
 }
 
