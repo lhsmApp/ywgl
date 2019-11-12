@@ -34,15 +34,15 @@
 								</span>
 								<button type="button" class="btn btn-info btn-xs" onclick="tosearch();">
 										<i class="ace-icon fa fa-search bigger-110"></i>
-								</button>					
-									<div data-toggle="buttons" class="btn-group no-margin">
-									<label class="btn btn-sm btn-primary active"> <span
-										class="bigger-110">系统变更</span> <input type="radio" value="1" />
+								</button>	
+									<div data-toggle="buttons" class="btn-group no-margin" >
+									<label class="btn btn-sm btn-primary">
+									<input type="radio" class="level_select"  name="level_select" value="1">系统变更
 									</label>
-									<label class="btn btn-sm btn-primary"> <span
-										class="bigger-110">角色变更</span> <input type="radio" value="2" />
-									</label>									
-								</div>
+									<label class="btn btn-sm btn-primary">
+									<input type="radio" class="level_select" name="level_select" value="2">角色变更
+									</label>
+									</div> 												
 							</div>
 						</form>
 					</div>
@@ -179,6 +179,25 @@
 					if(which == 2) $('#form-field-select-4').addClass('tag-input-style');
 					 else $('#form-field-select-4').removeClass('tag-input-style');
 				});
+			}
+			function createColumn(){
+				 $("#simple-table tbody").html(""); 
+				var tableColumn='<c:choose><c:when test="'+${not empty varList}+'">'
+					+'<c:forEach items="'+${varList}+'" var="var" varStatus="vs">'
+					+'<tr><td class="center" style="width: 30px;">'+${vs.index+1}+'</td>'
+					+'<td class="center">'+${var.BILL_CODE}+'</td>'
+					+'<td class="center">'+${var.BG_NAME}+'</td>'
+					+'<td class="center">'+${var.UNIT_CODE}+'</td>'
+					+'<td class="center">'+${var.DEPT_CODE}+'</td>'
+					+'<td class="center">'+${var.BG_REASON}+'</td>'
+					+'<td class="center">'+${var.USER_CODE}+'</td>'
+					+'<td class="center">'+${var.USER_DEPT}+'</td>'
+					+'<td class="center">'+${var.USER_JOB}+'</td>'
+					+'<td class="center">'+${var.USER_CONTACT}+'</td>'
+					+'<td class="center">'+${var.ENTRY_DATE}+'</td>'	
+					+'</tr></c:forEach></c:when><c:otherwise><tr class="main_info">'
+					+'<td colspan="10" class="center">没有相关数据</td></tr></c:otherwise></c:choose>';	
+					 $("#simple-table tbody").html(tableColumn); 
 			}
 			
 			

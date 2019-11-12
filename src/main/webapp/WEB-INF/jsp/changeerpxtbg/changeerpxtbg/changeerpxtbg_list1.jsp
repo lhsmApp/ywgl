@@ -27,11 +27,11 @@
 		<div class="main-content">
 			<div class="main-content-inner">
 				<div class="page-content">
-					<div id="zhongxin1" class="row">
+					<div class="row">
 						<div class="col-xs-12">
 							
 						<!-- 检索  -->
-						<form action="trainstudent/list.do" method="post" name="Form" id="Form">
+						<form action="changeerpxtbg/list.do" method="post" name="Form" id="Form">
 						<table style="margin-top:5px;">
 							<tr>
 								<td>
@@ -42,12 +42,20 @@
 										</span>
 									</div>
 								</td>
-								
-								
-								
+								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastStart" id="lastStart"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="开始日期" title="开始日期"/></td>
+								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastEnd" name="lastEnd"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="结束日期"/></td>
+								<td style="vertical-align:top;padding-left:2px;">
+								 	<select class="chosen-select form-control" name="name" id="id" data-placeholder="请选择" style="vertical-align:top;width: 120px;">
+									<option value=""></option>
+									<option value="">全部</option>
+									<option value="">1</option>
+									<option value="">2</option>
+								  	</select>
+								</td>
+								<c:if test="${QX.cha == 1 }">
 								<td style="vertical-align:top;padding-left:2px"><a class="btn btn-light btn-xs" onclick="tosearch();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
-								
-								<!-- <td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="toExcel();" title="导出到EXCEL"><i id="nav-search-icon" class="ace-icon fa fa-download bigger-110 nav-search-icon blue"></i></a></td> -->
+								</c:if>
+								<c:if test="${QX.toExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="toExcel();" title="导出到EXCEL"><i id="nav-search-icon" class="ace-icon fa fa-download bigger-110 nav-search-icon blue"></i></a></td></c:if>
 							</tr>
 						</table>
 						<!-- 检索  -->
@@ -59,13 +67,27 @@
 									<label class="pos-rel"><input type="checkbox" class="ace" id="zcheckbox" /><span class="lbl"></span></label>
 									</th>
 									<th class="center" style="width:50px;">序号</th>
-									<th class="center">学员编号</th>
-									<th class="center">学员名称</th>
-									<th class="center">员工账户</th>
-									<th class="center">所属单位</th>
-									<th class="center">所属部门</th>
-									<th class="center">备注</th>
-									<th class="center">状态</th>
+									<th class="center">备注1</th>
+									<th class="center">备注2</th>
+									<th class="center">备注3</th>
+									<th class="center">备注4</th>
+									<th class="center">备注5</th>
+									<th class="center">备注6</th>
+									<th class="center">备注7</th>
+									<th class="center">备注8</th>
+									<th class="center">备注9</th>
+									<th class="center">备注10</th>
+									<th class="center">备注11</th>
+									<th class="center">备注12</th>
+									<th class="center">备注13</th>
+									<th class="center">备注14</th>
+									<th class="center">备注15</th>
+									<th class="center">备注16</th>
+									<th class="center">备注17</th>
+									<th class="center">备注18</th>
+									<th class="center">备注19</th>
+									<th class="center">备注20</th>
+									<th class="center">备注21</th>
 									<th class="center">操作</th>
 								</tr>
 							</thead>
@@ -74,36 +96,49 @@
 							<!-- 开始循环 -->	
 							<c:choose>
 								<c:when test="${not empty varList}">
-									
+									<c:if test="${QX.cha == 1 }">
 									<c:forEach items="${varList}" var="var" varStatus="vs">
 										<tr>
 											<td class='center'>
-												<label class="pos-rel"><input type='checkbox' name='ids' value="${var.STUDENT_ID}" class="ace" /><span class="lbl"></span></label>
+												<label class="pos-rel"><input type='checkbox' name='ids' value="${var.CHANGEERPXTBG_ID}" class="ace" /><span class="lbl"></span></label>
 											</td>
 											<td class='center' style="width: 30px;">${vs.index+1}</td>
-											
-											<td class='center'>${var.STUDENT_CODE}</td>
-											<td class='center'>${var.STUDENT_NAME}</td>
-											<td class='center'>${var.ACCOUNT_NAME}</td>
-											<td class='center'>${var.UNIT_NAME}</td>
-											<td class='center'>${var.DEPART_NAME}</td>
-											<td class='center'>${var.MEMO}</td>
-											<td style="width: 60px;" class="center">
-												<c:if test="${var.STATE == '0' }"><span class="label label-important arrowed-in">停用</span></c:if>
-												<c:if test="${var.STATE == '1' }"><span class="label label-success arrowed">正常</span></c:if>
-											</td>
+											<td class='center'>${var.BILL_CODE}</td>
+											<td class='center'>${var.UNIT_CODE}</td>
+											<td class='center'>${var.DEPT_CODE}</td>
+											<td class='center'>${var.ENTRY_DATE}</td>
+											<td class='center'>${var.SERIAL_NUM}</td>
+											<td class='center'>${var.USER_CODE}</td>
+											<td class='center'>${var.USER_DEPT}</td>
+											<td class='center'>${var.USER_JOB}</td>
+											<td class='center'>${var.USER_CONTACT}</td>
+											<td class='center'>${var.BG_NAME}</td>
+											<td class='center'>${var.SYSTEM}</td>
+											<td class='center'>${var.BG_TYPE}</td>
+											<td class='center'>${var.BG_REASON}</td>
+											<td class='center'>${var.BILL_STATE}</td>
+											<td class='center'>${var.BILL_USER}</td>
+											<td class='center'>${var.BILL_DATE}</td>
+											<td class='center'>${var.CUS_COLUMN1}</td>
+											<td class='center'>${var.CUS_COLUMN2}</td>
+											<td class='center'>${var.CUS_COLUMN3}</td>
+											<td class='center'>${var.CUS_COLUMN4}</td>
+											<td class='center'>${var.CUS_COLUMN5}</td>
 											<td class="center">
-												
+												<c:if test="${QX.edit != 1 && QX.del != 1 }">
+												<span class="label label-large label-grey arrowed-in-right arrowed-in"><i class="ace-icon fa fa-lock" title="无权限"></i></span>
+												</c:if>
 												<div class="hidden-sm hidden-xs btn-group">
-													
-													<a class="btn btn-xs btn-success" title="编辑" onclick="edit('${var.STUDENT_ID}');">
+													<c:if test="${QX.edit == 1 }">
+													<a class="btn btn-xs btn-success" title="编辑" onclick="edit('${var.CHANGEERPXTBG_ID}');">
 														<i class="ace-icon fa fa-pencil-square-o bigger-120" title="编辑"></i>
 													</a>
-													
-													<a class="btn btn-xs btn-danger" onclick="del('${var.STUDENT_ID}');">
+													</c:if>
+													<c:if test="${QX.del == 1 }">
+													<a class="btn btn-xs btn-danger" onclick="del('${var.CHANGEERPXTBG_ID}');">
 														<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
 													</a>
-													
+													</c:if>
 												</div>
 												<div class="hidden-md hidden-lg">
 													<div class="inline pos-rel">
@@ -112,24 +147,24 @@
 														</button>
 			
 														<ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
-															
+															<c:if test="${QX.edit == 1 }">
 															<li>
-																<a style="cursor:pointer;" onclick="edit('${var.STUDENT_ID}');" class="tooltip-success" data-rel="tooltip" title="修改">
+																<a style="cursor:pointer;" onclick="edit('${var.CHANGEERPXTBG_ID}');" class="tooltip-success" data-rel="tooltip" title="修改">
 																	<span class="green">
 																		<i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
 																	</span>
 																</a>
 															</li>
-			
-															
+															</c:if>
+															<c:if test="${QX.del == 1 }">
 															<li>
-																<a style="cursor:pointer;" onclick="del('${var.STUDENT_ID}');" class="tooltip-error" data-rel="tooltip" title="删除">
+																<a style="cursor:pointer;" onclick="del('${var.CHANGEERPXTBG_ID}');" class="tooltip-error" data-rel="tooltip" title="删除">
 																	<span class="red">
 																		<i class="ace-icon fa fa-trash-o bigger-120"></i>
 																	</span>
 																</a>
 															</li>
-															
+															</c:if>
 														</ul>
 													</div>
 												</div>
@@ -137,7 +172,12 @@
 										</tr>
 									
 									</c:forEach>
-									
+									</c:if>
+									<c:if test="${QX.cha == 0 }">
+										<tr>
+											<td colspan="100" class="center">您无权查看</td>
+										</tr>
+									</c:if>
 								</c:when>
 								<c:otherwise>
 									<tr class="main_info">
@@ -151,11 +191,12 @@
 						<table style="width:100%;">
 							<tr>
 								<td style="vertical-align:top;">
-									
+									<c:if test="${QX.add == 1 }">
 									<a class="btn btn-mini btn-success" onclick="add();">新增</a>
-									
+									</c:if>
+									<c:if test="${QX.del == 1 }">
 									<a class="btn btn-mini btn-danger" onclick="makeAll('确定要删除选中的数据吗?');" title="批量删除" ><i class='ace-icon fa fa-trash-o bigger-120'></i></a>
-									
+									</c:if>
 								</td>
 								<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
 							</tr>
@@ -254,9 +295,9 @@
 			 var diag = new top.Dialog();
 			 diag.Drag=true;
 			 diag.Title ="新增";
-			 diag.URL = '<%=basePath%>trainstudent/goAdd.do';
-			 diag.Width = 550;
-			 diag.Height = 420;
+			 diag.URL = '<%=basePath%>changeerpxtbg/goAdd.do';
+			 diag.Width = 450;
+			 diag.Height = 355;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮
@@ -279,7 +320,7 @@
 			bootbox.confirm("确定要删除吗?", function(result) {
 				if(result) {
 					top.jzts();
-					var url = "<%=basePath%>trainstudent/delete.do?STUDENT_ID="+Id+"&tm="+new Date().getTime();
+					var url = "<%=basePath%>changeerpxtbg/delete.do?CHANGEERPXTBG_ID="+Id+"&tm="+new Date().getTime();
 					$.get(url,function(data){
 						nextPage(${page.currentPage});
 					});
@@ -293,9 +334,9 @@
 			 var diag = new top.Dialog();
 			 diag.Drag=true;
 			 diag.Title ="编辑";
-			 diag.URL = '<%=basePath%>trainstudent/goEdit.do?STUDENT_ID='+Id;
-			 diag.Width = 550;
-			 diag.Height = 420;
+			 diag.URL = '<%=basePath%>changeerpxtbg/goEdit.do?CHANGEERPXTBG_ID='+Id;
+			 diag.Width = 450;
+			 diag.Height = 355;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮 
@@ -337,7 +378,7 @@
 							top.jzts();
 							$.ajax({
 								type: "POST",
-								url: '<%=basePath%>trainstudent/deleteAll.do?tm='+new Date().getTime(),
+								url: '<%=basePath%>changeerpxtbg/deleteAll.do?tm='+new Date().getTime(),
 						    	data: {DATA_IDS:str},
 								dataType:'json',
 								//beforeSend: validateData,
@@ -356,7 +397,7 @@
 		
 		//导出excel
 		function toExcel(){
-			window.location.href='<%=basePath%>trainstudent/excel.do';
+			window.location.href='<%=basePath%>changeerpxtbg/excel.do';
 		}
 	</script>
 

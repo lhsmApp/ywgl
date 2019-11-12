@@ -23,13 +23,16 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fh.controller.base.BaseController;
 import com.fh.entity.CommonBase;
 import com.fh.entity.Page;
+import com.fh.entity.system.User;
 import com.fh.service.exam.testpaper.TestPaperManager;
 import com.fh.service.testquestion.testquestion.TestQuestionManager;
 import com.fh.service.trainBase.CourseTypeManager;
 import com.fh.util.AppUtil;
+import com.fh.util.Const;
 import com.fh.util.Jurisdiction;
 import com.fh.util.PageData;
 import com.fh.util.StringUtil;
+import com.fh.util.date.DateUtils;
 import com.fh.util.enums.PaperType;
 import com.fh.util.enums.QuestionDifficulty;
 import com.fh.util.enums.QuestionType;
@@ -381,4 +384,30 @@ public class TestPaperController extends BaseController {
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(format,true));
 	}
+	/**進入答題页面
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/goExam")
+	public ModelAndView goExam(Page page)throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		pd.put("TEST_PAPER_ID", 1);
+		page.setPd(pd);
+		List<PageData>	varList = testpaperService.listExam(page);	//列出TestPaper列表
+		double score= Double.parseDouble(varList.get(0).get("TEST_PAPER_SCORE").toString());
+		int num=Integer.parseInt(varList.get(0).get("TEST_QUESTION_NUM").toString());
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+	    String userId=user.getUSER_ID();
+		mv.setViewName("exam/testonline/examOnline");
+		mv.addObject("varList", varList);
+		pd.put("TEST_PAPER_SCORE", score);
+		pd.put("TEST_QUESTION_NUM", num);
+		pd.put("TEST_USER", userId);
+		pd.put("EXAM_TIME", DateUtils.getCurrentTime());
+		pd.put("ANSWER_TIME", Integer.parseInt(varList.get(0).get("ANSWER_TIME").toString()));
+		mv.addObject("pd", pd);
+		return mv;
+	}	
 }

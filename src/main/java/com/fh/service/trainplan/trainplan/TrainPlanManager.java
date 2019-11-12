@@ -1,16 +1,16 @@
-package com.fh.service.exam.testpaper;
+package com.fh.service.trainplan.trainplan;
 
 import java.util.List;
 import com.fh.entity.Page;
 import com.fh.util.PageData;
 
 /** 
- * 说明： testpaper接口
+ * 说明： trainplan接口
  * 创建人：jiachao
- * 创建时间：2019-11-06
+ * 创建时间：2019-11-01
  * @version
  */
-public interface TestPaperManager{
+public interface TrainPlanManager{
 
 	/**新增
 	 * @param pd
@@ -36,7 +36,6 @@ public interface TestPaperManager{
 	 */
 	public List<PageData> list(Page page)throws Exception;
 	
-	public List<PageData> listExam(Page page)throws Exception;
 	/**列表(全部)
 	 * @param pd
 	 * @throws Exception

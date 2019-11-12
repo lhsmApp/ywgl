@@ -206,7 +206,7 @@ public class ChangeErpXtbgController extends BaseController {
 	}
 	/**显示该用户提报的变更申请单
 	 * @param page
-	 * @throws Exception
+	 * @throws Exceptionz
 	 */
 	@RequestMapping(value="/getPageList")
 	public @ResponseBody List<PageData> getPageList(Page page) throws Exception{
