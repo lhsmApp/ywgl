@@ -637,6 +637,9 @@
 			var keywords = $("#SelectedBillCode").val();
 			 //获取选中项的值
             var value=$(".level_select:checked").val();
+            if(null==value||value==''){
+            	value='1';
+            }
 			$.ajax({
 					type: "POST",
 					url: '<%=basePath%>approvalconfig/getPageList.do?BUSINESS_CODE='+value,
