@@ -129,14 +129,27 @@
 	<!-- 列表 -->
 	<select id="datalistPage" parameterType="page" resultType="pd">
 		select
-		<include refid="Field"></include>
+			b.USERNAME,
+			a.TEST_PLAN_ID,	
+			a.TEST_PAPER_ID,	
+			a.TEST_USER,	
+			a.TEST_TIME,	
+			a.TEST_COUNT,	
+			a.TEST_SCORE,	
+			a.IF_QUALIFIED,	
+			a.TEST_QUESTION_NUM,	
+			a.STATE,	
+			a.CREATE_DATE
 		from 
-		<include refid="tableName"></include>
-		where STATE=1
+			tb_test_main as a
+		LEFT JOIN sys_user AS b ON a.TEST_USER = b.USER_ID
+		where 
+			a.STATE=1
 		<!-- 关键词检索 -->
 		<if test="pd.keywords!= null and pd.keywords != ''">
 			and
 				(
+					b.USERNAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 					<!-- 根据需求自己加检索条件
 					字段1 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 					 or 
