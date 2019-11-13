@@ -37,6 +37,7 @@ public interface TestPaperManager{
 	public List<PageData> list(Page page)throws Exception;
 	
 	public List<PageData> listExam(Page page)throws Exception;
+	public List<PageData> listExamHistory(Page page)throws Exception;
 	public List<PageData> listAnswer(Page page)throws Exception;
 	/**列表(全部)
 	 * @param pd

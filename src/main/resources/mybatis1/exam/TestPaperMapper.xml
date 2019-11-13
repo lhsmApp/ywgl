@@ -197,18 +197,17 @@
 			  FROM
 			    tb_test_paper a,
 			    tb_test_paper_detail b 
-			  WHERE a.TEST_PAPER_ID = b.TEST_PAPER_ID) AS t 
+			  WHERE a.TEST_PAPER_ID = b.TEST_PAPER_ID AND a.TEST_PAPER_ID=#{pd.TEST_PAPER_ID}) AS t 
 			    LEFT JOIN 
 			  tb_test_question d
 			  ON
 			 t.TEST_QUESTION_ID = d.TEST_QUESTION_ID 
-			  AND T.TEST_PAPER_ID=#{pd.TEST_PAPER_ID}
 			  	 ORDER BY  d.TEST_QUESTION_TYPE,
 			  	 T.TEST_QUESTION_ID			  		  		 
 	</select>
 	<!-- 	获取试题答案信息 -->
 	<select id="listAnswer" parameterType="page" resultType="pd">
-			SELECT 
+		SELECT 
 		   t.TEST_PAPER_ID,   
 		   t.TEST_QUESTION_ID,
 		   f.TEST_QUESTION_ITEM_TITLE,
@@ -225,17 +224,54 @@
 		     FROM
 		       tb_test_paper a,
 		       tb_test_paper_detail b 
-		     WHERE a.TEST_PAPER_ID = b.TEST_PAPER_ID) AS t 
+		     WHERE a.TEST_PAPER_ID = b.TEST_PAPER_ID  AND a.TEST_PAPER_ID=#{pd.TEST_PAPER_ID}) AS t 
 		     LEFT JOIN 
 		     (SELECT  c.*,  d.TEST_QUESTION_TYPE 
 		     FROM 
-		     tb_test_question_item c LEFT JOIN tb_test_question d  
-		     ON  c.TEST_QUESTION_ID=d.TEST_QUESTION_ID) as f
+		      tb_test_question d   LEFT JOIN tb_test_question_item c
+		     ON  c.TEST_QUESTION_ID=d.TEST_QUESTION_ID) AS f
 		 ON t.TEST_QUESTION_ID = f.TEST_QUESTION_ID 
-		 WHERE TEST_PAPER_ID=#{pd.TEST_PAPER_ID}
-		 <if test="pd.IS_RIGHT!= null and pd.IS_RIGHT != ''">
+		where 
+			1=1
+	<if test="pd.IS_RIGHT!= null and pd.IS_RIGHT != ''">
 			and IS_RIGHT=#{pd.IS_RIGHT}				
-		</if>
-		  		  		 
+		</if>	  		  		 
+	</select>
+	<select id="listExamHistory" parameterType="page" resultType="pd">
+	SELECT * 
+	from 	
+		(SELECT 
+		a.TEST_PLAN_ID,	
+		a.TEST_PAPER_ID,
+		b.TEST_QUESTION_ID,	
+		b.TEST_ANSWER,
+		b.TEST_CORRECT_ANSWER,		
+		a.TEST_USER,	
+		a.TEST_TIME,	
+		a.TEST_COUNT,	
+		a.TEST_SCORE,	
+		a.IF_QUALIFIED,	
+		a.TEST_QUESTION_NUM,	
+		a.STATE,	
+		a.CREATE_USER,	
+		a.CREATE_DATE
+		FROM tb_test_main	a	 
+ 		LEFT JOIN tb_test_detail b  ON a.TEST_PAPER_ID=b.TEST_PAPER_ID
+ 		AND a.TEST_USER=b.TEST_USER
+ 		WHERE
+ 		a.TEST_PLAN_ID=#{pd.TEST_PLAN_ID}
+ 		AND
+ 		a.TEST_USER=#{pd.TEST_USER}
+ 		AND
+ 		a.TEST_PAPER_ID=#{pd.TEST_PAPER_ID}) as t 		
+ 		 LEFT JOIN 
+			  tb_test_question d
+			  ON
+			 t.TEST_QUESTION_ID = d.TEST_QUESTION_ID 
+			  	 ORDER BY  d.TEST_QUESTION_TYPE,
+			  	 T.TEST_QUESTION_ID			  		  	
+ 		
+ 		
+ 		
 	</select>
 </mapper>

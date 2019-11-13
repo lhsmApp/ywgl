@@ -389,7 +389,7 @@ public class TestPaperController extends BaseController {
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(format,true));
 	}
-	/**進入答題页面
+	/**进入答题页面
 	 * @param
 	 * @throws Exception
 	 */
@@ -413,17 +413,20 @@ public class TestPaperController extends BaseController {
 		page.setPd(pd);
 		List<PageData>	varList = testpaperService.listExam(page);	//列出TestPaper列表
 		List<PageData>	answerList = testpaperService.listAnswer(page);	//列出TestPaper列表
-		double score= Double.parseDouble(varList.get(0).get("TEST_PAPER_SCORE").toString());
-//		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
-//	    String userId=user.getUSER_ID();
+		double score=0;
+		if(null!=varList&&varList.size()>0){
+			 score= Double.parseDouble(varList.get(0).get("TEST_PAPER_SCORE").toString());
+		}
+		if(null!=answerList&&answerList.size()>0){
+			pd.put("ANSWER_TIME", Integer.parseInt(varList.get(0).get("ANSWER_TIME").toString()));
+		}
 		mv.setViewName("exam/testonline/examOnline");
 		mv.addObject("varList", varList);
 		mv.addObject("answerList", answerList);
 		pd.put("TEST_PAPER_SCORE", score);
 		pd.put("TEST_QUESTION_NUM", varList.size());
 		pd.put("TEST_USER", userId);
-		pd.put("EXAM_TIME", DateUtils.getCurrentTime());
-		pd.put("ANSWER_TIME", Integer.parseInt(varList.get(0).get("ANSWER_TIME").toString()));
+		pd.put("EXAM_TIME", DateUtils.getCurrentTime());	
 		mv.addObject("pd", pd);
 		return mv;
 	}	
@@ -438,15 +441,14 @@ public class TestPaperController extends BaseController {
 		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 	    String userId=user.getUSER_ID();
 		pd.put("TEST_USER", userId);
-		//pd.put("TEST_PLAN_ID", "EP20191107150901187");//考试计划
-		//根据考试计划、试卷ID和考试人判断该用户是否已参加过考试
-//		List<PageData> userExamList=testmainService.listByUser(pd);
-//		if(null!=userExamList&&userExamList.size()>0){
-//			pd.put("msg", "该用户已参加过考试，不允许再考！");
-//			return pd;
-//		}
 		List<PageData> answerList=new ArrayList<PageData>();//答案集合		 
 		JSONObject jsonobject = JSONObject.fromObject(pd.getString("result"));
+		//根据考试计划、试卷ID和考试人判断该用户是否已参加过考试
+		List<PageData> userExamList=testmainService.listByUser(pd);
+		if(null!=userExamList&&userExamList.size()>0){
+			pd.put("msg","该用户已参加过考试！");
+			return pd;
+		}
 		//考试分数
 		int score=0;
 		page.setPd(pd);
@@ -476,7 +478,7 @@ public class TestPaperController extends BaseController {
 			}else if(p.getString("TEST_QUESTION_TYPE").equals("2")){
 				String rightAnswer=p.getString("TEST_QUESTION_ANSWER");
 				PageData pdAnswer = new PageData();//答案
-				//判断该多选题题是否作答
+				//判断该多选题是否作答
 				if (jsonobject.has(p.getString("TEST_QUESTION_ID"))){
 					String answer=jsonobject.getString(p.getString("TEST_QUESTION_ID"));
 			        if (answer.indexOf("#&#")!=-1){
@@ -501,7 +503,25 @@ public class TestPaperController extends BaseController {
 					pdAnswer.put("TEST_CORRECT_ANSWER", rightAnswer);
 				}
 				answerList.add(pdAnswer);
-			}			
+			}else{
+				String rightAnswer=p.getString("TEST_QUESTION_ANSWER");
+				PageData pdAnswer = new PageData();//答案
+				//判断该简答题是否作答
+				if (jsonobject.has(p.getString("TEST_QUESTION_ID"))){
+					String answer=jsonobject.getString(p.getString("TEST_QUESTION_ID"));			       
+					pdAnswer.put("TEST_QUESTION_ID", p.getString("TEST_QUESTION_ID"));
+					pdAnswer.put("TEST_ANSWER", answer);
+					pdAnswer.put("TEST_CORRECT_ANSWER", rightAnswer);					
+					if (answer.equals(rightAnswer)) {
+						score=score+Integer.parseInt(p.get("TEST_QUESTION_SCORE").toString());
+					}
+				}else{
+					pdAnswer.put("TEST_QUESTION_ID", p.getString("TEST_QUESTION_ID"));
+					pdAnswer.put("TEST_ANSWER", "");
+					pdAnswer.put("TEST_CORRECT_ANSWER", rightAnswer);
+				}
+				answerList.add(pdAnswer);
+			}
 		}
 		//纸卷分数
 		double paperScore= Double.parseDouble(varList.get(0).get("TEST_PAPER_SCORE").toString());
@@ -516,6 +536,7 @@ public class TestPaperController extends BaseController {
 		}else{
 			pd.put("IF_QUALIFIED", '0');//是否合格
 		}
+		pd.put("STATE", "1");//考试完成，考试主表状态置为1
 		pd.put("answerList", answerList);
 		pd.put("TEST_COUNT", 1);
 		pd.put("CREATE_USER", userId);//创建人
@@ -524,5 +545,34 @@ public class TestPaperController extends BaseController {
 		//将考试成绩存入考试主表和明细表
 		testmainService.saveExamResult(pd);
 		return pd;
+	}	
+	/**试卷回顾
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/reviewExam")
+	public ModelAndView reviewExam(Page page)throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+	    String userId=user.getUSER_ID();
+		pd.put("TEST_USER", userId);
+		pd.put("TEST_PLAN_ID", "EP20191107150902187");//考试计划
+		pd.put("TEST_PAPER_ID", "EP20191107144218001");//考试计划
+		page.setPd(pd);
+		List<PageData>	varList = testpaperService.listExamHistory(page);	//列出TestPaper列表
+		List<PageData>	answerList = testpaperService.listAnswer(page);	//列出TestPaper列表
+		double score=0;
+		if(null!=varList&&varList.size()>0){
+			 score= Double.parseDouble(varList.get(0).get("TEST_SCORE").toString());
+		}
+		mv.setViewName("exam/testonline/examReview");
+		mv.addObject("varList", varList);
+		mv.addObject("answerList", answerList);
+		pd.put("TEST_SCORE", score);	
+		mv.addObject("pd", pd);
+		return mv;
+		
 	}	
 }

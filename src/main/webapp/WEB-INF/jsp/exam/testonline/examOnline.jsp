@@ -182,18 +182,22 @@
 			$("#Form").submit();
 		}
 		$(function() {
-			 Time();
-			 //report()数字1代表自动提交，2代表手工提交
-			//var test1 =window.setTimeout('report(1)','${pd.ANSWER_TIME}'*60000);
-			//var test1 =window.setTimeout('report(1)',360000);
-			// 定时器每秒调用一次Time()
-			 timer =setInterval("Time()", 1000); 
+			
+			if('${pd.ANSWER_TIME}'>0){
+				Time();
+				 //report()数字1代表自动提交，2代表手工提交
+				//var test1 =window.setTimeout('report(1)','${pd.ANSWER_TIME}'*60000);
+				//var test1 =window.setTimeout('report(1)',360000);
+				// 定时器每秒调用一次Time()
+				 timer =setInterval("Time()", 1000); 
+			}
+			 
 			 <c:forEach items="${varList}" var="vas" varStatus="vs">            	         
 	           if('${vas.TEST_QUESTION_TYPE}'=='2'){
 	            //判断复选框是否被选中   
 		        var nameCheck='${vas.TEST_PAPER_ID}'+'-'+'${vas.TEST_QUESTION_ID}'; 
-		        //注册复选框选中事件
-		        $("input[name='"+nameCheck+"']").click(function (){
+		        //注册复选框改变事件
+		        $("input[name='"+nameCheck+"']").change(function (){
 		        	if("input:checkbox[name='"+nameCheck+"']:checked"){
 		        		$("#"+'${vs.index+1}').css({"background-color":"green"});	
 		        	}else{
@@ -294,6 +298,10 @@
 											bootbox.dialog({
 												message: "<div><span class='bigger-110' style='color: red;'>您的分数"+data.TEST_SCORE+",考试未通过</span></div><div><span class='bigger-110'>满分"+data.TEST_PAPER_SCORE+"</span></div><div><span class='bigger-110'>及格分数"+data.QUALIFIED_SCORE+"</span></div>",
 											});	
+									   }else{
+										   bootbox.dialog({
+										   message: "<div><span class='bigger-110' style='color: red;'>您的分数"+data.TEST_SCORE+",恭喜您通过考试</span></div><div><span class='bigger-110'>满分"+data.TEST_PAPER_SCORE+"</span></div><div><span class='bigger-110'>及格分数"+data.QUALIFIED_SCORE+"</span></div>",
+										   });	
 									   }
 								}else{
 									bootbox.dialog({

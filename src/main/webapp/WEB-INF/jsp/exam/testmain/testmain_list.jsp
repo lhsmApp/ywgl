@@ -159,7 +159,7 @@
 													           	  <span class="list-item-info" style="padding-left:3px;"><i style="padding-right: 2px;" class="blue ace-icon fa fa-inbox"></i>试题数:${var.TEST_QUESTION_NUM}</span>
 													          </div>
 													          <div class="btm-box">
-														          <button style="width:100%;" class="btn btn-round btn-info" onclick="checkPaper('${var.var.TEST_ID}')">
+														          <button style="width:100%;" class="btn btn-round btn-info" onclick="checkPaper('${var.TEST_PLAN_ID}','${var.TEST_PAPER_ID}')">
 															          <font style="vertical-align: inherit;">回顾试卷</font>
 														       	  </button>
 				               								  </div>
@@ -220,8 +220,9 @@
 			});
 		}
 		/*回顾考试*/
-		function checkPaper(Id){
-			
+		function checkPaper(planId,paperId){
+			top.jzts();
+			window.location.href='<%=basePath%>testpaper/reviewExam.do?TEST_PLAN_ID='+planId+'&TEST_PAPER_ID='+paperId;
 		}
 	</script>
 

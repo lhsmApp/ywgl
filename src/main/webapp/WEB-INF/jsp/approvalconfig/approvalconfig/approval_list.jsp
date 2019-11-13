@@ -49,7 +49,7 @@
 <!-- 											</span>		 -->
 								<div class="btn-group" data-toggle="buttons" >
 									<label class="btn btn-info">
-									<input type="radio" class="level_select"  name="level_select" value="1">系统变更
+									<input type="radio" class="level_select"  name="level_select" value="1" checked>系统变更
 									</label>
 									<label class="btn btn-info">
 									<input type="radio" class="level_select" name="level_select" value="2">角色变更
