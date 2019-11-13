@@ -59,13 +59,6 @@
 											   <label class="btn btn-sm btn-warning" onclick="report(2)"> 
 												            <i class="ace-icon  bigger-110"></i>提交
 												            </label> 
-											<%--隐藏表单，用于考试结束且考生未手动提交试卷 自动提交 --%>
-											<form action="submit"method="post" style="display: none;">
-												<input type="hidden" value="${sessionScope.loginStudent.studentId }" name="studentId" />
-												<input type="hidden" value="${examPaperId }" name="examPaperId" />
-												<input type="hidden" value="${classId }" name="classId" />
-												<input type="hidden" value="${gradeId }" name="gradeId" />
-											</form>
 											<span style="font-weight: 600;">剩余时间：
 												<span id="lastTime" style="color: #00A06B;font-size: 16px;font-weight: 900;">
 													<span id="time_min">${pd.ANSWER_TIME}</span>"
@@ -111,7 +104,7 @@
 										<c:forEach items="${varList}" var="var" varStatus="vs">	
 										<dd>
 									<div>
-										<h5 class=" lighter gray" id="${var.TEST_PAPER_ID}-${vs.index+1}">${vs.index+1}、${var.TEST_QUESTION_TITLE }</h5>
+										<h5 class=" lighter gray" id="${var.TEST_PAPER_ID}-${vs.index+1}">${vs.index+1}、${var.TEST_QUESTION_TITLE }(${var.TEST_QUESTION_SCORE}分)</h5>
 									</div>
 									<div>
 										<c:forEach items="${answerList}" var="ans" >
