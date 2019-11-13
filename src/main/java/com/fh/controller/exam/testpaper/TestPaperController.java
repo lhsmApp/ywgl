@@ -639,16 +639,16 @@ public class TestPaperController extends BaseController {
 	 * @param
 	 * @throws Exception
 	 */
-	@RequestMapping(value="/reviewExam")
-	public ModelAndView reviewExam(Page page)throws Exception{
+	@RequestMapping(value="/goReviewExam")
+	public ModelAndView goReviewExam(Page page)throws Exception{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 	    String userId=user.getUSER_ID();
 		pd.put("TEST_USER", userId);
-		pd.put("TEST_PLAN_ID", "EP20191107150902187");//考试计划
-		pd.put("TEST_PAPER_ID", "EP20191107144218001");//考试计划
+		pd.put("TEST_PLAN_ID", "EP20191107150902187");//考试计划ID
+		pd.put("TEST_PAPER_ID", "EP20191107144218001");//试卷ID
 		page.setPd(pd);
 		List<PageData>	varList = testpaperService.listExamHistory(page);	//列出TestPaper列表
 		List<PageData>	answerList = testpaperService.listAnswer(page);	//列出TestPaper列表
@@ -661,7 +661,6 @@ public class TestPaperController extends BaseController {
 		mv.addObject("answerList", answerList);
 		pd.put("TEST_SCORE", score);	
 		mv.addObject("pd", pd);
-		return mv;
-		
+		return mv;		
 	}	
 }

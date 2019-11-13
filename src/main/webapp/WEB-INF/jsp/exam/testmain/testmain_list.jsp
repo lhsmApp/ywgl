@@ -100,12 +100,12 @@
 												<c:forEach items="${paperList}" var="var">
 													<div class="item-box inline"><!-- 整体 -->
 											      		<div style="width:185px;height:200px;">
-											        		<a onclick="beginExam('${var.TEST_PLAN_ID}')" data-rel="colorbox" class="cboxElement" title="">
+											        		<a onclick="beginExam('${var.TEST_PLAN_ID}','${var.TEST_PAPER_ID}')" data-rel="colorbox" class="cboxElement" title="">
 											          		<img width="230" height="200" alt="请上传图片" src="uploadFiles/uploadImgs/ebaeff7ab06b4f6b9c5275f2c5518b82.jpg"></a>
 											      		</div>
 													    <div>
 													        <div class="box-title"><span class="list-item-value-title">${var.TEST_PLAN_NAME}</span></div>
-													          <div class="box-body"><i class="ace-icon fa fa-clock-o"></i><a style="padding-left:3px;" class="list-item-info high-font" onclick="beginExam('${var.TEST_PLAN_ID}')" title="">考试时间 :${var.START_DATE}至${var.END_DATE}</a></div>
+													          <div class="box-body"><i class="ace-icon fa fa-clock-o"></i><a style="padding-left:3px;" class="list-item-info high-font" onclick="beginExam('${var.TEST_PLAN_ID}','${var.TEST_PAPER_ID}')" title="">考试时间 :${var.START_DATE}至${var.END_DATE}</a></div>
 													          <div  class="box-foot">
 													              <span class="list-item-info"><i style="padding-right: 2px;" class="ace-icon fa fa-trophy no-hover orange"></i>总分:${var.TEST_PAPER_SCORE}</span>
 													              <span class="list-item-info" style="padding-left:3px;"> <i style="padding-right: 2px;" class="green ace-icon fa fa-pencil"></i>及格分:${var.QUALIFIED_SCORE}</span>
@@ -142,12 +142,12 @@
 												<c:forEach items="${varList}" var="var"> 
 													<div class="item-box inline"><!-- 整体 -->
 											      		<div style="width:185px;height:200px;">
-											        		<a onclick="checkPaper('${var.var.TEST_ID}')" data-rel="colorbox" class="cboxElement" title="">
+											        		<a onclick="checkPaper('${var.TEST_PLAN_ID}','${var.TEST_PAPER_ID}')" data-rel="colorbox" class="cboxElement" title="">
 											          		<img width="230" height="200" alt="请上传图片" src="static/html_UI/assets/images/gallery/image-2.jpg"></a>
 											      		</div>
 													    <div>
 													        <div class="box-title"><span class="list-item-value-title">${var.TEST_PLAN_NAME}</span></div>
-													          <div class="box-body"><i class="ace-icon fa fa-clock-o"></i><a style="padding-left:3px;" class="list-item-info high-font" onclick="checkPaper('${var.var.TEST_ID}')" title="">考试时间 :${var.TEST_TIME}</a></div>
+													          <div class="box-body"><i class="ace-icon fa fa-clock-o"></i><a style="padding-left:3px;" class="list-item-info high-font" onclick="checkPaper('${var.TEST_PLAN_ID}','${var.TEST_PAPER_ID}')" title="">考试时间 :${var.TEST_TIME}</a></div>
 													          <div  class="box-foot">
 													              <span class="list-item-info">
 													              	<c:if test=""></c:if>
@@ -215,14 +215,14 @@
 					/*
 						开始考试跳转	
 					*/
-					window.location.href='<%=basePath%>testpaper/goExam.do?TEST_PLAN_ID='+planId+'&TEST_PAPER_ID='+paperId;
+			window.location.href='<%=basePath%>testpaper/goExam.do?TEST_PLAN_ID='+planId+'&TEST_PAPER_ID='+paperId;
 				}
 			});
 		}
 		/*回顾考试*/
 		function checkPaper(planId,paperId){
 			top.jzts();
-			window.location.href='<%=basePath%>testpaper/reviewExam.do?TEST_PLAN_ID='+planId+'&TEST_PAPER_ID='+paperId;
+			window.location.href='<%=basePath%>testpaper/goReviewExam.do?TEST_PLAN_ID='+planId+'&TEST_PAPER_ID='+paperId;
 		}
 	</script>
 

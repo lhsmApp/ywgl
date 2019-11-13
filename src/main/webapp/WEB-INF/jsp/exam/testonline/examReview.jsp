@@ -45,7 +45,7 @@
 					<div class="row">
 						 <div class="col-xs-12">						 
 						 	<div>
-								<h4 style='color: #ff0033;'>您该试卷的得分为${pd.TEST_SCORE}分</h4>
+								<h4 style='color: #ff0033;'>${pd.TEST_USER},您好！您该试卷的得分为${pd.TEST_SCORE}分</h4>
 							</div>
 							<div style="margin-top: 20px;">
 <%-- 					<span style="display: none;" id="exam-studentId">${sessionScope.loginStudent.studentId }</span> --%>
@@ -85,8 +85,9 @@
 												</c:if>						
 											</c:if>
 										</c:forEach>
-										<div style="background:#82D900; color:#66FFcc"><span style='color: #F5FFE8;' >您的答案：${var.TEST_ANSWER}&nbsp;&nbsp;&nbsp;正确答案：${var.TEST_CORRECT_ANSWER}</span></div>
-										<div style="background:#82D900; color:#66FFcc"><span style='color: #F5FFE8;' >答案解析：${var.TEST_ANSWER_NOTE}</span></div>
+										<div id="answerExplain-${var.TEST_PAPER_ID}-${var.TEST_QUESTION_ID}" style="background:#82D900; color:#66FFcc">
+										<p><span style='color: #F5FFE8;' >您的答案：${var.TEST_ANSWER}&nbsp;&nbsp;&nbsp;正确答案：${var.TEST_CORRECT_ANSWER}</span></p>
+										<p><span style='color: #F5FFE8;' >答案解析：${var.TEST_ANSWER_NOTE}</span></p></div>
 									</div>
 									</dd>
 										<c:set value="${index+1 }" var="index"></c:set>
@@ -138,8 +139,8 @@
 					 $("input[name="+name+"][value='${vas.TEST_CORRECT_ANSWER}']").attr("checked",true);				 
 				 }	
 				//循环根据用户所选答案给多选框赋值
-				 var rightAnswer = '${vas.TEST_ANSWER}';//考试答案
-				 var result = rightAnswer.split(",");//
+				 var uesrAnswer = '${vas.TEST_ANSWER}';//考试答案
+				 var result = uesrAnswer.split(",");//
 				 var checkNames = document.getElementsByName(name);
 				 for(var i=0;i<checkNames.length;i++){
 					 for(var j=0;j<result.length;j++){
@@ -148,6 +149,11 @@
 							 break;
 						 }
 					 }
+				 }				
+				 var rightAnswer = '${vas.TEST_CORRECT_ANSWER}';//考试答案
+				 if(uesrAnswer!=rightAnswer){
+					 console.log("答案判断标红");
+					 $("#answerExplain-"+name).css({"background-color":"red"});
 				 }
 			 </c:forEach> 
 	 	});
