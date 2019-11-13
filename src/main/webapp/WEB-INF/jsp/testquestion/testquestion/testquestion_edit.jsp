@@ -182,8 +182,8 @@
 		<script type="text/javascript">
 		$(function(){
 			//edit 类型回显下拉框
-			questionType = document.getElementById("questionType").value;
-			objType = document.getElementById("TEST_QUESTION_TYPE");
+			var questionType = document.getElementById("questionType").value;
+			var objType = document.getElementById("TEST_QUESTION_TYPE");
 			for(i=0;i<objType.length;i++){
 			    if(objType[i].value==questionType){
 			    	objType[i].selected = true;
@@ -194,8 +194,8 @@
 			    }
 			}
 			//edit难度回显下拉框
-			questionDifficulty = document.getElementById("questionDifficulty").value;
-			objDifficulty = document.getElementById("TEST_QUESTION_DIFFICULTY");
+			var questionDifficulty = document.getElementById("questionDifficulty").value;
+			var objDifficulty = document.getElementById("TEST_QUESTION_DIFFICULTY");
 			for(i=0;i<objDifficulty.length;i++){
 			    if(objDifficulty[i].value==questionDifficulty)
 			    	objDifficulty[i].selected = true;

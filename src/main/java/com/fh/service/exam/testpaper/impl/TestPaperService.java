@@ -10,7 +10,7 @@ import com.fh.service.exam.testpaper.TestPaperManager;
 
 /** 
  * 说明： testpaper
- * 创建人：jiachao
+ * 创建人：xinyuLo
  * 创建时间：2019-11-06
  * @version
  */
@@ -102,6 +102,62 @@ public class TestPaperService implements TestPaperManager{
 	 */
 	public void deleteAll(String[] ArrayDATA_IDS)throws Exception{
 		dao.delete("TestPaperMapper.deleteAll", ArrayDATA_IDS);
+	}
+
+	/**
+	 * 保存随机生成信息
+	 * @param pageData
+	 * @throws Exception
+	 */
+	public void savePaperParam(PageData pageData) throws Exception {
+		dao.save("TestPaperMapper.savePaperParam", pageData);
+	}
+
+	/**
+	 * 保存试卷明细
+	 * @param paperDetail
+	 * @throws Exception
+	 */
+	public void savePaperDetail(PageData paperDetail) throws Exception {
+		dao.save("TestPaperMapper.savePaperDetail", paperDetail);
+	}
+
+	/**
+	 * 删除试卷明细
+	 * @param paperData
+	 * @throws Exception
+	 */
+	public void deletePaperDetail(PageData paperData) throws Exception {
+		dao.delete("TestPaperMapper.deletePaperDetail", paperData);
+	}
+
+	/**
+	 * 删除随机信息
+	 * @param paperData
+	 * @throws Exception
+	 */
+	public void deletePaperParam(PageData paperData) throws Exception {
+		dao.delete("TestPaperMapper.deletePaperParam", paperData);
+	}
+
+	/**
+	 * 通过id查询随机条件
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PageData> listParamById(PageData pd) throws Exception {
+		return (List<PageData>)dao.findForList("TestPaperMapper.listParamById", pd);
+	}
+
+	/**
+	 * 查询该试卷下所有试题
+	 * @param pd
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PageData> listPaperDetail(PageData pd) throws Exception {
+		return (List<PageData>)dao.findForList("TestPaperMapper.listPaperDetail", pd);
 	}
 	
 }

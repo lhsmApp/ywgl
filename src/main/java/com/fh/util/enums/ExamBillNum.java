@@ -14,5 +14,6 @@ public class ExamBillNum {
 	public static final String TRAIN_PLAN = "VP";//培训计划  
 	public static final String EXAM_PLAN = "EP";//考试计划  
 	public static final String EXAM_QUESTION= "EQ";//试题
+	public static final String EXAM_PAPER= "EP";//试卷
 }
 

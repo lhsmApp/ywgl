@@ -205,6 +205,32 @@ public class TestMainController extends BaseController {
 		return AppUtil.returnObject(pd, map);
 	}
 	
+	/**列表
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/queryList")
+	public ModelAndView queryList(Page page) throws Exception {
+		logBefore(logger, Jurisdiction.getUsername() + "统计列表TestMain");
+		// if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;}
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		
+		pd = this.getPageData();
+		String keywords = pd.getString("keywords"); // 关键词检索条件
+		if (null != keywords && !"".equals(keywords)) {
+			pd.put("keywords", keywords.trim());
+		}
+		page.setPd(pd);
+		List<PageData> varList = testmainService.list(page); // 列出TestMain列表
+		
+		mv.addObject("varList", varList);
+		mv.addObject("pd", pd);
+		mv.setViewName("exam/testmain/testmain_query_list");
+		mv.addObject("QX", Jurisdiction.getHC()); // 按钮权限
+		return mv;
+	}
+	
 	 /**导出到excel
 	 * @param
 	 * @throws Exception

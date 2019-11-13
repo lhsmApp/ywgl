@@ -54,13 +54,92 @@
 		)
 	</insert>
 	
+	<!-- 向试卷明细表插入数据 -->
+	<insert id="savePaperDetail" parameterType="pd">
+		insert into
+			tb_test_paper_detail 
+		(
+			TEST_PAPER_ID,
+			TEST_QUESTION_ID,
+			DISP_ORDER
+		) values (
+			#{TEST_PAPER_ID},
+			#{TEST_QUESTION_ID},
+			#{DISP_ORDER}
+		)
+	</insert>
+	
+	<!-- 向生成随机信息插入数据 -->
+	<insert id="savePaperParam" parameterType="pd">
+		insert into
+		 	tb_test_rand_param
+		(
+			TEST_PAPER_ID,
+			TEST_QUESTION_TYPE,
+			TEST_QUESTION_DIFFICULTY,
+			TEST_QUESTION_NUM,
+			TEST_QUESTION_SCORE,
+			CREATE_USER,
+			CREATE_DATE
+		) values (
+			#{TEST_PAPER_ID},
+			#{TEST_QUESTION_TYPE},
+			#{TEST_QUESTION_DIFFICULTY},
+			#{TEST_QUESTION_NUM},
+			#{TEST_QUESTION_SCORE},
+			#{CREATE_USER},
+			#{CREATE_DATE}
+		)
+	</insert>
+	
 	<!-- 删除-->
-	<delete id="delete" parameterType="pd">
-		delete from
+	<delete id="deletePaperDetail" parameterType="pd">
+		 delete from tb_test_paper_detail
+		    where TEST_PAPER_ID = #{TEST_PAPER_ID}
+	</delete>
+	
+	<!-- 删除-->
+	<delete id="deletePaperParam" parameterType="pd">
+		delete from tb_test_rand_param
+		    where TEST_PAPER_ID = #{TEST_PAPER_ID}
+	</delete>
+	
+	<!-- 通过id查询所有试题 -->
+	<select id="listPaperDetail" parameterType="pd" resultType="pd">
+		select
+			TEST_PAPER_ID,
+			TEST_QUESTION_ID,
+			DISP_ORDER
+		from
+			tb_test_paper_detail
+		where
+			TEST_PAPER_ID = #{TEST_PAPER_ID} 
+	</select>
+	
+	<!-- 通过id查询随机信息 -->
+	<select id="listParamById" parameterType="pd" resultType="pd">
+		select
+			TEST_PAPER_ID,
+			TEST_QUESTION_TYPE,
+			TEST_QUESTION_DIFFICULTY,
+			TEST_QUESTION_NUM,
+			TEST_QUESTION_SCORE  
+		from
+			tb_test_rand_param
+		where
+			TEST_PAPER_ID = #{TEST_PAPER_ID}
+	</select>
+	
+	
+	<!-- 删除-->
+	<update id="delete" parameterType="pd">
+		update
 		<include refid="tableName"></include>
+		set
+			STATE = 0
 		where 
 			TEST_PAPER_ID = #{TEST_PAPER_ID}
-	</delete>
+	</update>
 	
 	<!-- 修改 -->
 	<update id="edit" parameterType="pd">
@@ -76,12 +155,9 @@
 			TEST_PAPER_SCORE = #{TEST_PAPER_SCORE},
 			ANSWER_TIME = #{ANSWER_TIME},
 			TEST_CHANCE = #{TEST_CHANCE},
-			QUALIFIED_SCORE = #{QUALIFIED_SCORE},
-			STATE = #{STATE},
-			CREATE_USER = #{CREATE_USER},
-			CREATE_DATE = #{CREATE_DATE}
+			QUALIFIED_SCORE = #{QUALIFIED_SCORE}
 		where 
-		TEST_PAPER_ID = #{TEST_PAPER_ID}
+			TEST_PAPER_ID = #{TEST_PAPER_ID}
 	</update>
 	
 	<!-- 通过ID获取数据 -->
@@ -155,17 +231,18 @@
 		from 
 		<include refid="tableName"></include>
 	</select>
-	
 	<!-- 批量删除 -->
-	<delete id="deleteAll" parameterType="String">
-		delete from
+	<update id="deleteAll" parameterType="String">
+		update
 		<include refid="tableName"></include>
-		where 
+		set
+			STATE = 0
+		where  
 			TEST_PAPER_ID in
 		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
                  #{item}
 		</foreach>
-	</delete>
+	</update>
 <!-- 	獲取在線考試試題信息 -->
 	<select id="datalistExam" parameterType="page" resultType="pd">
 		SELECT 		   
