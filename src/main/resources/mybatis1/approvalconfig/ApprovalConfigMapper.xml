@@ -837,8 +837,9 @@
 			BILL_CODE = #{BILL_CODE}
 	</delete>
 	
-	<!-- 审批通过-更新审批明细表 -->
+	<!-- 审批通过-更新审批明细表和主表 -->
 	<update id="editDetail" parameterType="pd">
+<!-- 	更新审批明细表审批人、审批状态等信息 -->
 		update TB_APPROVAL_DETAIL
 		set
 		 
@@ -851,6 +852,7 @@
 		BILL_CODE = #{BILL_CODE}
 		AND
 		CURRENT_LEVEL=#{CURRENT_LEVEL};
+<!-- 		激活审批明细表下级审批状态 -->
 		update TB_APPROVAL_DETAIL
 		set
 		 ACTIVE_FLAG='1'
@@ -858,9 +860,13 @@
 		BILL_CODE = #{BILL_CODE}
 		AND
 		CURRENT_LEVEL=#{NEXT_LEVEL};
+<!-- 		更新审批主表状态 -->
+			update tb_approval_main
+		set 
+		APPROVAL_STATE=#{APPROVAL_STATE_MAIN}
 	</update>
 	
-	<!-- 审批退回-更新审批明细表 -->
+	<!-- 审批退回-更新审批明细表和主表 -->
 	<update id="editReturnDetail" parameterType="pd">
 		update TB_APPROVAL_DETAIL
 		set		 

@@ -236,8 +236,8 @@ public class ApprovalConfigController extends BaseController {
 		//根据激活标识，审批单位，审批部门，审批角色和审批状态5个条件获取tb_approval_detail信息
 		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 	    String unitCode=user.getDEPARTMENT_ID();
-//	    String roleCode=user.getROLE_ID(); //审批角色   
-//	    pd.put("ROLE_CODE", roleCode);//单位编码
+	    String roleCode=user.getROLE_ID(); //审批角色   
+	    pd.put("ROLE_CODE", roleCode);//角色编码
 		pd.put("UNIT_CODE", unitCode);//单位编码
 		pd.put("ACTIVE_FLAG", '1');//激活状态为1
 		pd.put("APPROVAL_STATE", "0");///审批状态为0
@@ -379,13 +379,19 @@ public class ApprovalConfigController extends BaseController {
 			User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 	//	    String unitCode=user.getDEPARTMENT_ID();
 		    String userName=user.getUSERNAME();  
-	//	    String roleId=user.getROLE_ID();
+		    String roleId=user.getROLE_ID();
 		    pd.put("APPROVAL_USER",userName);//实际审批人
 			pd.put("APPROVAL_DATE", DateUtils.getCurrentTime());//审批日期
 			pd.put("APPROVAL_ADVICE", "同意");
 			pd.put("APPROVAL_STATE", "1");
 	//		pd.put("UNIT_CODE",unitCode);//单位编码
-	//		pd.put("ROLE_CODE",roleId);//角色
+			pd.put("ROLE_CODE",roleId);//角色
+			//当下一审批级别为0时，即最后一级审批更新审批主表为已完成
+			if (Integer.parseInt(pd.get("NEXT_LEVEL").toString())==0){
+				pd.put("APPROVAL_STATE_MAIN", "1");//审批完成
+			}else{
+				pd.put("APPROVAL_STATE_MAIN", "0");//审批中
+			}
 			//通过业务单据编码和当前审批级别更新审批明细表信息
 			approvalconfigService.editDetail(pd);
 			pd.put("msg","审批成功");

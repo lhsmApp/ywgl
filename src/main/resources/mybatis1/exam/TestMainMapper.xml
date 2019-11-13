@@ -90,6 +90,7 @@
 	<select id="paperListPage" parameterType="page" resultType="pd">
 		SELECT
 			a.TEST_PLAN_ID,
+			a.TEST_PAPER_ID,
 			a.START_DATE,
 			a.END_DATE, 
 			a.TEST_PLAN_PERSONS,

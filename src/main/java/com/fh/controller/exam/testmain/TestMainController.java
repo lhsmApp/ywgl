@@ -120,7 +120,7 @@ public class TestMainController extends BaseController {
 			if (DateUtil.compareDates(endDate, nowDate)) {
 				pageData.put("TEST_USER",userId);
 				List<PageData> userExamList = testmainService.listByUser(pageData);
-				if (null != userExamList && userExamList.size() > 0) {
+				if (null == userExamList || userExamList.size()==0) {
 					String[] planPerson = pageData.getString("TEST_PLAN_PERSONS").split(",");
 					if (null != planPerson && planPerson.length > 0) {
 						for (int i = 0; i < planPerson.length; i++) {
