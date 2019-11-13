@@ -22,9 +22,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fh.controller.base.BaseController;
+import com.fh.controller.common.BillnumUtil;
 import com.fh.entity.CommonBase;
 import com.fh.entity.Page;
 import com.fh.entity.system.User;
+import com.fh.service.billnum.BillNumManager;
 import com.fh.service.exam.testmain.TestMainManager;
 import com.fh.service.exam.testpaper.TestPaperManager;
 import com.fh.service.testquestion.testquestion.TestQuestionManager;
@@ -35,6 +37,7 @@ import com.fh.util.Jurisdiction;
 import com.fh.util.PageData;
 import com.fh.util.StringUtil;
 import com.fh.util.date.DateUtils;
+import com.fh.util.enums.ExamBillNum;
 import com.fh.util.enums.PaperType;
 import com.fh.util.enums.QuestionDifficulty;
 import com.fh.util.enums.QuestionType;
@@ -58,25 +61,65 @@ public class TestPaperController extends BaseController {
 	private CourseTypeManager coursetypeService;
 	@Resource(name="testquestionService")
 	private TestQuestionManager testquestionService;
-	
 	@Resource(name="testmainService")
 	private TestMainManager testmainService;
+	@Resource(name = "billnumService")
+	private BillNumManager billNumService;
+	
 	/**保存
 	 * @param
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/save")
-	public ModelAndView save() throws Exception{
+	@ResponseBody
+	public CommonBase save() throws Exception{
 		logBefore(logger, Jurisdiction.getUsername()+"新增TestPaper");
-		if(!Jurisdiction.buttonJurisdiction(menuUrl, "add")){return null;} //校验权限
-		ModelAndView mv = this.getModelAndView();
+		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "add")){return null;} //校验权限
+		CommonBase commonBase = new CommonBase();
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USER);
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		pd.put("TESTPAPER_ID", this.get32UUID());	//主键
-		testpaperService.save(pd);
-		mv.addObject("msg","success");
-		mv.setViewName("save_result");
-		return mv;
+		String listData = pd.getString("listData");
+		String paperId = BillnumUtil.getExamBillnum(billNumService, ExamBillNum.EXAM_PAPER);
+		JSONArray array = JSONArray.fromObject(listData);
+		@SuppressWarnings("unchecked")
+		List<PageData> listTransferData = (List<PageData>) JSONArray.toCollection(array, PageData.class);// 过时方法
+		
+		PageData paperData = listTransferData.get(0); //所有试卷基本信息
+		paperData.put("STATE", "1");
+		paperData.put("CREATE_USER", user.getUSER_ID());
+		paperData.put("CREATE_DATE", DateUtils.getCurrentDate());
+		paperData.put("TEST_PAPER_ID",paperId);
+		testpaperService.save(paperData);
+		
+		//向试卷明细表插入数据
+		String questionIds = paperData.getString("questionIds");
+		if(StringUtil.isNotEmpty(questionIds)) {
+			String[] ids = questionIds.split(",");
+			PageData paperDetail = new PageData();
+			for (int i = 0; i < ids.length; i++) {
+				paperDetail.put("TEST_PAPER_ID",paperId);
+				paperDetail.put("TEST_QUESTION_ID",ids[i]);
+				paperDetail.put("DISP_ORDER",i);
+				testpaperService.savePaperDetail(paperDetail);
+			}
+		}
+		
+		//判断是否为随机试卷
+		String paperType = paperData.getString("TEST_PAPER_TYPE");
+		if(StringUtil.isNotEmpty(paperType) && paperType.equals("2")) {
+			//保存以后删掉该集合内的基本信息进行添加查询条件
+			listTransferData.remove(0);
+			for (PageData pageData : listTransferData) {
+				pageData.put("TEST_PAPER_ID",paperId);
+				pageData.put("CREATE_USER", user.getUSER_ID());
+				pageData.put("CREATE_DATE", DateUtils.getCurrentDate());
+				testpaperService.savePaperParam(pageData);
+			}
+		}
+		
+		commonBase.setCode(1);
+		return commonBase;
 	}
 	
 	/**删除
@@ -86,7 +129,7 @@ public class TestPaperController extends BaseController {
 	@RequestMapping(value="/delete")
 	public void delete(PrintWriter out) throws Exception{
 		logBefore(logger, Jurisdiction.getUsername()+"删除TestPaper");
-		if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return;} //校验权限
+		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return;} //校验权限
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		testpaperService.delete(pd);
@@ -99,16 +142,49 @@ public class TestPaperController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/edit")
-	public ModelAndView edit() throws Exception{
+	@ResponseBody
+	public CommonBase edit() throws Exception{
 		logBefore(logger, Jurisdiction.getUsername()+"修改TestPaper");
-		if(!Jurisdiction.buttonJurisdiction(menuUrl, "edit")){return null;} //校验权限
-		ModelAndView mv = this.getModelAndView();
+		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "edit")){return null;} //校验权限
+		CommonBase commonBase = new CommonBase();
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USER);
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		testpaperService.edit(pd);
-		mv.addObject("msg","success");
-		mv.setViewName("save_result");
-		return mv;
+		String listData = pd.getString("listData");
+		JSONArray array = JSONArray.fromObject(listData);
+		@SuppressWarnings("unchecked")
+		List<PageData> listTransferData = (List<PageData>) JSONArray.toCollection(array, PageData.class);// 过时方法
+		PageData paperData = listTransferData.get(0); //所有试卷基本信息
+		testpaperService.edit(paperData);
+		String paperId = paperData.getString("TEST_PAPER_ID");
+		//向试卷明细表插入数据,全部删除重新插入
+		testpaperService.deletePaperDetail(paperData);
+		String questionIds = paperData.getString("questionIds");
+		if(StringUtil.isNotEmpty(questionIds)) {
+			String[] ids = questionIds.split(",");
+			PageData paperDetail = new PageData();
+			for (int i = 0; i < ids.length; i++) {
+				paperDetail.put("TEST_PAPER_ID",paperId);
+				paperDetail.put("TEST_QUESTION_ID",ids[i]);
+				paperDetail.put("DISP_ORDER",i);
+				testpaperService.savePaperDetail(paperDetail);
+			}
+		}
+		
+		//判断是否为随机试卷
+		String paperType = paperData.getString("TEST_PAPER_TYPE");
+		if(StringUtil.isNotEmpty(paperType) && paperType.equals("2")) {
+			testpaperService.deletePaperParam(paperData);
+			//保存以后删掉该集合内的基本信息进行添加查询条件
+			listTransferData.remove(0);
+			for (PageData pageData : listTransferData) {
+				pageData.put("TEST_PAPER_ID",paperId);
+				pageData.put("CREATE_USER", user.getUSER_ID());
+				pageData.put("CREATE_DATE", DateUtils.getCurrentDate());
+				testpaperService.savePaperParam(pageData);
+			}
+		}
+		return commonBase;
 	}
 	
 	/**列表
@@ -173,8 +249,21 @@ public class TestPaperController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd = testpaperService.findById(pd);	//根据ID读取
+		String questionIds = "";
+		//树形下拉框
 		List<PageData> courseTypePdList = new ArrayList<PageData>(); 
 		JSONArray arr = JSONArray.fromObject(coursetypeService.listAllCourseTypeToSelect("0",courseTypePdList));
+		//随机条件
+		List<PageData> listParam = testpaperService.listParamById(pd);
+		//通过id查询该试卷所选试题
+		List<PageData> listPaperDetail = testpaperService.listPaperDetail(pd);
+		for (PageData pageData : listPaperDetail) {
+			if(questionIds.equals("")) questionIds += pageData.getString("TEST_QUESTION_ID");
+			else questionIds += "," + pageData.getString("TEST_QUESTION_ID");
+		}
+		
+		mv.addObject("questionIds",questionIds);
+		mv.addObject("listParam",listParam);
 		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
 		mv.setViewName("exam/testpaper/testpaper_edit");
 		mv.addObject("msg", "edit");
@@ -190,7 +279,7 @@ public class TestPaperController extends BaseController {
 	@ResponseBody
 	public Object deleteAll() throws Exception{
 		logBefore(logger, Jurisdiction.getUsername()+"批量删除TestPaper");
-		if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return null;} //校验权限
+		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return null;} //校验权限
 		PageData pd = new PageData();		
 		Map<String,Object> map = new HashMap<String,Object>();
 		pd = this.getPageData();

@@ -197,6 +197,7 @@
 		
 		//新增
 		function add(){
+			top.jzts();
 			window.location.href = '<%=basePath%>testpaper/goAdd.do';
 		}		
 		
@@ -205,9 +206,9 @@
 			bootbox.confirm("确定要删除吗?", function(result) {
 				if(result) {
 					top.jzts();
-					var url = "<%=basePath%>testpaper/delete.do?TESTPAPER_ID="+Id+"&tm="+new Date().getTime();
+					var url = "<%=basePath%>testpaper/delete.do?TEST_PAPER_ID="+Id+"&tm="+new Date().getTime();
 					$.get(url,function(data){
-						nextPage(${page.currentPage});
+						nextPage(eval('${page.currentPage}'));
 					});
 				}
 			});
@@ -216,22 +217,7 @@
 		//修改
 		function edit(Id){
 			 top.jzts();
-			 var diag = new top.Dialog();
-			 diag.Drag=true;
-			 diag.Title ="编辑";
-			 diag.URL = '<%=basePath%>testpaper/goEdit.do?TESTPAPER_ID='+Id;
-			 diag.Width = 450;
-			 diag.Height = 355;
-			 diag.Modal = true;				//有无遮罩窗口
-			 diag. ShowMaxButton = true;	//最大化按钮
-		     diag.ShowMinButton = true;		//最小化按钮 
-			 diag.CancelEvent = function(){ //关闭事件
-				 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
-					 nextPage(${page.currentPage});
-				}
-				diag.close();
-			 };
-			 diag.show();
+			 window.location.href = '<%=basePath%>testpaper/goEdit.do?TEST_PAPER_ID='+Id;
 		}
 		
 		//批量操作
@@ -266,11 +252,10 @@
 								url: '<%=basePath%>testpaper/deleteAll.do?tm='+new Date().getTime(),
 						    	data: {DATA_IDS:str},
 								dataType:'json',
-								//beforeSend: validateData,
 								cache: false,
 								success: function(data){
 									 $.each(data.list, function(i, list){
-											nextPage(${page.currentPage});
+											nextPage(eval('${page.currentPage}'));
 									 });
 								}
 							});
@@ -279,11 +264,6 @@
 				}
 			});
 		};
-		
-		//导出excel
-		function toExcel(){
-			window.location.href='<%=basePath%>testpaper/excel.do';
-		}
 	</script>
 
 

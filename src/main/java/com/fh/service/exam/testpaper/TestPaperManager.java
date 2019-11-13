@@ -6,7 +6,7 @@ import com.fh.util.PageData;
 
 /** 
  * 说明： testpaper接口
- * 创建人：jiachao
+ * 创建人：xinyuLo
  * 创建时间：2019-11-06
  * @version
  */
@@ -55,6 +55,48 @@ public interface TestPaperManager{
 	 * @throws Exception
 	 */
 	public void deleteAll(String[] ArrayDATA_IDS)throws Exception;
+	
+	/**
+	 * 保存随机生成信息
+	 * @param pageData
+	 * @throws Exception
+	 */
+	public void savePaperParam(PageData pageData)throws Exception;
+	
+	/**
+	 * 保存试卷明细
+	 * @param paperDetail
+	 * @throws Exception
+	 */
+	public void savePaperDetail(PageData paperDetail)throws Exception;
+	
+	/**
+	 * 删除试卷明细
+	 * @param paperData
+	 * @throws Exception
+	 */
+	public void deletePaperDetail(PageData paperData)throws Exception;
+	
+	/**
+	 * 删除随机信息
+	 * @param paperData
+	 * @throws Exception
+	 */
+	public void deletePaperParam(PageData paperData)throws Exception;
+	
+	/**
+	 * 通过id查询随机条件
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public List<PageData> listParamById(PageData pd)throws Exception;
+	
+	/**
+	 * 查询该试卷下所有试题
+	 * @param pd
+	 */
+	public List<PageData> listPaperDetail(PageData pd)throws Exception;
 	
 }
 
