@@ -128,8 +128,7 @@
 	
 	<!-- 列表 -->
 	<select id="datalistPage" parameterType="page" resultType="pd">
-		select
-			b.USERNAME,
+		SELECT
 			a.TEST_PLAN_ID,	
 			a.TEST_PAPER_ID,	
 			a.TEST_USER,	
@@ -139,17 +138,26 @@
 			a.IF_QUALIFIED,	
 			a.TEST_QUESTION_NUM,	
 			a.STATE,	
-			a.CREATE_DATE
-		from 
-			tb_test_main as a
-		LEFT JOIN sys_user AS b ON a.TEST_USER = b.USER_ID
-		where 
+			a.CREATE_DATE,
+			b.STUDENT_NAME,
+			c.NAME,
+			d.TEST_PAPER_TITLE
+		FROM 
+			tb_test_main AS a
+		LEFT JOIN tb_train_student AS b ON a.TEST_USER = b.STUDENT_ID
+		LEFT JOIN oa_department AS c ON b.DEPART_CODE = c.DEPARTMENT_CODE
+		LEFT JOIN tb_test_paper AS d ON d.TEST_PAPER_ID = a.TEST_PAPER_ID
+		WHERE 
 			a.STATE=1
+		<if test="pd.TEST_PLAN_ID != null and pd.TEST_PLAN_ID != ''">
+		AND
+			a.TEST_PLAN_ID = #{pd.TEST_PLAN_ID}		
+		</if> 
 		<!-- 关键词检索 -->
 		<if test="pd.keywords!= null and pd.keywords != ''">
 			and
 				(
-					b.USERNAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					b.STUDENT_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 					<!-- 根据需求自己加检索条件
 					字段1 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 					 or 

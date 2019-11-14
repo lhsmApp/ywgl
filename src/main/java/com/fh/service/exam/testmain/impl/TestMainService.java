@@ -102,6 +102,15 @@ public class TestMainService implements TestMainManager{
 	public List<PageData> paperListPage(Page page) throws Exception {
 		return (List<PageData>)dao.findForList("TestMainMapper.paperListPage", page);
 	}
+
+	/**
+	 * 导出信息到excel
+	 * @param page
+	 * @return
+	 */
+	public List<PageData> exportList(Page page) throws Exception {
+		return null;
+	}
 	
 }
 

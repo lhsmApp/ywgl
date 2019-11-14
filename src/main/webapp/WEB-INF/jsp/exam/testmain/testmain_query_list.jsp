@@ -36,9 +36,18 @@
 							</span>
 							<span style="margin-left:-15px;"> 
 							</span>
-							<button style="margin-bottom:3px;" class="btn btn-light btn-minier" onclick="search();" title="检索">
-								<i id="nav-search-icon" class="ace-icon fa fa-search bigger-120 nav-search-icon blue"></i>
+							<select class="chosen-select form-control inline" name="TEST_PLAN_ID" id="TEST_PLAN_ID" data-placeholder="请选择" style="vertical-align:top;width:200px;">
+								<option value="">全部</option>
+								<c:forEach items="${planList}" var="var">
+								<option value="${var.TEST_PLAN_ID }" <c:if test="${pd.TEST_PLAN_ID == var.TEST_PLAN_ID }">selected="selected"</c:if>>${var.TEST_PLAN_NAME}</option>
+								</c:forEach>
+						  	</select>
+						  	<button style="margin-bottom:3px;" class="btn btn-info btn-sm" onclick="search();" title="检索">
+								<i class="ace-icon fa fa-search bigger-110"></i>
 							</button>
+							<a class="btn btn-primary btn-xs inline pull-right" onclick="toExcel()">
+								<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>导出</span>
+							</a>
 						</div>
 					<div class="row">
 						<div class="col-xs-12">
@@ -48,11 +57,12 @@
 							<thead>
 								<tr>
 									<th class="center" style="width:50px;">序号</th>
+									<th class="center">考试时间</th>
+										<th class="center">考试试卷名称</th>
+									<th class="center">题目数</th> 
 									<th class="center">考试人</th>
 									<th class="center">分数</th>
 									<th class="center">是否合格</th>
-									<th class="center">题目数</th> 
-									<th class="center">考试时间</th>
 								</tr>
 							</thead>
 													
@@ -63,14 +73,15 @@
 									<c:forEach items="${varList}" var="var" varStatus="vs">
 										<tr>
 											<td class='center' style="width: 30px;">${vs.index+1}</td>
-											<td class='center'>${var.USERNAME}</td>
+											<td class='center'>${var.TEST_TIME}</td>
+											<td class='center'>${var.TEST_PAPER_TITLE}</td>
+											<td class='center'>${var.TEST_QUESTION_NUM}</td>
+											<td class='center'>${var.STUDENT_NAME}</td>
 											<td class='center'>${var.TEST_SCORE}</td>
 											<td class='center'>
 												<c:if test="${var.IF_QUALIFIED == 0}"><span class="lbl red">不及格</span></c:if>
 												<c:if test="${var.IF_QUALIFIED == 1}"><span class="lbl green">及格</span></c:if>
 											</td>
-											<td class='center'>${var.TEST_QUESTION_NUM}</td>
-											<td class='center'>${var.TEST_TIME}</td>
 										</tr>
 									</c:forEach>
 								</c:when>
@@ -140,6 +151,11 @@
 				});
 			});
 		});
+		
+		/* 导出Excel */
+		function toExcel(){
+			window.location.href='<%=basePath%>testmain/excel.do';
+		}
 	</script>
 </body>
 </html>
