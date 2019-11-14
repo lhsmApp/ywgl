@@ -60,7 +60,7 @@
 			<if test="item!=null">
 				insert into tb_gl_plan_user
 				(
-					TRAIN_PLAN_ID,	
+					PLAN_ID,	
 					STUDENT_ID
 				) values (#{item.TRAIN_PLAN_ID},
 					#{item.STUDENT_ID})

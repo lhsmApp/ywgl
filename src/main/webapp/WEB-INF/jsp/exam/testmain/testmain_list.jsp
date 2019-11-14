@@ -81,10 +81,10 @@
 						          		<i class="ace-icon fa fa-rss orange"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">我的考试列表</font></font></h4>
 						        <div class="widget-toolbar no-border">
 						          <ul class="nav nav-tabs" id="recent-tab">
-						              <li class="active">
+						              <li class="active" tag="task-tab">
 						              	<a data-toggle="tab" href="#task-tab" aria-expanded="true"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">未完成</font></font></a>
 						              </li>
-						              <li class="">
+						              <li class="" tag="member-tab">
 						              	<a data-toggle="tab" href="#member-tab" aria-expanded="false"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">已完成</font></font></a>
 						              </li>
 						          </ul>
@@ -159,9 +159,9 @@
 													           	  <span class="list-item-info" style="padding-left:3px;"><i style="padding-right: 2px;" class="blue ace-icon fa fa-inbox"></i>试题数:${var.TEST_QUESTION_NUM}</span>
 													          </div>
 													          <div class="btm-box">
-														          <button style="width:100%;" class="btn btn-round btn-info" onclick="checkPaper('${var.TEST_PLAN_ID}','${var.TEST_PAPER_ID}')">
+														          <a style="width:100%;" class="btn btn-round btn-info" onclick="checkPaper('${var.TEST_PLAN_ID}','${var.TEST_PAPER_ID}')">
 															          <font style="vertical-align: inherit;">回顾试卷</font>
-														       	  </button>
+														       	  </a>
 				               								  </div>
 													    </div>
 													</div>
@@ -206,6 +206,16 @@
 			top.jzts();
 			$("#Form").submit();
 		}  	
+		$(function() {
+			//试卷回顾页面返回时，激活已完成tab
+			if('${pd.tabNo}'=="tabReview"){
+				$("#recent-tab li[tag='member-tab'] a").click();
+			}
+			//考试页面返回时，激活未完成tab
+			if('${pd.tabNo}'=="tabExam"){
+				$("#recent-tab li[tag='task-tab'] a").click();
+			}
+		})
 		
 		/*开始考试*/
 		function beginExam(planId,paperId){
@@ -221,7 +231,6 @@
 		}
 		/*回顾考试*/
 		function checkPaper(planId,paperId){
-			top.jzts();
 			window.location.href='<%=basePath%>testpaper/goReviewExam.do?TEST_PLAN_ID='+planId+'&TEST_PAPER_ID='+paperId;
 		}
 	</script>

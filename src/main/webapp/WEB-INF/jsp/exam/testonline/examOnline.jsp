@@ -30,6 +30,7 @@
  			height: 30px;
  			line-height: 30px;
 			cursor: pointer;
+			text-indent:2em;
  		}
  		.aswer-p:hover {
  			background-color: #FFF;
@@ -44,7 +45,7 @@
 			<div class="main-content-inner">
 				<div class="page-content">
 					<div class="row">
-						 <div class="col-xs-12">
+						 <div class="col-xs-12" >
 						 	<div >
 								<!-- 答题卡 -->
 								<span id="beginTime" style="display: none;">${beginTime }</span>
@@ -92,7 +93,9 @@
 								</div>
 								<!--   答题卡  end -->
 							 </div>
-						 	<div>
+						 	<div style="margin-top: 20px;">
+						 		<a style="cursor: pointer;" onclick="returnTestMain()"><span class="label label-success arrowed">返回考试列表</span></a>
+						 		<div>---------------------------</div>
 								<h4>共${pd.TEST_QUESTION_NUM }题,总分${pd.TEST_PAPER_SCORE}分</h4>
 							</div>
 							<div style="margin-top: 20px;">
@@ -320,9 +323,14 @@
 			        {
 			           d=document.getElementsByTagName('li')
 			           for(p=d.length;p--;){
-			                if(d[p].id==x){d[p].style.backgroundColor='green'}
+			                if(d[p].id==x){
+			                	d[p].style.backgroundColor='green';
+			                	}
 			           } 
 			         }
+			   function returnTestMain(){		   
+					   window.location.href='<%=basePath%>testmain/list.do?tabNo=tabExam';
+			   }
 	</script>
 
 

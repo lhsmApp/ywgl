@@ -52,11 +52,21 @@
 									<option value="">2</option>
 								  	</select>
 								</td>
-								<c:if test="${QX.cha == 1 }">
-								<td style="vertical-align:top;padding-left:2px"><a class="btn btn-light btn-xs" onclick="tosearch();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
-								</c:if>
-								<c:if test="${QX.toExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="toExcel();" title="导出到EXCEL"><i id="nav-search-icon" class="ace-icon fa fa-download bigger-110 nav-search-icon blue"></i></a></td></c:if>
-							</tr>
+								<td style="padding-left:2px;">
+									<span class="input-icon pull-left" style="margin-right: 5px;">
+													<input id="planName" class="nav-search-input" autocomplete="off" type="text" name="keywords" value="${pd.keywords }" placeholder="请输入任务名称"> 
+													<i class="ace-icon fa fa-search nav-search-icon"></i>
+												</span>																			 
+												<button type="button" class="btn btn-info btn-xs" onclick="tosearch();">
+												    <i class="ace-icon fa fa-search bigger-110"></i>
+												</button>	
+								</td>	
+								<td style="padding-left:10px;">  
+   									<a id="btnAdd"  onclick="add()"> 
+										<span class="ace-icon fa fa-plus-circle blue"></span>新增计划
+									</a> 
+								</td>	
+							</tr>							
 						</table>
 						<!-- 检索  -->
 					
@@ -67,17 +77,13 @@
 									<label class="pos-rel"><input type="checkbox" class="ace" id="zcheckbox" /><span class="lbl"></span></label>
 									</th>
 									<th class="center" style="width:50px;">序号</th>
-									<th class="center">备注1</th>
-									<th class="center">备注2</th>
-									<th class="center">备注3</th>
-									<th class="center">备注4</th>
-									<th class="center">备注5</th>
-									<th class="center">备注6</th>
-									<th class="center">备注7</th>
-									<th class="center">备注8</th>
-									<th class="center">备注9</th>
-									<th class="center">备注10</th>
-									<th class="center">备注11</th>
+									<th class="center">计划编码</th>
+									<th class="center">计划名称</th>
+									<th class="center">计划创建时间</th>
+									<th class="center">计划开始时间</th>
+									<th class="center">计划结束时间</th>
+									<th class="center">考试任务描述</th>
+<!-- 									<th class="center">计划创建人员</th> -->
 									<th class="center">操作</th>
 								</tr>
 							</thead>
@@ -86,7 +92,6 @@
 							<!-- 开始循环 -->	
 							<c:choose>
 								<c:when test="${not empty varList}">
-									<c:if test="${QX.cha == 1 }">
 									<c:forEach items="${varList}" var="var" varStatus="vs">
 										<tr>
 											<td class='center'>
@@ -95,69 +100,23 @@
 											<td class='center' style="width: 30px;">${vs.index+1}</td>
 											<td class='center'>${var.TEST_PLAN_ID}</td>
 											<td class='center'>${var.TEST_PLAN_NAME}</td>
+											<td class='center'>${var.CREATE_DATE}</td>
 											<td class='center'>${var.START_DATE}</td>
 											<td class='center'>${var.END_DATE}</td>
-											<td class='center'>${var.COURSE_TYPE_ID}</td>
-											<td class='center'>${var.TEST_PAPER_ID}</td>
 											<td class='center'>${var.TEST_PLAN_MEMO}</td>
-											<td class='center'>${var.TEST_PLAN_PERSONS}</td>
-											<td class='center'>${var.STATE}</td>
-											<td class='center'>${var.CREATE_USER}</td>
-											<td class='center'>${var.CREATE_DATE}</td>
+<%-- 											<td class='center'>${var.CREATE_USER}</td> --%>
 											<td class="center">
-												<c:if test="${QX.edit != 1 && QX.del != 1 }">
-												<span class="label label-large label-grey arrowed-in-right arrowed-in"><i class="ace-icon fa fa-lock" title="无权限"></i></span>
-												</c:if>
-												<div class="hidden-sm hidden-xs btn-group">
-													<c:if test="${QX.edit == 1 }">
-													<a class="btn btn-xs btn-success" title="编辑" onclick="edit('${var.TESTPLAN_ID}');">
+											<div class="hidden-sm hidden-xs btn-group">
+													<a class="btn btn-xs btn-success" title="编辑" onclick="edit('${var.TEST_PLAN_ID}');">
 														<i class="ace-icon fa fa-pencil-square-o bigger-120" title="编辑"></i>
 													</a>
-													</c:if>
-													<c:if test="${QX.del == 1 }">
-													<a class="btn btn-xs btn-danger" onclick="del('${var.TESTPLAN_ID}');">
+													<a class="btn btn-xs btn-danger" onclick="del('${var.TEST_PLAN_ID}');">
 														<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
 													</a>
-													</c:if>
-												</div>
-												<div class="hidden-md hidden-lg">
-													<div class="inline pos-rel">
-														<button class="btn btn-minier btn-primary dropdown-toggle" data-toggle="dropdown" data-position="auto">
-															<i class="ace-icon fa fa-cog icon-only bigger-110"></i>
-														</button>
-			
-														<ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
-															<c:if test="${QX.edit == 1 }">
-															<li>
-																<a style="cursor:pointer;" onclick="edit('${var.TESTPLAN_ID}');" class="tooltip-success" data-rel="tooltip" title="修改">
-																	<span class="green">
-																		<i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
-																	</span>
-																</a>
-															</li>
-															</c:if>
-															<c:if test="${QX.del == 1 }">
-															<li>
-																<a style="cursor:pointer;" onclick="del('${var.TESTPLAN_ID}');" class="tooltip-error" data-rel="tooltip" title="删除">
-																	<span class="red">
-																		<i class="ace-icon fa fa-trash-o bigger-120"></i>
-																	</span>
-																</a>
-															</li>
-															</c:if>
-														</ul>
-													</div>
 												</div>
 											</td>
-										</tr>
-									
+										</tr>									
 									</c:forEach>
-									</c:if>
-									<c:if test="${QX.cha == 0 }">
-										<tr>
-											<td colspan="100" class="center">您无权查看</td>
-										</tr>
-									</c:if>
 								</c:when>
 								<c:otherwise>
 									<tr class="main_info">
@@ -166,22 +125,7 @@
 								</c:otherwise>
 							</c:choose>
 							</tbody>
-						</table>
-						<div class="page-header position-relative">
-						<table style="width:100%;">
-							<tr>
-								<td style="vertical-align:top;">
-									<c:if test="${QX.add == 1 }">
-									<a class="btn btn-mini btn-success" onclick="add();">新增</a>
-									</c:if>
-									<c:if test="${QX.del == 1 }">
-									<a class="btn btn-mini btn-danger" onclick="makeAll('确定要删除选中的数据吗?');" title="批量删除" ><i class='ace-icon fa fa-trash-o bigger-120'></i></a>
-									</c:if>
-								</td>
-								<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
-							</tr>
-						</table>
-						</div>
+						</table>			
 						</form>
 					
 						</div>
@@ -268,41 +212,36 @@
 				});
 			});
 		});
-		
+
 		//新增
 		function add(){
 			 top.jzts();
 			 var diag = new top.Dialog();
 			 diag.Drag=true;
-			 diag.Title ="新增";
+			 diag.Title ="培训计划维护";
 			 diag.URL = '<%=basePath%>testplan/goAdd.do';
-			 diag.Width = 450;
-			 diag.Height = 355;
+			 diag.Width = 900;
+			 diag.Height = 550;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮
 			 diag.CancelEvent = function(){ //关闭事件
-				 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
-					 if('${page.currentPage}' == '0'){
-						 top.jzts();
-						 setTimeout("self.location=self.location",100);
-					 }else{
-						 nextPage(${page.currentPage});
-					 }
-				}
 				diag.close();
+				tosearch();
 			 };
 			 diag.show();
+<%-- 		window.location.href = '<%=basePath%>trainplan/goAdd.do'; --%>
+				 
 		}
-		
 		//删除
 		function del(Id){
 			bootbox.confirm("确定要删除吗?", function(result) {
 				if(result) {
 					top.jzts();
-					var url = "<%=basePath%>testplan/delete.do?TESTPLAN_ID="+Id+"&tm="+new Date().getTime();
+					var url = "<%=basePath%>testplan/delete.do?TEST_PLAN_ID="+Id;
 					$.get(url,function(data){
-						nextPage(${page.currentPage});
+						//nextPage(${page.currentPage});
+						tosearch();
 					});
 				}
 			});
@@ -314,16 +253,14 @@
 			 var diag = new top.Dialog();
 			 diag.Drag=true;
 			 diag.Title ="编辑";
-			 diag.URL = '<%=basePath%>testplan/goEdit.do?TESTPLAN_ID='+Id;
-			 diag.Width = 450;
-			 diag.Height = 355;
+			 diag.URL = '<%=basePath%>testplan/goEdit.do?TEST_PLAN_ID='+Id;
+			 diag.Width = 900;
+			 diag.Height = 550;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮 
 			 diag.CancelEvent = function(){ //关闭事件
-				 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
-					 nextPage(${page.currentPage});
-				}
+			
 				diag.close();
 			 };
 			 diag.show();

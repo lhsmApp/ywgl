@@ -39,42 +39,33 @@
 					<div class="row">
 				<div class="col-xs-12">							
 					<form action="trainplan/${msg}.do" name="Form" id="Form" method="post">
-						<input type="hidden" name="TRAINPLAN_ID" id="TRAINPLAN_ID" value="${pd.TRAIN_PLAN_ID}"/>
+						<input type="hidden" name="TEST_PLAN_ID" id="TEST_PLAN_ID" value="${pd.TEST_PLAN_ID}"/>
 						<div id="zhongxin" style="padding-top: 13px;">
 							<table id="table_report" class="table table-striped table-bordered table-hover">
 								<tr>
-									<td width="25%"><span>任务名称：</span></td>
-									<td width="40%"><input type="text" name="TRAIN_PLAN_NAME" id="TRAIN_PLAN_NAME" value="${pd.TRAIN_PLAN_NAME}" maxlength="32" placeholder="这里输入任务名称" title="任务名称" /></td>
-								<td  width="35%" rowspan="3"><img src="static/images/rw.jpg"></td>
+									<td width="25%"><span>考试计划名称：</span></td>
+									<td width="40%"><input type="text" name="TEST_PLAN_NAME" id="TEST_PLAN_NAME" value="${pd.TEST_PLAN_NAME}" maxlength="32" placeholder="这里输入考试计划名称" title="计划名称" /></td>
+									<td  width="35%" rowspan="2"><img src="static/images/rw.jpg"></td>
 								</tr>									
 								<tr>
-									<td width="25%"><span>课程分类：</span></td>
+									<td width="25%"><span>选择试卷：</span></td>
 									<td width="40%">
-										<div style="margin:10px 0px;">
-												<input type="hidden" name="COURSE_TYPE_ID" id="COURSE_TYPE_ID"   />
-												<div class="selectTree" id="selectTree" style="float:none;display:block;"></div>												
-											</div>				
-									</td>																
-								</tr>
-										<tr>
-									<td width="25%"><span>课程名称：</span></td>
-									<td width="40%">
-										<select class="form-control" name="COURSE_CODE" id="COURSE_CODE" value="${pd.COURSE_CODE}" >
-<!-- 												<option value=""></option> -->
-<%-- 												<c:forEach items="${courseList}" var="course"> --%>
-<%-- 												<option value="${course.COURSE_ID}">${course.COURSE_NAME}</option> --%>
-<%-- 												</c:forEach> --%>
+										<select class="form-control" name="TEST_PAPER_ID" id="TEST_PAPER_ID" value="${pd.TEST_PAPER_ID}" >
+												<option value="">请选择试卷</option>
+												<c:forEach items="${paperList}" var="course">
+												<option value="${course.TEST_PAPER_ID}">${course.TEST_PAPER_TITLE}</option>
+												</c:forEach>
 										</select>					
 									</td>																
 								</tr>
-								<tr><td><label> <i class="ace-icon  bigger-110"></i>任务时间范围：</label> </td>
+								<tr><td><label> <i class="ace-icon  bigger-110"></i>计划时间范围：</label> </td>
 								<td style="padding-left:10px;"><input class="span10 date-picker" name="START_DATE" id="START_DATE"  value="${pd.START_DATE}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:95%;" placeholder="开始日期" title="开始日期"/></td>
 								<td style="padding-left:10px;"><input class="span10 date-picker" name="END_DATE" id="END_DATE"  value="${pd.END_DATE}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:95%;" placeholder="结束日期" title="结束日期"/></td>
 								</tr>
 								<tr>
 									<td>
 									<label id="btnChoice"  onclick="choiceStudent()">
-									<i class="ace-icon fa  glyphicon-plus bigger-110"></i>选择培训人群：</label>
+									<i class="ace-icon fa  glyphicon-plus bigger-110"></i>选择考试人群：</label>
 									</td>
 									<td>
 									<label id="btnShow"  onclick="showTable()">
@@ -87,13 +78,13 @@
 								</tr>
 								<tr>	
 								<td  colspan="3">
-								<textarea  id="uesrTextarea" name="uesrTextarea"  style="width:98%;height:30%;">${pd.TRAIN_PERSONSNAME}</textarea>
-								<input type="hidden" style="width:98%; name="TRAIN_PLAN_PERSONS" id="TRAIN_PLAN_PERSONS" value="${pd.TRAIN_PERSONSCODE}" />
+								<textarea  id="uesrTextarea" name="uesrTextarea"  style="width:98%;height:30%;">${pd.TEST_PERSONSNAME}</textarea>
+								<input type="hidden" style="width:98%;" name="TEST_PLAN_PERSONS" id="TEST_PLAN_PERSONS" value="${pd.TEST_PERSONSCODE}" />
 								</td>
 								</tr>
 								<tr>
 								<td colspan="3">
-									<span id="btnChoice">培训人员列表：</span>
+									<span id="btnChoice"  onclick="choiceStudent()">培训人员列表：</span>
 									</td></tr>
 								<tr>
 								<td colspan="3">
@@ -131,7 +122,7 @@
 									<td colspan="3"><span>任务描述：</span></td>
 								</tr>
 								<tr>
-									<td colspan="3"><textarea name="a" id="TRAIN_PLAN_MEMO" style="width:98%;height:80px;">${pd.TRAIN_PLAN_MEMO}</textarea></td>
+									<td colspan="3"><textarea name="a" id="TEST_PLAN_MEMO" style="width:98%;height:80px;">${pd.TEST_PLAN_MEMO}</textarea></td>
 								</tr>
 								<tr>
 								<td style="text-align: center;" colspan="10">
@@ -176,21 +167,21 @@
 			top.jzts();
 			$("#Form").submit();
 		}
+		$("#tobodyUser").hide();
 		//保存
 		function save(){
 			top.jzts();		
-			var trainID=$("#TRAINPLAN_ID").val();//任务ID
-			var planName=$("#TRAIN_PLAN_NAME").val();//任务名称
-			var couseTypeId=$("#COURSE_TYPE_ID").val();//课程分类
-			var couseCode=$("#COURSE_CODE").val();//课程名称编码
+			var testID=$("#TEST_PLAN_ID").val();//任务ID
+			var testName=$("#TEST_PLAN_NAME").val();//任务名称
+			var paperId=$("#TEST_PAPER_ID").val();//试卷ID
 			var startDate=$("#START_DATE").val();//开始时间
 			var endDate=$("#END_DATE").val();//结束时间
-			var planPersons=$("#TRAIN_PLAN_PERSONS").val();//培训人员
-			var planMemo=$("#TRAIN_PLAN_MEMO").val();//	任务描述
+			var testPersons=$("#TEST_PLAN_PERSONS").val();//考试人员
+			var testMemo=$("#TEST_PLAN_MEMO").val();//	任务描述
 			$.ajax({
 				type: "POST",
-				url: '<%=basePath%>trainplan/save.do',
-				data:{TRAIN_PLAN_ID:trainID,TRAIN_PLAN_NAME:planName,COURSE_TYPE_ID:couseTypeId,COURSE_CODE:couseCode,START_DATE:startDate,END_DATE:endDate,TRAIN_PLAN_PERSONS:planPersons,TRAIN_PLAN_MEMO:planMemo},
+				url: '<%=basePath%>testplan/save.do',
+				data:{TEST_PLAN_ID:testID,TEST_PLAN_NAME:testName,TEST_PAPER_ID:paperId,START_DATE:startDate,END_DATE:endDate,TEST_PLAN_PERSONS:testPersons,TEST_PLAN_MEMO:testMemo},
 		    	dataType:'json',
 				cache: false,
 				success: function(response){
@@ -217,15 +208,14 @@
 			});			
 		}
 		function init(){
-			$("#TRAIN_PLAN_NAME").val('');//任务名称
-			$("#COURSE_CODE").val('');//课程名称编码
+			$("#TEST_PLAN_NAME").val('');//任务名称
 			$("#START_DATE").val('');//开始时间
 			$("#END_DATE").val('');//结束时间
-			$("#TRAIN_PLAN_PERSONS").val('');//申请人岗位
-			$("#TRAIN_PLAN_MEMO").val('');//联系方式
+			$("#TEST_PAPER_ID").val('');//清除试卷选项		
+			$("#TEST_PLAN_PERSONS").val('');//申请人岗位
+			$("#TEST_PLAN_MEMO").val('');//联系方式
 			$("#uesrTextarea").val('');
 			$("#tobodyUser").html('');
-			initComplete();
 		}
 		$(function() {
 			//日期框
@@ -272,60 +262,18 @@
 			});
 		});
 		
-		$("#COURSETYPE_CODE").change(function(){
-		    var opt=$("#COURSETYPE_CODE").val();
-		
-		});
 		function goBack(){
 			 window.location.href = '<%=basePath%>trainplan/list.do';
 		}
 	
-		function initComplete(){
-			//下拉树
-			var defaultNodes = {"treeNodes":${zTreeNodes}};
-			//绑定change事件
-			$("#selectTree").bind("change",function(){
-
-				if(!$(this).attr("relValue")){
-			    }else{
-					$("#COURSE_TYPE_ID").val($(this).attr("relValue"));	
-			    }
-				 //清空select框中数据
-				   $('#COURSE_CODE').empty();
-				$.ajax({
-					   type: "POST",
-					   url: '<%=basePath%>coursebase/getCourse.do',
-					   data: {'COURSE_TYPE':$("#COURSE_TYPE_ID").val()},
-					   dataType:'json',
-					   //beforeSend: validateData,
-					   cache: false,
-					      success: function (data) {
-					                $('#COURSE_CODE').append("<option value='0'>--请选择课程--</option>");
-					                //遍历成功返回的数据
-					                $.each(data, function (index,item) {
-					                    var courseName = data[index].COURSE_NAME;
-					                    var courseId = data[index].COURSE_ID;
-					                    //构造动态option
-					                    $('#COURSE_CODE').append("<option value='"+courseId+"'>"+courseName+"</option>")
-					                });
-					            },
-					            error: function () {
-
-					            }
-					  });
-			});
-
-			//赋给data属性
-			$("#selectTree").data("data",defaultNodes);  
-			$("#selectTree").render();
-		}		
+	
 		//选择培训人群
 		function choiceStudent(){
 			 top.jzts();
 			 var diag = new top.Dialog();
 			 diag.Drag=true;
 			 diag.Title ="选择培训人员";
-			 diag.URL = '<%=basePath%>trainplan/listStudent.do';
+			 diag.URL = '<%=basePath%>testplan/listStudent.do';
 			 diag.Width = 700;
 			 diag.Height = 400;
 			 diag.Modal = true;				//有无遮罩窗口
@@ -341,10 +289,9 @@
 					}
 					$.ajax({
 						   type: "POST",
-						   url: '<%=basePath%>trainplan/getChoiceStudent.do',
+						   url: '<%=basePath%>testplan/getChoiceStudent.do',
 						   data: {'sturentStr':str},
 						   dataType:'json',
-						   //beforeSend: validateData,
 						   cache: false,
 						      success: function (data) {
 						    	  if($("#uesrTextarea").val()==''){
@@ -364,11 +311,11 @@
 											$("#tobodyUser").hide();
 									 	});
 							    	  $("#uesrTextarea").val(userNames);
-							    	  $("#TRAIN_PLAN_PERSONS").val(userCodes); 
+							    	  $("#TEST_PLAN_PERSONS").val(userCodes); 
 						    	  }else{
 						    		  var userCodes='';
 							    	  var userNames='';
-							    	  var arry = $("#TRAIN_PLAN_PERSONS").val().split(",");
+							    	  var arry = $("#TEST_PLAN_PERSONS").val().split(",");
 						    		  var num=0;
 							    	  $.each(data, function(i, item){	
 								    	  if(arry.indexOf(item.STUDENT_ID.toString())==-1){
@@ -382,7 +329,7 @@
 							    			 
 									 	});	
 							       	  $("#uesrTextarea").val($("#uesrTextarea").val()+userNames);
-							    	  $("#TRAIN_PLAN_PERSONS").val($("#TRAIN_PLAN_PERSONS").val()+userCodes); 
+							    	  $("#TEST_PLAN_PERSONS").val($("#TEST_PLAN_PERSONS").val()+userCodes); 
 						    	  }
 						    	 
 						         },
