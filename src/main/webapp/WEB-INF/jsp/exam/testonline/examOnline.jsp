@@ -59,13 +59,6 @@
 											   <label class="btn btn-sm btn-warning" onclick="report(2)"> 
 												            <i class="ace-icon  bigger-110"></i>提交
 												            </label> 
-											<%--隐藏表单，用于考试结束且考生未手动提交试卷 自动提交 --%>
-											<form action="submit"method="post" style="display: none;">
-												<input type="hidden" value="${sessionScope.loginStudent.studentId }" name="studentId" />
-												<input type="hidden" value="${examPaperId }" name="examPaperId" />
-												<input type="hidden" value="${classId }" name="classId" />
-												<input type="hidden" value="${gradeId }" name="gradeId" />
-											</form>
 											<span style="font-weight: 600;">剩余时间：
 												<span id="lastTime" style="color: #00A06B;font-size: 16px;font-weight: 900;">
 													<span id="time_min">${pd.ANSWER_TIME}</span>"
@@ -111,7 +104,7 @@
 										<c:forEach items="${varList}" var="var" varStatus="vs">	
 										<dd>
 									<div>
-										<h5 class=" lighter gray" id="${var.TEST_PAPER_ID}-${vs.index+1}">${vs.index+1}、${var.TEST_QUESTION_TITLE }</h5>
+										<h5 class=" lighter gray" id="${var.TEST_PAPER_ID}-${vs.index+1}">${vs.index+1}、${var.TEST_QUESTION_TITLE }(${var.TEST_QUESTION_SCORE}分)</h5>
 									</div>
 									<div>
 										<c:forEach items="${answerList}" var="ans" >
@@ -182,18 +175,22 @@
 			$("#Form").submit();
 		}
 		$(function() {
-			 Time();
-			 //report()数字1代表自动提交，2代表手工提交
-			//var test1 =window.setTimeout('report(1)','${pd.ANSWER_TIME}'*60000);
-			//var test1 =window.setTimeout('report(1)',360000);
-			// 定时器每秒调用一次Time()
-			 timer =setInterval("Time()", 1000); 
+			
+			if('${pd.ANSWER_TIME}'>0){
+				Time();
+				 //report()数字1代表自动提交，2代表手工提交
+				//var test1 =window.setTimeout('report(1)','${pd.ANSWER_TIME}'*60000);
+				//var test1 =window.setTimeout('report(1)',360000);
+				// 定时器每秒调用一次Time()
+				 timer =setInterval("Time()", 1000); 
+			}
+			 
 			 <c:forEach items="${varList}" var="vas" varStatus="vs">            	         
 	           if('${vas.TEST_QUESTION_TYPE}'=='2'){
 	            //判断复选框是否被选中   
 		        var nameCheck='${vas.TEST_PAPER_ID}'+'-'+'${vas.TEST_QUESTION_ID}'; 
-		        //注册复选框选中事件
-		        $("input[name='"+nameCheck+"']").click(function (){
+		        //注册复选框改变事件
+		        $("input[name='"+nameCheck+"']").change(function (){
 		        	if("input:checkbox[name='"+nameCheck+"']:checked"){
 		        		$("#"+'${vs.index+1}').css({"background-color":"green"});	
 		        	}else{
@@ -294,6 +291,10 @@
 											bootbox.dialog({
 												message: "<div><span class='bigger-110' style='color: red;'>您的分数"+data.TEST_SCORE+",考试未通过</span></div><div><span class='bigger-110'>满分"+data.TEST_PAPER_SCORE+"</span></div><div><span class='bigger-110'>及格分数"+data.QUALIFIED_SCORE+"</span></div>",
 											});	
+									   }else{
+										   bootbox.dialog({
+										   message: "<div><span class='bigger-110' style='color: red;'>您的分数"+data.TEST_SCORE+",恭喜您通过考试</span></div><div><span class='bigger-110'>满分"+data.TEST_PAPER_SCORE+"</span></div><div><span class='bigger-110'>及格分数"+data.QUALIFIED_SCORE+"</span></div>",
+										   });	
 									   }
 								}else{
 									bootbox.dialog({

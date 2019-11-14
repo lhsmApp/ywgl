@@ -34,18 +34,7 @@
  		.aswer-p:hover {
  			background-color: #FFF;
  		}
- 		input {
-		}
-		.subjectOption {
-			padding-top: 0px;
-		}
-		.hidden_info {
-			display: none;
-		}
-		.currentli {
-            color:#186ecc;
-            background-color:#fff;
-        }
+
  	</style>
 </head>
 <body  class="no-skin">
@@ -54,62 +43,9 @@
 			<div class="main-content-inner">
 				<div class="page-content">
 					<div class="row">
-						 <div class="col-xs-12">
-						 	<div >
-								<!-- 答题卡 -->
-								<span id="beginTime" style="display: none;">${beginTime }</span>
-								<span id="examTime" style="display: none;">${EXAM_TIME }</span>
-								<div style="width: 38%; float: right;margin-top: 20px;">
-									<div style="width:100%; height:63px;text-align: center;">
-										<div style="float: left; width: 42%;height: 100%;" >
-											<h2>答题卡</h2>
-										</div>
-										<div style="float: right; width: 55%;height: 100%;line-height: 63px; text-align: left;">
-<%-- 											<a href="submit?studentId=${sessionScope.loginStudent.studentId }&examPaperId=${examPaperId }&classId=${classId }&gradeId=${gradeId }" type="button" class="btn btn-default btn-sm" onclick="return confirm('确定提交吗?')">提交</a> --%>
-											   <label class="btn btn-sm btn-warning" onclick="report(2)"> 
-												            <i class="ace-icon  bigger-110"></i>提交
-												            </label> 
-											<%--隐藏表单，用于考试结束且考生未手动提交试卷 自动提交 --%>
-											<form action="submit"method="post" style="display: none;">
-												<input type="hidden" value="${sessionScope.loginStudent.studentId }" name="studentId" />
-												<input type="hidden" value="${examPaperId }" name="examPaperId" />
-												<input type="hidden" value="${classId }" name="classId" />
-												<input type="hidden" value="${gradeId }" name="gradeId" />
-											</form>
-											<span style="font-weight: 600;">剩余时间：
-												<span id="lastTime" style="color: #00A06B;font-size: 16px;font-weight: 900;">
-													<span id="time_min">${pd.ANSWER_TIME}</span>"
-													<span id="time_sec">00</span>'
-												</span>
-											</span>
-										</div>
-									</div>
-						<!-- 			页面生成答题序号按钮 -->
-									<div style="width: 100%; height: 100%;margin-top: 10px;">
-										<ul id="answerNo">
-											<c:if test="${varList != null }">
-												<c:set value="1" var="indexAswer"></c:set>
-												<c:forEach items="${varList }" var="var">
-														<c:if test="${indexAswer == 1 }">
-															<li  id="${indexAswer }"  onclick="showQuestionItem('${var.TEST_PAPER_ID}-${indexAswer}');">
-																${indexAswer }
-															</li>
-														</c:if>
-														<c:if test="${indexAswer != 1 }">
-															<li id="${indexAswer }" onclick="showQuestionItem('${var.TEST_PAPER_ID}-${indexAswer}');">
-																${indexAswer }
-															</li>
-														</c:if>
-														<c:set value="${indexAswer+1 }" var="indexAswer"></c:set>
-												</c:forEach>
-											</c:if>
-										</ul>
-									</div>		
-								</div>
-								<!--   答题卡  end -->
-							 </div>
+						 <div class="col-xs-12">						 
 						 	<div>
-								<h4>共${pd.TEST_QUESTION_NUM }题,总分${pd.TEST_PAPER_SCORE}分</h4>
+								<h4 style='color: #ff0033;'>${pd.TEST_USER},您好！您该试卷的得分为${pd.TEST_SCORE}分</h4>
 							</div>
 							<div style="margin-top: 20px;">
 <%-- 					<span style="display: none;" id="exam-studentId">${sessionScope.loginStudent.studentId }</span> --%>
@@ -128,15 +64,15 @@
 											<%-- 单选 --%>
 												<c:if test="${var.TEST_QUESTION_TYPE == 1 }">		
 													<p class="aswer-p">
-														<input class="aswer-option" id="${ans.TEST_PAPER_ID}-${ans.TEST_QUESTION_ID}-${ans.TEST_QUESTION_ITEM_TITLE}" type="radio" name="${ans.TEST_PAPER_ID}-${ans.TEST_QUESTION_ID}" value="${ans.TEST_QUESTION_ITEM_TITLE}"onclick="getRadio('${vs.index+1}')"/>&nbsp;
+														<input class="aswer-option" id="${ans.TEST_PAPER_ID}-${ans.TEST_QUESTION_ID}-${ans.TEST_QUESTION_ITEM_TITLE}" type="radio" name="${ans.TEST_PAPER_ID}-${ans.TEST_QUESTION_ID}" value="${ans.TEST_QUESTION_ITEM_TITLE}"  disabled/>&nbsp;
 														<span class="subjectOption">${ans.TEST_QUESTION_ITEM_TITLE}.</span>
-														<span class="subjectOption">${ans.TEST_QUESTION_ITEM_CONTENT}</span>
+														<span class="subjectOption">${ans.TEST_QUESTION_ITEM_CONTENT}</span>														
 													</p>	
 												</c:if>		
 												<%-- 多选 --%>
 												<c:if test="${var.TEST_QUESTION_TYPE == 2 }">
 													<p class="aswer-p">
-														<input class="aswer-option" id="${ans.TEST_PAPER_ID}-${ans.TEST_QUESTION_ID}-${ans.TEST_QUESTION_ITEM_TITLE}" type="checkbox" name="${ans.TEST_PAPER_ID}-${ans.TEST_QUESTION_ID}" value="${ans.TEST_QUESTION_ITEM_TITLE}"/>&nbsp;
+														<input class="aswer-option" id="${ans.TEST_PAPER_ID}-${ans.TEST_QUESTION_ID}-${ans.TEST_QUESTION_ITEM_TITLE}" type="checkbox" name="${ans.TEST_PAPER_ID}-${ans.TEST_QUESTION_ID}" value="${ans.TEST_QUESTION_ITEM_TITLE}"  disabled/>&nbsp;
 														<span class="subjectOption">${ans.TEST_QUESTION_ITEM_TITLE}.</span>
 														<span class="subjectOption">${ans.TEST_QUESTION_ITEM_CONTENT}</span>
 													</p>
@@ -148,7 +84,10 @@
 													</p>
 												</c:if>						
 											</c:if>
-										</c:forEach>			
+										</c:forEach>
+										<div id="answerExplain-${var.TEST_PAPER_ID}-${var.TEST_QUESTION_ID}" style="background:#82D900; color:#66FFcc">
+										<p><span style='color: #F5FFE8;' >您的答案：${var.TEST_ANSWER}&nbsp;&nbsp;&nbsp;正确答案：${var.TEST_CORRECT_ANSWER}</span></p>
+										<p><span style='color: #F5FFE8;' >答案解析：${var.TEST_ANSWER_NOTE}</span></p></div>
 									</div>
 									</dd>
 										<c:set value="${index+1 }" var="index"></c:set>
@@ -156,7 +95,7 @@
 								</c:when>
 								<c:otherwise>
 									<tr class="main_info">
-										<td colspan="100" class="center" >暂无试题数据，请联系管理员!</td>
+										<td colspan="100" class="center" >暂无考试记录!</td>
 									</tr>
 								</c:otherwise>
 							</c:choose>			
@@ -191,134 +130,35 @@
 			$("#Form").submit();
 		}
 		$(function() {
-			 Time();
-			 //report()数字1代表自动提交，2代表手工提交
-			//var test1 =window.setTimeout('report(1)','${pd.ANSWER_TIME}'*60000);
-			//var test1 =window.setTimeout('report(1)',360000);
-			// 定时器每秒调用一次Time()
-			 timer =setInterval("Time()", 1000); 
-			 <c:forEach items="${varList}" var="vas" varStatus="vs">            	         
-	           if('${vas.TEST_QUESTION_TYPE}'=='2'){
-	            //判断复选框是否被选中   
-		        var nameCheck='${vas.TEST_PAPER_ID}'+'-'+'${vas.TEST_QUESTION_ID}'; 
-		        //注册复选框选中事件
-		        $("input[name='"+nameCheck+"']").click(function (){
-		        	if("input:checkbox[name='"+nameCheck+"']:checked"){
-		        		$("#"+'${vs.index+1}').css({"background-color":"green"});	
-		        	}else{
-		        		$("#"+'${vs.index+1}').css({"background-color":"gray"});		 
-		        	}
-		        	       	 
-		        })
-	      	}
-	        </c:forEach> 
+			//对试卷试题及答案做循环		
+			 <c:forEach items="${varList}" var="vas" varStatus="vs">  
+			 	//获取单选框和复选框name
+				var name='${vas.TEST_PAPER_ID}'+'-'+'${vas.TEST_QUESTION_ID}';
+				//循环根据用户所选答案给单选框赋值
+				 if('${vas.TEST_QUESTION_TYPE}'=='1'){
+					 $("input[name="+name+"][value='${vas.TEST_CORRECT_ANSWER}']").attr("checked",true);				 
+				 }	
+				//循环根据用户所选答案给多选框赋值
+				 var uesrAnswer = '${vas.TEST_ANSWER}';//考试答案
+				 var result = uesrAnswer.split(",");//
+				 var checkNames = document.getElementsByName(name);
+				 for(var i=0;i<checkNames.length;i++){
+					 for(var j=0;j<result.length;j++){
+						 if(checkNames[i].value==result[j]){
+							 checkNames[i].checked=true;
+							 break;
+						 }
+					 }
+				 }				
+				 var rightAnswer = '${vas.TEST_CORRECT_ANSWER}';//考试答案
+				 if(uesrAnswer!=rightAnswer){
+					 console.log("答案判断标红");
+					 $("#answerExplain-"+name).css({"background-color":"red"});
+				 }
+			 </c:forEach> 
 	 	});
 
-		 var examTime='${pd.ANSWER_TIME}'*60;
-		 //var examTime=70;
-		// console.log(examTime);
-		 function Time(){	
-		     if (examTime >= 0) {
-		    	 minutes = Math.floor(examTime / 60);
-		    	 seconds = Math.floor(examTime % 60);
-		    	msg = "距离结束还有" + minutes + "分" + seconds + "秒";
-		    	//if (examTime == 1 * 60)alert("还剩5分钟");
-	    	    --examTime;		
-		    	} else{
-		    	clearInterval(timer);
-		    	report(1);
-		    	alert("答题时间到，结束!");
-		    	      }
-		        time_min.innerHTML=minutes;
-		        time_sec.innerHTML=seconds
-		    }
-
-		//提交时,获取单选和复选框选择答案
-		function report(type){
-			 //report()数字1代表自动提交，2代表手工提交
-			 var message;
-			if(type==2){
-				message=confirm('确定提交吗?')//手动提交
-			}else{
-				message=true;//自动提交
-			}	
-			 var paperId=undefined;
-			 if(message==true){
-				//存放试题ID和用户提交的答案  
-					//var m = new Map();	
-					var data={begin:''};
-			        <c:forEach items="${varList}" var="vas">
-			        paperId='${vas.TEST_PAPER_ID}';
-				        if('${vas.TEST_QUESTION_TYPE}'=='1'){
-				        	//获取单选题选项
-					        var nameRadio='${vas.TEST_PAPER_ID}'+'-'+'${vas.TEST_QUESTION_ID}';
-							var val=$('input:radio[name="'+nameRadio+'"]:checked').val();
-					        if(val==null){				        	
-					        }else{
-					        	 //m.put('${vas.TEST_QUESTION_ID}',val );
-					        	 data.${vas.TEST_QUESTION_ID}=val;					           
-					        }
-				        }
-				        if('${vas.TEST_QUESTION_TYPE}'=='2'){
-				        	//获取多选题选项
-						      var str = '';
-						  	  var nameCheck='${vas.TEST_PAPER_ID}'+'-'+'${vas.TEST_QUESTION_ID}';	
-							  for(var i=0;i < document.getElementsByName(nameCheck).length;i++){
-							  	if(document.getElementsByName(nameCheck)[i].checked){
-							  	if(str=='') str += document.getElementsByName(nameCheck)[i].value;
-							  	else str += '#&#' + document.getElementsByName(nameCheck)[i].value;				 
-							  }
-							  	if(typeof str == "undefined" || str == null || str == ""){
-							  		
-							  	}else{
-							  		 //m.put('${vas.TEST_QUESTION_ID}',str );
-							  		 data.${vas.TEST_QUESTION_ID}=str;
-							  	}
-							  	
-							}
-				        }
-				        if('${vas.TEST_QUESTION_TYPE}'=='3'){
-				        	var nameCheck='${vas.TEST_PAPER_ID}'+'-'+'${vas.TEST_QUESTION_ID}';	
-				        	var tx =  $("#"+nameCheck).val();
-				        	if(typeof tx == "undefined" || tx == null || tx == ""){
-						  		
-						  	}else{
-						  		//m.put('${vas.TEST_QUESTION_ID}',tx );
-						  		 data.${vas.TEST_QUESTION_ID}=tx;
-						  	}				        	 
-				        }
-			        </c:forEach>		     	
-			        $.ajax({
-						   type: "POST",
-						   url: '<%=basePath%>testpaper/examResult.do',
-						   data: {'result':JSON.stringify(data),TEST_PAPER_ID:paperId},
-						   dataType:'json',
-						   //beforeSend: validateData,
-						   cache: false,
-						   success: function (data) {
-							   $(top.hangge());//关闭加载状态
-								if(typeof data.msg == "undefined" || data.msg == null || data.msg == ""){
-									//考试未通过
-									   if(data.IF_QUALIFIED==0){
-											bootbox.dialog({
-												message: "<div><span class='bigger-110' style='color: red;'>您的分数"+data.TEST_SCORE+",考试未通过</span></div><div><span class='bigger-110'>满分"+data.TEST_PAPER_SCORE+"</span></div><div><span class='bigger-110'>及格分数"+data.QUALIFIED_SCORE+"</span></div>",
-											});	
-									   }
-								}else{
-									bootbox.dialog({
-										message: "<span class='bigger-110'>"+data.msg+"</span>",
-									});	
-								}
-
-						         },
-						   error: function () {
-								bootbox.dialog({
-									message: "<span class='bigger-110'>考试失败,请联系相关人员</span>",
-								});	
-						          }
-						  });
-			 }
-		 }
+		
 				//根据选项卡按钮定位到指定题目
 			   function showQuestionItem(node){
 				   //console.log(node);

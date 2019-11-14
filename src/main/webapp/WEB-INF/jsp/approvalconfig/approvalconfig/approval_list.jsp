@@ -49,7 +49,7 @@
 <!-- 											</span>		 -->
 								<div class="btn-group" data-toggle="buttons" >
 									<label class="btn btn-info">
-									<input type="radio" class="level_select"  name="level_select" value="1">系统变更
+									<input type="radio" class="level_select"  name="level_select" value="1" checked>系统变更
 									</label>
 									<label class="btn btn-info">
 									<input type="radio" class="level_select" name="level_select" value="2">角色变更
@@ -637,6 +637,9 @@
 			var keywords = $("#SelectedBillCode").val();
 			 //获取选中项的值
             var value=$(".level_select:checked").val();
+            if(null==value||value==''){
+            	value='1';
+            }
 			$.ajax({
 					type: "POST",
 					url: '<%=basePath%>approvalconfig/getPageList.do?BUSINESS_CODE='+value,

@@ -62,6 +62,14 @@ public class TestPaperService implements TestPaperManager{
 		return (List<PageData>)dao.findForList("TestPaperMapper.datalistExam", page);
 	}
 	
+	/**考試历史信息列表
+	 * @param page
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PageData> listExamHistory(Page page)throws Exception{
+		return (List<PageData>)dao.findForList("TestPaperMapper.listExamHistory", page);
+	}
 	/**考試信息列表
 	 * @param page
 	 * @throws Exception
