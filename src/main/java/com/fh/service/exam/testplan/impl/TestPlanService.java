@@ -77,6 +77,17 @@ public class TestPlanService implements TestPlanManager{
 	public void deleteAll(String[] ArrayDATA_IDS)throws Exception{
 		dao.delete("TestPlanMapper.deleteAll", ArrayDATA_IDS);
 	}
+
+	/**
+	 * 列出考试计划下拉列表
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PageData> planList(PageData pd) throws Exception {
+		return (List<PageData>)dao.findForList("TestPlanMapper.planList", pd);
+	}
 	
 }
 

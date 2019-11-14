@@ -53,6 +53,14 @@ public interface TestPlanManager{
 	 * @throws Exception
 	 */
 	public void deleteAll(String[] ArrayDATA_IDS)throws Exception;
+
+	/**
+	 * 列出考试计划下拉列表
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public List<PageData> planList(PageData pd)throws Exception;
 	
 }
 

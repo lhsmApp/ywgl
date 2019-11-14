@@ -4,7 +4,7 @@
 	
 	<!--表名 -->
 	<sql id="tableName">
-		TB_TEST_PLAN
+		tb_test_plan
 	</sql>
 	
 	<!-- 字段 -->
@@ -126,4 +126,12 @@
                  #{item}
 		</foreach>
 	</delete>
+	
+	<select id="planList" parameterType="pd" resultType="pd">
+		select
+			TEST_PLAN_ID,	
+			TEST_PLAN_NAME		
+		from 
+		<include refid="tableName"></include>
+	</select>
 </mapper>

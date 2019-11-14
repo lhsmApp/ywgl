@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,9 +21,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fh.controller.base.BaseController;
+import com.fh.controller.common.Common;
 import com.fh.entity.Page;
+import com.fh.entity.TableColumns;
+import com.fh.entity.TmplConfigDetail;
 import com.fh.entity.system.User;
 import com.fh.service.exam.testmain.TestMainManager;
+import com.fh.service.exam.testplan.TestPlanManager;
+import com.fh.service.tmplconfig.tmplconfig.impl.TmplConfigService;
 import com.fh.util.AppUtil;
 import com.fh.util.Const;
 import com.fh.util.DateUtil;
@@ -42,6 +48,14 @@ public class TestMainController extends BaseController {
 	String menuUrl = "testmain/list.do"; //菜单地址(权限用)
 	@Resource(name="testmainService")
 	private TestMainManager testmainService;
+	@Resource(name="testplanService")
+	private TestPlanManager testplanService;
+	@Resource(name="tmplconfigService")
+	private TmplConfigService tmplconfigService;
+	
+	String TableNameDetail = "TB_DI_GRC_PERSON"; //表名
+	Map<String, TableColumns> Map_HaveColumnsList = new LinkedHashMap<String, TableColumns>();
+	Map<String, TmplConfigDetail> Map_SetColumnsList = new LinkedHashMap<String, TmplConfigDetail>();
 	
 	/**保存
 	 * @param
@@ -223,59 +237,89 @@ public class TestMainController extends BaseController {
 		}
 		page.setPd(pd);
 		List<PageData> varList = testmainService.list(page); // 列出TestMain列表
+		List<PageData> planList = testplanService.planList(pd);
+		
+		//***********************************************************导出
+		Map_HaveColumnsList = Common.GetHaveColumnsMapByTableName(TableNameDetail, tmplconfigService);
+		Map_SetColumnsList.put("TEST_TIME", new TmplConfigDetail("TEST_TIME", "考试时间", "1", false));
+		Map_SetColumnsList.put("TEST_PAPER_TITLE", new TmplConfigDetail("TEST_PAPER_TITLE", "考试试卷名称", "1", false));
+		Map_SetColumnsList.put("TEST_QUESTION_NUM", new TmplConfigDetail("TEST_QUESTION_NUM", "题目数", "1", false));
+		Map_SetColumnsList.put("STUDENT_NAME", new TmplConfigDetail("STUDENT_NAME", "考试人", "1", false));
+		Map_SetColumnsList.put("TEST_SCORE", new TmplConfigDetail("TEST_SCORE", "分数", "1", false));
+		Map_SetColumnsList.put("IF_QUALIFIED", new TmplConfigDetail("IF_QUALIFIED", "是否合格", "1", false));
 		
 		mv.addObject("varList", varList);
+		mv.addObject("planList", planList);
 		mv.addObject("pd", pd);
 		mv.setViewName("exam/testmain/testmain_query_list");
 		mv.addObject("QX", Jurisdiction.getHC()); // 按钮权限
 		return mv;
 	}
 	
-	 /**导出到excel
+	/**
+	 * 导出到excel
+	 * 
 	 * @param
 	 * @throws Exception
 	 */
-	@RequestMapping(value="/excel")
-	public ModelAndView exportExcel() throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"导出TestMain到excel");
-		if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;}
+	@RequestMapping(value = "/excel")
+	public ModelAndView exportExcel(Page page) throws Exception {
+		logBefore(logger, Jurisdiction.getUsername() + "导出TestMain到excel");
+		// if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;}
+		PageData getPd = this.getPageData();
+		// 页面显示数据的年月
+		// getPd.put("SystemDateTime", SystemDateTime);
+		page.setPd(getPd);
+		List<PageData> varOList = testmainService.list(page);
+		return export(varOList, "", Map_SetColumnsList);
+	}
+
+	private ModelAndView export(List<PageData> varOList, String ExcelName,
+			Map<String, TmplConfigDetail> map_SetColumnsList) throws Exception {
 		ModelAndView mv = new ModelAndView();
-		PageData pd = new PageData();
-		pd = this.getPageData();
-		Map<String,Object> dataMap = new HashMap<String,Object>();
+		Map<String, Object> dataMap = new LinkedHashMap<String, Object>();
+		dataMap.put("filename", ExcelName);
 		List<String> titles = new ArrayList<String>();
-		titles.add("备注1");	//1
-		titles.add("备注2");	//2
-		titles.add("备注3");	//3
-		titles.add("备注4");	//4
-		titles.add("备注5");	//5
-		titles.add("备注6");	//6
-		titles.add("备注7");	//7
-		titles.add("备注8");	//8
-		titles.add("备注9");	//9
-		titles.add("备注10");	//10
-		titles.add("备注11");	//11
-		dataMap.put("titles", titles);
-		List<PageData> varOList = testmainService.listAll(pd);
 		List<PageData> varList = new ArrayList<PageData>();
-		for(int i=0;i<varOList.size();i++){
-			PageData vpd = new PageData();
-			vpd.put("var1", varOList.get(i).get("TEST_ID").toString());	//1
-			vpd.put("var2", varOList.get(i).get("TEST_PAPER_ID").toString());	//2
-			vpd.put("var3", varOList.get(i).getString("TEST_USER"));	    //3
-			vpd.put("var4", varOList.get(i).getString("TEST_TIME"));	    //4
-			vpd.put("var5", varOList.get(i).get("TEST_COUNT").toString());	//5
-			vpd.put("var6", varOList.get(i).getString("TEST_SCORE"));	    //6
-			vpd.put("var7", varOList.get(i).getString("IF_QUALIFIED"));	    //7
-			vpd.put("var8", varOList.get(i).get("TEST_QUESTION_NUM").toString());	//8
-			vpd.put("var9", varOList.get(i).getString("STATE"));	    //9
-			vpd.put("var10", varOList.get(i).getString("CREATE_USER"));	    //10
-			vpd.put("var11", varOList.get(i).getString("CREATE_DATE"));	    //11
-			varList.add(vpd);
+		if (map_SetColumnsList != null && map_SetColumnsList.size() > 0) {
+			for (TmplConfigDetail col : map_SetColumnsList.values()) {
+				if (col.getCOL_HIDE().equals("1")) {
+					titles.add(col.getCOL_NAME());
+				}
+			}
+			if (varOList != null && varOList.size() > 0) {
+				for (int i = 0; i < varOList.size(); i++) {
+					PageData vpd = new PageData();
+					int j = 1;
+					for (TmplConfigDetail col : map_SetColumnsList.values()) {
+						if (col.getCOL_HIDE().equals("1")) {
+							Object getCellValue = varOList.get(i).get(col.getCOL_CODE().toUpperCase());
+							if(null == getCellValue) {
+								getCellValue = "";
+							}
+							if(j==6) {//判断是否合格
+								if(getCellValue.toString().equals("1")) {
+									vpd.put("var" + j, "及格");
+								}else if (getCellValue.toString().equals("0")) {
+									vpd.put("var" + j, "不及格");
+								}else {
+									vpd.put("var" + j, getCellValue.toString());
+								}
+							}else {
+								vpd.put("var" + j, getCellValue.toString());
+							}
+							
+							j++;
+						}
+					}
+					varList.add(vpd);
+				}
+			}
 		}
+		dataMap.put("titles", titles);
 		dataMap.put("varList", varList);
 		ObjectExcelView erv = new ObjectExcelView();
-		mv = new ModelAndView(erv,dataMap);
+		mv = new ModelAndView(erv, dataMap);
 		return mv;
 	}
 	

@@ -72,5 +72,12 @@ public interface TestMainManager{
 	 */
 	public List<PageData> paperListPage(Page page)throws Exception;
 	
+	/**
+	 * 导出信息到excel
+	 * @param page
+	 * @return
+	 */
+	public List<PageData> exportList(Page page)throws Exception;
+	
 }
 
