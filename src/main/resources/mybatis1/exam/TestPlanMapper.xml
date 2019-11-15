@@ -106,6 +106,8 @@
 		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
 			and
 				(
+				
+				TEST_PLAN_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 				<!--	根据需求自己加检索条件
 					字段1 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 					 or 
@@ -113,6 +115,15 @@
 				-->
 				)
 		</if>
+		<if test="pd.STATE!= null and pd.STATE != ''"><!-- 关键词检索 -->
+			and STATE=#{pd.STATE}
+		</if>
+		<if test="pd.START_DATE!= null and pd.START_DATE != ''">
+			AND SUBSTR( CREATE_DATE,1,8 )  &gt;= #{pd.START_DATE}  
+		</if>
+		<if test="pd.END_DATE!= null and pd.END_DATE != ''">
+			AND SUBSTR( CREATE_DATE,1,8 )  &lt;= #{pd.END_DATE} 
+			 </if>
 	</select>
 	
 	<!-- 列表(全部) -->

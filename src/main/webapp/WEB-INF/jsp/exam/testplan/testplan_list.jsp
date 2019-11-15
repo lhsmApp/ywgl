@@ -34,24 +34,17 @@
 						<form action="testplan/list.do" method="post" name="Form" id="Form">
 						<table style="margin-top:5px;">
 							<tr>
-								<td>
-									<div class="nav-search">
-										<span class="input-icon">
-											<input type="text" placeholder="这里输入关键词" class="nav-search-input" id="nav-search-input" autocomplete="off" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词"/>
-											<i class="ace-icon fa fa-search nav-search-icon"></i>
-										</span>
-									</div>
-								</td>
-								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastStart" id="lastStart"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="开始日期" title="开始日期"/></td>
-								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastEnd" name="lastEnd"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="结束日期"/></td>
-								<td style="vertical-align:top;padding-left:2px;">
-								 	<select class="chosen-select form-control" name="name" id="id" data-placeholder="请选择" style="vertical-align:top;width: 120px;">
-									<option value=""></option>
-									<option value="">全部</option>
-									<option value="">1</option>
-									<option value="">2</option>
-								  	</select>
-								</td>
+								<td><label> <i class="ace-icon  bigger-110"></i>考试计划时间范围：</label> </td>
+								<td style="padding-left:2px;"><input class="span10 date-picker" name="START_DATE" id="START_DATE"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="开始日期" title="开始日期"/></td>
+								<td style="padding-left:2px;"><input class="span10 date-picker" name="END_DATE" name="END_DATE"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="结束日期"/></td>
+<!-- 								<td style="vertical-align:top;padding-left:2px;"> -->
+<!-- 								 	<select class="chosen-select form-control" name="STATE" id="id" data-placeholder="请选择" style="vertical-align:top;width: 120px;"> -->
+<!-- 									<option value=""></option> -->
+<!-- 									<option value="">全部</option> -->
+<!-- 									<option value="1">已完成</option> -->
+<!-- 									<option value="0">未完成</option> -->
+<!-- 								  	</select> -->
+<!-- 								</td> -->
 								<td style="padding-left:2px;">
 									<span class="input-icon pull-left" style="margin-right: 5px;">
 													<input id="planName" class="nav-search-input" autocomplete="off" type="text" name="keywords" value="${pd.keywords }" placeholder="请输入任务名称"> 
@@ -107,7 +100,7 @@
 <%-- 											<td class='center'>${var.CREATE_USER}</td> --%>
 											<td class="center">
 											<div class="hidden-sm hidden-xs btn-group">
-													<a class="btn btn-xs btn-success" title="编辑" onclick="edit('${var.TEST_PLAN_ID}');">
+													<a class="btn btn-xs btn-success" title="编辑" onclick="edit('${var.TEST_PLAN_ID}','${var.TEST_PAPER_ID}');">
 														<i class="ace-icon fa fa-pencil-square-o bigger-120" title="编辑"></i>
 													</a>
 													<a class="btn btn-xs btn-danger" onclick="del('${var.TEST_PLAN_ID}');">
@@ -218,7 +211,7 @@
 			 top.jzts();
 			 var diag = new top.Dialog();
 			 diag.Drag=true;
-			 diag.Title ="培训计划维护";
+			 diag.Title ="考试计划维护";
 			 diag.URL = '<%=basePath%>testplan/goAdd.do';
 			 diag.Width = 900;
 			 diag.Height = 550;
@@ -248,20 +241,21 @@
 		}
 		
 		//修改
-		function edit(Id){
+		function edit(planId,paperId){
 			 top.jzts();
 			 var diag = new top.Dialog();
 			 diag.Drag=true;
 			 diag.Title ="编辑";
-			 diag.URL = '<%=basePath%>testplan/goEdit.do?TEST_PLAN_ID='+Id;
+			 diag.URL = '<%=basePath%>testplan/goEdit.do?TEST_PLAN_ID='+planId+"&TEST_PAPER_ID="+paperId;
 			 diag.Width = 900;
 			 diag.Height = 550;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮 
-			 diag.CancelEvent = function(){ //关闭事件
-			
+			 diag.CancelEvent = function(){ //关闭事件			
 				diag.close();
+			 console.log("关闭对话框");
+				tosearch();
 			 };
 			 diag.show();
 		}
@@ -302,7 +296,7 @@
 								cache: false,
 								success: function(data){
 									 $.each(data.list, function(i, list){
-											nextPage(${page.currentPage});
+											//nextPage(${page.currentPage});
 									 });
 								}
 							});

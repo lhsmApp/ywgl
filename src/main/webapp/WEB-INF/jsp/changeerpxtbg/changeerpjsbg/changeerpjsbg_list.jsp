@@ -433,6 +433,16 @@
 		    return div;
 		}
 		function showDetail(code){
+			if(event){
+				$("#tasks li").each(function(){
+					var item = this;
+					$(item).removeClass("bc-light-orange");
+				}); 
+				$($(event.srcElement).closest('li')).addClass("bc-light-orange");
+			}else{
+				$("#tasks li").first().addClass("bc-light-orange");
+				//$($(event.srcElement).parents('li')).addClass("bc-light-orange");
+			}
 			  $.ajax({
 				  	type: "POST",
 		            //提交的网址

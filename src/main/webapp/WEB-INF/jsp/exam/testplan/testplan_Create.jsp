@@ -41,6 +41,7 @@
 					<form action="trainplan/${msg}.do" name="Form" id="Form" method="post">
 						<input type="hidden" name="TEST_PLAN_ID" id="TEST_PLAN_ID" value="${pd.TEST_PLAN_ID}"/>
 						<div id="zhongxin" style="padding-top: 13px;">
+							<input type="hidden" name="PAPER_ID" id="PAPER_ID" value="${pd.TEST_PAPER_ID}"/>
 							<table id="table_report" class="table table-striped table-bordered table-hover">
 								<tr>
 									<td width="25%"><span>考试计划名称：</span></td>
@@ -50,10 +51,10 @@
 								<tr>
 									<td width="25%"><span>选择试卷：</span></td>
 									<td width="40%">
-										<select class="form-control" name="TEST_PAPER_ID" id="TEST_PAPER_ID" value="${pd.TEST_PAPER_ID}" >
+										<select class="form-control" name="TEST_PAPER_ID" id="TEST_PAPER_ID"  >
 												<option value="">请选择试卷</option>
-												<c:forEach items="${paperList}" var="course">
-												<option value="${course.TEST_PAPER_ID}">${course.TEST_PAPER_TITLE}</option>
+												<c:forEach items="${paperList}" var="paper">
+												<option value="${paper.TEST_PAPER_ID}">${paper.TEST_PAPER_TITLE}</option>
 												</c:forEach>
 										</select>					
 									</td>																
@@ -78,7 +79,7 @@
 								</tr>
 								<tr>	
 								<td  colspan="3">
-								<textarea  id="uesrTextarea" name="uesrTextarea"  style="width:98%;height:30%;">${pd.TEST_PERSONSNAME}</textarea>
+								<textarea  id="uesrTextarea" name="uesrTextarea"  style="width:98%;height:30%;" readonly>${pd.TEST_PERSONSNAME}</textarea>
 								<input type="hidden" style="width:98%;" name="TEST_PLAN_PERSONS" id="TEST_PLAN_PERSONS" value="${pd.TEST_PERSONSCODE}" />
 								</td>
 								</tr>
@@ -126,14 +127,12 @@
 								</tr>
 								<tr>
 								<td style="text-align: center;" colspan="10">
-									<a class="btn btn-mini btn-primary" onclick="save();">保存</a>
+									<a class="btn btn-mini btn-primary" onclick="save();top.Dialog.close();">保存</a>
 									<a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">取消</a>
 								</td>
 							</table>
 						</div>
 					</form>
-					
-
 						</div>
 					</div>
 				</div>
@@ -168,6 +167,9 @@
 			$("#Form").submit();
 		}
 		$("#tobodyUser").hide();
+// 		console.log('${pd.TEST_PAPER_ID}');
+		$("#TEST_PAPER_ID").val('${pd.TEST_PAPER_ID}');
+		
 		//保存
 		function save(){
 			top.jzts();		

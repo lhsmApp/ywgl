@@ -21,197 +21,106 @@
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
 </head>
 <body class="no-skin">
-
-	<!-- /section:basics/navbar.layout -->
 	<div class="main-container" id="main-container">
-		<!-- /section:basics/sidebar -->
 		<div class="main-content">
 			<div class="main-content-inner">
 				<div class="page-content">
-						<!-- 检索  -->
-						<div class="row">
-						    <div class="col-xs-12">
-							    <div class="widget-box" >
-								    <div class="widget-body">
-									    <div class="widget-main">
-<!-- 									    <label class="pull-left" style="padding: 5px;">选择业务类型：</label> -->
-<!-- 										    <span class="pull-left" style="margin-right: 5px;">  -->
-<!-- 												<select -->
-<!-- 													class="chosen-select form-control" name="BUSINESS_TYPE" -->
-<!-- 													id=BUSINESS_TYPE data-placeholder="请选择业务类型" -->
-<!-- 													style="vertical-align: top; height: 32px; width: 150px;"> -->
-<!-- 														<option  value="1">系统变更</option> -->
-<!-- 														<option  value="2">角色变更</option> -->
-<!-- 														<option  value="3">GRC帐号新增</option> -->
-<!-- 														<option  value="4">GRC权限变更</option> -->
-<!-- 														<option  value="5">GRC帐号撤销</option> -->
-<!-- 												</select> -->
-<!-- 											</span>		 -->
-								<div class="btn-group" data-toggle="buttons" >
-									<label class="btn btn-info">
-									<input type="radio" class="level_select"  name="level_select" value="1" checked>系统变更
+					<!-- /section:settings.box -->
+					<div class="page-header">
+						<div class="pull-right">
+							<span class="green middle bolder">变更业务类型: &nbsp;</span>
+							<div class="btn-toolbar inline middle no-margin">
+								<div data-toggle="buttons" class="btn-group no-margin">
+									<label class="btn btn-sm btn-primary active">
+										<input type="radio" class="level_select"  name="level_select" value="1" checked>系统变更
 									</label>
-									<label class="btn btn-info">
-									<input type="radio" class="level_select" name="level_select" value="2">角色变更
+									<label class="btn btn-sm btn-primary"> 
+										<input type="radio" class="level_select" name="level_select" value="2">角色变更
 									</label>
-									<label class="btn btn-info">
-									<input type="radio" class="level_select" name="level_select" value="3">GRC帐号新增
+									<label class="btn btn-sm btn-primary">
+										<input type="radio" class="level_select" name="level_select" value="3">GRC帐号新增
 									</label>
-									<label class="btn btn-info">
-									<input type="radio" class="level_select" name="level_select" value="4">GRC权限变更
+									<label class="btn btn-sm btn-primary"> 
+										<input type="radio" class="level_select" name="level_select" value="4">GRC权限变更
 									</label>
-									<label class="btn btn-info">
-									<input type="radio" class="level_select" name="level_select" value="5">GRC帐号撤销
-									</label>
-									</div> 		
-												<span class="input-icon pull-left" style="margin-right: 5px;">
-													<input id="SelectedBillCode" class="nav-search-input" autocomplete="off" type="text" name="keywords" value="${pd.keywords }" placeholder="在已有申请中搜索"> 
-													<i class="ace-icon fa fa-search nav-search-icon"></i>
-												</span>		
-																																							 
-												<button type="button" class="btn btn-info btn-sm" onclick="tosearch();">
-												    <i class="ace-icon fa fa-search bigger-110"></i>
-												</button>																			       
-												            <label class="btn btn-sm btn-primary"onclick="passApproval()"> 
-<!-- 												        <span  class="bigger-110">上报</span>  -->
-												    	    <i class="ace-icon fa fa-share bigger-110"></i>审批通过
-												            </label>
-												            <label class="btn btn-sm btn-primary" onclick="returnApproval()">
-													        <i class="ace-icon fa fa-undo bigger-110"></i>审批退回
-												            </label>
-															
-									    </div>
-								    </div>
-							    </div>
-						    </div>
-						    
-					    </div>	
+									<label class="btn btn-sm btn-primary">
+										<input type="radio" class="level_select" name="level_select" value="5">GRC帐号撤销
+									</label> 
+								
+								</div>
+							</div>
+						</div>
+					</div>	
 					<div class="row">
-						<div class="col-xs-4">
-						<!-- 检索  -->
-						<form style="margin:5px;" action="user/listUsers.do" method="post" name="userForm" id="userForm">														
-							<ul id="tasks" class="item-list">
-							
-							</ul>						
-	
-				
-						</form>
+						<div class="col-xs-12">
+							<div>
+								<span class="input-icon pull-left" style="margin-right: 5px;">
+									<input id="SelectedBillCode" class="nav-search-input" autocomplete="off" type="text" name="keywords" value="${pd.keywords }" placeholder="在已有申请中搜索"> 
+										<i class="ace-icon fa fa-search nav-search-icon"></i>
+								</span>		
+																																								 
+								<button type="button" class="btn btn-info btn-sm" onclick="tosearch();">
+								    <i class="ace-icon fa fa-search bigger-110"></i>
+								</button>																			       
+					            <button class="btn btn-sm btn-primary"onclick="passApproval()"> 
+					    	    	<i class="ace-icon fa fa-share bigger-110"></i>审批通过
+					            </button>
+					            <button class="btn btn-sm btn-primary" onclick="returnApproval()">
+						        	<i class="ace-icon fa fa-undo bigger-110"></i>审批退回
+					            </button>
+				            </div>
+			            </div>
 					</div>
 					
-					<div class="col-xs-8">
-						<div class="widget-box transparent" id="recent-box">
-							<div class="widget-header">
-								<div style="height:25%">
-									<ul  id="approvalProcess" class="steps">
-									<li id="step1" data-step="1" class="active">
-										<span class="step">1</span>
-										<span class="title">发起</span>
-									</li>
-									<li id="step2"  data-step="2">
-										<span class="step">2</span>
-										<span class="title">审批中</span>
-									</li>
-									<li id="step3" data-step="3">
-										<span class="step">3</span>
-										<span class="title">完成</span>
-									</li>
-									</ul>
-								</div>		
-								<h4 class="widget-title lighter smaller">
-									<i class="ace-icon fa fa-rss orange"></i>详情
-								</h4>
-		
-<!-- 								<div class="widget-toolbar no-border"> -->
-<!-- 									<ul class="nav nav-tabs" id="recent-tab"> -->
-<!-- 										<li class="active"> -->
-<!-- 											<a data-toggle="tab" href="#detail-tab">详情</a> -->
-<!-- 										</li> -->
-		
-<!-- 										<li> -->
-<!-- 											<a data-toggle="tab" href="#assigh-tab">分配</a> -->
-<!-- 										</li> -->
-		
-<!-- 										<li> -->
-<!-- 											<a data-toggle="tab" href="#comment-tab">关闭</a> -->
-<!-- 										</li> -->
-<!-- 									</ul> -->
-<!-- 								</div> -->
-							</div>
-		
-							<div class="widget-body">
-								<div class="widget-main padding-4">
-									<div class="tab-content padding-8">
-										<div id="assigh-tab" class="tab-pane">
-											<!-- <h4 class="smaller lighter green">
-												<i class="ace-icon fa fa-list"></i>
-												Sortable Lists
-											</h4> -->
-											<form action="problemAssign/savaProblemAssign.do" name="problemAssignForm" id="problemAssignForm" method="post">
-												<input type="hidden" name="problemID" id="problemID" value="${pd.PROBLEM_ID }"/>
-												<div id="zhongxin" style="padding-top: 13px;">
-													<div style="margin:10px 0px;">
-														<label for="form-field-select-1">受理人</label>
-														<select class="form-control" id="form-field-select-1">
-															<option value=""></option>
-															<option value="AL">Alabama</option>
-															<option value="AK">Alaska</option>
-														</select>
-													</div>
-													
-													<div style="margin:10px 0px;">
-														<label for="form-field-select-2">提问系统</label>
-														<select class="form-control" id="form-field-select-2">
-															<option value=""></option>
-															<option value="AL">ERP系统</option>
-															<option value="AK">财务系统</option>
-														</select>
-													</div>
-													
-													<div style="margin:10px 0px;">
-														<label for="form-field-select-3">优先级</label>
-														<select class="form-control" id="form-field-select-3">
-															<option value=""></option>
-															<option value="AL">紧急</option>
-															<option value="AK">一般</option>
-														</select>
-													</div>
-													<%-- <input type="number" name="PHONE" id="PHONE"  value="${pd.PHONE }"  maxlength="32" placeholder="这里输入手机号" title="手机号" style="width:98%;"/> --%>
-													<div style="margin:20px 0px;">
-														<span>分配人：</span><span>张三</span>
-														<span style="margin-left:30px;">分配时间：</span><span>2019-05-23</span>
-													</div>
-													<hr />
-													<div>
-														<a class="btn btn-mini btn-primary" onclick="save();">保存</a>
-														<a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">取消</a>
-													</div>		
-												</div>
-												<div id="zhongxin2" class="center" style="display:none"><br/><br/><br/><br/><img src="static/images/jiazai.gif" /><br/><h4 class="lighter block green"></h4></div>
-											</form>
-										</div>
-										<div id="detail-tab" class="tab-pane active">
-											
+					<div class="row">
+						<div class="col-xs-4">
+							<ul id="tasks" class="item-list">
+							
+							</ul>
+						</div>
+						<div class="col-xs-8">
+							<div class="widget-box transparent" id="recent-box">
+								<div class="widget-header">
+									<div style="height:25%">
+										<ul  id="approvalProcess" class="steps">
+										<li id="step1" data-step="1" class="active">
+											<span class="step">1</span>
+											<span class="title">发起</span>
+										</li>
+										<li id="step2"  data-step="2">
+											<span class="step">2</span>
+											<span class="title">审批中</span>
+										</li>
+										<li id="step3" data-step="3">
+											<span class="step">3</span>
+											<span class="title">完成</span>
+										</li>
+										</ul>
+									</div>		
+									<h4 class="widget-title lighter smaller">
+										<i class="ace-icon fa fa-rss orange"></i>详情
+									</h4>
+								</div>
+								<div class="widget-body">
+									<div class="widget-main padding-4">
+										<div class="tab-content padding-8">
+											<div id="detail-tab" class="tab-pane active">
+												
+											</div>
 										</div>
 									</div>
 								</div>
-							</div>	
-					</div>			
- 					<div class="row">
-						    <div class="col-xs-12">
-						        <table id="jqGridBase"></table>
-						        <div id="jqGridBasePager"></div>
-						    </div>
-					    </div>
-				    </div>
+							</div>
+						</div>			
+			    	</div>
 			    </div>
 		    </div>
-	
-		    <!-- 返回顶部 -->
-		    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
-			    <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
-		    </a>
-	    </div>
-	<!-- /.main-container -->
+		</div>
+	    <a href="#" id="btn-scroll-up"
+			class="btn-scroll-up btn btn-sm btn-inverse"> <i
+			class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+		</a>
+    </div>
 
 	<!-- basic scripts -->
 	<!-- 页面底部js¨ -->
@@ -231,13 +140,7 @@
 	    var current_level=undefined;//当前审批级别
 	    varnext_level=undefined;//下一审批级别	    
 		$(top.hangge());//关闭加载状态
-		//检索
-		function tosearch(){
-			top.jzts();
-			$("#Form").submit();
-		}
 		
-
 		$(function() {
 			var data=${varList};
 			showDetail(data[0].BILL_CODE,data[0].CURRENT_LEVEL,data[0].NEXT_LEVEL);

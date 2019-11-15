@@ -181,6 +181,12 @@ public class TestPlanController extends BaseController {
 		if(null != keywords && !"".equals(keywords)){
 			pd.put("keywords", keywords.trim());
 		}
+		if(null!=pd.getString("START_DATE")&&!"".equals(pd.getString("START_DATE"))){
+			pd.put("START_DATE", pd.getString("START_DATE").replace("-", ""));
+		}
+		if(null!=pd.getString("END_DATE")&&!"".equals(pd.getString("END_DATE"))){
+			pd.put("END_DATE", pd.getString("END_DATE").replace("-", ""));
+		}
 		page.setPd(pd);
 		List<PageData>	varList = testplanService.list(page);	//列出TestPlan列表
 		mv.setViewName("exam/testplan/testplan_list");
@@ -216,6 +222,7 @@ public class TestPlanController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
+		List <PageData> paperList=testpaperService.listAll(pd);
 		pd = testplanService.findById(pd);	//根据ID读取
 		String[] persons =pd.getString("TEST_PLAN_PERSONS").split(",");
 		List<PageData> studentList = new ArrayList<PageData>();
@@ -233,6 +240,7 @@ public class TestPlanController extends BaseController {
 		}
 		mv.setViewName("exam/testplan/testplan_Create");
 		mv.addObject("studentList", studentList);
+		mv.addObject("paperList", paperList);
 		pd.put("TEST_PERSONSNAME", nameStr);
 		pd.put("TEST_PERSONSCODE", codeStr);
 		mv.addObject("pd", pd);

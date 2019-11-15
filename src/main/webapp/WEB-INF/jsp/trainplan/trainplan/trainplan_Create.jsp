@@ -87,7 +87,7 @@
 								</tr>
 								<tr>	
 								<td  colspan="3">
-								<textarea  id="uesrTextarea" name="uesrTextarea"  style="width:98%;height:30%;">${pd.TRAIN_PERSONSNAME}</textarea>
+								<textarea  id="uesrTextarea" name="uesrTextarea"  style="width:98%;height:30%;" readonly>${pd.TRAIN_PERSONSNAME}</textarea>
 								<input type="hidden" style="width:98%; name="TRAIN_PLAN_PERSONS" id="TRAIN_PLAN_PERSONS" value="${pd.TRAIN_PERSONSCODE}" />
 								</td>
 								</tr>
