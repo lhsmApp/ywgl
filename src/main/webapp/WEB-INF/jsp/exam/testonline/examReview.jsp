@@ -30,6 +30,7 @@
  			height: 30px;
  			line-height: 30px;
 			cursor: pointer;
+			text-indent:2em;
  		}
  		.aswer-p:hover {
  			background-color: #FFF;
@@ -44,8 +45,10 @@
 				<div class="page-content">
 					<div class="row">
 						 <div class="col-xs-12">						 
-						 	<div>
-								<h4 style='color: #ff0033;'>${pd.TEST_USER},您好！您该试卷的得分为${pd.TEST_SCORE}分</h4>
+						 		<div style="margin-top: 20px;">
+						 		<a style="cursor: pointer;" onclick="returnTestMain()"><span class="label label-success arrowed">返回考试列表</span></a>
+								<div>---------------------------</div>
+								<h4 style='color: #ff0033;'>${pd.TEST_USER},您好！您该试卷的得分为${pd.TEST_SCORE}分,${pd.IF_QUALIFIED}</h4>
 							</div>
 							<div style="margin-top: 20px;">
 <%-- 					<span style="display: none;" id="exam-studentId">${sessionScope.loginStudent.studentId }</span> --%>
@@ -56,7 +59,7 @@
 										<c:forEach items="${varList}" var="var" varStatus="vs">	
 										<dd>
 									<div>
-										<h5 class=" lighter gray" id="${var.TEST_PAPER_ID}-${vs.index+1}">${vs.index+1}、${var.TEST_QUESTION_TITLE }</h5>
+										<h5 class=" lighter gray" id="${var.TEST_PAPER_ID}-${vs.index+1}">${vs.index+1}、${var.TEST_QUESTION_TITLE }(${var.TEST_QUESTION_SCORE}分)</h5>
 									</div>
 									<div>
 										<c:forEach items="${answerList}" var="ans" >
@@ -85,7 +88,7 @@
 												</c:if>						
 											</c:if>
 										</c:forEach>
-										<div id="answerExplain-${var.TEST_PAPER_ID}-${var.TEST_QUESTION_ID}" style="background:#82D900; color:#66FFcc">
+										<div id="answerExplain-${var.TEST_PAPER_ID}-${var.TEST_QUESTION_ID}" style="background:#438EB8; color:#438EB8">
 										<p><span style='color: #F5FFE8;' >您的答案：${var.TEST_ANSWER}&nbsp;&nbsp;&nbsp;正确答案：${var.TEST_CORRECT_ANSWER}</span></p>
 										<p><span style='color: #F5FFE8;' >答案解析：${var.TEST_ANSWER_NOTE}</span></p></div>
 									</div>
@@ -151,8 +154,8 @@
 					 }
 				 }				
 				 var rightAnswer = '${vas.TEST_CORRECT_ANSWER}';//考试答案
+				 //答案错误背景标记为红色
 				 if(uesrAnswer!=rightAnswer){
-					 console.log("答案判断标红");
 					 $("#answerExplain-"+name).css({"background-color":"red"});
 				 }
 			 </c:forEach> 
@@ -171,6 +174,9 @@
 			                if(d[p].id==x){d[p].style.backgroundColor='green'}
 			           } 
 			         }
+			   function returnTestMain(){		   
+				   window.location.href='<%=basePath%>testmain/list.do?tabNo=tabReview';
+		   }
 	</script>
 
 

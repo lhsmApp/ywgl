@@ -647,19 +647,25 @@ public class TestPaperController extends BaseController {
 		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 	    String userId=user.getUSER_ID();
 		pd.put("TEST_USER", userId);
-		pd.put("TEST_PLAN_ID", "EP20191107150902187");//考试计划ID
-		pd.put("TEST_PAPER_ID", "EP20191107144218001");//试卷ID
 		page.setPd(pd);
 		List<PageData>	varList = testpaperService.listExamHistory(page);	//列出TestPaper列表
 		List<PageData>	answerList = testpaperService.listAnswer(page);	//列出TestPaper列表
 		double score=0;
+		String if_qualified="";
 		if(null!=varList&&varList.size()>0){
 			 score= Double.parseDouble(varList.get(0).get("TEST_SCORE").toString());
+			 if_qualified=varList.get(0).get("IF_QUALIFIED").toString();
 		}
 		mv.setViewName("exam/testonline/examReview");
 		mv.addObject("varList", varList);
 		mv.addObject("answerList", answerList);
-		pd.put("TEST_SCORE", score);	
+		pd.put("TEST_SCORE", score);//考试分数	
+		if(if_qualified.equals("1")){//是否合格
+			pd.put("IF_QUALIFIED", "考试合格");
+		}else{
+			pd.put("IF_QUALIFIED", "考试成绩不合格");
+		}
+		
 		mv.addObject("pd", pd);
 		return mv;		
 	}	
