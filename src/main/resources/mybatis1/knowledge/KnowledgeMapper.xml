@@ -123,17 +123,21 @@
     	ON A.KNOWLEDGE_TYPE = B.KNOWLEDGE_TYPE_ID 
     	
 		<where>
-		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
-			and
-				(
-				
-					KNOWLEDGE_TITLE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
-				<!--	根据需求自己加检索条件	
-					 or 
-					字段2 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
-				-->
-				)
-		</if>
+			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+				and
+					(
+					
+						KNOWLEDGE_TITLE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					<!--	根据需求自己加检索条件	
+						 or 
+						字段2 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+					-->
+					)
+			</if>
+			
+			<if test="pd.KNOWLEDGE_TYPE!= null and pd.KNOWLEDGE_TYPE != ''"><!-- 知识库类别-->
+				and KNOWLEDGE_TYPE=#{pd.KNOWLEDGE_TYPE}
+			</if>
 		</where>
 	</select>
 	

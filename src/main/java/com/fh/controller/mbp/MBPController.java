@@ -87,6 +87,7 @@ public class MBPController extends BaseController {
 		 */
 		PageData pd=new PageData();
 		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		String userIds = user.getUNIT_CODE();
 		String userId = user.getUSER_ID();
 		String userName=user.getNAME();
 		pd.put("USER_NAME", userName);
@@ -335,6 +336,32 @@ public class MBPController extends BaseController {
 		if(null != keywords && !"".equals(keywords)){
 			pd.put("keywords", keywords.trim());
 		}
+		if(pd.get("ProOperType")!=null){
+			String sqlFilter="";
+			/*else if(pd.getString("ProOperType").equals("PROBLEM_GET")){//领取：受理人或者分配过来的受理人为当前登录人，并状态为已提交
+				sqlFilter="(A.PRO_ACCEPT_USER='"+userId+"' OR problemAssign.PRO_ACCEPT_USER='"+userId+"') AND A.PRO_STATE='"+ProState.New.getNameKey()+"'";
+				pd.put("PRO_ACCESS", sqlFilter);
+			}*/
+			
+			if(pd.getString("ProOperType").equals("PROBLEM_INFO")){//提报：创建人为当前登录人，状态为所有
+				sqlFilter="A.BILL_USER='"+userId+"'";
+				pd.put("PRO_ACCESS", sqlFilter);
+			}else if(pd.getString("ProOperType").equals("PROBLEM_GET")){//领取：受理人为当前登录人，并状态为已提交
+				sqlFilter="A.PRO_ACCEPT_USER='"+userId+"' AND A.PRO_STATE='"+ProState.New.getNameKey()+"'";
+				pd.put("PRO_ACCESS", sqlFilter);
+			}else if(pd.getString("ProOperType").equals("PROBLEM_ASSIGN")){//分配：受理人为当前登录人，并状态为已提交或者已领取（受理中）
+				sqlFilter="A.PRO_ACCEPT_USER='"+userId+"' AND (A.PRO_STATE='"+ProState.New.getNameKey()+"' OR A.PRO_STATE='"+ProState.Accept.getNameKey()+"')";
+				pd.put("PRO_ACCESS", sqlFilter);
+			}else if(pd.getString("ProOperType").equals("PROBLEM_ANSWER")){//受理（回复）：受理人为当前登录人，并状态为已领取（受理中）
+				sqlFilter="A.PRO_ACCEPT_USER='"+userId+"' AND A.PRO_STATE='"+ProState.Accept.getNameKey()+"'";
+				pd.put("PRO_ACCESS", sqlFilter);
+			}else if(pd.getString("ProOperType").equals("PROBLEM_CLOSE")){//关闭：受理人为当前登录人，并状态为已提交或者已领取（受理中）
+				sqlFilter="A.PRO_ACCEPT_USER='"+userId+"' AND (A.PRO_STATE='"+ProState.New.getNameKey()+"' OR A.PRO_STATE='"+ProState.Accept.getNameKey()+"')";
+				pd.put("PRO_ACCESS", sqlFilter);
+			}
+		}
+		
+		
 		page.setPd(pd);
 		List<PageData> varList = mbpService.list(page);
 		return varList;
@@ -374,12 +401,11 @@ public class MBPController extends BaseController {
 		commonBase.setCode(-1);
 
 		PageData pd = this.getPageData();
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 		if(pd.getString("PRO_CODE")==null||pd.getString("PRO_CODE").trim().equals("")){
 			
 			String billCode=BillnumUtil.getBillnum(billNumService, BillNumType.RPOBLEM, pd.getString("PRO_DEPART"), "");
 			pd.put("PRO_CODE", billCode);
-			
-			User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 			String userId = user.getUSER_ID();
 			pd.put("BILL_USER", userId);
 			pd.put("PRO_DEPART", user.getDEPARTMENT_ID());
@@ -391,6 +417,7 @@ public class MBPController extends BaseController {
 		}
 		else{
 			pd.put("UPDATE_DATE", DateUtils.getCurrentTime());
+			pd.put("PRO_DEPART", user.getDEPARTMENT_ID());
 			mbpService.edit(pd);
 			commonBase.setCode(0);
 		}

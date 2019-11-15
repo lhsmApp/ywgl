@@ -42,24 +42,24 @@
 					<div class="row">
 						<div class="col-xs-4">
 							<!-- 检索  -->
-							<form style="margin:5px;" action="<%=basePath%>knowledge/getPageList.do" method="post" name="knowledgeForm" id="knowledgeForm">
-								<div class="nav-search" style="margin:10px 0px;">
-									<span class="input-icon" style="width:86%">
-										<input style="width:100%" class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词" />
-										<i class="ace-icon fa fa-search nav-search-icon"></i>
-									</span>
-									<button style="margin-bottom:3px;" class="btn btn-light btn-minier" onclick="searchs();"  title="检索">
-										<i id="nav-search-icon" class="ace-icon fa fa-search bigger-120 nav-search-icon blue"></i>
-										<!-- <i class="ace-icon fa fa-signal icon-only bigger-150"></i> -->
-									</button>
-								</div>
+							
+							<div class="nav-search" style="margin:10px 0px;">
+								<span class="input-icon" style="width:86%">
+									<input style="width:100%" class="nav-search-input" autocomplete="off" id="keywords" type="text" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词" />
+									<i class="ace-icon fa fa-search nav-search-icon"></i>
+								</span>
+								<button style="margin-bottom:3px;" class="btn btn-light btn-minier" onclick="searchs();"  title="检索">
+									<i id="nav-search-icon" class="ace-icon fa fa-search bigger-120 nav-search-icon blue"></i>
+									<!-- <i class="ace-icon fa fa-signal icon-only bigger-150"></i> -->
+								</button>
+							</div>
+							
+							<ul id="knowledgeList" class="item-list">
 								
-								<ul id="knowledgeList" class="item-list">
-									
-								</ul>						
-	
-								<div id="page" class="pagination" style="float: right;padding-top: 5px;margin-top: 0px;font-size:12px;"></div>
-							</form>
+							</ul>						
+
+							<div id="page" class="pagination" style="float: right;padding-top: 5px;margin-top: 0px;font-size:12px;"></div>
+							
 						</div>
 						<!-- /.col4 -->
 						
@@ -216,11 +216,6 @@
 		var currentItem;
 	
 		$(top.hangge());//关闭加载状态
-		//检索
-		function tosearch(){
-			top.jzts();
-			$("#Form").submit();
-		}
 		$(function() {
 		
 			//日期框
@@ -273,6 +268,7 @@
 			//初始化字段为只读
 			initFieldDisabled(true);
 			
+			console.log('init');
 			//初始化问题列表数据
 			initList('<%=basePath%>knowledge/getPageList.do');
 		});		
@@ -312,7 +308,6 @@
 		//检索
 		function searchs(){
 			initList('<%=basePath%>knowledge/getPageList.do');
-			//$("#knowledgeForm").submit();
 		}
 		
 		/**
@@ -329,7 +324,7 @@
 					dataType:'json',
 					cache: false,
 					success: function(data){
-						console.log(data.pageHtml);
+						//console.log(data.pageHtml);
 						$("#page").html(data.pageHtml);
 						var first;
 						if(data.rows){
@@ -406,7 +401,6 @@
 		 * 获取明细信息
 		 */
 		function getDetail(knowledgeID){
-			console.log(knowledgeID);
 			if(event){
 				$("#knowledgeList li").each(function(){
 					var item = this;

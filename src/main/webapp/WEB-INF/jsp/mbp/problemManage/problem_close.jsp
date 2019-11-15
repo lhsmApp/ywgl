@@ -110,7 +110,7 @@
 														<div class="profile-info-name"> 问题 </div>
 			
 														<div class="profile-info-value">
-															<span id="valPRO_TITLE">测试问题1</span>
+															<span id="valPRO_TITLE"></span>
 														</div>
 													</div>
 													
@@ -135,7 +135,7 @@
 														<div class="profile-info-name"> 上报单位 </div>
 			
 														<div class="profile-info-value">
-															<i class="fa fa-map-marker light-orange bigger-110"></i>
+															<!-- <i class="fa fa-map-marker light-orange bigger-110"></i> -->
 															<!-- <span>中国石油</span> -->
 															<span id="valPRO_DEPART"></span>
 														</div>
@@ -429,13 +429,13 @@ function initList(){
 	var keywords = $("#keywords").val();
 	$.ajax({
 			type: "POST",
-			url: '<%=basePath%>mbp/getPageList.do',
+			url: '<%=basePath%>mbp/getPageList.do?ProOperType=PROBLEM_CLOSE',
 	    	data: {keywords:keywords},
 			dataType:'json',
 			cache: false,
 			success: function(data){
 				var first;
-				if(data){
+				if(data&&data.length>0){
 					$.each(data, function(i, item){
 						if(i==0){
 							first=item;

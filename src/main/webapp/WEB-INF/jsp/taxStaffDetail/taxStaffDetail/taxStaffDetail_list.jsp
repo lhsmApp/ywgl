@@ -85,7 +85,10 @@
 														<option value="">请选择考核指标</option>
 														<c:forEach items="${listKPI}" var="each">
 															<%-- <option value="${each.KPI_CODE}">${each.KPI_NAME}</option> --%>
-															<c:if test="${pd.KPI_CODE==each.KPI_CODE}">selected</c:if>>${each.KPI_NAME}
+															
+															<option value="${each.KPI_CODE}"
+																<c:if test="${pd.KPI_CODE==each.KPI_CODE}">selected</c:if>>${each.KPI_NAME}
+															</option>
 														</c:forEach>
 													</select>
 											</span>
@@ -121,14 +124,14 @@
 											<div class="profile-info-name">分类</div>
 	
 											<div class="profile-info-value">
-												<span id="valPRO_TITLE">准确性</span>
+												<span id="valPRO_TITLE">${KPI.KPI_TYPE}</span>
 											</div>
 										</div>
 										<div class="profile-info-row">
 											<div class="profile-info-name">指标代码</div>
 	
 											<div class="profile-info-value">
-												<span id="valPRO_TITLE">Z203</span>
+												<span id="valPRO_TITLE">${KPI.KPI_CODE}</span>
 											</div>
 										</div>
 										
@@ -136,7 +139,7 @@
 											<div class="profile-info-name"> 指标作用 </div>
 	
 											<div class="profile-info-value">
-												<span id="valPRO_REPORT_USER"></span>
+												<span id="valPRO_REPORT_USER">${KPI.KPI_EFFECT}</span>
 											</div>
 										</div>
 										
@@ -144,7 +147,7 @@
 											<div class="profile-info-name">考核对象</div>
 	
 											<div class="profile-info-value">
-												<span id="valPRO_ACCEPT_USER"></span>
+												<span id="valPRO_ACCEPT_USER">${KPI.ASSESS_OBJECT}</span>
 											</div>
 										</div>
 									</div>
@@ -155,7 +158,7 @@
 											<div class="profile-info-name">指标名称</div>
 	
 											<div class="profile-info-value">
-												<span id="valPRO_DEPART"></span>
+												<span id="valPRO_DEPART">${KPI.KPI_NAME}</span>
 											</div>
 										</div>
 										
@@ -164,7 +167,7 @@
 	
 											<div class="profile-info-value">
 												<!-- <span>中国石油</span> -->
-												<span id="valPRO_SYS_TYPE"></span>
+												<span id="valPRO_SYS_TYPE">${KPI.JUDGEMENT_STANDARD}</span>
 											</div>
 										</div>
 										
@@ -172,7 +175,7 @@
 											<div class="profile-info-name">计算公式</div>
 	
 											<div class="profile-info-value">
-												<span id="valPRO_TYPE_ID">“ZC--结算凭证”不传FMIS，故集成凭证比率考核指标不对“ZC--结算凭证”进行统计。勘探板块ERP凭证类型为表【BKPF-BLART】中所有凭证，其中手工凭证类型有以下几种： SI--融合初始化凭证、SX--融合清帐凭证、SY--新融合方案输入界面、SZ--新融合方案输入界面，除以上几种手工凭证外，其他凭证均为集成凭证，凭证总数减去手工凭证后的凭证行项目数量与所有凭证行项目数的比值乘以100，则为该统计指标得分</span>
+												<span id="valPRO_TYPE_ID">${KPI.FORMULA}</span>
 											</div>
 										</div>
 										

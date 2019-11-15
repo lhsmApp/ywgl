@@ -15,6 +15,8 @@
 		<result column="SKIN" property="SKIN"/>
 		<result column="DEPARTMENT_ID" property="DEPARTMENT_ID"/>
 		<result column="DEPARTMENT_NAME" property="DEPARTMENT_NAME"/>
+		<result column="UNIT_CODE" property="UNIT_CODE"/>
+		<result column="UNIT_NAME" property="UNIT_NAME"/>
 		<association property="role" column="ROLE_ID" javaType="Role">
 			<id column="ROLE_ID" property="ROLE_ID"/>
 			<result column="ROLE_NAME" property="ROLE_NAME"/>
@@ -35,6 +37,8 @@
 		<result column="SKIN" property="SKIN"/>
 		<result column="DEPARTMENT_ID" property="DEPARTMENT_ID"/>
 		<result column="DEPARTMENT_NAME" property="DEPARTMENT_NAME"/>
+		<result column="UNIT_CODE" property="UNIT_CODE"/>
+		<result column="UNIT_NAME" property="UNIT_NAME"/>
 	</resultMap>
 	
 	<!--表名 -->
@@ -57,6 +61,7 @@
 		RIGHTS,
 		ROLE_ID,
 		DEPARTMENT_ID,
+		UNIT_CODE,
 		LAST_LOGIN,
 		IP,
 		STATUS,
@@ -75,6 +80,7 @@
 		RIGHTS,
 		ROLE_ID,
 		DEPARTMENT_ID,
+		UNIT_CODE,
 		LAST_LOGIN,
 		IP,
 		STATUS,
@@ -94,6 +100,7 @@
 		#{RIGHTS},
 		#{ROLE_ID},
 		#{DEPARTMENT_ID},
+		#{UNIT_CODE},
 		#{LAST_LOGIN},
 		#{IP},
 		#{STATUS},
@@ -112,6 +119,7 @@
 		#{RIGHTS},
 		#{ROLE_ID},
 		#{DEPARTMENT_ID},
+		#{UNIT_CODE},
 		#{LAST_LOGIN},
 		#{IP},
 		#{STATUS},
@@ -157,6 +165,9 @@
 				r.RIGHTS as ROLE_RIGHTS,
 				d.NAME DEPARTMENT_NAME,
 				u.DEPARTMENT_ID,
+				
+				e.NAME UNIT_NAME,
+				u.UNIT_CODE,
 				u.STATUS,
 				u.BZ  
 		from 
@@ -167,6 +178,10 @@
 		left join 
 		oa_department d
 		on u.DEPARTMENT_ID=d.DEPARTMENT_CODE 
+		
+		left join 
+		oa_department e
+		on u.UNIT_CODE=e.DEPARTMENT_CODE 
 		where u.STATUS=1 
 		and u.USER_ID=#{USER_ID}
 	</select>
@@ -219,7 +234,9 @@
 				r.ROLE_ID,
 				r.ROLE_NAME,
 				u.DEPARTMENT_ID,
-				d.NAME DEPARTMENT_NAME
+				d.NAME DEPARTMENT_NAME,
+				u.UNIT_CODE,
+				e.NAME UNIT_NAME
 		from <include refid="tableName"></include> u 
 		left join
 		<include refid="roleTableName"></include> r 
@@ -227,6 +244,10 @@
 		left join
 		oa_department d 
 		on u.DEPARTMENT_ID = d.DEPARTMENT_CODE 
+		
+		left join
+		oa_department e 
+		on u.UNIT_CODE = e.DEPARTMENT_CODE 
 		<where>
 			and u.USERNAME != 'admin'
 			and r.PARENT_ID = '1'
@@ -248,7 +269,10 @@
 			<if test="pd.ROLE_ID != null and pd.ROLE_ID != ''"><!-- 角色检索 -->
 				and u.ROLE_ID=#{pd.ROLE_ID} 
 			</if>
-			<if test="pd.DEPARTMENT_ID != null and pd.DEPARTMENT_ID != ''"><!-- 单位检索 -->
+			<if test="pd.UNIT_CODE != null and pd.UNIT_CODE != ''"><!-- 单位检索 -->
+				and u.UNIT_CODE=#{pd.UNIT_CODE} 
+			</if>
+			<if test="pd.DEPARTMENT_ID != null and pd.DEPARTMENT_ID != ''"><!-- 部门检索 -->
 				and u.DEPARTMENT_ID=#{pd.DEPARTMENT_ID} 
 			</if>
 			<if test="pd.STATUS != null and pd.STATUS != ''"><!-- 状态检索 -->
@@ -361,6 +385,7 @@
 			set NAME 					= #{NAME},
 				ROLE_ID 				= #{ROLE_ID},
 				DEPARTMENT_ID 				= #{DEPARTMENT_ID},
+				UNIT_CODE 				= #{UNIT_CODE},
 				BZ						= #{BZ},
 				EMAIL					= #{EMAIL},
 				NUMBER					= #{NUMBER},
@@ -430,7 +455,9 @@
 				r.ROLE_ID,
 				r.ROLE_NAME,
 				u.DEPARTMENT_ID,
-				d.NAME DEPARTMENT_NAME
+				d.NAME DEPARTMENT_NAME,
+				u.UNIT_CODE,
+				e.NAME UNIT_NAME
 		from <include refid="tableName"></include> u 
 		left join
 		<include refid="roleTableName"></include> r 
@@ -438,6 +465,10 @@
 		left join
 		oa_department d 
 		on u.DEPARTMENT_ID = d.DEPARTMENT_CODE 
+		
+		left join
+		oa_department e 
+		on u.UNIT_CODE = e.DEPARTMENT_CODE 
 		<where> 
 			and u.USERNAME != 'admin'
 			and r.PARENT_ID = '1'
@@ -458,7 +489,10 @@
 			<if test="ROLE_ID != null and ROLE_ID != ''"><!-- 角色检索 -->
 				and u.ROLE_ID=#{ROLE_ID} 
 			</if>
-			<if test="DEPARTMENT_ID != null and DEPARTMENT_ID != ''"><!-- 单位检索 -->
+			<if test="UNIT_CODE != null and UNIT_CODE != ''"><!-- 单位检索 -->
+				and u.UNIT_CODE=#{UNIT_CODE} 
+			</if>
+			<if test="DEPARTMENT_ID != null and DEPARTMENT_ID != ''"><!-- 部门检索 -->
 				and u.DEPARTMENT_ID=#{DEPARTMENT_ID} 
 			</if>
 			<if test="STATUS != null and STATUS != ''"><!-- 状态检索 -->

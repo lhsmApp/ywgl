@@ -142,6 +142,15 @@ public class TaxStaffDetailController extends BaseController {
 		List<PageData> listKpi=kpiService.listAll(null);
 		mv.addObject("listKPI", listKpi);
 		
+		PageData pdCode=new PageData();
+		if(getPd.get("KPI_CODE")!=null){
+			pdCode.put("KPI_CODE", getPd.getString("KPI_CODE"));
+		}else{
+			pdCode.put("KPI_CODE", listKpi.get(0).getString("KPI_CODE"));
+		}
+		PageData kpi=kpiService.findByCode(pdCode);
+		mv.addObject("KPI", kpi);
+		
 		// 员工组 必须执行，用来设置汇总和传输上报类型
  		String SelectedTableNo = Corresponding.getWhileValue(getPd.getString("SelectedTableNo"), DefaultWhile);
 		 		

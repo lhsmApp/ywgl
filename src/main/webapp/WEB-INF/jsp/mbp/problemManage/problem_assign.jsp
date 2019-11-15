@@ -116,7 +116,7 @@
 															<option value=""></option>
 															<c:forEach items="${userList}" var="user">
 																<%-- <option value="${system.DICT_CODE }" <c:if test="${system.DICT_CODE == pd.DICT_CODE }">selected</c:if>>${system.NAME }</option> --%>
-																<option value="${user.USER_ID}">${user.USERNAME}</option>
+																<option value="${user.USER_ID}">${user.NAME}</option>
 															</c:forEach>
 														</select>
 													</div>
@@ -192,7 +192,7 @@
 														<div class="profile-info-name"> 问题 </div>
 			
 														<div class="profile-info-value">
-															<span id="valPRO_TITLE">测试问题1</span>
+															<span id="valPRO_TITLE"></span>
 														</div>
 													</div>
 													
@@ -217,7 +217,7 @@
 														<div class="profile-info-name"> 上报单位 </div>
 			
 														<div class="profile-info-value">
-															<i class="fa fa-map-marker light-orange bigger-110"></i>
+															<!-- <i class="fa fa-map-marker light-orange bigger-110"></i> -->
 															<!-- <span>中国石油</span> -->
 															<span id="valPRO_DEPART"></span>
 														</div>
@@ -511,13 +511,13 @@ function initList(){
 	var keywords = $("#keywords").val();
 	$.ajax({
 			type: "POST",
-			url: '<%=basePath%>mbp/getPageList.do',
+			url: '<%=basePath%>mbp/getPageList.do?ProOperType=PROBLEM_ASSIGN',
 	    	data: {keywords:keywords},
 			dataType:'json',
 			cache: false,
 			success: function(data){
 				var first;
-				if(data){
+				if(data&&data.length>0){
 					$.each(data, function(i, item){
 						if(i==0){
 							first=item;
@@ -665,7 +665,7 @@ function getDetail(problemCode){
 				 }else{
 					 proTypeName="请选择问题类型"
 				 }
-				 $("#selectTree3_input").val(proTypeName);
+				 $("#selectTree2_input").val(proTypeName);
 				 $("#ff-assign-pro-priority").val(data.PRO_PRIORITY);
 				 
 				 /* 获取提报中附件信息 */

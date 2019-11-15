@@ -94,6 +94,16 @@
 			KPI_ID = #{KPI_ID}
 	</select>
 	
+	<!-- 通过Code获取数据 -->
+	<select id="findByCode" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			KPI_CODE = #{KPI_CODE}
+	</select>
+	
 	<!-- 列表 -->
 	<select id="datalistPage" parameterType="page" resultType="pd">
 		select
