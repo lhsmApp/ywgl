@@ -147,4 +147,34 @@
                  #{item}
 		</foreach>
 	</delete>
+	
+	<!-- 列表 -->
+	<select id="courseList" parameterType="page" resultType="pd">
+		SELECT
+			a.TRAIN_PLAN_ID,	
+			a.TRAIN_PLAN_NAME,	
+			a.START_DATE,	
+			a.END_DATE,	
+			a.TRAIN_PLAN_MEMO,	
+			b.COURSE_NAME,
+			b.COURSE_COVER,
+			b.COURSE_ID
+		FROM 
+			tb_gl_plan_user AS d
+		LEFT JOIN tb_train_plan AS  a ON d.PLAN_ID = a.TRAIN_PLAN_ID
+		LEFT JOIN tb_course_base AS b ON a.COURSE_ID = b.COURSE_ID
+		LEFT JOIN tb_course_type AS c ON b.COURSE_TYPE = c.COURSE_TYPE_ID
+		WHERE
+			a.STATE = 1
+		AND 
+			d.STUDENT_ID = #{pd.STUDENT_ID}
+		AND 
+			d.PLAN_TYPE = #{pd.PLAN_TYPE}
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+				a.TRAIN_PLAN_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				)
+		</if>
+	</select>
 </mapper>
