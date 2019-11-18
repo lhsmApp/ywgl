@@ -115,7 +115,7 @@
 														<div class="profile-info-name"> 问题 </div>
 			
 														<div class="profile-info-value">
-															<span id="valPRO_TITLE">测试问题1</span>
+															<span id="valPRO_TITLE"></span>
 														</div>
 													</div>
 													
@@ -140,7 +140,7 @@
 														<div class="profile-info-name"> 上报单位 </div>
 			
 														<div class="profile-info-value">
-															<i class="fa fa-map-marker light-orange bigger-110"></i>
+															<!-- <i class="fa fa-map-marker light-orange bigger-110"></i> -->
 															<!-- <span>中国石油</span> -->
 															<span id="valPRO_DEPART"></span>
 														</div>
@@ -481,13 +481,13 @@ function initList(){
 	var keywords = $("#keywords").val();
 	$.ajax({
 			type: "POST",
-			url: '<%=basePath%>mbp/getPageList.do',
+			url: '<%=basePath%>mbp/getPageList.do?ProOperType=PROBLEM_ANSWER',
 	    	data: {keywords:keywords},
 			dataType:'json',
 			cache: false,
 			success: function(data){
 				var first;
-				if(data){
+				if(data&&data.length>0){
 					$.each(data, function(i, item){
 						if(i==0){
 							first=item;
@@ -661,6 +661,7 @@ function searchs(){
  * 获取问题回复信息
  */
 function getProAnswers(){
+	if(currentItem==null) return;
 	$("#ff-answer-info").empty();
 	top.jzts();
 	var proCode=currentItem.PRO_CODE;//问题单号
@@ -679,7 +680,7 @@ function getProAnswers(){
 						}
 						var selected=true;
 						console.log(item);
-						var option = new Option(item.BILL_DATE, item.ANSWER_ID, selected, true);
+						var option = new Option(item.NAME+'  '+item.BILL_DATE, item.ANSWER_ID, selected, true);
 						$('#ff-answer-info').append(option);
 				 	});
 					if(first){
@@ -750,6 +751,7 @@ function addAnswer(){
 	var arr = [];
     arr.push(contentAnswer);
     content=arr.join("");
+    /* content="<p></p>"+content; */
     var proCode=currentItem.PRO_CODE;//问题单号
     /* var answerId=$("#ff-answer-answer-id").val(); */
     var answerID=$("#ff-answer-info").val();
@@ -881,7 +883,7 @@ function getProLog(){
 function addItemLog(item,index){
 	var htmlLog='<tr>'
 		+'<td class="center" style="width: 30px;">'+index+'</td>'
-		+'<td class="center">'+item.USERNAME+'</td>'
+		+'<td class="center">'+item.NAME+'</td>'
 		+'<td class="center">'+item.PRO_EVENT+'</td>'
 		+'<td class="center">'+item.CLIENT_IP+'</td>'
 		+'<td class="center">'+item.CREATE_DATE+'</td>'

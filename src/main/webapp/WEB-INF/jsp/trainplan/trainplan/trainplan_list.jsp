@@ -103,8 +103,12 @@
 											<td class='center'>1/3</td>	
 											<td class="center">
 												<div class="hidden-sm hidden-xs btn-group">
-													<button class="btn btn-xs btn-yellow" onClick="edit('${var.TRAIN_PLAN_ID}')">编辑</button>
-													<button class="btn btn-xs btn-yellow" onClick="del('${var.TRAIN_PLAN_ID}')">删除</button>
+													<a class="btn btn-xs btn-success" title="编辑" onClick="edit('${var.TRAIN_PLAN_ID}')">
+														<i class="ace-icon fa fa-pencil-square-o bigger-120" title="编辑"></i>
+													</a>
+													<a class="btn btn-xs btn-danger" onClick="del('${var.TRAIN_PLAN_ID}')">
+														<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
+													</a>
 												</div>
 											</td>
 										</tr>									
@@ -214,7 +218,7 @@
 			 diag.Drag=true;
 			 diag.Title ="培训计划维护";
 			 diag.URL = '<%=basePath%>trainplan/goAdd.do';
-			 diag.Width = 1000;
+			 diag.Width = 900;
 			 diag.Height = 550;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮

@@ -113,7 +113,7 @@
 														<!-- <option value="AL">Alabama</option>
 														<option value="AK">Alaska</option> -->
 														<%-- <option value="${system.DICT_CODE }" <c:if test="${system.DICT_CODE == pd.DICT_CODE }">selected</c:if>>${system.NAME }</option> --%>
-														<option value="${user.USER_ID}">${user.USERNAME}</option>
+														<option value="${user.USER_ID}">${user.NAME}</option>
 													</c:forEach>
 												</select>
 											</div>
@@ -126,7 +126,7 @@
 														<!-- <option value="AL">Alabama</option>
 														<option value="AK">Alaska</option> -->
 														<%-- <option value="${system.DICT_CODE }" <c:if test="${system.DICT_CODE == pd.DICT_CODE }">selected</c:if>>${system.NAME }</option> --%>
-														<option value="${user.USER_ID}">${user.USERNAME}</option>
+														<option value="${user.USER_ID}">${user.NAME}</option>
 													</c:forEach>
 												</select>
 											</div>
@@ -177,10 +177,6 @@
 											</div> -->
 											
 											<%-- <input type="number" name="PHONE" id="PHONE"  value="${pd.PHONE }"  maxlength="32" placeholder="这里输入手机号" title="手机号" style="width:98%;"/> --%>
-											<div style="margin:20px 0px;">
-												<span>分配人：</span><span>张三</span>
-												<span style="margin-left:30px;">分配时间：</span><span>2019-05-23</span>
-											</div>
 											
 											<!--<hr />
 											<div>
@@ -484,7 +480,7 @@ function initList(){
 	var keywords = $("#keywords").val();
 	$.ajax({
 			type: "POST",
-			url: '<%=basePath%>mbp/getPageList.do',
+			url: '<%=basePath%>mbp/getPageList.do?ProOperType=PROBLEM_INFO',
 	    	data: {keywords:keywords},
 			dataType:'json',
 			cache: false,

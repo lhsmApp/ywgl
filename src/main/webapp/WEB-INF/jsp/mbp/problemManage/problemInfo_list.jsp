@@ -1678,7 +1678,7 @@ function getProAnswers(){
 						}
 						var selected=true;
 						console.log(item);
-						var option = new Option(item.BILL_DATE, item.ANSWER_ID, selected, true);
+						var option = new Option(item.NAME+'  '+item.BILL_DATE, item.ANSWER_ID, selected, true);
 						$('#ff-answer-info').append(option);
 				 	});
 					if(first){
@@ -1749,6 +1749,8 @@ function addAnswer(){
 	var arr = [];
     arr.push(contentAnswer);
     content=arr.join("");
+    
+    content="<p style='font-size:14px;color:#478fca;'>${pd.USER_NAME}  ${pd.CURRENT_DATE}</p>"+content;
     var proCode=currentItem.PRO_CODE;//问题单号
     /* var answerId=$("#ff-answer-answer-id").val(); */
     var answerID=$("#ff-answer-info").val();
@@ -1996,7 +1998,7 @@ function getProLog(){
 function addItemLog(item,index){
 	var htmlLog='<tr>'
 		+'<td class="center" style="width: 30px;">'+index+'</td>'
-		+'<td class="center">'+item.USERNAME+'</td>'
+		+'<td class="center">'+item.NAME+'</td>'
 		+'<td class="center">'+item.PRO_EVENT+'</td>'
 		+'<td class="center">'+item.CLIENT_IP+'</td>'
 		+'<td class="center">'+item.CREATE_DATE+'</td>'

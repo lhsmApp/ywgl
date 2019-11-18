@@ -30,6 +30,7 @@ import com.fh.util.AppUtil;
 import com.fh.util.Const;
 import com.fh.util.Jurisdiction;
 import com.fh.util.PageData;
+import com.fh.util.StringUtil;
 import com.fh.util.date.DateFormatUtils;
 import com.fh.util.date.DateUtils;
 import com.fh.util.enums.QuestionDifficulty;
@@ -188,11 +189,17 @@ public class TestQuestionController extends BaseController {
 		//进行数据转换
 		for (PageData pageData : varList) {
 			String testQuestionType = pageData.getString("TEST_QUESTION_TYPE");
+			String answerNote = pageData.getString("TEST_ANSWER_NOTE");
 			String testQuestionDifficulty = pageData.getString("TEST_QUESTION_DIFFICULTY");
 			String enmuType = QuestionType.getValueByKey(testQuestionType);
 			String enumDifficulty = QuestionDifficulty.getValueByKey(testQuestionDifficulty);
 			pageData.put("TEST_QUESTION_TYPE", enmuType);
 			pageData.put("TEST_QUESTION_DIFFICULTY", enumDifficulty);
+			if(StringUtil.isNotEmpty(answerNote) && answerNote.length() > 50) {
+				//截取显示
+				answerNote = answerNote.substring(0, 40) + "...";
+				pageData.put("TEST_ANSWER_NOTE", answerNote);
+			}
 		}
 		mv.setViewName("testquestion/testquestion/testquestion_list");
 		mv.addObject("varList", varList);

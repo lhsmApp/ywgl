@@ -77,6 +77,17 @@ public class TrainPlanService implements TrainPlanManager{
 	public void deleteAll(String[] ArrayDATA_IDS)throws Exception{
 		dao.delete("TrainPlanMapper.deleteAll", ArrayDATA_IDS);
 	}
+
+	/**
+	 * 查询用户观看列表
+	 * @param page
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PageData> courseList(Page page) throws Exception {
+		return (List<PageData>)dao.findForList("TrainPlanMapper.courseList", page);
+	}
 	
 }
 

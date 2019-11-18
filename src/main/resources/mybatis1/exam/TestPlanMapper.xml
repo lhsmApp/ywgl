@@ -19,8 +19,7 @@
 		TEST_PLAN_PERSONS,	
 		STATE,	
 		CREATE_USER,	
-		CREATE_DATE,	
-		TESTPLAN_ID
+		CREATE_DATE
 	</sql>
 	
 	<!-- 字段值 -->
@@ -35,8 +34,7 @@
 		#{TEST_PLAN_PERSONS},	
 		#{STATE},	
 		#{CREATE_USER},	
-		#{CREATE_DATE},	
-		#{TESTPLAN_ID}
+		#{CREATE_DATE}
 	</sql>
 	
 	<!-- 新增-->
@@ -47,7 +45,17 @@
 	<include refid="Field"></include>
 		) values (
 	<include refid="FieldValue"></include>
-		)
+		);
+			<foreach item="item" index="index" collection="varList" open=" " separator="; " close=" ">		
+			<if test="item!=null">
+				insert into tb_gl_plan_user
+				(
+					PLAN_ID,	
+					STUDENT_ID
+				) values (#{item.TEST_PLAN_ID},
+					#{item.STUDENT_ID})
+					</if>
+		</foreach>
 	</insert>
 	
 	<!-- 删除-->
@@ -55,7 +63,7 @@
 		delete from
 		<include refid="tableName"></include>
 		where 
-			TESTPLAN_ID = #{TESTPLAN_ID}
+			TEST_PLAN_ID = #{TEST_PLAN_ID}
 	</delete>
 	
 	<!-- 修改 -->
@@ -73,10 +81,9 @@
 			TEST_PLAN_PERSONS = #{TEST_PLAN_PERSONS},
 			STATE = #{STATE},
 			CREATE_USER = #{CREATE_USER},
-			CREATE_DATE = #{CREATE_DATE},
-		TESTPLAN_ID = TESTPLAN_ID
+			CREATE_DATE = #{CREATE_DATE}
 		where 
-		TESTPLAN_ID = #{TESTPLAN_ID}
+		TEST_PLAN_ID = #{TEST_PLAN_ID}
 	</update>
 	
 	<!-- 通过ID获取数据 -->
@@ -86,7 +93,7 @@
 		from 
 		<include refid="tableName"></include>
 		where 
-			TESTPLAN_ID = #{TESTPLAN_ID}
+			TEST_PLAN_ID = #{TEST_PLAN_ID}
 	</select>
 	
 	<!-- 列表 -->
@@ -99,6 +106,8 @@
 		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
 			and
 				(
+				
+				TEST_PLAN_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 				<!--	根据需求自己加检索条件
 					字段1 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 					 or 
@@ -106,6 +115,15 @@
 				-->
 				)
 		</if>
+		<if test="pd.STATE!= null and pd.STATE != ''"><!-- 关键词检索 -->
+			and STATE=#{pd.STATE}
+		</if>
+		<if test="pd.START_DATE!= null and pd.START_DATE != ''">
+			AND SUBSTR( CREATE_DATE,1,8 )  &gt;= #{pd.START_DATE}  
+		</if>
+		<if test="pd.END_DATE!= null and pd.END_DATE != ''">
+			AND SUBSTR( CREATE_DATE,1,8 )  &lt;= #{pd.END_DATE} 
+			 </if>
 	</select>
 	
 	<!-- 列表(全部) -->
@@ -121,7 +139,7 @@
 		delete from
 		<include refid="tableName"></include>
 		where 
-			TESTPLAN_ID in
+			TEST_PLAN_ID in
 		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
                  #{item}
 		</foreach>

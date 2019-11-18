@@ -51,7 +51,7 @@
 							</span> --%>
 							
 							<span class="pull-left nav-search input-icon" style="margin-left:20px;margin-top:2px;">
-								<input type="text" placeholder="这里输入关键词" class="nav-search-input" id="nav-search-input" autocomplete="off" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词"/>
+								<input type="text" placeholder="这里输入知识标题" class="nav-search-input" id="nav-search-input" autocomplete="off" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词"/>
 								<i class="ace-icon fa fa-search nav-search-icon"></i>
 							</span>
 							

@@ -25,6 +25,8 @@ public class User {
 	private String SKIN;		//皮肤
 	private String DEPARTMENT_ID;
 	private String DEPARTMENT_NAME;
+	private String UNIT_CODE;
+	private String UNIT_NAME;
 	
 	public String getSKIN() {
 		return SKIN;
@@ -115,4 +117,16 @@ public class User {
 		DEPARTMENT_NAME = dEPARTMENT_NAME;
 	}
 	
+	public String getUNIT_CODE() {
+		return UNIT_CODE;
+	}
+	public void setUNIT_CODE(String uNIT_CODE) {
+		UNIT_CODE = uNIT_CODE;
+	}
+	public String getUNIT_NAME() {
+		return UNIT_NAME;
+	}
+	public void setUNIT_NAME(String uNIT_NAME) {
+		UNIT_NAME = uNIT_NAME;
+	}
 }

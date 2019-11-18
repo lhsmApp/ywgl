@@ -70,6 +70,14 @@ public class KPIService implements KPIManager{
 		return (PageData)dao.findForObject("KPIMapper.findById", pd);
 	}
 	
+	/**通过Code获取数据
+	 * @param pd
+	 * @throws Exception
+	 */
+	public PageData findByCode(PageData pd)throws Exception{
+		return (PageData)dao.findForObject("KPIMapper.findByCode", pd);
+	}
+	
 	/**批量删除
 	 * @param ArrayDATA_IDS
 	 * @throws Exception

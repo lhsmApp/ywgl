@@ -95,7 +95,7 @@ public class TrainPlanController extends BaseController {
 		return commonBase;
 	}
 
-	/**显示选择的培训人人员信息
+	/**显示选择的培训人员信息
 	 * @param page
 	 * @throws Exceptionz
 	 */

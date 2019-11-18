@@ -270,6 +270,16 @@ public class UserController extends BaseController {
 		/*String departBianma=pd.getString("DEPARTMENT_ID");//对DEPARTMENT_ID还原本人DEPARTMENT_ID
 		PageData pdDepart=new PageData();
 		pdDepart.put("BIANMA", departBianma);*/
+		
+		pd.put("DEPARTMENT_CODE", pd.getString("UNIT_CODE"));
+		PageData pdDepartResultUnit=departmentService.findByBianma(pd);
+		//pd.put("DEPARTMENT_ID", pdDepartResult.getString("DEPARTMENT_ID")); //根据编码读取ID
+		mv.setViewName("system/user/user_edit");
+		if(pdDepartResultUnit!=null)
+			mv.addObject("depnameUnit", pdDepartResultUnit.getString("NAME"));
+		else
+			mv.addObject("depnameUnit", null);
+		
 		pd.put("DEPARTMENT_CODE", pd.getString("DEPARTMENT_ID"));
 		PageData pdDepartResult=departmentService.findByBianma(pd);
 		//pd.put("DEPARTMENT_ID", pdDepartResult.getString("DEPARTMENT_ID")); //根据编码读取ID

@@ -54,5 +54,13 @@ public interface TrainPlanManager{
 	 */
 	public void deleteAll(String[] ArrayDATA_IDS)throws Exception;
 	
+	/**
+	 * 查询用户观看列表
+	 * @param page
+	 * @return
+	 * @throws Exception
+	 */
+	public List<PageData> courseList(Page page)throws Exception;
+	
 }
 

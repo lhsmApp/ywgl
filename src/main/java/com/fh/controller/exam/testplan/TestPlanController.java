@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -17,13 +18,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import com.fh.controller.base.BaseController;
+import com.fh.controller.common.BillnumUtil;
+import com.fh.entity.CommonBase;
 import com.fh.entity.Page;
+import com.fh.entity.system.User;
 import com.fh.util.AppUtil;
+import com.fh.util.Const;
 import com.fh.util.ObjectExcelView;
 import com.fh.util.PageData;
 import com.fh.util.Jurisdiction;
 import com.fh.util.Tools;
+import com.fh.util.date.DateUtils;
+import com.fh.util.enums.ExamBillNum;
+
+import net.sf.json.JSONArray;
+
+import com.fh.service.billnum.BillNumManager;
+import com.fh.service.exam.testpaper.TestPaperManager;
 import com.fh.service.exam.testplan.TestPlanManager;
+import com.fh.service.trainBase.TrainStudentManager;
 
 /** 
  * 说明：testplan
@@ -38,24 +51,89 @@ public class TestPlanController extends BaseController {
 	@Resource(name="testplanService")
 	private TestPlanManager testplanService;
 	
+	@Resource(name="testpaperService")
+	private TestPaperManager testpaperService;
+	
+	@Resource(name="trainstudentService")
+	private TrainStudentManager trainstudentService;
+
+	@Resource(name = "billnumService")
+	private BillNumManager billNumService;
+
 	/**保存
 	 * @param
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/save")
-	public ModelAndView save() throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"新增TestPlan");
-		if(!Jurisdiction.buttonJurisdiction(menuUrl, "add")){return null;} //校验权限
+	public  @ResponseBody CommonBase save() throws Exception{
+		CommonBase commonBase = new CommonBase();
+		commonBase.setCode(-1);
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USER);
+		pd.put("CREATE_USER", user.getUSER_ID());//创建人
+		pd.put("STATE", "1");//状态
+		pd.put("START_DATE", pd.getString("START_DATE").replace("-", ""));//开始日期
+		pd.put("END_DATE", pd.getString("END_DATE").replace("-", ""));//结束日期
+		DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+		Calendar calendar = Calendar.getInstance();
+		String nowDate = df.format(calendar.getTime());
+		pd.put("CREATE_DATE",nowDate);
+		if(null==pd.getString("TEST_PLAN_ID")||pd.getString("TEST_PLAN_ID").trim().equals("")){
+			String testPlanId=BillnumUtil.getExamBillnum(billNumService, ExamBillNum.EXAM_PLAN);
+			pd.put("TEST_PLAN_ID", testPlanId);	//主键
+			String testPersonStr=pd.getString("TEST_PLAN_PERSONS");
+			String [] trainPersons=testPersonStr.split(",");
+			List<PageData> studentList=new ArrayList<PageData>();
+			for(int i=0;i<trainPersons.length;i++){
+				PageData p=new PageData();
+				p.put("TEST_PLAN_ID", testPlanId);
+				p.put("STUDENT_ID", trainPersons[i]);
+				studentList.add(p);
+			}
+			pd.put("varList", studentList);
+			testplanService.save(pd);
+			commonBase.setCode(0);
+		}else{
+			testplanService.edit(pd);
+			commonBase.setCode(0);
+		}
+		return commonBase;
+	}
+	/**显示选择的考试人员信息
+	 * @param page
+	 * @throws Exceptionz
+	 */
+	@RequestMapping(value="/getChoiceStudent")
+	public @ResponseBody List<PageData> getChoiceStudent() throws Exception{
+		PageData pd = new PageData();
+		pd = this.getPageData();	
+		String studentCode=pd.getString("sturentStr");
+		String[] studentArry=studentCode.split(",");		
+		List<PageData> varList = trainstudentService.listChoiceStudent(studentArry);		
+		return varList;
+	}
+	/**获取考试人员列表
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/listStudent")
+	public ModelAndView listStudent(Page page) throws Exception{		
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		pd.put("TESTPLAN_ID", this.get32UUID());	//主键
-		testplanService.save(pd);
-		mv.addObject("msg","success");
-		mv.setViewName("save_result");
+		String keywords = pd.getString("keywords");				//关键词检索条件
+		if(null != keywords && !"".equals(keywords)){
+			pd.put("keywords", keywords.trim());
+		}
+		page.setPd(pd);
+		List<PageData>	varList = trainstudentService.list(page);	//列出TrainStudent列表
+		mv.setViewName("exam/testplan/trainstudent_list");
+		mv.addObject("varList", varList);
+		mv.addObject("pd", pd);
+		
 		return mv;
 	}
-	
 	/**删除
 	 * @param out
 	 * @throws Exception
@@ -63,7 +141,7 @@ public class TestPlanController extends BaseController {
 	@RequestMapping(value="/delete")
 	public void delete(PrintWriter out) throws Exception{
 		logBefore(logger, Jurisdiction.getUsername()+"删除TestPlan");
-		if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return;} //校验权限
+		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return;} //校验权限
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		testplanService.delete(pd);
@@ -103,6 +181,12 @@ public class TestPlanController extends BaseController {
 		if(null != keywords && !"".equals(keywords)){
 			pd.put("keywords", keywords.trim());
 		}
+		if(null!=pd.getString("START_DATE")&&!"".equals(pd.getString("START_DATE"))){
+			pd.put("START_DATE", pd.getString("START_DATE").replace("-", ""));
+		}
+		if(null!=pd.getString("END_DATE")&&!"".equals(pd.getString("END_DATE"))){
+			pd.put("END_DATE", pd.getString("END_DATE").replace("-", ""));
+		}
 		page.setPd(pd);
 		List<PageData>	varList = testplanService.list(page);	//列出TestPlan列表
 		mv.setViewName("exam/testplan/testplan_list");
@@ -121,8 +205,10 @@ public class TestPlanController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		mv.setViewName("exam/testplan/testplan_edit");
+		mv.setViewName("exam/testplan/testplan_Create");
+		List <PageData> paperList=testpaperService.listAll(pd);
 		mv.addObject("msg", "save");
+		mv.addObject("paperList", paperList);
 		mv.addObject("pd", pd);
 		return mv;
 	}	
@@ -136,9 +222,27 @@ public class TestPlanController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
+		List <PageData> paperList=testpaperService.listAll(pd);
 		pd = testplanService.findById(pd);	//根据ID读取
-		mv.setViewName("exam/testplan/testplan_edit");
-		mv.addObject("msg", "edit");
+		String[] persons =pd.getString("TEST_PLAN_PERSONS").split(",");
+		List<PageData> studentList = new ArrayList<PageData>();
+		studentList=trainstudentService.listChoiceStudent(persons);
+		String codeStr="";
+		String nameStr="";
+		for(PageData p:studentList){
+			if("".equals(codeStr)) {
+			  codeStr += p.get("STUDENT_ID");
+			  nameStr += p.getString("STUDENT_NAME");
+  		  }else {
+  			codeStr += "," +p.get("STUDENT_ID");
+  			nameStr += "," +p.getString("STUDENT_NAME");
+  		  }
+		}
+		mv.setViewName("exam/testplan/testplan_Create");
+		mv.addObject("studentList", studentList);
+		mv.addObject("paperList", paperList);
+		pd.put("TEST_PERSONSNAME", nameStr);
+		pd.put("TEST_PERSONSCODE", codeStr);
 		mv.addObject("pd", pd);
 		return mv;
 	}	

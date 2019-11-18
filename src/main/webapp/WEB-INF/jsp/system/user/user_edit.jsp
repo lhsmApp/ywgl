@@ -55,15 +55,24 @@
 											<tr>
 												<td style="width:79px;text-align: right;padding-top: 13px;">单位:</td>
 												<td>
+													<input type="hidden" name="UNIT_CODE" width="400px"
+														id="UNIT_CODE" value="${pd.UNIT_CODE}" />
+													<div class="selectTree" id="selectTreeUnit"></div>
+												</td>
+											</tr>
+											<tr>
+												<td style="width:79px;text-align: right;padding-top: 13px;">部门:</td>
+												<td>
 													<input type="hidden" name="DEPARTMENT_ID" width="400px"
 														id="DEPARTMENT_ID" value="${pd.DEPARTMENT_ID}" />
-														<div class="selectTree" id="selectTree"></div>
+													<div class="selectTree" id="selectTree" style="float:none;display:block;"></div>
 												</td>
 											</tr>
 										</c:if>
 										
 										<c:if test="${fx == 'head'}">
 											<input name="ROLE_ID" id="role_id" value="${pd.ROLE_ID }" type="hidden" />
+											<input name="UNIT_CODE" id="department_id" value="${pd.UNIT_CODE }" type="hidden" />
 											<input name="DEPARTMENT_ID" id="department_id" value="${pd.DEPARTMENT_ID }" type="hidden" />
 										</c:if>
 										<tr>
@@ -389,6 +398,21 @@
 	function initComplete(){
 		
 		//绑定change事件
+		$("#selectTreeUnit").bind("change",function(){
+			if(!$(this).attr("relValue")){
+		      //  top.Dialog.alert("没有选择节点");
+		    }else{
+				//alert("选中节点文本："+$(this).attr("relText")+"<br/>选中节点值："+$(this).attr("relValue"));
+				$("#UNIT_CODE").val($(this).attr("relValue"));
+		    }
+		});
+		//赋给data属性
+		$("#selectTreeUnit").data("data",defaultNodes);  
+		$("#selectTreeUnit").render();
+		$("#selectTree2_input").val("${null==depnameUnit?'请选择单位':depnameUnit}");
+		
+		
+		//绑定change事件
 		$("#selectTree").bind("change",function(){
 			if(!$(this).attr("relValue")){
 		      //  top.Dialog.alert("没有选择节点");
@@ -397,12 +421,10 @@
 				$("#DEPARTMENT_ID").val($(this).attr("relValue"));
 		    }
 		});
-		console.log(defaultNodes);
-		console.log(depname);
 		//赋给data属性
 		$("#selectTree").data("data",defaultNodes);  
 		$("#selectTree").render();
-		$("#selectTree2_input").val("${null==depname?'请选择单位':depname}");
+		$("#selectTree3_input").val("${null==depname?'请选择部门':depname}");
 	}
 </script>
 </html>
