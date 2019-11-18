@@ -65,16 +65,16 @@
 								</tr>
 								<tr>
 									<td>
-									<label id="btnChoice"  onclick="choiceStudent()">
-									<i class="ace-icon fa  glyphicon-plus bigger-110"></i>选择考试人群：</label>
+									<a id="btnChoice"  onclick="choiceStudent()">
+									<i class="ace-icon fa  glyphicon-plus bigger-110"></i>选择考试人群：</a>
 									</td>
 									<td>
-									<label id="btnShow"  onclick="showTable()">
-									<i class="ace-icon fa   bigger-110"></i>显示/隐藏人员列表：</label>
+									<a id="btnShow"  onclick="showTable()">
+									<i class="ace-icon fa   bigger-110"></i>显示/隐藏人员列表：</a>
 									</td>
 									<td>
-									<label id="btnClear"  onclick="clearTable()">
-									<i class="ace-icon fa   bigger-110"></i>清空人员列表：</label>
+									<a id="btnClear"  onclick="clearTable()">
+									<i class="ace-icon fa   bigger-110"></i>清空人员列表：</a>
 									</td>
 								</tr>
 								<tr>	

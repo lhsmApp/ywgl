@@ -23,15 +23,13 @@
 
 	<!-- /section:basics/navbar.layout -->
 	<div class="main-container" id="main-container">
-		<!-- /section:basics/sidebar -->
 		<div class="main-content">
 			<div class="main-content-inner">
 				<div class="page-content">
 					<div class="row">
-						<div class="col-xs-12">
-							
+						<div class="col-xs-12">							
 						<!-- 检索  -->
-						<form action="testplan/list.do" method="post" name="Form" id="Form">
+						<form action="trainplan/list.do" method="post" name="trainForm" id="trainForm">
 						<table style="margin-top:5px;">
 							<tr>
 								<td><label> <i class="ace-icon  bigger-110"></i>考试计划时间范围：</label> </td>
@@ -61,6 +59,7 @@
 								</td>	
 							</tr>							
 						</table>
+					</form>
 						<!-- 检索  -->
 					
 						<table id="simple-table" class="table table-striped table-bordered table-hover" style="margin-top:5px;">	
@@ -118,18 +117,19 @@
 								</c:otherwise>
 							</c:choose>
 							</tbody>
-						</table>			
-						</form>
-					
+						</table>	
+						<div class="page-header position-relative">
+						<table style="width:100%;">
+							<tr>
+								<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
+							</tr>
+						</table>
+						</div>					
 						</div>
-						<!-- /.col -->
 					</div>
-					<!-- /.row -->
 				</div>
-				<!-- /.page-content -->
 			</div>
 		</div>
-		<!-- /.main-content -->
 
 		<!-- 返回顶部 -->
 		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
