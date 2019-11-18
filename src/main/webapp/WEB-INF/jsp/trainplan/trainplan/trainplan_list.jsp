@@ -219,7 +219,7 @@
 			 diag.Title ="培训计划维护";
 			 diag.URL = '<%=basePath%>trainplan/goAdd.do';
 			 diag.Width = 900;
-			 diag.Height = 550;
+			 diag.Height = 500;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮
@@ -252,8 +252,8 @@
 			 diag.Drag=true;
 			 diag.Title ="编辑";
 			 diag.URL = '<%=basePath%>trainplan/goEdit.do?TRAIN_PLAN_ID='+Id;
-			 diag.Width = 1000;
-			 diag.Height = 550;
+			 diag.Width = 900;
+			 diag.Height = 500;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮 

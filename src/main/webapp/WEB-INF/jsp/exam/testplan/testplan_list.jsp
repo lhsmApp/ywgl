@@ -214,7 +214,7 @@
 			 diag.Title ="考试计划维护";
 			 diag.URL = '<%=basePath%>testplan/goAdd.do';
 			 diag.Width = 900;
-			 diag.Height = 550;
+			 diag.Height = 500;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮
@@ -248,7 +248,7 @@
 			 diag.Title ="编辑";
 			 diag.URL = '<%=basePath%>testplan/goEdit.do?TEST_PLAN_ID='+planId+"&TEST_PAPER_ID="+paperId;
 			 diag.Width = 900;
-			 diag.Height = 550;
+			 diag.Height = 500;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮 

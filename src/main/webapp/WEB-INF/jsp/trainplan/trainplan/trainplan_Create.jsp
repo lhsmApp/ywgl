@@ -289,7 +289,10 @@
 				if(!$(this).attr("relValue")){
 			    }else{
 					$("#COURSE_TYPE_ID").val($(this).attr("relValue"));	
-			    }
+			    }	
+// 				$("#selectTree").data("data",defaultNodes);  
+// 				$("#selectTree").render();
+				//$("#selectTree2_input").val("${null==coursetypeid||''==coursetypeid?'请选择课程类型':coursetypeid}");
 				 //清空select框中数据
 				   $('#COURSE_CODE').empty();
 				$.ajax({

@@ -153,7 +153,29 @@
 
 	<!-- 列表 -->
 	<select id="datalistPage" parameterType="page" resultType="pd">
-		SELECT * FROM 
+		SELECT * FROM (SELECT 
+				t.BILL_CODE BILL_CODE,	
+				t.UNIT_CODE UNIT_CODE,		
+				t.DEPT_CODE DEPT_CODE,	
+				t.ENTRY_DATE ENTRY_DATE,	
+				t.SERIAL_NUM SERIAL_NUM,	
+				t.USER_CODE USER_CODE,	
+				t.USER_DEPT USER_DEPT,	
+				t.USER_JOB USER_JOB,	
+				t.USER_CONTACT USER_CONTACT,	
+				t.BG_NAME BG_NAME,	
+				t.SYSTEM SYSTEM,	
+				t.BG_TYPE BG_TYPE,	
+				t.BG_REASON BG_REASON,	
+				t.BILL_STATE BILL_STATE,	
+				t.BILL_USER BILL_USER,	
+				t.BILL_DATE BILL_DATE,
+				t.EFFECTIVE_DATE,
+				t.APPROVAL_STATE APPROVAL_STATE,
+				u.NAME AS UNIT_NAME,
+				v.USERNAME
+				
+			FROM 
 			(SELECT
 				a.BILL_CODE BILL_CODE,	
 				a.UNIT_CODE UNIT_CODE,		
@@ -177,7 +199,9 @@
 				b.APPROVAL_STATE APPROVAL_STATE
 				FROM 
 				TB_CHANGE_ERP_JSBG a LEFT JOIN tb_approval_main b
-				ON a.BILL_CODE=b.BILL_CODE)  AS t
+				ON a.BILL_CODE=b.BILL_CODE)  AS t,oa_department u, sys_user v 
+				WHERE u.DEPARTMENT_CODE = t.UNIT_CODE
+		AND t.USER_CODE=v.USER_ID) AS h
 		<where>
 			(BILL_USER=#{pd.BILL_USER}
 			or

@@ -759,10 +759,98 @@
 	<select id="listApproval" parameterType="pd" resultType="pd">
 		SELECT 
 			a.BUSINESS_CODE,a.BILL_CODE,a.CURRENT_LEVEL,a.NEXT_LEVEL,a.ACTIVE_FLAG,a.UNIT_CODE AS SPUNIT_CODE,a.DEPART_CODE,a.APPROVAL_STATE,	
-			a.ROLE_CODE,a.APPROVAL_USER,a.APPROVAL_DATE,a.APPROVAL_ADVICE,b.BILL_CODE,b.UNIT_CODE AS UNIT_CODE,b.DEPT_CODE,b.ENTRY_DATE,	
-			b.SERIAL_NUM,b.USER_CODE,b.USER_DEPT,b.USER_JOB,b.USER_CONTACT,b.BG_NAME,b.SYSTEM,b.BG_TYPE,b.BG_REASON,b.BILL_STATE,b.BILL_USER,b.BILL_DATE
+			a.ROLE_CODE,a.APPROVAL_USER,a.APPROVAL_DATE,a.APPROVAL_ADVICE,b.UNIT_CODE AS UNIT_CODE,b.DEPT_CODE,b.ENTRY_DATE,	
+			b.SERIAL_NUM,b.USER_CODE,b.USER_DEPT,b.USER_JOB,b.USER_CONTACT,b.BG_NAME,b.SYSTEM,b.BG_TYPE,b.BG_REASON as REASON,b.BILL_STATE,b.BILL_USER,b.BILL_DATE
 		FROM
 			  tb_approval_detail a, tb_change_erp_xtbg b 
+			  <where>
+			  a.BILL_CODE = b.BILL_CODE 
+			 <if test="ACTIVE_FLAG!=null and ACTIVE_FLAG!=''"> 
+			 and a.ACTIVE_FLAG =#{ACTIVE_FLAG}
+			 </if>
+		 	<if test="UNIT_CODE!=null and UNIT_CODE!=''"> 
+			 and a.UNIT_CODE = #{UNIT_CODE}
+			 </if>
+			<if test="ROLE_CODE!=null and ROLE_CODE!=''"> 
+			 and a.ROLE_CODE = #{ROLE_CODE}
+			 </if>
+			<if test="APPROVAL_STATE!=null and APPROVAL_STATE!=''"> 
+			 and a.APPROVAL_STATE = #{APPROVAL_STATE}
+			 </if>
+			</where>
+			UNION
+				SELECT 
+			a.BUSINESS_CODE,a.BILL_CODE,a.CURRENT_LEVEL,a.NEXT_LEVEL,a.ACTIVE_FLAG,a.UNIT_CODE AS SPUNIT_CODE,a.DEPART_CODE,a.APPROVAL_STATE,	
+			a.ROLE_CODE,a.APPROVAL_USER,a.APPROVAL_DATE,a.APPROVAL_ADVICE,b.UNIT_CODE AS UNIT_CODE,b.DEPT_CODE,b.ENTRY_DATE,	
+			b.SERIAL_NUM,b.USER_CODE,b.USER_DEPT,b.USER_JOB,b.USER_CONTACT,b.BG_NAME,b.SYSTEM,b.BG_TYPE,b.BG_REASON as REASON,b.BILL_STATE,b.BILL_USER,b.BILL_DATE
+		FROM
+			  tb_approval_detail a, tb_change_erp_jsbg b 
+			  <where>
+			  a.BILL_CODE = b.BILL_CODE 
+			 <if test="ACTIVE_FLAG!=null and ACTIVE_FLAG!=''"> 
+			 and a.ACTIVE_FLAG =#{ACTIVE_FLAG}
+			 </if>
+		 	<if test="UNIT_CODE!=null and UNIT_CODE!=''"> 
+			 and a.UNIT_CODE = #{UNIT_CODE}
+			 </if>
+			<if test="ROLE_CODE!=null and ROLE_CODE!=''"> 
+			 and a.ROLE_CODE = #{ROLE_CODE}
+			 </if>
+			<if test="APPROVAL_STATE!=null and APPROVAL_STATE!=''"> 
+			 and a.APPROVAL_STATE = #{APPROVAL_STATE}
+			 </if>
+			</where>
+				UNION
+				SELECT 
+			a.BUSINESS_CODE,a.BILL_CODE,a.CURRENT_LEVEL,a.NEXT_LEVEL,a.ACTIVE_FLAG,a.UNIT_CODE AS SPUNIT_CODE,a.DEPART_CODE,a.APPROVAL_STATE,	
+			a.ROLE_CODE,a.APPROVAL_USER,a.APPROVAL_DATE,a.APPROVAL_ADVICE,b.UNIT_CODE AS UNIT_CODE,b.DEPT_CODE,b.ENTRY_DATE,	
+			b.SERIAL_NUM,b.USER_CODE,b.USER_DEPT,b.USER_JOB,b.USER_CONTACT,'' as BG_NAME,b.SYSTEM,b.BG_TYPE,b.BG_REASON as REASON,b.BILL_STATE,b.BILL_USER,b.BILL_DATE
+		FROM
+			  tb_approval_detail a, tb_change_grc_qxbg b 
+			  <where>
+			  a.BILL_CODE = b.BILL_CODE 
+			 <if test="ACTIVE_FLAG!=null and ACTIVE_FLAG!=''"> 
+			 and a.ACTIVE_FLAG =#{ACTIVE_FLAG}
+			 </if>
+		 	<if test="UNIT_CODE!=null and UNIT_CODE!=''"> 
+			 and a.UNIT_CODE = #{UNIT_CODE}
+			 </if>
+			<if test="ROLE_CODE!=null and ROLE_CODE!=''"> 
+			 and a.ROLE_CODE = #{ROLE_CODE}
+			 </if>
+			<if test="APPROVAL_STATE!=null and APPROVAL_STATE!=''"> 
+			 and a.APPROVAL_STATE = #{APPROVAL_STATE}
+			 </if>
+			</where>
+				UNION
+				SELECT 
+			a.BUSINESS_CODE,a.BILL_CODE,a.CURRENT_LEVEL,a.NEXT_LEVEL,a.ACTIVE_FLAG,a.UNIT_CODE AS SPUNIT_CODE,a.DEPART_CODE,a.APPROVAL_STATE,	
+			a.ROLE_CODE,a.APPROVAL_USER,a.APPROVAL_DATE,a.APPROVAL_ADVICE,b.UNIT_CODE AS UNIT_CODE,b.DEPT_CODE,b.ENTRY_DATE,	
+			b.SERIAL_NUM,b.USER_CODE,b.USER_DEPT,b.USER_JOB,b.USER_CONTACT,'' as BG_NAME,b.SYSTEM,'' as BG_TYPE,b.ACCOUNT_REASON as REASON,b.BILL_STATE,b.BILL_USER,b.BILL_DATE
+		FROM
+			  tb_approval_detail a, tb_change_grc_zhxz b 
+			  <where>
+			  a.BILL_CODE = b.BILL_CODE 
+			 <if test="ACTIVE_FLAG!=null and ACTIVE_FLAG!=''"> 
+			 and a.ACTIVE_FLAG =#{ACTIVE_FLAG}
+			 </if>
+		 	<if test="UNIT_CODE!=null and UNIT_CODE!=''"> 
+			 and a.UNIT_CODE = #{UNIT_CODE}
+			 </if>
+			<if test="ROLE_CODE!=null and ROLE_CODE!=''"> 
+			 and a.ROLE_CODE = #{ROLE_CODE}
+			 </if>
+			<if test="APPROVAL_STATE!=null and APPROVAL_STATE!=''"> 
+			 and a.APPROVAL_STATE = #{APPROVAL_STATE}
+			 </if>
+			</where>
+					UNION
+				SELECT 
+			a.BUSINESS_CODE,a.BILL_CODE,a.CURRENT_LEVEL,a.NEXT_LEVEL,a.ACTIVE_FLAG,a.UNIT_CODE AS SPUNIT_CODE,a.DEPART_CODE,a.APPROVAL_STATE,	
+			a.ROLE_CODE,a.APPROVAL_USER,a.APPROVAL_DATE,a.APPROVAL_ADVICE,b.UNIT_CODE AS UNIT_CODE,b.DEPT_CODE,b.ENTRY_DATE,	
+			b.SERIAL_NUM,b.USER_CODE,b.USER_DEPT,b.USER_JOB,b.USER_CONTACT,'' as BG_NAME,b.SYSTEM,'' as BG_TYPE,b.CANCLE_REASON as REASON,b.BILL_STATE,b.BILL_USER,b.BILL_DATE
+		FROM
+			  tb_approval_detail a, tb_change_grc_zhzx b 
 			  <where>
 			  a.BILL_CODE = b.BILL_CODE 
 			 <if test="ACTIVE_FLAG!=null and ACTIVE_FLAG!=''"> 

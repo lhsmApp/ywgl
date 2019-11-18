@@ -27,6 +27,12 @@
 				<div class="page-content">
 					<!-- /section:settings.box -->
 					<div class="page-header">
+						<span class="label label-xlg label-success arrowed-right">变更管理</span>
+			            <span class="label label-xlg label-yellow arrowed-in arrowed-right"
+			              id="subTitle" style="margin-left: 2px;">变更审批
+			            </span> 
+			            <span style="border-left: 1px solid #e2e2e2; margin: 0px 10px;">&nbsp;
+			            </span>
 						<div class="pull-right">
 							<span class="green middle bolder">变更业务类型: &nbsp;</span>
 							<div class="btn-toolbar inline middle no-margin">
@@ -286,7 +292,7 @@
 								cache: false,
 								success: function(data){
 									 $.each(data.list, function(i, list){
-											nextPage(${page.currentPage});
+											//nextPage(${page.currentPage});
 									 });
 								}
 							});
@@ -300,13 +306,28 @@
 		function getChangeData(){
 		    var html = '';
 		    for(var i = 0;i<data.length;i++){
-		        html += setDiv1(data[i]);
+		    	if(data[i].BG_NAME==""){
+		    		if(data[i].BUSINESS_CODE==3){
+		    			data[i].BG_NAME='GRC帐号新增';
+		    			data[i].BG_REASON=data[i].ACCOUNT_REASON;
+						
+					}else if(data[i].BUSINESS_CODE==4){
+						data[i].BG_NAME='GRC权限变更';
+						data[i].BG_REASON=data[i].BG_REASON;
+						
+					}else{
+						data[i].BG_NAME='GRC帐号撤销';
+						data[i].BG_REASON=data[i].CANCLE_REASON;
+					}
+		    	}
+		
+		        html += setDiv(data[i]);
 		    }
 		    //document.getElementById("tasks").innerHTML = html;
 			$('#tasks').html(html);
 		}		
 		//动态加载变更数据
-		function setDiv1(item){
+		function setDiv(item){
 		    var div = '<li  class="item-grey clearfix" onclick="showDetail(\''+item.BILL_CODE+'\',\''+item.CURRENT_LEVEL+'\',\''+item.NEXT_LEVEL+'\');"><div><label class="inline" style="margin-bottom:5px;"><span class="list-item-value-title">'
 		        + item.BG_NAME
 		        + '</span></label></div><div><label class="inline"><span class="list-item-info">单号:&nbsp;</span><span class="list-item-value">'
@@ -318,7 +339,7 @@
 		        +'</span></label><label class="inline pull-right"><span class="list-item-info">单位:&nbsp;</span><span class="list-item-value">'
 		        + item.UNIT_CODE
 		        +'</span></label></div><div><label class="inline"><span class="list-item-info">变更原因:&nbsp;</span><span class="list-item-value">'
-		        + item.BG_REASON
+		        + item.REASON
 		        +'</span></label><label class="inline pull-right"><span class="list-item-info">申请日期:&nbsp;'
 		        + item.ENTRY_DATE
 		        +'</span></label></div></li>';

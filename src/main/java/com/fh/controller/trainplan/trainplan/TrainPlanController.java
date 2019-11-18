@@ -35,6 +35,7 @@ import com.fh.util.Jurisdiction;
 import net.sf.json.JSONArray;
 
 import com.fh.service.billnum.BillNumManager;
+import com.fh.service.coursemanagement.coursebase.CourseBaseManager;
 import com.fh.service.trainBase.CourseTypeManager;
 import com.fh.service.trainBase.TrainStudentManager;
 import com.fh.service.trainplan.trainplan.TrainPlanManager;
@@ -60,6 +61,9 @@ public class TrainPlanController extends BaseController {
 
 	@Resource(name = "billnumService")
 	private BillNumManager billNumService;
+	
+	@Resource(name="coursebaseService")
+	private CourseBaseManager coursebaseService;
 	/**保存
 	 * @param
 	 * @throws Exception
@@ -207,6 +211,14 @@ public class TrainPlanController extends BaseController {
   			nameStr += "," +p.getString("STUDENT_NAME");
   		  }
 		}
+		pd.put("COURSE_TYPE", pd.get("COURSE_TYPE_ID").toString());
+		List<PageData> varList = coursebaseService.listById(pd);
+		//pd.put("DEPARTMENT_ID", pdDepartResult.getString("DEPARTMENT_ID")); //根据编码读取ID
+		mv.setViewName("system/user/user_edit");
+		if(varList!=null)
+			mv.addObject("coursetypeid", varList.get(0).getString("NAME"));
+		else
+			mv.addObject("coursetypeid", null);
 		JSONArray arr = JSONArray.fromObject(coursetypeService.listAllCourseTypeToSelect("0",courseTypePdList));
 		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
 		mv.setViewName("trainplan/trainplan/trainplan_Create");

@@ -424,7 +424,7 @@
 		        +'</span></label></div><div><label class="inline"><span class="list-item-info">状态:&nbsp;</span><span class="list-item-value">'
 		        + item.APPROVAL_STATE
 		        +'</span></label><label class="inline pull-right"><span class="list-item-info">单位:&nbsp;</span><span class="list-item-value">'
-		        + item.UNIT_CODE
+		        + item.UNIT_NAME
 		        +'</span></label></div><div><label class="inline"><span class="list-item-info">变更原因:&nbsp;</span><span class="list-item-value">'
 		        + item.BG_REASON
 		        +'</span></label><label class="inline pull-right"><span class="list-item-info">申请日期:&nbsp;'
