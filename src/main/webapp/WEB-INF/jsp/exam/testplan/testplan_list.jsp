@@ -29,7 +29,7 @@
 					<div class="row">
 						<div class="col-xs-12">							
 						<!-- 检索  -->
-						<form action="trainplan/list.do" method="post" name="trainForm" id="trainForm">
+						<form action="testplan/list.do" method="post" name="Form" id="Form">
 						<table style="margin-top:5px;">
 							<tr>
 								<td><label> <i class="ace-icon  bigger-110"></i>考试计划时间范围：</label> </td>

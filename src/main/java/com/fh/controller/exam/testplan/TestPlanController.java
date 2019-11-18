@@ -36,6 +36,7 @@ import net.sf.json.JSONArray;
 import com.fh.service.billnum.BillNumManager;
 import com.fh.service.exam.testpaper.TestPaperManager;
 import com.fh.service.exam.testplan.TestPlanManager;
+import com.fh.service.trainBase.TrainDepartManager;
 import com.fh.service.trainBase.TrainStudentManager;
 
 /** 
@@ -59,6 +60,9 @@ public class TestPlanController extends BaseController {
 
 	@Resource(name = "billnumService")
 	private BillNumManager billNumService;
+	
+	@Resource(name="traindepartService")
+	private TrainDepartManager trainDepartService;
 
 	/**保存
 	 * @param
@@ -128,7 +132,10 @@ public class TestPlanController extends BaseController {
 		}
 		page.setPd(pd);
 		List<PageData>	varList = trainstudentService.list(page);	//列出TrainStudent列表
-		mv.setViewName("exam/testplan/trainstudent_list");
+		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
+		JSONArray arr = JSONArray.fromObject(trainDepartService.listAllTrainDepartToSelect("0",zdepartmentPdList));
+		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));	
+		mv.setViewName("exam/testplan/teststudent_list");
 		mv.addObject("varList", varList);
 		mv.addObject("pd", pd);
 		

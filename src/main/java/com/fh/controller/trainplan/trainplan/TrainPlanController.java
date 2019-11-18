@@ -36,7 +36,9 @@ import net.sf.json.JSONArray;
 
 import com.fh.service.billnum.BillNumManager;
 import com.fh.service.coursemanagement.coursebase.CourseBaseManager;
+import com.fh.service.fhoa.department.DepartmentManager;
 import com.fh.service.trainBase.CourseTypeManager;
+import com.fh.service.trainBase.TrainDepartManager;
 import com.fh.service.trainBase.TrainStudentManager;
 import com.fh.service.trainplan.trainplan.TrainPlanManager;
 
@@ -64,6 +66,9 @@ public class TrainPlanController extends BaseController {
 	
 	@Resource(name="coursebaseService")
 	private CourseBaseManager coursebaseService;
+	
+	@Resource(name="traindepartService")
+	private TrainDepartManager trainDepartService;
 	/**保存
 	 * @param
 	 * @throws Exception
@@ -244,6 +249,9 @@ public class TrainPlanController extends BaseController {
 		page.setPd(pd);
 		List<PageData>	varList = trainstudentService.list(page);	//列出TrainStudent列表
 		mv.setViewName("trainplan/trainplan/trainstudent_list");
+		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
+		JSONArray arr = JSONArray.fromObject(trainDepartService.listAllTrainDepartToSelect("0",zdepartmentPdList));
+		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));		
 		mv.addObject("varList", varList);
 		mv.addObject("pd", pd);
 		

@@ -18,6 +18,16 @@
 <%@ include file="../../system/index/top.jsp"%>
 <!-- 日期框 -->
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
+<script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
+<!-- 树形下拉框start -->
+<script type="text/javascript" src="plugins/selectZtree/selectTree.js"></script>
+<script type="text/javascript" src="plugins/selectZtree/framework.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="plugins/selectZtree/import_fh.css" />
+<script type="text/javascript" src="plugins/selectZtree/ztree/ztree.js"></script>
+<link type="text/css" rel="stylesheet"
+	href="plugins/selectZtree/ztree/ztree.css"></link>
+<!-- 树形下拉框end -->
 </head>
 <body class="no-skin">
 
@@ -31,9 +41,20 @@
 						<div class="col-xs-12">
 							
 						<!-- 检索  -->
-						<form action="trainplan/saveChoiceStudent.do" method="post" name="Form" id="Form">	
-						<input type="hidden" name="TRAIN_PLAN_PERSONS" id="TRAIN_PLAN_PERSONS" value="${pd.TRAIN_PLAN_PERSONS}"/>
-						</form>					
+						<form action="trainplan/listStudent.do" method="post" name="Form" id="Form">	
+						<input type="hidden" name="TRAIN_PLAN_PERSONS" id="TRAIN_PLAN_PERSONS" value="${pd.TRAIN_PLAN_PERSONS}"/>	
+						<table style="margin-top:5px;">
+							<tr>
+								<td>
+									<div style="margin:10px 0px;">
+										<input type="hidden" name="DEPART_CODE" id="DEPART_CODE"  />
+										<div class="selectTree" id="selectTree" style="float:none;display:block;"></div>												
+									</div>		
+								</td>								
+								<td style=padding-left:2px"><a class="btn btn-light btn-xs" onclick="tosearch();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>														
+							</tr>
+						</table>	
+					</form>			
 						<table id="student-table" class="table table-striped table-bordered table-hover" style="margin-top:5px;">	
 							<thead>
 								<tr>
@@ -168,6 +189,23 @@
 				});
 			});
 		});
+		function initComplete(){
+			//下拉树
+			var defaultNodes = {"treeNodes":${zTreeNodes}};
+			console.log(${zTreeNodes});
+			//绑定change事件
+			$("#selectTree").bind("change",function(){
+	
+				if(!$(this).attr("relValue")){
+			    }else{
+					$("#DEPART_CODE").val($(this).attr("relValue"));	
+			    }	
+			});
+			//赋给data属性
+			$("#selectTree").data("data",defaultNodes);  
+			$("#selectTree").render();
+		}
+				
 		
 		//保存
 		function save(){
@@ -184,6 +222,7 @@
 			$("#Form").submit();
 			
 		}
+	
 	</script>
 
 

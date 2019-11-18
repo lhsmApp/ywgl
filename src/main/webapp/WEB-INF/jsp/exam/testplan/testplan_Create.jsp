@@ -85,7 +85,7 @@
 								</tr>
 								<tr>
 								<td colspan="3">
-									<span id="btnChoice"  onclick="choiceStudent()">培训人员列表：</span>
+									<span>培训人员列表：</span>
 									</td></tr>
 								<tr>
 								<td colspan="3">

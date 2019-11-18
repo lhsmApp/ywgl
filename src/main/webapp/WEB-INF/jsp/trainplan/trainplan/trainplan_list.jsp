@@ -35,13 +35,13 @@
 								<td><label> <i class="ace-icon  bigger-110"></i>任务时间范围：</label> </td>
 								<td style="padding-left:2px;"><input class="span10 date-picker" name="START_DATE" id="START_DATE"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="开始日期" title="开始日期"/></td>
 								<td style="padding-left:2px;"><input class="span10 date-picker" name="END_DATE" name="END_DATE"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="结束日期"/></td>
-								<td style="vertical-align:top;padding-left:2px;">
-								 	<select class="chosen-select form-control" name="name" id="id" data-placeholder="请选择" style="vertical-align:top;width: 120px;">
-									<option value="0">全部</option>
-									<option value="1">已完成</option>
-									<option value="2">未完成</option>
-								  	</select>
-								</td>
+<!-- 								<td style="vertical-align:top;padding-left:2px;"> -->
+<!-- 								 	<select class="chosen-select form-control" name="name" id="id" data-placeholder="请选择" style="vertical-align:top;width: 120px;"> -->
+<!-- 									<option value="0">全部</option> -->
+<!-- 									<option value="1">已完成</option> -->
+<!-- 									<option value="2">未完成</option> -->
+<!-- 								  	</select> -->
+<!-- 								</td> -->
 								<td style="padding-left:2px;">
 									<span class="input-icon pull-left" style="margin-right: 5px;">
 													<input id="planName" class="nav-search-input" autocomplete="off" type="text" name="keywords" value="${pd.keywords }" placeholder="请输入任务名称"> 
