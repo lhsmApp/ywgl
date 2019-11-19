@@ -79,5 +79,12 @@ public interface CourseDetailManager{
 	 */
 	public Integer countByParentId(Integer parentId)throws Exception;
 	
+	/**
+	 * 查询小节信息
+	 * @param pd
+	 * @return
+	 */
+	public PageData findSection(PageData pd)throws Exception;
+	
 }
 

@@ -186,7 +186,7 @@
 						return false;
 					}
 					var options = {
-						url: '<%=basePath%>coursebase/uploadVideo.do?tm='+new Date().getTime(),
+						url: '<%=basePath%>coursedetail/uploadVideo.do?tm='+new Date().getTime(),
 						type: 'POST',
 						dataType: 'json',
 						cache: false,

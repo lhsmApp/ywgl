@@ -219,7 +219,7 @@
 								<div class="widget-box transparent">
 									<div class="widget-header widget-header-flat">
 										<h4 class="widget-title lighter"><i class="ace-icon fa fa-star orange"></i>
-										<font style="vertical-align: inherit;"><font style="vertical-align: inherit;">查看列表</font></font></h4>
+										<font style="vertical-align: inherit;"><font style="vertical-align: inherit;">试题列表</font></font></h4>
 										<div class="widget-toolbar">
 											<a href="#" data-action="collapse"><i class="ace-icon fa fa-chevron-up"></i></a>
 										</div>
