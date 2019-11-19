@@ -16,12 +16,15 @@
 	<%@ include file="../../system/index/top.jsp"%>
 	<script type="text/javascript" src="static/ace/js/jquery.js"></script>
 	<!-- 上传插件 -->
-	<link href="plugins/uploadify/uploadify.css" rel="stylesheet" type="text/css">
+	<!-- <link href="plugins/uploadify/uploadify.css" rel="stylesheet" type="text/css">
 	<script type="text/javascript" src="plugins/uploadify/swfobject.js"></script>
-	<script type="text/javascript" src="plugins/uploadify/jquery.uploadify.v2.1.4.min.js"></script>
+	<script type="text/javascript" src="plugins/uploadify/jquery.uploadify.v2.1.4.min.js"></script> -->
+	
+	<link href="plugins/uploadify3.2.1/uploadify.css" rel="stylesheet" type="text/css">
+	<script type="text/javascript" src="plugins/uploadify3.2.1/jquery.uploadify.js"></script>
 	<!-- 上传插件 -->
 	<script type="text/javascript">
-	var jsessionid = "<%=session.getId()%>";  //勿删，uploadify兼容火狐用到
+		var jsessionid = "<%=session.getId()%>";  //勿删，uploadify兼容火狐用到
 	</script>
 </head>
 <body class="no-skin">
@@ -37,7 +40,7 @@
 					<form action="attachment/${msg }.do" name="Form" id="Form" method="post">
 						<input type="hidden" value="${pd.BUSINESS_TYPE}" name="BUSINESS_TYPE" id="BUSINESS_TYPE" />
 						<input type="hidden" value="${pd.BILL_CODE}" name="BILL_CODE" id="BILL_CODE" />
-						<input type="hidden" value="no" id="hasTp1" />
+						<!-- <input type="hidden" value="no" id="hasTp1" /> -->
 						<div id="zhongxin" style="padding-top: 13px;">
 						<table id="table_report" class="table table-striped table-bordered table-hover">
 							<tr>
@@ -45,10 +48,12 @@
 								<td><input type="text" name="ATTACHMENT_NAME" id="ATTACHMENT_NAME" value="" maxlength="30" placeholder="这里输入附件名" title="文件名" style="width:98%;"/></td>
 							</tr>
 							<tr>
-								<td style="width:75px;text-align: right;padding-top: 13px;" id="FILEPATHn">文件:</td>
+								<td style="width:75px;text-align: right;padding-top: 13px;">文件:</td>
 								<td>
-									<input type="file" name="File_name" id="uploadify1" keepDefaultStyle = "true"/>
-									<input type="hidden" name="ATTACHMENT_PATH" id="ATTACHMENT_PATH" value=""/>
+									<!-- <div id="fileQueue"> -->
+										<input type="file" name="File_name" id="uploadify1" keepDefaultStyle = "true"/>
+										<input type="hidden" name="ATTACHMENT_PATH" id="ATTACHMENT_PATH" value=""/>
+									<!-- </div>  -->
 								</td>
 							</tr>
 							<tr>
@@ -88,6 +93,8 @@
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 		<script type="text/javascript">
 		$(top.hangge());
+		
+		
 		//保存
 		function save(){
 			if($("#ATTACHMENT_NAME").val()==""){
@@ -100,7 +107,7 @@
 				$("#ATTACHMENT_NAME").focus();
 			return false;
 			}
-			if($("#hasTp1").val()=="no"){
+			/* if($("#hasTp1").val()=="no"){
 				$("#FILEPATHn").tips({
 					side:2,
 			        msg:'请选择文件',
@@ -108,15 +115,20 @@
 			        time:2
 			    });
 			return false;
-			}
-			$('#uploadify1').uploadifyUpload();
+			} */
+			//$('#uploadify1').uploadifyUpload();
+			$('#uploadify1').uploadify('upload', '*');
 		}
 		
 		//====================上传=================
 		$(document).ready(function(){
+			/* if ($.browser.msie) {
+		    	$(&quot;.swfupload&quot;).attr(&quot;classid&quot;,&quot;clsid:D27CDB6E-AE6D-11cf-96B8-444553540000&quot;);
+		    } */
+			
 			var str='';
 			$("#uploadify1").uploadify({
-				'buttonImg'	: 	"<%=basePath%>static/images/fileup.png",
+				<%-- 'buttonImg'	: 	"<%=basePath%>static/images/fileup.png",
 				'uploader'	:	"<%=basePath%>plugins/uploadify/uploadify.swf",
 				'script'    :	"<%=basePath%>plugins/uploadify/uploadFile.jsp;jsessionid="+jsessionid,
 				'cancelImg' :	"<%=basePath%>plugins/uploadify/cancel.png",
@@ -145,9 +157,70 @@
 		    	},
 		    	'onSelect' : function(event, queueId, fileObj){
 		    		$("#hasTp1").val("ok");
-		    	}
+		    	} --%>
+		    	
+		    	
+		        'formData':{
+		            'uploadPath':'/uploadFiles/uploadFile/'
+		          },
+		    	'width': 120,  
+		        //uploadify v3.1之前的用法
+	            //uploader:"${pageContext.request.contextPath}common/upload/swf/uploadify.swf",        
+	            //script: "${pageContext.request.contextPath}/uploadify.action?random="+Math.random(),  
+		        
+	            //uploadify v3.1之后的用法
+		        //flash文件位置，包含BROWSE的按钮，点击打开文件选择框
+		        'swf' : '<%=basePath%>plugins/uploadify3.2.1/uploadify.swf', 
+		        //后台处理的请求(sevlet)  
+		        'uploader': '<%=basePath%>plugins/uploadify/uploadFile.jsp;jsessionid='+jsessionid,
+		        //选定文件后是否自动上传，默认false  
+		        'auto': false,  
+		        //取消按钮图片  
+		        'cancelImg': '<%=basePath%>plugins/uploadify3.2.1/uploadify-cancel.png',  
+		        //与下面的上传文件列表id对应  
+		        /* 'queueID': 'fileQueue', */
+		        //上传文件的数量  
+		        'queueSizeLimit': 1,  
+		        //上传文件类型说明  
+		        /* 'fileTypeExts': '*.doc;*.docx;*.jpg;*.png', */ 
+		        'fileTypeExts': '*.*',
+		        //浏览按钮上的文字  
+		        'buttonText' : '选择文件',
+		        //设置提交方式，默认为post
+		        'method': 'get',  
+		        //设置是否允许多文件上传
+		        'multi': false,  
+		        //是否自动将已上传文件删除
+		        'removeCompleted':false,
+		           
+		        //上传文件的大小限制。默认单位kb
+		        'fileSizeLimit' : '256MB',
+		        //当Uploadify初始化过程中检测到当前浏览器不支持flash时触发。
+		        'onFallBack' : function(){
+		          alert("当前浏览器不支持Flash");
+		         },
+		        //当文件即将开始上传时立即触发
+		        'onUploadStart' : function (file) {
+		          /* alert("id:" + file.id + " -索引:" + file.index + " -文件名称:" + file.name +
+		          " -文件大小:" + file.size + " -文件类型:" + file.type + " -创建日期:" + file.creationdate +
+		          " -修改日期:" + file.modificationdate + " -文件状态:" + file.filestatus); */
+		         },
+		        //文件上传队列处理完毕后触发。
+		        'onQueueComplete' : function (stats) {
+			        /* alert("成功上传的文件数：" + stats.uploadsSuccessful + " -上传出错的文件数：" +
+			        stats.uploadsErrored + " -上传的文件总大小：" + stats.uploadSize); */
+	        	  
+				  $("#Form").submit();
+				  $("#zhongxin").hide();
+				  $("#zhongxin2").show();
+		        },
+		        /* onUploadSuccess为成功上传后的回调函数 file 为上传的文件，可通过file.name 获取文件名 size 可获取大小
+		        data 为后台reponse输出的字符串，上例中输出的是 json 对象，故使用eval 进行转换
+		        response 为 结果 true or false，具体可参考官方文档 */
+		        'onUploadSuccess' : function(file, data, response){  
+		        	$("#ATTACHMENT_PATH").val(data.trim());
+		        } ,
 			});
-					
 		});
 		//====================上传=================
 			//清除空格

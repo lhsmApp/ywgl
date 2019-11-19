@@ -23,7 +23,8 @@
 	<div class="main-container" id="main-container">
 		<!-- /section:basics/sidebar -->
 		<div class="main-content">
-			<div class="main-content-inner">
+		
+			<!-- <div class="main-content-inner">
 				<div class="page-content">
 					<h5 class="header smaller lighter green">
 						<i class="ace-icon fa fa-cog"></i>
@@ -47,16 +48,10 @@
 							
 								<div class="col-xs-3">
 									<div class="infobox infobox-blue infobox-dark btn btn-info" onclick="nav2()">
-										<!-- #section:pages/dashboard.infobox.sparkline -->
-										<!-- <div class="infobox-chart">
-											<span class="sparkline" data-values="3,4,2,3,4,4,2,2"></span>
-										</div> -->
-										
 										<div class="infobox-icon">
 											<i class="ace-icon fa fa-signal"></i>
 										</div>
 					
-										<!-- /section:pages/dashboard.infobox.sparkline -->
 										<div class="infobox-data">
 											<div class="infobox-content"><span class="percent">61</span>%</div>
 											<div class="infobox-content">本周受理完成率</div>
@@ -242,10 +237,10 @@
 												</tr>
 											</tbody>
 										</table>
-									</div><!-- /.widget-main -->
-								</div><!-- /.widget-body -->
-							</div><!-- /.widget-box -->
-						</div><!-- /.col -->
+									</div>/.widget-main
+								</div>/.widget-body
+							</div>/.widget-box
+						</div>/.col
 
 						<div class="col-sm-6">
 							<div class="widget-box transparent">
@@ -351,11 +346,11 @@
 												</tr>
 											</tbody>
 										</table>
-									</div><!-- /.widget-main -->
-								</div><!-- /.widget-body -->
-							</div><!-- /.widget-box -->
-						</div><!-- /.col -->
-					</div><!-- /.row -->
+									</div>/.widget-main
+								</div>/.widget-body
+							</div>/.widget-box
+						</div>/.col
+					</div>/.row
 					
 					<div class="hr hr20 hr-dotted"></div>
 					
@@ -464,10 +459,10 @@
 												</tr>
 											</tbody>
 										</table>
-									</div><!-- /.widget-main -->
-								</div><!-- /.widget-body -->
-							</div><!-- /.widget-box -->
-						</div><!-- /.col -->
+									</div>/.widget-main
+								</div>/.widget-body
+							</div>/.widget-box
+						</div>/.col
 
 						<div class="col-sm-6">
 							<div class="widget-box transparent">
@@ -573,13 +568,15 @@
 												</tr>
 											</tbody>
 										</table>
-									</div><!-- /.widget-main -->
-								</div><!-- /.widget-body -->
-							</div><!-- /.widget-box -->
-						</div><!-- /.col -->
-					</div><!-- /.row -->
+									</div>/.widget-main
+								</div>/.widget-body
+							</div>/.widget-box
+						</div>/.col
+					</div>/.row
 				</div>
 			</div>
+		 -->
+		
 		</div>
 		<!-- /.main-content -->
 
