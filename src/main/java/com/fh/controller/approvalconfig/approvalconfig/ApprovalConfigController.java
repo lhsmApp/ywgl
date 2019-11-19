@@ -278,7 +278,7 @@ public class ApprovalConfigController extends BaseController {
 			if(listResult.get(0).getString("APPROVAL_STATE").equals("2")){
 				approvalconfigService.delete(pd);
 			}else{
-				pd.put("msg", "该单据已上报！");
+				pd.put("msg", "该单据已上报不能重复上报！");
 				return pd;
 			}
 		}

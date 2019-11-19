@@ -173,7 +173,15 @@
 													</div>
 													<div style="margin:10px 0px;">
 														<label for="form-field-select-1">变更预期时间</label>
-														<input type="text" name="EFFECTIVE_DATE" id="EFFECTIVE_DATE" class="form-control" placeholder="请输入联系方式"/>
+<!-- 														<input type="text" name="EFFECTIVE_DATE" id="EFFECTIVE_DATE" class="form-control" placeholder="请输入联系方式"/> -->
+													</div>
+													<div style="margin:10px 0px;">
+														<div class="input-group input-group-sm">
+															<input type="text" id="EFFECTIVE_DATE" name="EFFECTIVE_DATE"  class="form-control"  data-date-format="yyyy-mm-dd" placeholder="请选择变更预期时间"/>
+															<span class="input-group-addon">
+																<i class="ace-icon fa fa-calendar" ></i>
+															</span>
+														</div>
 													</div>
 													<hr />
 													<div>
@@ -231,7 +239,9 @@
 			var data=${varList};
 			showDetail(data[0].BILL_CODE);
 			//日期框
-			$('.date-picker').datepicker({
+			$( "#EFFECTIVE_DATE" ).datepicker({
+				showOtherMonths: true,
+				selectOtherMonths: false,
 				autoclose: true,
 				todayHighlight: true
 			});

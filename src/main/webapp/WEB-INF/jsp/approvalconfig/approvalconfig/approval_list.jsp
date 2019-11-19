@@ -623,7 +623,7 @@
 						$.each(data, function(i, item){
 						    var html = '';
 						    if(value==1||value==2){
-						    	html += setDiv1(item);
+						    	html += setDiv(item);
 						    }else if(value==3){
 						    	html += setDiv3(item);
 			

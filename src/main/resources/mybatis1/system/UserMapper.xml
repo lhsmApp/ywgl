@@ -529,4 +529,12 @@
 			
 		</where>
 	</select>
+		
+	<!-- 通过单位获取用户信息-->
+	<select id="getUserByUnitCode" parameterType="pd" resultType="pd" >
+		select * from <include refid="tableName"></include>
+		WHERE
+		UNIT_CODE=#{UNIT_CODE}
+		
+	</select>
 </mapper>
