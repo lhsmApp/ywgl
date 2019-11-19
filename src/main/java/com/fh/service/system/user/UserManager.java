@@ -50,6 +50,12 @@ public interface UserManager {
 	 * @throws Exception
 	 */
 	public List<PageData> listAllUserByRoldId(PageData pd) throws Exception;
+	/**列出某单位下的所有用户
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public List<PageData> listUserByUnitCode(PageData pd) throws Exception;
 	
 	/**保存用户IP
 	 * @param pd

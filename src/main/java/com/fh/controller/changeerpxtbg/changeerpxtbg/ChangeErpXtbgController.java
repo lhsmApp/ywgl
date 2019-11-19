@@ -88,25 +88,23 @@ public class ChangeErpXtbgController extends BaseController {
 			User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 		    String userId=user.getUSER_ID();
 		    pd.put("BILL_USER", userId);	
-		    pd.put("BILL_DATE", DateUtils.getCurrentTime());//创建日期
-		    pd.put("ENTRY_DATE", DateUtils.getCurrentTime());//填表日期
+		    pd.put("BILL_DATE", DateUtils.getCurrentTime().split(" ")[0]);//创建日期
+		    pd.put("ENTRY_DATE", DateUtils.getCurrentTime().split(" ")[0]);//填表日期
 			String billCode=BillnumUtil.getBillnum(billNumService, BillNumType.ERP_XTBG, pd.getString("UNIT_CODE"), "");
 			pd.put("BILL_CODE", billCode);
 			changeerpxtbgService.save(pd);
 			commonBase.setCode(0);
 		}else{
-			pd.put("UPDATE_DATE", DateUtils.getCurrentTime());
+			pd.put("UPDATE_DATE", DateUtils.getCurrentTime().split(" ")[0]);
 			changeerpxtbgService.edit(pd);
 			commonBase.setCode(0);
-		}
-		
-		
+		}		
 		if(commonBase.getCode()==0){
 			BillnumUtil.updateBillnum(billNumService, BillNumType.ERP_XTBG);
 		}
 		return commonBase;
 	}
-	
+
 	/**删除
 	 * @param out
 	 * @throws Exception
@@ -344,7 +342,24 @@ public class ChangeErpXtbgController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd = changeerpxtbgService.findById(pd);	//根据ID读取
+		pd.put("DEPARTMENT_CODE", pd.getString("UNIT_CODE"));
+		PageData pdDepartResultUnit=departmentService.findByBianma(pd);
+		if(pdDepartResultUnit!=null)
+			pd.put("depnameUnit", pdDepartResultUnit.getString("NAME"));
+		else
+			pd.put("depnameUnit", null);
 		return pd;
+	}
+	/**根据单位获取用户信息
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/getUsers")
+	public @ResponseBody List<PageData> getUsers()throws Exception{
+		PageData pd = new PageData();
+		pd = this.getPageData();		
+		List<PageData> userList = userService.listUserByUnitCode(pd);
+		return userList;
 	}
 	 /**上报
 	 * @param

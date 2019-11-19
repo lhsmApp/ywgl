@@ -71,7 +71,15 @@ public class UserService implements UserManager{
 		return (List<PageData>) dao.findForList("UserMapper.listAllUserByRoldId", pd);
 		
 	}
-	
+	/**列出某单位下的所有用户
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PageData> listUserByUnitCode(PageData pd) throws Exception{
+		return (List<PageData>) dao.findForList("UserMapper.getUserByUnitCode", pd);
+	}
 	/**保存用户IP
 	 * @param pd
 	 * @throws Exception
