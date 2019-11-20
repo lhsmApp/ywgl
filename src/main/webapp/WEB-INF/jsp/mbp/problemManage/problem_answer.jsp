@@ -962,7 +962,11 @@ function addItemAttachment(item,index,type){
  */
 function addProAttachmentByType(type){
 	 var proCode=currentItem.PRO_CODE;
-	 console.log(type);
+	 /* var answerID=$("#ff-answer-info").val();
+	    //if(typeof answerID == "undefined" || answerID == null || answerID == ""){
+	    if(answerID == null){
+	    	answerID='';
+	    } */
 	 top.jzts();
 	 var diag = new top.Dialog();
 	 diag.Drag=true;
