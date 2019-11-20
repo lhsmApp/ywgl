@@ -176,7 +176,7 @@ public class ApprovalConfigController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
-	    String unitCode=user.getDEPARTMENT_ID();
+	    String unitCode=user.getUNIT_CODE();
 //	    String roleCode=user.getROLE_ID();    
 //	    pd.put("ROLE_CODE", roleCode);//单位编码
 		pd.put("UNIT_CODE", unitCode);//单位编码
@@ -235,7 +235,7 @@ public class ApprovalConfigController extends BaseController {
 		pd = this.getPageData();
 		//根据激活标识，审批单位，审批部门，审批角色和审批状态5个条件获取tb_approval_detail信息
 		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
-	    String unitCode=user.getDEPARTMENT_ID();
+	    String unitCode=user.getUNIT_CODE();
 	    String roleCode=user.getROLE_ID(); //审批角色   
 	    pd.put("ROLE_CODE", roleCode);//角色编码
 		pd.put("UNIT_CODE", unitCode);//单位编码
