@@ -126,34 +126,28 @@ public class TestMainController extends BaseController {
 		String keywords = pd.getString("keywords"); // 关键词检索条件
 		String userId = user.getUSER_ID();
 		String nowDate = DateUtil.getDays();
+		pd.put("STUDENT_ID", userId);
+		if (null != keywords && !"".equals(keywords)) {
+			pd.put("keywords", keywords.trim());
+		}
+		page.setPd(pd);
 		/*------------------未考试------------------*/
 		List<PageData> paperList = testmainService.paperListPage(page);
 		for (PageData pageData : paperList) {
 			// 先判断时间
 			String endDate = pageData.getString("END_DATE");
-			if (DateUtil.compareDates(endDate, nowDate)) {
-				pageData.put("TEST_USER",userId);
+			String startDate = pageData.getString("START_DATE");
+			if (DateUtil.compareDates(endDate, nowDate) && DateUtil.compareDates(nowDate, startDate)) {
+				pageData.put("TEST_USER", userId);
 				List<PageData> userExamList = testmainService.listByUser(pageData);
-				if (null == userExamList || userExamList.size()==0) {
-					String[] planPerson = pageData.getString("TEST_PLAN_PERSONS").split(",");
-					if (null != planPerson && planPerson.length > 0) {
-						for (int i = 0; i < planPerson.length; i++) {
-							if (userId.equals(planPerson[i])) {// 如果有该考生则添加进map内
-								paperPage.add(pageData);
-							}
-						}
-					}
+				if (null == userExamList || userExamList.size() == 0) {
+					paperPage.add(pageData);
 				}
 			}
 		}
 		
 		/*------------------已考试------------------*/
-		if (null != keywords && !"".equals(keywords)) {
-			pd.put("keywords", keywords.trim());
-		}
-		page.setPd(pd);
 		List<PageData> varList = testmainService.list(page); // 列出TestMain列表
-		
 		mv.addObject("varList", varList);
 		mv.addObject("paperList",paperPage);
 		mv.addObject("pd", pd);

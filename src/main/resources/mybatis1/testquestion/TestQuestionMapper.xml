@@ -72,14 +72,16 @@
 			#{CREATE_DATE}
 		)
 	</insert>
-	
+
 	<!-- 删除-->
-	<delete id="delete" parameterType="pd">
-		delete from
+	<update id="delete" parameterType="pd">
+		update
 		<include refid="tableName"></include>
+		set
+			STATE = 0
 		where 
 			TEST_QUESTION_ID = #{TEST_QUESTION_ID}
-	</delete>
+	</update>
 	
 	<!-- 修改 -->
 	<update id="edit" parameterType="pd">
@@ -167,15 +169,18 @@
 	</select>
 	
 	<!-- 批量删除 -->
-	<delete id="deleteAll" parameterType="String">
-		delete from
+	<update id="deleteAll" parameterType="String">
+		update
 		<include refid="tableName"></include>
-		where 
+		set
+			STATE = 0
+		where  
 			TEST_QUESTION_ID in
 		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
                  #{item}
 		</foreach>
-	</delete>
+	</update>
+	
 	<!-- 根据试题id查询所有答案 -->
 	<select id="listById" parameterType="pd" resultType="pd">
 		select

@@ -137,6 +137,19 @@ public class DictsUtil {
 		//USER_ID NAME
 		return listPara;
 	}
+	
+	/**
+	 * 获取组织结构信息，生成Jqgrid editOptions和SearchOptions所需的Select格式。
+	 * 
+	 * @param departmentService
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<PageData> getSysUserDicByCondition(UserManager userService,PageData pd) throws Exception {
+		List<PageData> listPara = (List<PageData>) userService.getUserValue(pd);
+		//USER_ID NAME
+		return listPara;
+	}
 
 	/**
 	 * 获取自定类型信息，生成Jqgrid editOptions和SearchOptions所需的Select格式。

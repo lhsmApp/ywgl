@@ -6,6 +6,14 @@
 	public void upload(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException {
 		String savePath = this.getServletConfig().getServletContext().getRealPath("");
 		savePath = savePath + request.getParameter("uploadPath");
+		
+		/* BufferedReader reader = new BufferedReader(new InputStreamReader(trequest.getInputStream()));
+        String str = "";
+		while((str = reader.readLine()) != null){//一行一行的读取body体里面的内容；
+			savePath=str;
+		} 
+		console.log(savePath); */
+		
 		File f1 = new File(savePath);
 		//这里接收了uploadPath的值  System.out.println(request.getParameter("uploadPath"));
 		if (!f1.exists()) {

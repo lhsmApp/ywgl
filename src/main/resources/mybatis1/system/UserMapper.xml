@@ -519,6 +519,15 @@
 	<!-- 获取用户信息-->
 	<select id="getUserValue" parameterType="pd" resultType="pd" >
 		select * from <include refid="tableName"></include>
+		<where> 
+			<if test="UNIT_CODE != null and UNIT_CODE != ''"><!-- 状态检索 -->
+				and UNIT_CODE=#{UNIT_CODE} 
+			</if>
+			<if test="ROLE_ID != null and ROLE_ID != ''"><!-- 状态检索 -->
+				and ROLE_ID in (${ROLE_ID}) 
+			</if>
+			
+		</where>
 	</select>
 		
 	<!-- 通过单位获取用户信息-->

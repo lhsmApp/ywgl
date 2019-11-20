@@ -109,26 +109,40 @@ public class CourseDetailService implements CourseDetailManager{
 		return (List<CourseDetail>) dao.findForList("CourseDetailMapper.listByParentId", pd);
 	}
 	
-	/**新增章节
-	 * 
+	/**
+	 * 新增章节
+	 * @param pd
+	 * @throws Exception
 	 */
 	public void saveChapter(PageData pd) throws Exception {
 		dao.save("CourseDetailMapper.saveChapter", pd);
 	}
 	
-	/**新增小节
-	 * 
+	/**
+	 * 新增小节
+	 * @param pd
+	 * @throws Exception
 	 */
 	public void saveSection(PageData pd) throws Exception {
 		dao.save("CourseDetailMapper.saveSection",pd);
 	}
 	
-	
-	/**通过父ID获取小节数量
-	 * 
+	/**通过父id获取小节数 
+	 * @param pd
+	 * @return
+	 * @throws Exception
 	 */
 	public Integer countByParentId(Integer parentId) throws Exception {
 		return (Integer)dao.findForObject("CourseDetailMapper.countByParentId", parentId);
+	}
+	
+	/**
+	 * 查询小节信息
+	 * @param pd
+	 * @return
+	 */
+	public PageData findSection(PageData pd) throws Exception {
+		return (PageData)dao.findForObject("CourseDetailMapper.findSection", pd);
 	}
 	
 }

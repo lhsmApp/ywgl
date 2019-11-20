@@ -28,6 +28,7 @@ import com.fh.entity.system.User;
 import com.fh.service.billnum.BillNumManager;
 import com.fh.service.mbp.MBPManager;
 import com.fh.service.mbp.ProblemTypeManager;
+import com.fh.service.sysConfig.sysconfig.SysConfigManager;
 import com.fh.service.system.dictionaries.DictionariesManager;
 import com.fh.service.system.user.UserManager;
 import com.fh.util.Const;
@@ -69,6 +70,9 @@ public class MBPController extends BaseController {
 	@Resource(name="problemtypeService")
 	private ProblemTypeManager problemtypeService;
 	
+	@Resource(name = "sysconfigService")
+	private SysConfigManager sysConfigManager;
+	
 	/**列表
 	 * @param page
 	 * @throws Exception
@@ -87,14 +91,25 @@ public class MBPController extends BaseController {
 		 */
 		PageData pd=new PageData();
 		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
-		String userIds = user.getUNIT_CODE();
+		String unitCode = user.getUNIT_CODE();
 		String userId = user.getUSER_ID();
 		String userName=user.getNAME();
 		pd.put("USER_NAME", userName);
 		pd.put("CURRENT_DATE", DateUtils.getCurrentTime());
 		mv.addObject("pd",pd);
 		mv.addObject("systemList", DictsUtil.getDictsByParentBianma(dictionariesService, "SYSTEM"));//系统类型
-		mv.addObject("userList", DictsUtil.getSysUserDic(userService));//用户
+		PageData pdCondition=new PageData();
+		pdCondition.put("UNIT_CODE", unitCode);
+		mv.addObject("userList", DictsUtil.getSysUserDicByCondition(userService,pdCondition));//用户
+		
+		//受理人
+		pd.put("KEY_CODE", "ProblemReceiverRole");
+		String receiverRole = sysConfigManager.getSysConfigByKey(pd);
+		PageData pdCondition1=new PageData();
+		pdCondition1.put("ROLE_ID", receiverRole);
+		List<PageData> receiveUserList=DictsUtil.getSysUserDicByCondition(userService,pdCondition1);//接收用户
+		mv.addObject("receiveUserList",receiveUserList);
+		
 		//mv.addObject("proTypeList", DictsUtil.getSysUserDic(userService));//问题类型
 		mv.addObject("proPriorityList", ProPriority.values());//优先级
 		
@@ -114,14 +129,28 @@ public class MBPController extends BaseController {
 		mv.setViewName("mbp/problemManage/problem_report");
 
 		PageData pd=new PageData();
-		/*User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
-		String userName=user.getNAME();
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		String unitCode = user.getUNIT_CODE();
+		
+		/*String userName=user.getNAME();
 		pd.put("USER_NAME", userName);
 		pd.put("CURRENT_DATE", DateUtils.getCurrentTime());*/
 		mv.addObject("pd",pd);
 		mv.addObject("systemList", DictsUtil.getDictsByParentBianma(dictionariesService, "SYSTEM"));//系统类型
-		mv.addObject("userList", DictsUtil.getSysUserDic(userService));//用户
+		//上报人
+		PageData pdCondition=new PageData();
+		pdCondition.put("UNIT_CODE", unitCode);
+		mv.addObject("userList", DictsUtil.getSysUserDicByCondition(userService,pdCondition));//用户
 		mv.addObject("proPriorityList", ProPriority.values());//优先级
+		
+		//受理人
+		pd.put("KEY_CODE", "ProblemReceiverRole");
+		String receiverRole = sysConfigManager.getSysConfigByKey(pd);
+		String receiverRoleIn=com.fh.controller.common.QueryFeildString.getSqlInString(receiverRole);
+		PageData pdCondition1=new PageData();
+		pdCondition1.put("ROLE_ID", receiverRoleIn);
+		List<PageData> receiveUserList=DictsUtil.getSysUserDicByCondition(userService,pdCondition1);//接收用户
+		mv.addObject("receiveUserList",receiveUserList);
 		
 		List<PageData> zproblemTypePdList = new ArrayList<PageData>();
 		JSONArray arr = JSONArray.fromObject(problemtypeService.listAllProblemTypeToSelect("0",zproblemTypePdList));

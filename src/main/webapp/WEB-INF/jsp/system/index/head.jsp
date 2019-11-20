@@ -36,7 +36,7 @@
 		<div class="navbar-buttons navbar-header pull-right" role="navigation">
 			<ul class="nav ace-nav">
 			<!-- <span class="badge badge-grey">2</span> -->
-				<li title="信息模块" class="grey"><a data-toggle="dropdown"
+				<!-- <li title="信息模块" class="grey"><a data-toggle="dropdown"
 					class="dropdown-toggle" href="#"> <i
 						class="ace-icon fa fa-tasks"></i> </a>
 					 <ul
@@ -59,11 +59,6 @@
 								</a></li>
 							</ul>
 						</li>
-						<!-- <li class="dropdown-footer">
-							<a href="http://www.pjtycp.com" target="_blank" style="cursor:pointer;text-align:left;">
-								<img style="height:30px;width:150px;" src="static/images/caipiao.png" />
-							</a>
-						</li> -->
 					</ul> 
 				</li>
 				<li title="即时聊天" class="purple"  onclick="creatw1();">
@@ -78,20 +73,12 @@
 						</li>
 					</ul>
 				</li>
-
-				<!-- <li title="标准页面" class="purple" onclick="instframe();"
-					id="instframe"><a data-toggle="dropdown"
-					class="dropdown-toggle" href="#"> 
-					<i class="ace-icon fa fa-users icon-animated-vertical">
-					</i>
-				</li> -->
-
-				<li title="站内信11" class="green" onclick="fhsms();" id="fhsmstss"><!-- fhsms()在 WebRoot\static\js\myjs\head.js中 -->
+				<li title="站内信11" class="green" onclick="fhsms();" id="fhsmstss">fhsms()在 WebRoot\static\js\myjs\head.js中
 					<a data-toggle="dropdown" class="dropdown-toggle" href="#">
 						<i class="ace-icon fa fa-envelope icon-animated-vertical"></i>
 						<span class="badge badge-success" id="fhsmsCount">5</span>
 					</a>
-				</li>
+				</li> -->
 
 				<!-- #section:basics/navbar.user_menu -->
 				<li class="light-blue">

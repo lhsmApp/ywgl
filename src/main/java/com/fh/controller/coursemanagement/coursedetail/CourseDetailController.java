@@ -295,7 +295,7 @@ public class CourseDetailController extends BaseController {
 	 */
 	@RequestMapping(value = "/uploadVideo")
 	public void uploadPic(MultipartFile video,HttpServletResponse response) throws Exception {
-		logBefore(logger, Jurisdiction.getUsername()+"图片上传CourseBase");
+		logBefore(logger, Jurisdiction.getUsername()+"视频上传CourseBase");
 		String videoPath = PathUtil.getClasspath()+Const.FILEPATHVIDEO;
 		String videoName = FileUpload.fileUp(video,videoPath,this.get32UUID());
 		System.out.println(videoPath+videoName);

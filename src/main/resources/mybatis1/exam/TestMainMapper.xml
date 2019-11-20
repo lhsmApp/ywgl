@@ -88,35 +88,40 @@
 	</select>
 	
 	<select id="paperListPage" parameterType="page" resultType="pd">
-		SELECT
-			a.TEST_PLAN_ID,
-			a.TEST_PAPER_ID,
-			a.START_DATE,
-			a.END_DATE, 
-			a.TEST_PLAN_PERSONS,
-			b.TEST_PAPER_TITLE,
-			b.COURSE_TYPE_ID,
-			b.TEST_PAPER_TYPE,
-			b.TEST_PAPER_DIFFICULTY,
-			b.TEST_QUESTION_NUM,
-			b.TEST_PAPER_SCORE,
-			b.ANSWER_TIME,
-			b.QUALIFIED_SCORE
-		FROM 
-			tb_test_plan AS a 
-		LEFT JOIN 
-			tb_test_paper AS b
- 		ON 
- 			a.TEST_PAPER_ID = b.TEST_PAPER_ID 
- 		WHERE 
- 			a.STATE = 1 
- 		AND 
- 			b.STATE = 1
+		SELECT 			
+			b.TEST_PLAN_ID,
+			b.TEST_PAPER_ID,
+			b.START_DATE,
+			b.END_DATE, 
+			b.TEST_PLAN_PERSONS,
+			c.TEST_PAPER_TITLE,
+			c.COURSE_TYPE_ID,
+			c.TEST_PAPER_TYPE,
+			c.TEST_PAPER_DIFFICULTY,
+			c.TEST_QUESTION_NUM,
+			c.TEST_PAPER_SCORE,
+			c.ANSWER_TIME,
+			c.QUALIFIED_SCORE 
+
+		FROM tb_gl_plan_user AS a
+
+		LEFT JOIN tb_test_plan AS b ON a.PLAN_ID = b.TEST_PLAN_ID
+
+		LEFT JOIN tb_test_paper AS c ON b.TEST_PAPER_ID = c.TEST_PAPER_ID
+
+		WHERE 
+			a.STUDENT_ID = #{pd.STUDENT_ID} 
+		AND 
+			a.PLAN_TYPE =1 
+		AND 
+			b.STATE = 1 
+		AND 
+			c.STATE = 1;
  		<!-- 关键词检索 -->
 		<if test="pd.keywords!= null and pd.keywords != ''">
 		AND
 				(
-					b.TEST_PAPER_TITLE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					c.TEST_PAPER_TITLE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 					<!-- 根据需求自己加检索条件
 					字段1 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 					 or 

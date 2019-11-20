@@ -1,5 +1,6 @@
 package com.fh.controller.attachment;
 
+import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -58,6 +59,7 @@ public class AttachmentController extends BaseController {
 		pd = this.getPageData();
 		List<PageData> varList = attachmentService.getAttachmentByType(pd);
 		return varList;
+		//BufferedReader reader = new BufferedReader(new InputStreamReader(trequest.getInputStream()));
 	}
 	
 	/**保存
@@ -73,7 +75,7 @@ public class AttachmentController extends BaseController {
 		String userId = user.getUSER_ID();
 		pd.put("CREATE_USER", userId);
 		pd.put("CREATE_DATE", DateUtils.getCurrentTime());
-		pd.put("ATTACHMENT_SIZE", FileUtil.getFilesize(PathUtil.getClasspath() + Const.FILEPATHFILEOA + pd.getString("ATTACHMENT_PATH")));	//文件大小
+		pd.put("ATTACHMENT_SIZE", FileUtil.getFilesize(PathUtil.getClasspath() + Const.FILEPATHFILEOA + pd.getString("ATTACHMENT_PATH").trim()));	//文件大小
 		attachmentService.save(pd);
 		mv.addObject("msg","success");
 		mv.setViewName("save_result");
@@ -215,7 +217,7 @@ public class AttachmentController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd = attachmentService.findById(pd);
-		String fileName = pd.getString("ATTACHMENT_PATH");
+		String fileName = pd.getString("ATTACHMENT_PATH").trim();
 		FileDownload.fileDownload(response, PathUtil.getClasspath() + Const.FILEPATHFILEOA + fileName, pd.getString("ATTACHMENT_NAME")+fileName.substring(19, fileName.length()));
 	}
 	

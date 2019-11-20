@@ -82,7 +82,7 @@
 									onclick="save()">
 									<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>保存</span>
 								</button>
-								<button id="btndelete" class="btn btn-danger btn-xs"
+								<button id="btnDelete" class="btn btn-danger btn-xs"
 									onclick="del()">
 									<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>作废</span>
 								</button>
@@ -122,7 +122,7 @@
 												<label for="form-field-pro-accept-user">受理人</label>
 												<select class="form-control" name="PRO_ACCEPT_USER" id="form-field-pro-accept-user">
 													<option value=""></option>
-													<c:forEach items="${userList}" var="user">
+													<c:forEach items="${receiveUserList}" var="user">
 														<!-- <option value="AL">Alabama</option>
 														<option value="AK">Alaska</option> -->
 														<%-- <option value="${system.DICT_CODE }" <c:if test="${system.DICT_CODE == pd.DICT_CODE }">selected</c:if>>${system.NAME }</option> --%>
@@ -613,6 +613,9 @@ function getDetail(problemCode){
 				 
 				 /* 设置提报中的字段动态获取值 */
 				 setReportFieldValue(data);
+				 
+				 /* 获取提报中附件信息 */
+				 getProAttachment("PROBLEM_INFO");
 			 }
 			 top.hangge();
 		}
@@ -742,6 +745,35 @@ function add(){
  * 编辑
  */
 function edit(){
+	if(currentItem.PRO_STATE=='2'){//已提交
+		$("#btnEdit").tips({
+			side : 3,
+			msg : '当前问题"已提交"，不能再编辑',
+			bg : '#AE81FF',
+			time : 2
+		});
+		$("#btnEdit").focus();
+		return false;
+	}else if(currentItem.PRO_STATE=='3'){//受理中
+		$("#btnEdit").tips({
+			side : 3,
+			msg : '当前问题"受理中"，不能再编辑',
+			bg : '#AE81FF',
+			time : 2
+		});
+		$("#btnEdit").focus();
+		return false;
+	}else if(currentItem.PRO_STATE=='4'){//已关闭
+		$("#btnEdit").tips({
+			side : 3,
+			msg : '当前问题"已关闭"，不能再编辑',
+			bg : '#AE81FF',
+			time : 2
+		});
+		$("#btnEdit").focus();
+		return false;
+	}
+	
 	initFieldDisabled(false);
 	
 	//setReportFieldValue(currentItem);
@@ -783,6 +815,35 @@ function setReportFieldValue(item){
  * 作废
  */
 function del(){
+	if(currentItem.PRO_STATE=='2'){//已提交
+		$("#btnDelete").tips({
+			side : 3,
+			msg : '当前问题"已提交"，不能再作废',
+			bg : '#AE81FF',
+			time : 2
+		});
+		$("#btnDelete").focus();
+		return false;
+	}else if(currentItem.PRO_STATE=='3'){//受理中
+		$("#btnDelete").tips({
+			side : 3,
+			msg : '当前问题"受理中"，不能再作废',
+			bg : '#AE81FF',
+			time : 2
+		});
+		$("#btnDelete").focus();
+		return false;
+	}else if(currentItem.PRO_STATE=='4'){//已关闭
+		$("#btnDelete").tips({
+			side : 3,
+			msg : '当前问题"已关闭"，不能再作废',
+			bg : '#AE81FF',
+			time : 2
+		});
+		$("#btnDelete").focus();
+		return false;
+	}
+	
 	bootbox.confirm("确定要作废当前问题吗?", function(result) {
 		if(result) {
 			top.jzts();
@@ -798,7 +859,35 @@ function del(){
  * 提交
  */
 function commit(){
-	console.log('commit');
+	if(currentItem.PRO_STATE=='2'){//已提交
+		$("#btnCommit").tips({
+			side : 3,
+			msg : '当前问题"已提交"，不能再提交',
+			bg : '#AE81FF',
+			time : 2
+		});
+		$("#btnCommit").focus();
+		return false;
+	}else if(currentItem.PRO_STATE=='3'){//受理中
+		$("#btnCommit").tips({
+			side : 3,
+			msg : '当前问题"受理中"，不能再提交',
+			bg : '#AE81FF',
+			time : 2
+		});
+		$("#btnCommit").focus();
+		return false;
+	}else if(currentItem.PRO_STATE=='4'){//已关闭
+		$("#btnCommit").tips({
+			side : 3,
+			msg : '当前问题"已关闭"，不能再提交',
+			bg : '#AE81FF',
+			time : 2
+		});
+		$("#btnCommit").focus();
+		return false;
+	}
+	
 	var proCode=currentItem.PRO_CODE;//问题单号
 	top.jzts();
 	
@@ -845,7 +934,34 @@ function commit(){
  * 取消提交
  */
 function cancel(){
-	console.log('cancel');
+	if(currentItem.PRO_STATE=='1'){//新发起
+		$("#btnCancel").tips({
+			side : 3,
+			msg : '当前问题"新发起"，不能取消',
+			bg : '#AE81FF',
+			time : 2
+		});
+		$("#btnCancel").focus();
+		return false;
+	}else if(currentItem.PRO_STATE=='3'){//受理中
+		$("#btnCancel").tips({
+			side : 3,
+			msg : '当前问题"受理中"，不能再取消',
+			bg : '#AE81FF',
+			time : 2
+		});
+		$("#btnCancel").focus();
+		return false;
+	}else if(currentItem.PRO_STATE=='4'){//已关闭
+		$("#btnCancel").tips({
+			side : 3,
+			msg : '当前问题"已关闭"，不能再取消',
+			bg : '#AE81FF',
+			time : 2
+		});
+		$("#btnCancel").focus();
+		return false;
+	}
 
 	
 	var proCode=currentItem.PRO_CODE;//问题单号
