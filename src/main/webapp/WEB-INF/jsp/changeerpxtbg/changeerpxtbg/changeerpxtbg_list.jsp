@@ -143,7 +143,7 @@
 													</div>
 														<div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-reason">变更原因</label>
-														<input type="text" name="BG_REASON" id="BG_REASON" class="form-control" placeholder="请输入变更内容及原因"/>
+														<input type="text" name="BG_REASON" id="BG_REASON" class="form-control" placeholder="请输入变更原因"/>
 													</div>
 													    <div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-depart">单位</label>
@@ -174,7 +174,7 @@
 													</div>
 										   			<div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-job">申请人岗位</label>
-														<input type="text" name="USER_JOB" id="USER_JOB" class="form-control" placeholder="请输入申请人部门"/>
+														<input type="text" name="USER_JOB" id="USER_JOB" class="form-control" placeholder="请输入申请人岗位"/>
 													</div>
 													<div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-contact">联系方式</label>
@@ -614,7 +614,7 @@
 					   dataType:'json',
 					   cache: false,
 					   success: function (data) {
-					           $('#USER_CODE').append("<option value='0'>--请选择单位--</option>");
+					           $('#USER_CODE').append("<option value='0'>--请选择申请人--</option>");
 					            //遍历成功返回的数据
 					            $.each(data, function (index,item) {
 					                var userName = data[index].NAME;

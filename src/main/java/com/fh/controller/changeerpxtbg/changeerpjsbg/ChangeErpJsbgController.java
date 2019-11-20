@@ -84,8 +84,8 @@ public class ChangeErpJsbgController extends BaseController {
 			User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 		    String userId=user.getUSER_ID();
 		    pd.put("BILL_USER", userId);	
-		    pd.put("BILL_DATE", DateUtils.getCurrentTime());//创建日期
-		    pd.put("ENTRY_DATE", DateUtils.getCurrentTime());//填表日期
+		    pd.put("BILL_DATE", DateUtils.getCurrentTime().split(" ")[0]);//创建日期
+		    pd.put("ENTRY_DATE", DateUtils.getCurrentTime().split(" ")[0]);//填表日期
 			String billCode=BillnumUtil.getBillnum(billNumService, BillNumType.ERP_JSBG, pd.getString("UNIT_CODE"), "");
 			pd.put("BILL_CODE", billCode);
 			changeerpjsbgService.save(pd);
@@ -169,6 +169,9 @@ public class ChangeErpJsbgController extends BaseController {
 			}		
 		} 	
 		mv.addObject("userList", DictsUtil.getSysUserDic(userService));//用户
+		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
+		JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0",zdepartmentPdList));
+		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
 		mv.setViewName("changeerpxtbg/changeerpjsbg/changeerpjsbg_list");
 		mv.addObject("varList", JSON.toJSONString(varList));
 		mv.addObject("pd", pd);

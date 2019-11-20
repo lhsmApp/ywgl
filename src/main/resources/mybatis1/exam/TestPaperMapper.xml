@@ -230,7 +230,13 @@
 		<include refid="Field"></include>
 		from 
 		<include refid="tableName"></include>
+		<where>
+		<if test="STATE!= null and STATE != ''">
+			and STATE=#{STATE}			
+		</if>
+		</where>
 	</select>
+	
 	<!-- 批量删除 -->
 	<update id="deleteAll" parameterType="String">
 		update

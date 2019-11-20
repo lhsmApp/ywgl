@@ -212,6 +212,7 @@ public class TestPlanController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
+		pd.put("STATE", "1");
 		mv.setViewName("exam/testplan/testplan_Create");
 		List <PageData> paperList=testpaperService.listAll(pd);
 		mv.addObject("msg", "save");

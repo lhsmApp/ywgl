@@ -2,12 +2,22 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ page import="com.fh.util.Const"%>
+<%@ page import="com.fh.entity.system.User"%>
+<%@ page import="com.fh.util.Jurisdiction"%>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://"
 			+ request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
-	String user=request.getUserPrincipal().getName();
+	//String user=request.getUserPrincipal().getName();
+	User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+    String userId=user.getUSER_ID();//用户ID 
+    String userName=user.getNAME();//用户姓名
+    String departId=user.getDEPARTMENT_ID();//部门ID
+    String departName=user.getDEPARTMENT_NAME();//部门名称
+    String unitCode=user.getUNIT_CODE();//单位ID
+    String unitName=user.getUNIT_NAME();//单位名称
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,6 +29,17 @@
 <%@ include file="../../system/index/top.jsp"%>
 <!-- 日期框 -->
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
+<script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
+
+<!-- 树形下拉框start -->
+<script type="text/javascript" src="plugins/selectZtree/selectTree.js"></script>
+<script type="text/javascript" src="plugins/selectZtree/framework.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="plugins/selectZtree/import_fh.css" />
+<script type="text/javascript" src="plugins/selectZtree/ztree/ztree.js"></script>
+<link type="text/css" rel="stylesheet"
+	href="plugins/selectZtree/ztree/ztree.css"></link>
+<!-- 树形下拉框end -->
 </head>
 <body class="no-skin">
 
@@ -42,26 +63,26 @@
 												<button type="button" class="btn btn-info btn-xs" onclick="tosearch();">
 												    <i class="ace-icon fa fa-search bigger-110"></i>
 												</button>									
-												            <label class="btn btn-sm btn-danger " onclick="add()"> 
-												    	          <i class="ace-icon fa  glyphicon-plus bigger-110"></i>新增
-												            </label> 
-												            <label class="btn btn-sm btn-primary" onclick="edit(bill_code)"> 
-												            <i class="ace-icon fa fa-pencil-square-o bigger-110"></i>编辑
-												            </label> 
-												            <label class="btn btn-sm btn-success" onclick="del(bill_code)"> 	
-												            <i class="ace-icon fa fa-trash-o bigger-110"></i>删除
-												            </label>
-												            <label class="btn btn-sm btn-purple" onclick="report(bill_code)"> 
+									            <label class="btn btn-sm btn-danger " onclick="add()"> 
+									    	          <i class="ace-icon fa  glyphicon-plus bigger-110"></i>新增
+									            </label> 
+									            <label class="btn btn-sm btn-primary" onclick="edit(bill_code)"> 
+									            <i class="ace-icon fa fa-pencil-square-o bigger-110"></i>编辑
+									            </label> 
+									            <label class="btn btn-sm btn-success" onclick="del(bill_code)"> 	
+									            <i class="ace-icon fa fa-trash-o bigger-110"></i>删除
+									            </label>
+									            <label class="btn btn-sm btn-purple" onclick="report(bill_code)"> 
 <!-- 												        <span  class="bigger-110">上报</span>  -->
-												    	    <i class="ace-icon fa fa-share bigger-110"></i>上报
-												            </label>
-												            <label class="btn btn-sm btn-warning" onclick="cancleXtbgReport(bill_code)">
-													        <i class="ace-icon fa fa-undo bigger-110"></i>撤销上报
-												            </label>
-												             <label class="btn btn-sm btn-pink" onclick="printf(bill_code)">
-												             <i class="ace-icon fa fa-print bigger-110"></i>
-															打印
-												            </label>										
+									    	    <i class="ace-icon fa fa-share bigger-110"></i>上报
+									            </label>
+									            <label class="btn btn-sm btn-warning" onclick="cancleXtbgReport(bill_code)">
+										        <i class="ace-icon fa fa-undo bigger-110"></i>撤销上报
+									            </label>
+									             <label class="btn btn-sm btn-pink" onclick="printf(bill_code)">
+									             <i class="ace-icon fa fa-print bigger-110"></i>
+												打印
+									            </label>										
 										    </form>
 									    </div>
 								    </div>
@@ -79,7 +100,7 @@
 							</ul>									
 						</form>
 					</div>
-					
+				
 					<div class="col-xs-8">
 						<div class="widget-box transparent" id="recent-box">
 							<div class="widget-header">
@@ -132,15 +153,20 @@
 													</div>
 														<div style="margin:10px 0px;">
 														<label for="form-field-jsbg-report-reason">变更原因</label>
-														<input type="text" name="BG_REASON" id="BG_REASON" class="form-control" placeholder="请输入变更内容及原因"/>
+														<input type="text" name="BG_REASON" id="BG_REASON" class="form-control" placeholder="请输入变更原因"/>
 													</div>
 													    <div style="margin:10px 0px;">
 														<label for="form-field-jsbg-report-depart">单位</label>
-														<input type="text" name="UNIT_CODE" id="UNIT_CODE" class="form-control" placeholder="请输入申请人单位"/>
+<!-- 														<input type="text" name="UNIT_CODE" id="UNIT_CODE" class="form-control" placeholder="请输入申请人单位"/> -->
 													</div>
-													   <div style="margin:10px 0px;">
-														<label for="form-field-jsbg-report-dept">部门</label>
-														<input type="text" name="DEPT_CODE" id="DEPT_CODE" class="form-control" placeholder="请输入申请人部门"/>
+														<div style="margin:10px 0px;">
+														<input type="hidden" name="UNIT_CODE" id="UNIT_CODE"   />
+														<div class="selectTree" id="selectTree" style="float:none;display:block;"></div>												
+													</div>
+													<div style="margin:10px 0px;">
+														<label for="form-field-xtbg-report-dept">部门</label>
+														<input type="hidden" name="DEPT_CODE" id="DEPT_CODE"/>
+														<input type="text" name="DEPT_NAME" id="DEPT_NAME" class="form-control" placeholder="请输入部门"/>
 													</div>
 													<div style="margin:10px 0px;">
 														<label for="form-field-jsbg-report-user">申请人</label>
@@ -153,11 +179,12 @@
 													</div>
 												    <div style="margin:10px 0px;">
 														<label for="form-field-jsbg-report-depart">申请人部门</label>
-														<input type="text" name="USER_DEPT" id="USER_DEPT" class="form-control" placeholder="请输入申请人单位"/>
+														<input type="hidden" name="USER_DEPT" id="USER_DEPT" />
+														<input type="text" name="USER_DEPTNAME" id="USER_DEPTNAME" class="form-control" placeholder="请输入申请人部门"/>
 													</div>
 										   			<div style="margin:10px 0px;">
 														<label for="form-field-jsbg-report-job">申请人岗位</label>
-														<input type="text" name="USER_JOB" id="USER_JOB" class="form-control" placeholder="请输入申请人部门"/>
+														<input type="text" name="USER_JOB" id="USER_JOB" class="form-control" placeholder="请输入申请人岗位"/>
 													</div>
 													<div style="margin:10px 0px;">
 														<label for="form-field-jsbg-report-addrole">新增角色</label>
@@ -165,7 +192,7 @@
 													</div>
 													<div style="margin:10px 0px;">
 														<label for="form-field-jsbg-report-delrole">删除角色</label>
-														<input type="text" name="DEL_ROLE" id="DEL_ROLE" class="form-control" placeholder="请输入新增角色"/>
+														<input type="text" name="DEL_ROLE" id="DEL_ROLE" class="form-control" placeholder="请输入删除角色"/>
 													</div>
 													<div style="margin:10px 0px;">
 														<label for="form-field-jsbg-report-contact">联系方式</label>
@@ -183,7 +210,6 @@
 															</span>
 														</div>
 													</div>
-													<hr />
 													<div>
 														<a class="btn btn-mini btn-primary" onclick="save();">保存</a>
 														<a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">取消</a>
@@ -194,23 +220,19 @@
 										</div>
 									</div>
 								</div>
-							</div>	
-					</div>			
- 					<div class="row">
-						    <div class="col-xs-12">
-						        <table id="jqGridBase"></table>
-						        <div id="jqGridBasePager"></div>
-						    </div>
-					    </div>
-				    </div>
-			    </div>
-		    </div>
+						  </div>	
+							</div>			
+						</div>
+					</div>
+				</div>
 	
 		    <!-- 返回顶部 -->
 		    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
 			    <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
 		    </a>
 	    </div>
+	 </div>
+	</div>
 	<!-- /.main-container -->
 
 	<!-- basic scripts -->
@@ -239,7 +261,7 @@
 			var data=${varList};
 			showDetail(data[0].BILL_CODE);
 			//日期框
-			$( "#EFFECTIVE_DATE" ).datepicker({
+			$( "#EFFECTIVE_DATE").datepicker({
 				showOtherMonths: true,
 				selectOtherMonths: false,
 				autoclose: true,
@@ -292,16 +314,20 @@
 			//新增清空文本框
 			$("#BG_NAME").val("");//变更名称
 			$("#BG_REASON").val("");//变更原因
-			$("#UNIT_CODE").val("");//单位
-			$("#DEPT_CODE").val("");//部门
-			$("#USER_CODE").val("");//申请人
-			$("#USER_DEPT").val("");//申请人部门
+			$("#UNIT_CODE").val('<%=unitCode%>');//单位编码
+			$("#selectTree2_input").val('<%=unitName%>');//单位名称
+			$("#DEPT_CODE").val('<%=departId%>');//部门编码
+			$("#DEPT_NAME").val('<%=departName%>');//部门名称			
+			$("#"+'<%=userId%>').val('<%=userName%>');//申请人
+			$("#USER_DEPT").val('<%=departId%>');//申请人部门编码
+			$("#USER_DEPTNAME").val('<%=departName%>');//申请人部门名称
 			$("#USER_JOB").val("");//申请人岗位
 			$("#USER_CONTACT").val("");//联系方式
 			$("#EFFECTIVE_DATE").val("");//变更预期时间
 			$("#BILL_CODE").val("");//申请单号
 			$("#ADD_ROLE").val("");//新增角色
 			$("#DEL_ROLE").val("");//删除角色
+			
 		}
 		
 		//删除
@@ -663,6 +689,44 @@
 			+'</li>';
 			$("#tasks").append(htmlEmpty);
 		}
+		function initComplete(){
+			//下拉树
+			var defaultNodes = {"treeNodes":${zTreeNodes}};
+			//绑定change事件
+			$("#selectTree").bind("change",function(){
+
+				if(!$(this).attr("relValue")){
+			    }else{
+					$("#UNIT_CODE").val($(this).attr("relValue"));	
+			    }
+				 //清空select框中数据
+				   $('#USER_CODE').empty();
+				$.ajax({
+					   type: "POST",
+					   url: '<%=basePath%>changeerpxtbg/getUsers.do',
+					   data: {'UNIT_CODE':$("#UNIT_CODE").val()},
+					   dataType:'json',
+					   cache: false,
+					   success: function (data) {
+					           $('#USER_CODE').append("<option value='0'>--请选择申请人--</option>");
+					            //遍历成功返回的数据
+					            $.each(data, function (index,item) {
+					                var userName = data[index].NAME;
+					                var userId = data[index].USER_ID;
+					                //构造动态option
+					                $('#USER_CODE').append("<option value='"+userId+"'>"+userName+"</option>")
+					             });
+					    },
+					    error: function () {
+
+					    }
+					  });
+
+			});
+			//赋给data属性
+			$("#selectTree").data("data",defaultNodes);  
+			$("#selectTree").render();
+		}	
 	</script>
 
 
