@@ -295,6 +295,12 @@ public class ChangeErpJsbgController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd = changeerpjsbgService.findByBillCode(pd);	//根据ID读取
+		pd.put("DEPARTMENT_CODE", pd.getString("UNIT_CODE"));
+		PageData pdDepartResultUnit=departmentService.findByBianma(pd);
+		if(pdDepartResultUnit!=null)
+			pd.put("depnameUnit", pdDepartResultUnit.getString("NAME"));
+		else
+			pd.put("depnameUnit", null);
 		return pd;
 	}
 	 /**打印

@@ -139,11 +139,11 @@
 												<div id="zhongxin" style="padding-top: 13px;">
 													<div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-bgname">系统变更名称</label>
-														<input type="text" name="BG_NAME" id="BG_NAME" class="form-control" placeholder="请输入系统变更名称"/>
+														<input type="text" name="BG_NAME" id="BG_NAME" class="form-control" placeholder="请输入系统变更名称" required="required" />
 													</div>
 														<div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-reason">变更原因</label>
-														<input type="text" name="BG_REASON" id="BG_REASON" class="form-control" placeholder="请输入变更原因"/>
+														<input type="text" name="BG_REASON" id="BG_REASON" class="form-control" placeholder="请输入变更原因" required="required" />
 													</div>
 													    <div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-depart">单位</label>
@@ -363,6 +363,18 @@
 			var uesrContact=$("#USER_CONTACT").val();//联系方式
 			var bgyqDate=$("#EFFECTIVE_DATE").val();//变更预期时间
 			var billCode=$("#BILL_CODE").val();//申请单号
+			if(bgName==""||bgName==null){    
+			        alert('系统变更名称不能为空！');
+			        $("#BG_NAME").focus();
+			        $(top.hangge());//关闭加载状态
+			        return ;
+			    }
+			if(uesrCode==""||uesrCode==null){    
+		        alert('申请人不能为空！');
+		        $("#USER_CODE").focus();
+		        $(top.hangge());//关闭加载状态
+		        return ;
+		    }
 			$.ajax({
 				type: "POST",
 				url: '<%=basePath%>changeerpxtbg/save.do',

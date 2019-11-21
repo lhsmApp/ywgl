@@ -61,9 +61,11 @@
 				insert into tb_gl_plan_user
 				(
 					PLAN_ID,	
-					STUDENT_ID
+					STUDENT_ID,
+					PLAN_TYPE
 				) values (#{item.TRAIN_PLAN_ID},
-					#{item.STUDENT_ID})
+					#{item.STUDENT_ID},
+					#{item.PLAN_TYPE})
 					</if>
 		</foreach>
 	</insert>

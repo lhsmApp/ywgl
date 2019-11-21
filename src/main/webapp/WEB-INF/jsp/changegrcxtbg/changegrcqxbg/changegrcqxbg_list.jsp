@@ -2,11 +2,21 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ page import="com.fh.util.Const"%>
+<%@ page import="com.fh.entity.system.User"%>
+<%@ page import="com.fh.util.Jurisdiction"%>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://"
 			+ request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
+	User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+    String userId=user.getUSER_ID();//用户ID 
+    String userName=user.getNAME();//用户姓名
+    String departId=user.getDEPARTMENT_ID();//部门ID
+    String departName=user.getDEPARTMENT_NAME();//部门名称
+    String unitCode=user.getUNIT_CODE();//单位ID
+    String unitName=user.getUNIT_NAME();//单位名称
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,6 +28,17 @@
 <%@ include file="../../system/index/top.jsp"%>
 <!-- 日期框 -->
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
+<script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
+
+<!-- 树形下拉框start -->
+<script type="text/javascript" src="plugins/selectZtree/selectTree.js"></script>
+<script type="text/javascript" src="plugins/selectZtree/framework.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="plugins/selectZtree/import_fh.css" />
+<script type="text/javascript" src="plugins/selectZtree/ztree/ztree.js"></script>
+<link type="text/css" rel="stylesheet"
+	href="plugins/selectZtree/ztree/ztree.css"></link>
+<!-- 树形下拉框end -->
 </head>
 <body class="no-skin">
 
@@ -27,29 +48,6 @@
 		<div class="main-content">
 			<div class="main-content-inner">
 				<div class="page-content">
-<!-- 				    <div class="page-header">				
-								  <div class="pull-right">
-							            <div class="btn-toolbar inline middle no-margin">
-								            <div data-toggle="buttons" class="btn-group no-margin">
-									            <label class="btn btn-sm btn-primary active"> <span
-									    	        class="bigger-110">CRC权限变更</span> <input type="radio" value="1" />
-									            </label> 
-									            <label class="btn btn-sm btn-primary"> <span
-									            	class="bigger-110">GRC账号新增</span> <input type="radio" value="2" />
-									            </label> 
-									            <label class="btn btn-sm btn-primary"> <span
-									            	class="bigger-110">ERP账号新增</span> <input type="radio" value="3" />
-									            </label>
-									            <label class="btn btn-sm btn-primary"> <span
-									    	        class="bigger-110">ERP账号注销</span> <input type="radio" value="4" />
-									            </label>
-									            <label class="btn btn-sm btn-primary"> <span
-										            class="bigger-110">ERP系统变更</span> <input type="radio" value="5" />
-									            </label>
-								            </div>
-							            </div>      
-								    </div>
-					 </div> -->
 						<!-- 检索  -->
 						<div class="row">
 						    <div class="col-xs-12">
@@ -64,26 +62,26 @@
 												<button type="button" class="btn btn-info btn-xs" onclick="tosearch();">
 												    <i class="ace-icon fa fa-search bigger-110"></i>
 												</button>									
-												            <label class="btn btn-sm btn-danger " onclick="add()"> 
-												    	          <i class="ace-icon fa  glyphicon-plus bigger-110"></i>新增
-												            </label> 
-												            <label class="btn btn-sm btn-primary" onclick="edit(bill_code)"> 
-												            <i class="ace-icon fa fa-pencil-square-o bigger-110"></i>编辑
-												            </label> 
-												            <label class="btn btn-sm btn-success" onclick="del(bill_code)"> 	
-												            <i class="ace-icon fa fa-trash-o bigger-110"></i>删除
-												            </label>
-												            <label class="btn btn-sm btn-purple" onclick="report(bill_code)"> 
+									            <label class="btn btn-sm btn-danger " onclick="add()"> 
+									    	          <i class="ace-icon fa  glyphicon-plus bigger-110"></i>新增
+									            </label> 
+									            <label class="btn btn-sm btn-primary" onclick="edit(bill_code)"> 
+									            <i class="ace-icon fa fa-pencil-square-o bigger-110"></i>编辑
+									            </label> 
+									            <label class="btn btn-sm btn-success" onclick="del(bill_code)"> 	
+									            <i class="ace-icon fa fa-trash-o bigger-110"></i>删除
+									            </label>
+									            <label class="btn btn-sm btn-purple" onclick="report(bill_code)"> 
 <!-- 												        <span  class="bigger-110">上报</span>  -->
-												    	    <i class="ace-icon fa fa-share bigger-110"></i>上报
-												            </label>
-												            <label class="btn btn-sm btn-warning" onclick="cancleReport(bill_code)">
-													        <i class="ace-icon fa fa-undo bigger-110"></i>撤销上报
-												            </label>
-												             <label class="btn btn-sm btn-pink"onclick="printf(bill_code)">
-												             <i class="ace-icon fa fa-print bigger-110"></i>
-															打印
-												            </label>										
+									    	    <i class="ace-icon fa fa-share bigger-110"></i>上报
+									            </label>
+									            <label class="btn btn-sm btn-warning" onclick="cancleReport(bill_code)">
+										        <i class="ace-icon fa fa-undo bigger-110"></i>撤销上报
+									            </label>
+									             <label class="btn btn-sm btn-pink"onclick="printf(bill_code)">
+									             <i class="ace-icon fa fa-print bigger-110"></i>
+												打印
+									            </label>										
 										    </form>
 									    </div>
 								    </div>
@@ -91,28 +89,11 @@
 						    </div>
 						    
 					    </div>	
-					<div class="row">
-						<div class="col-xs-4">
-						<!-- 检索  -->
-						<form style="margin:5px;" action="user/listUsers.do" method="post" name="userForm" id="userForm">
-<!-- 							<div class="nav-search" style="margin:10px 0px;"> -->
-<!-- 								<span class="input-icon" style="width:86%"> -->
-<%-- 									<input style="width:100%" class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词" /> --%>
-<!-- 									<i class="ace-icon fa fa-search nav-search-icon"></i> -->
-<!-- 								</span> -->
-<!-- 								<button style="margin-bottom:3px;" class="btn btn-light btn-minier" onclick="searchs();"  title="检索"> -->
-<!-- 									<i id="nav-search-icon" class="ace-icon fa fa-search bigger-120 nav-search-icon blue"></i> -->
-<!-- 									<i class="ace-icon fa fa-signal icon-only bigger-150"></i> -->
-<!-- 								</button> -->
-<!-- 							</div> -->
+				<div class="row">
+					<div class="col-xs-4">												
+						<ul id="tasks" class="item-list">
 							
-							
-							<ul id="tasks" class="item-list">
-							
-							</ul>						
-	
-				
-						</form>
+						</ul>						
 					</div>
 					
 					<div class="col-xs-8">
@@ -168,11 +149,20 @@
 													</div>
 													    <div style="margin:10px 0px;">
 														<label for="form-field-jsbg-report-depart">单位</label>
-														<input type="text" name="UNIT_CODE" id="UNIT_CODE" class="form-control" placeholder="请输入申请人单位"/>
+<!-- 														<input type="text" name="UNIT_CODE" id="UNIT_CODE" class="form-control" placeholder="请输入申请人单位"/> -->
 													</div>
-													   <div style="margin:10px 0px;">
-														<label for="form-field-jsbg-report-dept">部门</label>
-														<input type="text" name="DEPT_CODE" id="DEPT_CODE" class="form-control" placeholder="请输入申请人部门"/>
+														<div style="margin:10px 0px;">
+														<input type="hidden" name="UNIT_CODE" id="UNIT_CODE"   />
+														<div class="selectTree" id="selectTree" style="float:none;display:block;"></div>												
+													</div>
+<!-- 													   <div style="margin:10px 0px;"> -->
+<!-- 														<label for="form-field-jsbg-report-dept">部门</label> -->
+<!-- 														<input type="text" name="DEPT_CODE" id="DEPT_CODE" class="form-control" placeholder="请输入申请人部门"/> -->
+<!-- 													</div> -->
+													 <div style="margin:10px 0px;">
+														<label for="form-field-xtbg-report-dept">部门</label>
+														<input type="hidden" name="DEPT_CODE" id="DEPT_CODE"/>
+														<input type="text" name="DEPT_NAME" id="DEPT_NAME" class="form-control" placeholder="请输入部门"/>
 													</div>
 													<div style="margin:10px 0px;">
 														<label for="form-field-jsbg-report-user">申请人</label>
@@ -183,9 +173,14 @@
 																	</c:forEach>
 																</select>
 													</div>
-												    <div style="margin:10px 0px;">
-														<label for="form-field-jsbg-report-depart">申请人部门</label>
-														<input type="text" name="USER_DEPT" id="USER_DEPT" class="form-control" placeholder="请输入申请人单位"/>
+<!-- 												    <div style="margin:10px 0px;"> -->
+<!-- 														<label for="form-field-jsbg-report-depart">申请人部门</label> -->
+<!-- 														<input type="text" name="USER_DEPT" id="USER_DEPT" class="form-control" placeholder="请输入申请人单位"/> -->
+<!-- 													</div> -->
+													<div style="margin:10px 0px;">
+														<label for="form-field-xtbg-report-depart">申请人部门</label>
+														<input type="hidden" name="USER_DEPT" id="USER_DEPT" />
+														<input type="text" name="USER_DEPTNAME" id="USER_DEPTNAME" class="form-control" placeholder="请输入申请人部门"/>
 													</div>
 										   			<div style="margin:10px 0px;">
 														<label for="form-field-jsbg-report-job">申请人岗位</label>
@@ -205,7 +200,15 @@
 													</div>
 													<div style="margin:10px 0px;">
 														<label for="form-field-select-1">变更预期时间</label>
-														<input type="text" name="EFFECTIVE_DATE" id="EFFECTIVE_DATE" class="form-control" placeholder="请输入联系方式"/>
+<!-- 														<input type="text" name="EFFECTIVE_DATE" id="EFFECTIVE_DATE" class="form-control" placeholder="请输入联系方式"/> -->
+													</div>
+													<div style="margin:10px 0px;">
+														<div class="input-group input-group-sm">
+															<input type="text" id="EFFECTIVE_DATE" name="EFFECTIVE_DATE"  class="form-control"  data-date-format="yyyy-mm-dd" placeholder="请选择变更预期时间"/>
+															<span class="input-group-addon">
+																<i class="ace-icon fa fa-calendar" ></i>
+															</span>
+														</div>
 													</div>
 													<hr />
 													<div>
@@ -219,12 +222,6 @@
 								</div>
 							</div>	
 					</div>			
- 					<div class="row">
-						    <div class="col-xs-12">
-						        <table id="jqGridBase"></table>
-						        <div id="jqGridBasePager"></div>
-						    </div>
-					    </div>
 				    </div>
 			    </div>
 		    </div>
@@ -234,6 +231,9 @@
 			    <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
 		    </a>
 	    </div>
+	 </div>
+	</div>
+</div>
 	<!-- /.main-container -->
 
 	<!-- basic scripts -->
@@ -261,7 +261,9 @@
 			var data=${varList};
 			showDetail(data[0].BILL_CODE);
 			//日期框
-			$('.date-picker').datepicker({
+			$("#EFFECTIVE_DATE" ).datepicker({
+				showOtherMonths: true,
+				selectOtherMonths: false,
 				autoclose: true,
 				todayHighlight: true
 			});
@@ -312,7 +314,7 @@
 			var bgReason=$("#BG_REASON").val();//变更原因
 			var unitCode=$("#UNIT_CODE").val();//单位
 			var deptCode=$("#DEPT_CODE").val();//部门
-			var uesrCode=$("#USER_CODE").val();//申请人
+			var userCode=$("#USER_CODE").val();//申请人
 			var uesrDept=$("#USER_DEPT").val();//申请人部门
 			var uesrJob=$("#USER_JOB").val();//申请人岗位
 			var uesrContact=$("#USER_CONTACT").val();//联系方式
@@ -320,10 +322,28 @@
 			var billCode=$("#BILL_CODE").val();//申请单号
 			var addRole=$("#ADD_ROLES").val();//新增角色
 			var delRole=$("#DELETE_ROLES").val();//删除角色
+			if(bgReason==""||bgReason==null){    
+		        alert('变更原因不能为空！');
+		        $("#BG_REASON").focus();
+		        $(top.hangge());//关闭加载状态
+		        return ;
+		    }
+			if(unitCode==""||unitCode==null){    
+		        alert('单位不能为空！');
+		        $("#UNIT_CODE").focus();
+		        $(top.hangge());//关闭加载状态
+		        return ;
+		    }
+			if(userCode==""||userCode==null){    
+		        alert('申请人不能为空！');
+		        $("#USER_CODE").focus();
+		        $(top.hangge());//关闭加载状态
+		        return ;
+		    }
 			$.ajax({
 				type: "POST",
 				url: '<%=basePath%>changegrcqxbg/save.do',
-				data:{BG_REASON:bgReason,UNIT_CODE:unitCode,DEPT_CODE:deptCode,USER_CODE:uesrCode,USER_DEPT:uesrDept,USER_JOB:uesrJob,USER_CONTACT:uesrContact,EFFECTIVE_DATE:bgyqDate,BILL_CODE:billCode,ADD_ROLES:addRole,DELETE_ROLES:delRole},
+				data:{BG_REASON:bgReason,UNIT_CODE:unitCode,DEPT_CODE:deptCode,USER_CODE:userCode,USER_DEPT:uesrDept,USER_JOB:uesrJob,USER_CONTACT:uesrContact,EFFECTIVE_DATE:bgyqDate,BILL_CODE:billCode,ADD_ROLES:addRole,DELETE_ROLES:delRole},
 		    	dataType:'json',
 				cache: false,
 				success: function(response){
@@ -356,16 +376,19 @@
 			$("#grcqxbg-tab li[tag='report-tab'] a").click();
 			//新增清空文本框
 			$("#BG_REASON").val("");//变更原因
-			$("#UNIT_CODE").val("");//单位
-			$("#DEPT_CODE").val("");//部门
-			$("#USER_CODE").val("");//申请人
-			$("#USER_DEPT").val("");//申请人部门
+			$("#UNIT_CODE").val('<%=unitCode%>');//单位编码
+			$("#selectTree2_input").val('<%=unitName%>');//单位名称
+			$("#DEPT_CODE").val('<%=departId%>');//部门编码
+			$("#DEPT_NAME").val('<%=departName%>');//部门名称	
+			$("#"+'<%=userId%>').val('<%=userName%>');//申请人
+			$("#USER_DEPT").val('<%=departId%>');//申请人部门编码
+			$("#USER_DEPTNAME").val('<%=departName%>');//申请人部门名称
 			$("#USER_JOB").val("");//申请人岗位
 			$("#USER_CONTACT").val("");//联系方式
 			$("#EFFECTIVE_DATE").val("");//申请生效日期
 			$("#BILL_CODE").val("");//申请单号
 			$("#ADD_ROLES").val("");//新增角色
-			$("#DELETE_ROLES").val("");//删除角色
+			$("#DELETE_ROLES").val("");//删除角色		
 		}
 		
 		//删除
@@ -489,6 +512,7 @@
 		      			$("#BILL_CODE").val(datas.BILL_CODE);//申请单号
 		    			$("#BG_REASON").val(datas.BG_REASON);//变更原因
 		    			$("#UNIT_CODE").val(datas.UNIT_CODE);//单位
+		    			$("#selectTree2_input").val(datas.depnameUnit);
 		    			$("#DEPT_CODE").val(datas.DEPT_CODE);//部门
 		    			$("#USER_CODE").val(datas.USER_CODE);//申请人
 		    			$("#USER_DEPT").val(datas.USER_DEPT);//申请人部门
@@ -692,7 +716,44 @@
 			+'</li>';
 			$("#tasks").append(htmlEmpty);
 		}
-		
+		function initComplete(){
+			//下拉树
+			var defaultNodes = {"treeNodes":${zTreeNodes}};
+			//绑定change事件
+			$("#selectTree").bind("change",function(){
+
+				if(!$(this).attr("relValue")){
+			    }else{
+					$("#UNIT_CODE").val($(this).attr("relValue"));	
+			    }
+				 //清空select框中数据
+				   $('#USER_CODE').empty();
+				$.ajax({
+					   type: "POST",
+					   url: '<%=basePath%>changeerpxtbg/getUsers.do',
+					   data: {'UNIT_CODE':$("#UNIT_CODE").val()},
+					   dataType:'json',
+					   cache: false,
+					   success: function (data) {
+					           $('#USER_CODE').append("<option value='0'>--请选择申请人--</option>");
+					            //遍历成功返回的数据
+					            $.each(data, function (index,item) {
+					                var userName = data[index].NAME;
+					                var userId = data[index].USER_ID;
+					                //构造动态option
+					                $('#USER_CODE').append("<option value='"+userId+"'>"+userName+"</option>")
+					             });
+					    },
+					    error: function () {
+
+					    }
+					  });
+
+			});
+			//赋给data属性
+			$("#selectTree").data("data",defaultNodes);  
+			$("#selectTree").render();
+		}		
 	</script>
 
 

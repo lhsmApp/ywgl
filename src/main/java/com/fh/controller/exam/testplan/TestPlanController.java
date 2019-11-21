@@ -93,6 +93,7 @@ public class TestPlanController extends BaseController {
 				PageData p=new PageData();
 				p.put("TEST_PLAN_ID", testPlanId);
 				p.put("STUDENT_ID", trainPersons[i]);
+				p.put("PLAN_TYPE", '1');//计划类型，1考试2培训
 				studentList.add(p);
 			}
 			pd.put("varList", studentList);

@@ -365,6 +365,18 @@
 			var billCode=$("#BILL_CODE").val();//申请单号
 			var addRole=$("#ADD_ROLE").val();//新增角色
 			var delRole=$("#DEL_ROLE").val();//删除角色
+			if(bgName==""||bgName==null){    
+		        alert('系统变更名称不能为空！');
+		        $("#BG_NAME").focus();
+		        $(top.hangge());//关闭加载状态
+		        return ;
+		    }
+			if(uesrCode==""||uesrCode==null){    
+		        alert('申请人不能为空！');
+		        $("#USER_CODE").focus();
+		        $(top.hangge());//关闭加载状态
+		        return ;
+		    }
 			$.ajax({
 				type: "POST",
 				url: '<%=basePath%>changeerpjsbg/save.do',
@@ -493,6 +505,7 @@
 		      			$("#BG_NAME").val(datas.BG_NAME);//变更名称
 		    			$("#BG_REASON").val(datas.BG_REASON);//变更原因
 		    			$("#UNIT_CODE").val(datas.UNIT_CODE);//单位
+		    			$("#selectTree2_input").val(datas.depnameUnit);
 		    			$("#DEPT_CODE").val(datas.DEPT_CODE);//部门
 		    			$("#USER_CODE").val(datas.USER_CODE);//申请人
 		    			$("#USER_DEPT").val(datas.USER_DEPT);//申请人部门

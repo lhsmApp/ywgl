@@ -38,6 +38,7 @@ import net.sf.json.JSONArray;
 
 import com.fh.service.billnum.BillNumManager;
 import com.fh.service.changegrcxtbg.changegrcqxbg.ChangeGrcQxbgManager;
+import com.fh.service.fhoa.department.DepartmentManager;
 import com.fh.service.system.user.UserManager;
 
 /** 
@@ -58,6 +59,9 @@ public class ChangeGrcQxbgController extends BaseController {
 	
 	@Resource(name = "userService")
 	private UserManager userService;
+	
+	@Resource(name="departmentService")
+	private DepartmentManager departmentService;
 	
 	/**保存
 	 * @param
@@ -156,6 +160,9 @@ public class ChangeGrcQxbgController extends BaseController {
 			}		
 		} 	
 		mv.addObject("userList", DictsUtil.getSysUserDic(userService));//用户
+		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
+		JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0",zdepartmentPdList));
+		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
 		mv.setViewName("changegrcxtbg/changegrcqxbg/changegrcqxbg_list");
 		//mv.addObject("varList", varList);
 		mv.addObject("varList", JSON.toJSONString(varList));
@@ -324,6 +331,12 @@ public class ChangeGrcQxbgController extends BaseController {
 			PageData pd = new PageData();
 			pd = this.getPageData();
 			pd = changegrcqxbgService.findById(pd);	//根据ID读取
+			pd.put("DEPARTMENT_CODE", pd.getString("UNIT_CODE"));
+			PageData pdDepartResultUnit=departmentService.findByBianma(pd);
+			if(pdDepartResultUnit!=null)
+				pd.put("depnameUnit", pdDepartResultUnit.getString("NAME"));
+			else
+				pd.put("depnameUnit", null);
 			return pd;
 		}
 	 /**批量删除

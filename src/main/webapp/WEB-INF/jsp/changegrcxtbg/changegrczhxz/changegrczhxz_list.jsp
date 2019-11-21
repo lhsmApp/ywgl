@@ -2,11 +2,22 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ page import="com.fh.util.Const"%>
+<%@ page import="com.fh.entity.system.User"%>
+<%@ page import="com.fh.util.Jurisdiction"%>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://"
 			+ request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
+	//String user=request.getUserPrincipal().getName();
+	User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+    String userId=user.getUSER_ID();//用户ID 
+    String userName=user.getNAME();//用户姓名
+    String departId=user.getDEPARTMENT_ID();//部门ID
+    String departName=user.getDEPARTMENT_NAME();//部门名称
+    String unitCode=user.getUNIT_CODE();//单位ID
+    String unitName=user.getUNIT_NAME();//单位名称
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,6 +29,17 @@
 <%@ include file="../../system/index/top.jsp"%>
 <!-- 日期框 -->
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
+<script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
+
+<!-- 树形下拉框start -->
+<script type="text/javascript" src="plugins/selectZtree/selectTree.js"></script>
+<script type="text/javascript" src="plugins/selectZtree/framework.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="plugins/selectZtree/import_fh.css" />
+<script type="text/javascript" src="plugins/selectZtree/ztree/ztree.js"></script>
+<link type="text/css" rel="stylesheet"
+	href="plugins/selectZtree/ztree/ztree.css"></link>
+<!-- 树形下拉框end -->
 </head>
 <body class="no-skin">
 
@@ -163,12 +185,21 @@
 												<div id="zhongxin" style="padding-top: 13px;">		
 												 <div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-depart">单位</label>
-														<input type="text" name="UNIT_CODE" id="UNIT_CODE" class="form-control" placeholder="请输入申请人单位"/>
+<!-- 														<input type="text" name="UNIT_CODE" id="UNIT_CODE" class="form-control" placeholder="请输入申请人单位"/> -->
 													</div>
-													   <div style="margin:10px 0px;">
+													<div style="margin:10px 0px;">
+														<input type="hidden" name="UNIT_CODE" id="UNIT_CODE"   />
+														<div class="selectTree" id="selectTree" style="float:none;display:block;"></div>												
+													</div>	
+<!-- 													   <div style="margin:10px 0px;"> -->
+<!-- 														<label for="form-field-xtbg-report-dept">部门</label> -->
+<!-- 														<input type="text" name="DEPT_CODE" id="DEPT_CODE" class="form-control" placeholder="请输入申请人部门"/> -->
+<!-- 													</div>		 -->
+													 <div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-dept">部门</label>
-														<input type="text" name="DEPT_CODE" id="DEPT_CODE" class="form-control" placeholder="请输入申请人部门"/>
-													</div>											
+														<input type="hidden" name="DEPT_CODE" id="DEPT_CODE"/>
+														<input type="text" name="DEPT_NAME" id="DEPT_NAME" class="form-control" placeholder="请输入部门"/>
+													</div>									
 													<div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-user">申请人</label>
 															<select class="form-control" name="USER_CODE" id="USER_CODE">
@@ -178,13 +209,18 @@
 																	</c:forEach>
 																</select>
 													</div>
-												    <div style="margin:10px 0px;">
+<!-- 												    <div style="margin:10px 0px;"> -->
+<!-- 														<label for="form-field-xtbg-report-depart">申请人部门</label> -->
+<!-- 														<input type="text" name="USER_DEPT" id="USER_DEPT" class="form-control" placeholder="请输入申请人单位"/> -->
+<!-- 													</div> -->
+													 <div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-depart">申请人部门</label>
-														<input type="text" name="USER_DEPT" id="USER_DEPT" class="form-control" placeholder="请输入申请人单位"/>
+														<input type="hidden" name="USER_DEPT" id="USER_DEPT" />
+														<input type="text" name="USER_DEPTNAME" id="USER_DEPTNAME" class="form-control" placeholder="请输入申请人部门"/>
 													</div>
 										   			<div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-job">申请人岗位</label>
-														<input type="text" name="USER_JOB" id="USER_JOB" class="form-control" placeholder="请输入申请人部门"/>
+														<input type="text" name="USER_JOB" id="USER_JOB" class="form-control" placeholder="请输入申请人岗位"/>
 													</div>
 													<div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-contact">联系方式</label>
@@ -192,19 +228,19 @@
 													</div>
 													<div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-contact">新增帐号</label>
-														<input type="text" name="ACCOUNT_NEW" id="ACCOUNT_NEW" class="form-control" placeholder="请输入联系方式"/>
+														<input type="text" name="ACCOUNT_NEW" id="ACCOUNT_NEW" class="form-control" placeholder="请输入新增帐号"/>
 													</div>
 													<div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-contact">帐号有效期</label>
-														<input type="text" name="ACCOUNT_VALIDITY" id="ACCOUNT_VALIDITY" class="form-control" placeholder="请输入联系方式"/>
+														<input type="text" name="ACCOUNT_VALIDITY" id="ACCOUNT_VALIDITY" class="form-control" placeholder="请输入帐号有效期"/>
 													</div>
 													<div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-contact">新增帐号原因</label>
-														<input type="text" name="ACCOUNT_REASON" id="ACCOUNT_REASON" class="form-control" placeholder="请输入联系方式"/>
+														<input type="text" name="ACCOUNT_REASON" id="ACCOUNT_REASON" class="form-control" placeholder="请输入新增帐号原因"/>
 													</div>
 													<div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-contact">帐号角色</label>
-														<input type="text" name="ACCOUNT_ROLES" id="ACCOUNT_ROLES" class="form-control" placeholder="请输入联系方式"/>
+														<input type="text" name="ACCOUNT_ROLES" id="ACCOUNT_ROLES" class="form-control" placeholder="请输入帐号角色"/>
 													</div>
 													<div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-contact">申请生效日期</label>
@@ -212,7 +248,7 @@
 													</div>
 														<div style="margin:10px 0px;">
 														<div class="input-group input-group-sm">
-															<input type="text" id="EFFECTIVE_DATE" name="EFFECTIVE_DATE"  class="form-control"  data-date-format="yyyy-mm-dd" placeholder="请选择变更预期时间"/>
+															<input type="text" id="EFFECTIVE_DATE" name="EFFECTIVE_DATE"  class="form-control"  data-date-format="yyyy-mm-dd" placeholder="请选择申请生效日期"/>
 															<span class="input-group-addon">
 																<i class="ace-icon fa fa-calendar" ></i>
 															</span>
@@ -352,7 +388,7 @@
 			//$("#xtbgForm").submit();
 			var unitCode=$("#UNIT_CODE").val();//单位
 			var deptCode=$("#DEPT_CODE").val();//部门
-			var uesrCode=$("#USER_CODE").val();//申请人
+			var userCode=$("#USER_CODE").val();//申请人
 			var uesrDept=$("#USER_DEPT").val();//申请人部门
 			var uesrJob=$("#USER_JOB").val();//申请人岗位
 			var uesrContact=$("#USER_CONTACT").val();//联系方式
@@ -362,10 +398,22 @@
 			var accountReason=$("#ACCOUNT_REASON").val();//新增帐号原因
 			var accountRoles=$("#ACCOUNT_ROLES").val();//帐号角色	
 			var billCode=$("#BILL_CODE").val();//申请单号
+			if(accountNew==""||accountNew==null){    
+		        alert('新增帐号不能为空！');
+		        $("#ACCOUNT_NEW").focus();
+		        $(top.hangge());//关闭加载状态
+		        return ;
+		    }
+			if(userCode==""||userCode==null){    
+	        alert('申请人不能为空！');
+	        $("#USER_CODE").focus();
+	        $(top.hangge());//关闭加载状态
+	        return ;
+	    }
 			$.ajax({
 				type: "POST",
 				url: '<%=basePath%>changegrczhxz/save.do',
-				data:{UNIT_CODE:unitCode,DEPT_CODE:deptCode,USER_CODE:uesrCode,USER_DEPT:uesrDept,USER_JOB:uesrJob,USER_CONTACT:uesrContact,EFFECTIVE_DATE:sqsxDate,ACCOUNT_NEW:accountNew,ACCOUNT_VALIDITY:zhyxq,ACCOUNT_REASON:accountReason,ACCOUNT_ROLES:accountRoles,BILL_CODE:billCode},
+				data:{UNIT_CODE:unitCode,DEPT_CODE:deptCode,USER_CODE:userCode,USER_DEPT:uesrDept,USER_JOB:uesrJob,USER_CONTACT:uesrContact,EFFECTIVE_DATE:sqsxDate,ACCOUNT_NEW:accountNew,ACCOUNT_VALIDITY:zhyxq,ACCOUNT_REASON:accountReason,ACCOUNT_ROLES:accountRoles,BILL_CODE:billCode},
 		    	dataType:'json',
 				cache: false,
 				success: function(response){
@@ -397,10 +445,13 @@
 			//点击新增按钮，弹到提报tab页
 			$("#zhxz-tab li[tag='report-tab'] a").click();
 			//新增清空文本框
-			$("#UNIT_CODE").val("");//单位
-			$("#DEPT_CODE").val("");//部门
-			$("#USER_CODE").val("");//申请人
-			$("#USER_DEPT").val("");//申请人部门
+			$("#UNIT_CODE").val('<%=unitCode%>');//单位编码
+			$("#selectTree2_input").val('<%=unitName%>');//单位名称
+			$("#DEPT_CODE").val('<%=departId%>');//部门编码
+			$("#DEPT_NAME").val('<%=departName%>');//部门名称	
+			$("#"+'<%=userId%>').val('<%=userName%>');//申请人
+			$("#USER_DEPT").val('<%=departId%>');//申请人部门编码
+			$("#USER_DEPTNAME").val('<%=departName%>');//申请人部门名称
 			$("#USER_JOB").val("");//申请人岗位
 			$("#USER_CONTACT").val("");//联系方式
 			$("#ACCOUNT_NEW").val("");//新增帐号
@@ -603,6 +654,7 @@
 		            	bill_code=datas.BILL_CODE;
 		            	$("#BILL_CODE").val(datas.BILL_CODE);//单号
 		            	$("#UNIT_CODE").val(datas.UNIT_CODE);//单位
+		        		$("#selectTree2_input").val(datas.depnameUnit);
 		    			$("#DEPT_CODE").val(datas.DEPT_CODE);//部门
 		    			$("#USER_CODE").val(datas.USER_CODE);//申请人
 		    			$("#USER_DEPT").val(datas.USER_DEPT);//申请人部门
@@ -808,7 +860,44 @@
 			+'</li>';
 			$("#tasks").append(htmlEmpty);
 		}
-		
+		function initComplete(){
+			//下拉树
+			var defaultNodes = {"treeNodes":${zTreeNodes}};
+			//绑定change事件
+			$("#selectTree").bind("change",function(){
+
+				if(!$(this).attr("relValue")){
+			    }else{
+					$("#UNIT_CODE").val($(this).attr("relValue"));	
+			    }
+				 //清空select框中数据
+				   $('#USER_CODE').empty();
+				$.ajax({
+					   type: "POST",
+					   url: '<%=basePath%>changeerpxtbg/getUsers.do',
+					   data: {'UNIT_CODE':$("#UNIT_CODE").val()},
+					   dataType:'json',
+					   cache: false,
+					   success: function (data) {
+					           $('#USER_CODE').append("<option value='0'>--请选择申请人--</option>");
+					            //遍历成功返回的数据
+					            $.each(data, function (index,item) {
+					                var userName = data[index].NAME;
+					                var userId = data[index].USER_ID;
+					                //构造动态option
+					                $('#USER_CODE').append("<option value='"+userId+"'>"+userName+"</option>")
+					             });
+					    },
+					    error: function () {
+
+					    }
+					  });
+
+			});
+			//赋给data属性
+			$("#selectTree").data("data",defaultNodes);  
+			$("#selectTree").render();
+		}		
 	</script>
 
 
