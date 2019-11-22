@@ -167,7 +167,7 @@
 			$("#Form").submit();
 		}
 		$("#tobodyUser").hide();
-// 		console.log('${pd.TEST_PAPER_ID}');
+
 		$("#TEST_PAPER_ID").val('${pd.TEST_PAPER_ID}');
 		
 		//保存

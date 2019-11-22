@@ -59,11 +59,11 @@
 										<tr>
 									<td width="25%"><span>课程名称：</span></td>
 									<td width="40%">
-										<select class="form-control" name="COURSE_CODE" id="COURSE_CODE" value="${pd.COURSE_CODE}" >
-<!-- 												<option value=""></option> -->
-<%-- 												<c:forEach items="${courseList}" var="course"> --%>
-<%-- 												<option value="${course.COURSE_ID}">${course.COURSE_NAME}</option> --%>
-<%-- 												</c:forEach> --%>
+										<select class="form-control" name="COURSE_CODE" id="COURSE_CODE"  >
+												<option value=""></option>
+												<c:forEach items="${courseList}" var="course">
+												<option value="${course.COURSE_ID}">${course.COURSE_NAME}</option>
+												</c:forEach>
 										</select>					
 									</td>																
 								</tr>
@@ -176,6 +176,7 @@
 			top.jzts();
 			$("#Form").submit();
 		}
+		$("#COURSE_CODE").val('${pd.COURSE_ID}');
 		//保存
 		function save(){
 			top.jzts();		
@@ -292,9 +293,8 @@
 			    }	
 // 				$("#selectTree").data("data",defaultNodes);  
 // 				$("#selectTree").render();
-				//$("#selectTree2_input").val("${null==coursetypeid||''==coursetypeid?'请选择课程类型':coursetypeid}");
 				 //清空select框中数据
-				   $('#COURSE_CODE').empty();
+				$('#COURSE_CODE').empty();
 				$.ajax({
 					   type: "POST",
 					   url: '<%=basePath%>coursebase/getCourse.do',
@@ -321,6 +321,10 @@
 			//赋给data属性
 			$("#selectTree").data("data",defaultNodes);  
 			$("#selectTree").render();
+			
+			$("#COURSE_TYPE_ID").val('${pd.COURSE_TYPE_ID}');
+			$("#selectTree2_input").val('${coursetype}');		
+
 		}		
 		//选择培训人群
 		function choiceStudent(){

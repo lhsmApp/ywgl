@@ -144,10 +144,14 @@
 			CREATE_DATE	
 		from 
 		<include refid="tableName"></include>
-		where
-			STATE = 1
-		and
-			COURSE_TYPE = #{COURSE_TYPE}
+		<where>
+			<if test="STATE!= null and STATE!= ''">
+				and  STATE = #{STATE}			
+			</if>	
+			<if test="COURSE_TYPE!= null and COURSE_TYPE!= ''">
+				and  COURSE_TYPE = #{COURSE_TYPE}			
+			</if>	
+		</where>		
 	</select>
 	
 	<!-- 批量删除 -->

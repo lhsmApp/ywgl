@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -80,11 +81,17 @@ public class TrainPlanController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd.put("STATE", "1");
+		pd.put("START_DATE", pd.getString("START_DATE").replace("-", ""));//开始日期
+		pd.put("END_DATE", pd.getString("END_DATE").replace("-", ""));//结束日期
 		if(null==pd.getString("TRAIN_PLAN_ID")||pd.getString("TRAIN_PLAN_ID").trim().equals("")){
 			String billCode=BillnumUtil.getExamBillnum(billNumService, ExamBillNum.TRAIN_PLAN);
 			pd.put("TRAIN_PLAN_ID", billCode);	//主键
 			pd.put("COURSE_ID",pd.getString("COURSE_CODE"));//课程ID
-			pd.put("CREATE_DATE", DateUtils.getCurrentDate());
+//			pd.put("CREATE_DATE", DateUtils.getCurrentDate());
+			DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+			Calendar calendar = Calendar.getInstance();
+			String nowDate = df.format(calendar.getTime());
+			pd.put("CREATE_DATE",nowDate);
 			String trainPersonStr=pd.getString("TRAIN_PLAN_PERSONS");
 			String [] trainPersons=trainPersonStr.split(",");
 			List<PageData> studentList=new ArrayList<PageData>();
@@ -99,7 +106,8 @@ public class TrainPlanController extends BaseController {
 			trainplanService.save(pd);
 			commonBase.setCode(0);
 		}else{
-			pd.put("UPDATE_DATE", DateUtils.getCurrentTime());
+			//pd.put("UPDATE_DATE", DateUtils.getCurrentTime());
+			pd.put("COURSE_ID",pd.getString("COURSE_CODE"));//课程ID
 			trainplanService.edit(pd);
 			commonBase.setCode(0);
 		}
@@ -206,7 +214,8 @@ public class TrainPlanController extends BaseController {
 		String[] persons =pd.getString("TRAIN_PLAN_PERSONS").split(",");
 		List<PageData> studentList = new ArrayList<PageData>();
 		studentList=trainstudentService.listChoiceStudent(persons);
-		List<PageData> courseTypePdList = new ArrayList<PageData>();
+		List<PageData> courseTypePdList = new ArrayList<PageData>();//课程类型集合
+		List<PageData> courseList = new ArrayList<PageData>();//课程集合
 		String codeStr="";
 		String nameStr="";
 		for(PageData p:studentList){
@@ -219,22 +228,36 @@ public class TrainPlanController extends BaseController {
   		  }
 		}
 		pd.put("COURSE_TYPE", pd.get("COURSE_TYPE_ID").toString());
-		List<PageData> varList = coursebaseService.listById(pd);
-		//pd.put("DEPARTMENT_ID", pdDepartResult.getString("DEPARTMENT_ID")); //根据编码读取ID
-		mv.setViewName("system/user/user_edit");
-		if(varList!=null)
-			mv.addObject("coursetypeid", varList.get(0).getString("NAME"));
+		PageData pdCourseType = new PageData();
+		pdCourseType = coursetypeService.findById(pd);
+		courseList=getCourse();
+		if(pdCourseType!=null)
+			mv.addObject("coursetype", pdCourseType.getString("COURSE_TYPE_NAME"));
 		else
-			mv.addObject("coursetypeid", null);
+			mv.addObject("coursetype", null);
 		JSONArray arr = JSONArray.fromObject(coursetypeService.listAllCourseTypeToSelect("0",courseTypePdList));
 		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
 		mv.setViewName("trainplan/trainplan/trainplan_Create");
+
 		mv.addObject("studentList", studentList);
+		mv.addObject("courseList", courseList);
 		pd.put("TRAIN_PERSONSNAME", nameStr);
 		pd.put("TRAIN_PERSONSCODE", codeStr);
 		mv.addObject("pd", pd);
 		return mv;
 	}	
+	/**根据课程分类获取课程信息
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/getCourse")
+	public  List<PageData> getCourse()throws Exception{
+		PageData pd = new PageData();
+		pd = this.getPageData();	
+		pd.put("STATE",'1');
+		List<PageData> varList = coursebaseService.listById(pd);
+		return varList;
+	}
 	/**获取培训人员列表
 	 * @param page
 	 * @throws Exception

@@ -77,7 +77,7 @@
 		from 
 		<include refid="tableName"></include>
 		where 
-			COURSE_TYPE_ID = #{COURSETYPE_ID}
+			COURSE_TYPE_ID = #{COURSE_TYPE_ID}
 	</select>
 	
 	<!-- 列表 -->
@@ -88,7 +88,7 @@
 		<include refid="tableName"></include>
 		<where>
 			<if test="pd.COURSETYPE_ID!= null and pd.COURSETYPE_ID != ''"><!-- 检索 -->
-			and COURSE_TYPE_PARENT_ID = #{pd.COURSETYPE_ID}
+			and COURSE_TYPE_PARENT_ID = #{pd.COURSE_TYPE_ID}
 			</if>
 			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
 				and

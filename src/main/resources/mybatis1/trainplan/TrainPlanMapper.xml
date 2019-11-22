@@ -83,7 +83,6 @@
 		update
 		<include refid="tableName"></include>
 		set 
-			TRAIN_PLAN_ID = #{TRAIN_PLAN_ID},
 			TRAIN_PLAN_NAME = #{TRAIN_PLAN_NAME},
 			START_DATE = #{START_DATE},
 			END_DATE = #{END_DATE},
@@ -91,14 +90,7 @@
 			COURSE_ID = #{COURSE_ID},
 			TRAIN_PLAN_MEMO = #{TRAIN_PLAN_MEMO},
 			TRAIN_PLAN_PERSONS = #{TRAIN_PLAN_PERSONS},
-			STATE = #{STATE},
-			CREATE_USER = #{CREATE_USER},
-			CREATE_DATE = #{CREATE_DATE},
-			CUST1 = #{CUST1},
-			CUST2 = #{CUST2},
-			CUST3 = #{CUST3},
-			CUST4 = #{CUST4},
-			CUST5 = #{CUST5}
+			STATE = #{STATE}
 		where 
 		TRAIN_PLAN_ID = #{TRAIN_PLAN_ID}
 	</update>

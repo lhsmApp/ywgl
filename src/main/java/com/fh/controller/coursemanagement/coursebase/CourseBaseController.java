@@ -201,7 +201,8 @@ public class CourseBaseController extends BaseController {
 	@RequestMapping(value="/getCourse")
 	public @ResponseBody List<PageData> getCourse()throws Exception{
 		PageData pd = new PageData();
-		pd = this.getPageData();		
+		pd = this.getPageData();	
+		pd.put("STATE",'1');
 		List<PageData> varList = coursebaseService.listById(pd);
 		return varList;
 	}
