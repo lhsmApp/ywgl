@@ -87,5 +87,25 @@ public class ERPTempAcctApplicationService implements ERPTempAcctApplicationMana
 	public void grcUpdateDatabase(List<PageData> listData) throws Exception {
 		dao.update("ERPTempAcctApplicationMapper.delAndIns", listData);
 	}
+
+	/**
+	 * 批量审批/驳回
+	 * @param pd
+	 * @throws Exception
+	 */
+	public void editReportState(PageData pd) throws Exception {
+		dao.update("ERPTempAcctApplicationMapper.editReportState",pd);
+	}
+
+	/**
+	 * 业务期间集合
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PageData> listBusiDate(PageData pd) throws Exception {
+		return (List<PageData>)dao.findForList("ERPTempAcctApplicationMapper.listBusiDate", pd);
+	}
 }
 

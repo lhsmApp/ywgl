@@ -23,18 +23,21 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fh.controller.base.BaseController;
 import com.fh.controller.common.Common;
-import com.fh.controller.common.DictsUtil;
 import com.fh.entity.CommonBase;
 import com.fh.entity.Page;
 import com.fh.entity.TableColumns;
 import com.fh.entity.TmplConfigDetail;
+import com.fh.entity.system.User;
 import com.fh.exception.CustomException;
 import com.fh.service.dataReporting.erpofficialacctapplication.ERPOfficialAcctApplicationManager;
-import com.fh.service.fhoa.department.impl.DepartmentService;
 import com.fh.service.tmplconfig.tmplconfig.impl.TmplConfigService;
+import com.fh.util.Const;
 import com.fh.util.Jurisdiction;
 import com.fh.util.ObjectExcelView;
 import com.fh.util.PageData;
+import com.fh.util.StringUtil;
+import com.fh.util.date.DateFormatUtils;
+import com.fh.util.date.DateUtils;
 import com.fh.util.excel.LeadingInExcelToPageData;
 import com.fh.util.excel.TransferSbcDbc;
 
@@ -54,8 +57,6 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 	private ERPOfficialAcctApplicationManager erpofficialacctapplicationService;
 	@Resource(name="tmplconfigService")
 	private TmplConfigService tmplconfigService;
-	@Resource(name="departmentService")
-	private DepartmentService departmentService;
 	
 	String TableNameDetail = "TB_DI_ERP_OAA"; // 表名  tb_di_erp_oaa
 	Map<String, TableColumns> Map_HaveColumnsList = new LinkedHashMap<String, TableColumns>();
@@ -75,6 +76,7 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 		String staffId = null;
 		PageData pd = new PageData();
 		CommonBase commonBase = new CommonBase();
+		User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USER);
 		commonBase.setCode(-1);
 		pd = this.getPageData();
 		listData = pd.getString("listData");
@@ -84,12 +86,17 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 		for (int i = 0; i < listTransferData.size(); i++) {
 			staffId = listTransferData.get(i).trim();
 			PageData pageData = new PageData();
+			pageData.put("CONFIRM_STATE", "1"); //1未上报 2已上报 3撤销上报 4已驳回
+			pageData.put("USER_DEPART",user.getUNIT_CODE());
+			pageData.put("BUSI_DATE",DateUtils.getCurrentDateMonth()); //业务期间
 			pageData.put("STATE","1");
+			pageData.put("BILL_USER",user.getUSER_ID());
+			pageData.put("BILL_DATE",DateUtils.getCurrentTime(DateFormatUtils.TIME_NOFUll_FORMAT));
 			pageData.put("ID",listTransferData.get(i++));
 			pageData.put("STAFF_CODE",listTransferData.get(i++).trim());
 			pageData.put("STAFF_NAME",listTransferData.get(i++).trim());
-			pageData.put("STAFF_UNIT_LEVEL2",listTransferData.get(i++).trim());
-			pageData.put("STAFF_UNIT_LEVEL3",listTransferData.get(i++).trim());
+			pageData.put("DEPART_CODE",listTransferData.get(i++).trim());
+			pageData.put("UNITS_DEPART",listTransferData.get(i++).trim());
 			pageData.put("STAFF_POSITION",listTransferData.get(i++).trim());
 			pageData.put("STAFF_JOB",listTransferData.get(i++).trim());
 			pageData.put("STAFF_MODULE",listTransferData.get(i++).trim());
@@ -123,22 +130,19 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
+		User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USER);
 		pd = this.getPageData();
-		String keywords = pd.getString("keywords");				//关键词检索条件
-		if(null != keywords && !"".equals(keywords)){
-			pd.put("keywords", keywords.trim());
+		String confirmState = pd.getString("confirmState");
+		if(null == confirmState || StringUtil.isEmpty(confirmState)) {
+			pd.put("confirmState", "1");  //1未上报 2已上报 3撤销上报 4已驳回
 		}
+		pd.put("DEPART_CODE",user.getUNIT_NAME());
+		pd.put("USER_DEPART",user.getUNIT_CODE());
 		page.setPd(pd);
 		List<PageData>	varList = erpofficialacctapplicationService.list(page);	//列出ERPOfficialAcctApplication列表
-		String DepartmentSelectTreeSource=DictsUtil.getDepartmentSelectTreeSource(departmentService);
-		if(DepartmentSelectTreeSource.equals("0"))
-		{
-			pd.put("departTreeSource", DepartmentSelectTreeSource);
-		} else {
-			pd.put("departTreeSource", 1);
-		}
+		List<PageData> listBusiDate = erpofficialacctapplicationService.listBusiDate(pd);
 		mv.setViewName("dataReporting/erpofficialacctapplication/erpofficialacctapplication_list");
-		mv.addObject("zTreeNodes", DepartmentSelectTreeSource);
+		mv.addObject("listBusiDate",listBusiDate);
 		mv.addObject("varList", varList);
 		mv.addObject("pd", pd);
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
@@ -147,8 +151,8 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 		Map_HaveColumnsList = Common.GetHaveColumnsMapByTableName(TableNameDetail, tmplconfigService);
 		Map_SetColumnsList.put("STAFF_CODE", new TmplConfigDetail("STAFF_CODE", "员工编号", "1", false));
 		Map_SetColumnsList.put("STAFF_NAME", new TmplConfigDetail("STAFF_NAME", "员工姓名", "1", false));
-		Map_SetColumnsList.put("STAFF_UNIT_LEVEL2", new TmplConfigDetail("STAFF_UNIT", "二级单位", "1", false));
-		Map_SetColumnsList.put("STAFF_UNIT_LEVEL3", new TmplConfigDetail("STAFF_DEPART", "三级单位", "1", false));
+		Map_SetColumnsList.put("DEPART_CODE", new TmplConfigDetail("DEPART_CODE", "二级单位", "1", false));
+		Map_SetColumnsList.put("UNITS_DEPART", new TmplConfigDetail("UNITS_DEPART", "三级单位", "1", false));
 		Map_SetColumnsList.put("STAFF_POSITION", new TmplConfigDetail("STAFF_POSITION", "职务", "1", false));
 		Map_SetColumnsList.put("STAFF_JOB", new TmplConfigDetail("STAFF_JOB", "岗位", "1", false));
 		Map_SetColumnsList.put("STAFF_MODULE", new TmplConfigDetail("STAFF_MODULE", "模块", "1", false));
@@ -189,6 +193,31 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 		return commonBase;
 	}
 	
+	/**批量上报/撤销上报
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/report")
+	@ResponseBody
+	public CommonBase editReport() throws Exception{
+		logBefore(logger, Jurisdiction.getUsername()+"批量上报/撤销上报ERPOfficialAcctApplication");
+		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return null;} //校验权限
+		PageData pd = new PageData();
+		CommonBase commonBase = new CommonBase();
+		commonBase.setCode(-1);
+		pd = this.getPageData();
+		String DATA_IDS = pd.getString("DATA_IDS");
+		if(null != DATA_IDS && !"".equals(DATA_IDS)){
+			String arrayDATA_IDS[] = DATA_IDS.split(",");
+			pd.put("arrayDATA_IDS", arrayDATA_IDS);
+			erpofficialacctapplicationService.editReportState(pd);
+			commonBase.setCode(0);
+		}else{
+			commonBase.setCode(-1);
+		}
+		return commonBase;
+	}
+	
 	/**
 	 * 打开上传EXCEL页面
 	 * 
@@ -216,12 +245,10 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 	@RequestMapping(value = "/excel")
 	public ModelAndView exportExcel(Page page) throws Exception {
 		logBefore(logger, Jurisdiction.getUsername() + "导出ERPOfficialAcctApplication到excel");
-		// if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;}
-
-		PageData getPd = this.getPageData();
-		// 页面显示数据的年月
-		// getPd.put("SystemDateTime", SystemDateTime);
-		page.setPd(getPd);
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		pd.put("confirmState", "1,2,4"); //1未上报 2已上报 3撤销上报 4已驳回
+		page.setPd(pd);
 		List<PageData> varOList = erpofficialacctapplicationService.exportList(page);
 		return export(varOList, "", Map_SetColumnsList);
 	}
@@ -334,6 +361,16 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 			judgement = true;
 		}
 		if (judgement) {
+			User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USER);
+			for (PageData pageData : listUploadAndRead) {
+			//将每条数据插入新内容
+				pageData.put("CONFIRM_STATE", "1"); //1未上报 2已上报 3撤销上报 4已驳回
+				pageData.put("USER_DEPART",StringUtil.toString(user.getUNIT_CODE(), ""));
+				pageData.put("BUSI_DATE",DateUtils.getCurrentDateMonth()); //业务期间
+				pageData.put("STATE","1");
+				pageData.put("BILL_USER",user.getUSER_ID());
+				pageData.put("BILL_DATE",DateUtils.getCurrentTime(DateFormatUtils.TIME_NOFUll_FORMAT));
+			}
 			erpofficialacctapplicationService.grcUpdateDatabase(listUploadAndRead);
 			commonBase.setCode(0);
 		} else {

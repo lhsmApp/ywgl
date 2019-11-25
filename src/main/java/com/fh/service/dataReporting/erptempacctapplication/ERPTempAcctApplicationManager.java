@@ -61,5 +61,20 @@ public interface ERPTempAcctApplicationManager{
 	 */
 	public void grcUpdateDatabase(List<PageData> listData) throws Exception;
 	
+	/**
+	 * 批量审批/驳回
+	 * @param pd
+	 * @throws Exception
+	 */
+	public void editReportState(PageData pd)throws Exception;
+	
+	/**
+	 * 业务期间集合
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public List<PageData> listBusiDate(PageData pd)throws Exception;
+	
 }
 

@@ -95,5 +95,25 @@ public class ERPOfficialAcctApplicationService implements ERPOfficialAcctApplica
 	public void grcUpdateDatabase(List<PageData> listData) throws Exception {
 		dao.update("ERPOfficialAcctApplicationMapper.delAndIns", listData);
 	}
+	
+	/**
+	 *  批量审批
+	 * @param pageData
+	 * @throws Exception
+	 */
+	public void editReportState(PageData pageData)throws Exception{
+		dao.update("ERPOfficialAcctApplicationMapper.editReportState",pageData);
+	}
+
+	/**
+	 * 业务期间集合
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PageData> listBusiDate(PageData pd) throws Exception {
+		return (List<PageData>)dao.findForList("ERPOfficialAcctApplicationMapper.listBusiDate", pd);
+	}
 }
 

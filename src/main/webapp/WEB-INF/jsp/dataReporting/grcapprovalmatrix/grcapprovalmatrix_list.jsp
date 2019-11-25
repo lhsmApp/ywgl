@@ -76,7 +76,7 @@
 								<a class="btn btn-white btn-info btn-bold" onclick="toExcel()"><span class="ace-icon fa fa-cloud-download"></span>导出</a>
 								</tr>
 							</table>
-							<table id="simple-table" class="mtable" style="margin-top:5px;">	
+							<table id="simple-table" class="mtable" style="margin-top:5px; width: 99%;">	
 								<thead style="height: 40px">
 									<tr>
 										<th class="center" style="width:35px; background-color: #BEBEC5;">
@@ -106,10 +106,10 @@
 								</tbody>
 							</table>
 							<!-- 分页 -->
-							<div class="position-relative">
+							<div class="position-relative page-header pull-right">
 								<table style="width:100%;">
 									<tr>
-										<td style="vertical-align:top;"><div class="pagination" style="padding-left: 495px;margin-top: 0px;">${page.pageStr}</div></td>
+										<td style="vertical-align:top;"><div class="pagination">${page.pageStr}</div></td>
 									</tr>
 								</table>
 							</div>

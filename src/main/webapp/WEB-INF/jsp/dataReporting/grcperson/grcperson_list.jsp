@@ -77,20 +77,20 @@
 									</tr>
 								</table>
 								<!-- 检索  -->
-								<table id="simple-table" class="mtable" style="margin-top:5px;width: 850px">	
+								<table id="simple-table" class="mtable" style="margin-top:5px;width:99%">	
 									<thead style="height: 40px">
 										<tr>
 											<th class="center" style="width:35px; background-color: #BEBEC5;">
 												<label class="pos-rel"><input type="checkbox" class="ace" id="zcheckbox"/><span class="lbl"></span></label>
 											</th>
-											<th style="width:90px; background-color: #BEBEC5; text-align: center;">员工编号</th>
-											<th style="width:90px; background-color: #BEBEC5; text-align: center;">员工姓名</th>
-											<th style="width:90px; background-color: #BEBEC5; text-align: center;">单位</th>
-											<th style="width:90px; background-color: #BEBEC5; text-align: center;">部门</th>
-											<th style="width:90px; background-color: #BEBEC5; text-align: center;">职务</th>
-											<th style="width:90px; background-color: #BEBEC5; text-align: center;">岗位</th>
+											<th style="width:110px; height:30px; background-color: #BEBEC5; text-align: center;">员工编号</th>
+											<th style="width:110px; background-color: #BEBEC5; text-align: center;">员工姓名</th>
+											<th style="width:110px; background-color: #BEBEC5; text-align: center;">单位</th>
+											<th style="width:110px; background-color: #BEBEC5; text-align: center;">部门</th>
+											<th style="width:110px; background-color: #BEBEC5; text-align: center;">职务</th>
+											<th style="width:110px; background-color: #BEBEC5; text-align: center;">岗位</th>
 											<th style="width:100px; background-color: #BEBEC5; text-align: center;">办公室电话</th>
-											<th style="width:90px; background-color: #BEBEC5; text-align: center;">手机号</th>
+											<th style="width:110px; background-color: #BEBEC5; text-align: center;">手机号</th>
 											<th style="width:120px; background-color: #BEBEC5; text-align: center;">中国石油邮箱</th>
 										</tr>
 									</thead>
@@ -115,10 +115,10 @@
 									</tbody>
 								</table>
 								<!-- 分页 -->
-								<div class="position-relative">
+								<div class="position-relative page-header pull-right">
 									<table style="width:100%;">
 										<tr>
-											<td style="vertical-align:top;"><div class="pagination" style="padding-left: 495px;margin-top: 0px;">${page.pageStr}</div></td>
+											<td style="vertical-align:top;"><div class="pagination">${page.pageStr}</div></td>
 										</tr>
 									</table>
 								</div>
