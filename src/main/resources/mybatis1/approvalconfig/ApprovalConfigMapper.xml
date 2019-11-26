@@ -977,5 +977,28 @@
 		select * from TB_APPROVAL_DETAIL
 		where 
 			BILL_CODE = #{BILL_CODE}
+	</select>	
+	<select id="listStatistic" parameterType="pd" resultType="pd">
+	SELECT c.BUSINESS_CODE,b.BUSINESS_NAME,c.total,c.solve,  CONCAT( ROUND( c.solve/c.total * 100, 2 ), '', '%' ) AS solverate FROM 
+(SELECT 
+  a.BUSINESS_CODE,a.APPLY_DATE,
+  COUNT(a.BUSINESS_CODE) AS total,
+  SUM(
+    CASE
+      WHEN a.APPROVAL_STATE = '1' 
+      THEN 1 
+      ELSE 0 
+    END
+  ) AS solve
+FROM
+  tb_approval_main a 
+  where 1=1
+	<if test="START_DATE!=null and START_DATE!='' "> 
+			  and SUBSTRING(APPLY_DATE,1,10) &gt;= #{START_DATE} 
+			 </if>
+	<if test="END_DATE!=null and END_DATE!=''"> 
+			  and SUBSTRING(APPLY_DATE,1,10) &lt;= #{END_DATE} 
+			 </if> 
+GROUP BY a.BUSINESS_CODE)AS c LEFT JOIN tb_approval_business_config b ON  c.BUSINESS_CODE=b.BUSINESS_CODE
 	</select>
 </mapper>

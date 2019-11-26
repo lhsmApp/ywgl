@@ -57,6 +57,7 @@ public interface ApprovalConfigManager{
 	public List<PageData> listMain(Page page)throws Exception;
 	public List<PageData> listScheme(Page page)throws Exception;
 	public List<PageData> listByBusiness(Page page,String mapStr)throws Exception;
+	public List<PageData> listStatistic(PageData pd)throws Exception;
 	
 	/**列表(全部)
 	 * @param pd

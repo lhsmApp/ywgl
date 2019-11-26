@@ -28,12 +28,16 @@ import com.fh.util.PageData;
 import com.fh.util.Jurisdiction;
 import com.fh.util.Tools;
 import com.fh.util.date.DateUtils;
+
+import net.sf.json.JSONArray;
+
 import com.fh.service.approvalconfig.approvalconfig.ApprovalConfigManager;
 import com.fh.service.changeerpxtbg.changeerpjsbg.impl.ChangeErpJsbgService;
 import com.fh.service.changeerpxtbg.changeerpxtbg.impl.ChangeErpXtbgService;
 import com.fh.service.changegrcxtbg.changegrcqxbg.impl.ChangeGrcQxbgService;
 import com.fh.service.changegrcxtbg.changegrczhxz.impl.ChangeGrcZhxzService;
 import com.fh.service.changegrcxtbg.changegrczhzx.impl.ChangeGrcZhzxService;
+import com.fh.service.fhoa.department.DepartmentManager;
 
 /** 
  * 说明：TB_APPROVAL_BUSINESS_CONFIG
@@ -63,6 +67,9 @@ public class ApprovalConfigController extends BaseController {
 	@Resource(name="changegrczhzxService")
 	private ChangeGrcZhzxService changegrczhzxService;
 	
+	@Resource(name="departmentService")
+	private DepartmentManager departmentService;
+	
 	
 	/**保存
 	 * @param
@@ -70,8 +77,6 @@ public class ApprovalConfigController extends BaseController {
 	 */
 	@RequestMapping(value="/save")
 	public ModelAndView save() throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"新增ApprovalConfig");
-		if(!Jurisdiction.buttonJurisdiction(menuUrl, "add")){return null;} //校验权限
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
@@ -143,6 +148,18 @@ public class ApprovalConfigController extends BaseController {
 		}	
 	
 		return pd;
+	}
+	/**显示变更统计数据
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/listStatistic")
+	public @ResponseBody List<PageData> listStatistic() throws Exception{
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		List<PageData>	varList = approvalconfigService.listStatistic(pd);	//
+	
+		return varList;
 	}
 	/**列表
 	 * @param page
@@ -377,14 +394,14 @@ public class ApprovalConfigController extends BaseController {
 		pd = this.getPageData();
 		try{
 			User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
-	//	    String unitCode=user.getDEPARTMENT_ID();
-		    String userName=user.getUSERNAME();  
+		    String unitCode=user.getDEPARTMENT_ID();
+		    String userId=user.getUSER_ID();  
 		    String roleId=user.getROLE_ID();
-		    pd.put("APPROVAL_USER",userName);//实际审批人
+		    pd.put("APPROVAL_USER",userId);//实际审批人
 			pd.put("APPROVAL_DATE", DateUtils.getCurrentTime());//审批日期
 			pd.put("APPROVAL_ADVICE", "同意");
 			pd.put("APPROVAL_STATE", "1");
-	//		pd.put("UNIT_CODE",unitCode);//单位编码
+			pd.put("UNIT_CODE",unitCode);//单位编码
 			pd.put("ROLE_CODE",roleId);//角色
 			//当下一审批级别为0时，即最后一级审批更新审批主表为已完成
 			if (Integer.parseInt(pd.get("NEXT_LEVEL").toString())==0){
@@ -454,7 +471,25 @@ public class ApprovalConfigController extends BaseController {
 		mv.addObject("pd", pd);
 		return mv;
 	}	
-	
+	/**变更统计列表
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/listBgStatistic")
+	public ModelAndView listBgStatistic(Page page) throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		page.setPd(pd);
+		List<PageData>	varList = approvalconfigService.listBusiness(page);	
+		mv.setViewName("statisticAnalysis/bgStatistic/bgStatistic_list");
+		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
+		JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0",zdepartmentPdList));
+		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
+		mv.addObject("varList", varList);
+		mv.addObject("pd", pd);
+		return mv;
+	}
 	 /**批量删除
 	 * @param
 	 * @throws Exception

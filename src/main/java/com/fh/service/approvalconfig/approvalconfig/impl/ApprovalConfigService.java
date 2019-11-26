@@ -124,7 +124,10 @@ public class ApprovalConfigService implements ApprovalConfigManager{
 	public List<PageData> listByBusiness(Page page,String mapStr)throws Exception{
 		return (List<PageData>)dao.findForList("ApprovalConfigMapper."+mapStr, page);
 	}
-	
+	@SuppressWarnings("unchecked")
+	public List<PageData> listStatistic(PageData pd)throws Exception{
+		return (List<PageData>)dao.findForList("ApprovalConfigMapper.listStatistic", pd);
+	}
 	/**列表(全部)
 	 * @param pd
 	 * @throws Exception
