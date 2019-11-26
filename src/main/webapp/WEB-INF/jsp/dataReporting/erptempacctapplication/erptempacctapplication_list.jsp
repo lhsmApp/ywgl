@@ -62,6 +62,7 @@
 								<td>
 									 <c:if test="${not empty listBusiDate}"> 	
 										<select class="form-control" id="busiDate" name="busiDate" style="width:150px;margin-left: 5px;">
+											<option value="" >请选择业务期间</option>
 											<c:forEach items="${listBusiDate}" var="var">
 												<option value="${var.BUSI_DATE}" <c:if test="${pd.busiDate == var.BUSI_DATE}">selected="selected"</c:if>>${var.BUSI_DATE}</option>
 											</c:forEach>

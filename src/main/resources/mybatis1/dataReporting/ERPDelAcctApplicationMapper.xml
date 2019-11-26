@@ -110,7 +110,7 @@
 		where  STATE=1
 		<if test="pd.SelectedDepartCode != null and pd.SelectedDepartCode != ''">
 		and 
-			DEPART_CODE = #{pd.SelectedDepartCode}
+			USER_DEPART = #{pd.SelectedDepartCode}
 		</if>
 		
 		<if test="pd.confirmState != null and pd.confirmState != ''">

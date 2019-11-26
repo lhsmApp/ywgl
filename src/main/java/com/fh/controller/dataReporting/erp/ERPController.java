@@ -70,13 +70,15 @@ public class ERPController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		String keywords = pd.getString("keywords");				//关键词检索条件
-		if(null != keywords && !"".equals(keywords)){
-			pd.put("keywords", keywords.trim());
+		String confirmState = pd.getString("confirmState");
+		if(null == confirmState || StringUtil.isEmpty(confirmState)) {
+			pd.put("confirmState", "2"); //2待审批 3已审批
 		}
 		page.setPd(pd);
 		List<PageData>	varList = erpdelacctapplicationService.list(page);	//列出ERPDelAcctApplication列表
-		String DepartmentSelectTreeSource=DictsUtil.getDepartmentSelectTreeSource(departmentService);
+		//获取业务期间
+		List<PageData>  listBusiDate = erpdelacctapplicationService.listBusiDate(pd);
+		String DepartmentSelectTreeSource=DictsUtil.getDepartmentSelectTreeSource(departmentService,"00");
 		if(DepartmentSelectTreeSource.equals("0"))
 		{
 			pd.put("departTreeSource", DepartmentSelectTreeSource);
@@ -86,13 +88,15 @@ public class ERPController extends BaseController {
 		mv.addObject("zTreeNodes", DepartmentSelectTreeSource);
 		mv.setViewName("dataReporting/erp/erpdaa_list");
 		mv.addObject("varList", varList);
+		mv.addObject("listBusiDate",listBusiDate);
 		mv.addObject("pd", pd);
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		
+		Map_SetColumnsList.clear();
 		Map_SetColumnsList.put("STAFF_CODE", new TmplConfigDetail("STAFF_CODE", "员工编号", "1", false));
 		Map_SetColumnsList.put("STAFF_NAME", new TmplConfigDetail("STAFF_NAME", "员工姓名", "1", false));
-		Map_SetColumnsList.put("STAFF_UNIT_LEVEL2", new TmplConfigDetail("STAFF_UNIT", "二级单位", "1", false));
-		Map_SetColumnsList.put("STAFF_UNIT_LEVEL3", new TmplConfigDetail("STAFF_DEPART", "三级单位", "1", false));
+		Map_SetColumnsList.put("DEPART_CODE", new TmplConfigDetail("DEPART_CODE", "二级单位", "1", false));
+		Map_SetColumnsList.put("UNITS_DEPART", new TmplConfigDetail("UNITS_DEPART", "三级单位", "1", false));
 		Map_SetColumnsList.put("STAFF_POSITION", new TmplConfigDetail("STAFF_POSITION", "职务", "1", false));
 		Map_SetColumnsList.put("STAFF_JOB", new TmplConfigDetail("STAFF_JOB", "岗位", "1", false));
 		Map_SetColumnsList.put("STAFF_MODULE", new TmplConfigDetail("STAFF_MODULE", "模块", "1", false));
@@ -117,16 +121,14 @@ public class ERPController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		String keywords = pd.getString("keywords");				//关键词检索条件
 		String confirmState = pd.getString("confirmState");
-		if(null != keywords && !"".equals(keywords)){
-			pd.put("keywords", keywords.trim());
-		}
 		if(null == confirmState || StringUtil.isEmpty(confirmState)) {
-			pd.put("confirmState", "2,3"); //2待审批 3已审批
+			pd.put("confirmState", "2"); //2待审批 3已审批
 		}
 		page.setPd(pd);
 		List<PageData>	varList = erpofficialacctapplicationService.list(page);	//列出ERPOfficialAcctApplication列表
+		//获取业务期间
+		List<PageData>  listBusiDate = erpofficialacctapplicationService.listBusiDate(pd);
 		String DepartmentSelectTreeSource=DictsUtil.getDepartmentSelectTreeSource(departmentService,"00");
 		if(DepartmentSelectTreeSource.equals("0"))
 		{
@@ -134,9 +136,9 @@ public class ERPController extends BaseController {
 		} else {
 			pd.put("departTreeSource", 1);
 		}
-		pd.put("confirmState", confirmState);
 		mv.setViewName("dataReporting/erp/erpoaa_list");
 		mv.addObject("zTreeNodes", DepartmentSelectTreeSource);
+		mv.addObject("listBusiDate",listBusiDate);
 		mv.addObject("varList", varList);
 		mv.addObject("pd", pd);
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
@@ -145,8 +147,8 @@ public class ERPController extends BaseController {
 		Map_SetColumnsList.clear();//清空,重新添加防止导出时污染输出源
 		Map_SetColumnsList.put("STAFF_CODE", new TmplConfigDetail("STAFF_CODE", "员工编号", "1", false));
 		Map_SetColumnsList.put("STAFF_NAME", new TmplConfigDetail("STAFF_NAME", "员工姓名", "1", false));
-		Map_SetColumnsList.put("STAFF_UNIT_LEVEL2", new TmplConfigDetail("STAFF_UNIT_LEVEL2", "二级单位", "1", false));
-		Map_SetColumnsList.put("STAFF_UNIT_LEVEL3", new TmplConfigDetail("STAFF_UNIT_LEVEL3", "三级单位", "1", false));
+		Map_SetColumnsList.put("DEPART_CODE", new TmplConfigDetail("DEPART_CODE", "二级单位", "1", false));
+		Map_SetColumnsList.put("UNITS_DEPART", new TmplConfigDetail("UNITS_DEPART", "三级单位", "1", false));
 		Map_SetColumnsList.put("STAFF_POSITION", new TmplConfigDetail("STAFF_POSITION", "职务", "1", false));
 		Map_SetColumnsList.put("STAFF_JOB", new TmplConfigDetail("STAFF_JOB", "岗位", "1", false));
 		Map_SetColumnsList.put("STAFF_MODULE", new TmplConfigDetail("STAFF_MODULE", "模块", "1", false));
@@ -160,7 +162,6 @@ public class ERPController extends BaseController {
 		Map_SetColumnsList.put("UKEY_NUM", new TmplConfigDetail("UKEY_NUM", "UKey编号", "1", false));
 		Map_SetColumnsList.put("APPLY_DATE", new TmplConfigDetail("APPLY_DATE", "申请日期", "1", false));
 		Map_SetColumnsList.put("NOTE", new TmplConfigDetail("NOTE", "备注", "1", false));
-		Map_SetColumnsList.put("CONFIRM_STATE", new TmplConfigDetail("CONFIRM_STATE", "确认状态", "1", false));
 		return mv;
 	}
 	
@@ -175,22 +176,24 @@ public class ERPController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		String keywords = pd.getString("keywords");				//关键词检索条件
-		if(null != keywords && !"".equals(keywords)){
-			pd.put("keywords", keywords.trim());
+		String confirmState = pd.getString("confirmState");
+		if(null == confirmState || StringUtil.isEmpty(confirmState)) {
+			pd.put("confirmState", "2"); //2待审批 3已审批
 		}
-		pd.put("", "3");
 		page.setPd(pd);
 		List<PageData>	varList = erptempacctapplicationService.list(page);	//列出ERPTempAcctApplication列表
-		String DepartmentSelectTreeSource=DictsUtil.getDepartmentSelectTreeSource(departmentService);
+		//获取业务期间
+		List<PageData>  listBusiDate = erpdelacctapplicationService.listBusiDate(pd);
+		String DepartmentSelectTreeSource=DictsUtil.getDepartmentSelectTreeSource(departmentService,"00");
 		if(DepartmentSelectTreeSource.equals("0"))
 		{
 			pd.put("departTreeSource", DepartmentSelectTreeSource);
 		} else {
 			pd.put("departTreeSource", 1);
 		}
+		mv.setViewName("dataReporting/erp/erptaa_list");
 		mv.addObject("zTreeNodes", DepartmentSelectTreeSource);
-		mv.setViewName("dataReporting/erptempacctapplication/erptempacctapplication_list");
+		mv.addObject("listBusiDate",listBusiDate);
 		mv.addObject("varList", varList);
 		mv.addObject("pd", pd);
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
@@ -242,7 +245,7 @@ public class ERPController extends BaseController {
 	
 	
 	/**
-	 * 批量上报
+	 * 批量上报/驳回
 	 * 
 	 * @param
 	 * @throws Exception
@@ -267,7 +270,7 @@ public class ERPController extends BaseController {
 	}
 	
 	/**
-	 * 批量上报
+	 * 批量上报/驳回
 	 * 
 	 * @param
 	 * @throws Exception
@@ -299,13 +302,45 @@ public class ERPController extends BaseController {
 	 * @param
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/excel")
-	public ModelAndView exportExcel(Page page) throws Exception {
+	@RequestMapping(value = "/oaaExcel")
+	public ModelAndView oaaExportExcel(Page page) throws Exception {
 		logBefore(logger, Jurisdiction.getUsername() + "导出ERP审批数据到excel");
 		PageData pd = this.getPageData();
-		pd.put("CONFIRM_STATE", "2,3"); //2待审批 3已审批
+		pd.put("confirmState", "2,3"); //2待审批 3已审批
 		page.setPd(pd);
 		List<PageData> varOList = erpofficialacctapplicationService.exportList(page);
+		return export(varOList, "", Map_SetColumnsList);
+	}
+	
+	/**
+	 * 导出到excel
+	 * 
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/taaExcel")
+	public ModelAndView taaExportExcel(Page page) throws Exception {
+		logBefore(logger, Jurisdiction.getUsername() + "导出ERP审批数据到excel");
+		PageData pd = this.getPageData();
+		pd.put("confirmState", "2,3"); //2待审批 3已审批
+		page.setPd(pd);
+		List<PageData> varOList = erptempacctapplicationService.exportList(page);
+		return export(varOList, "", Map_SetColumnsList);
+	}
+	
+	/**
+	 * 导出到excel
+	 * 
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/daaExcel")
+	public ModelAndView daaExportExcel(Page page) throws Exception {
+		logBefore(logger, Jurisdiction.getUsername() + "导出ERP审批数据到excel");
+		PageData pd = this.getPageData();
+		pd.put("confirmState", "2,3"); //2待审批 3已审批
+		page.setPd(pd);
+		List<PageData> varOList = erpdelacctapplicationService.exportList(page);
 		return export(varOList, "", Map_SetColumnsList);
 	}
 	

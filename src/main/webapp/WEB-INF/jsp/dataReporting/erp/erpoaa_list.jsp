@@ -42,19 +42,19 @@
 					<div class="page-header">
 						<table style="width:100%;">
 							<tbody>
-							<tr>
-								<td>
-									<div class="pull-right">
-										<span class="green middle bolder">审批类型: &nbsp;</span>
+								<tr>
+									<td>
+										<div class="pull-right">
+											<span class="green middle bolder">审批类型: &nbsp;</span>
 											<div class="btn-toolbar inline middle no-margin">
 												<div data-toggle="buttons" class="btn-group no-margin">
-													<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toERPOfficialAcctApplication()">
+													<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toERPOaa()">
 														<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP正式账号审批</span>
 													</button>
-													<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toERPTempacctApplication()">
+													<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toERPTaa()">
 														<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP临时账号审批</span>
 													</button>
-													<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toERPDelAcctApplication()">
+													<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toERPDaa()">
 														<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP删除账号审批</span>
 													</button>
 												</div>
@@ -70,12 +70,14 @@
 							<table style="margin-bottom:6px; float:left;">
 								<tr>
 									<td>
-										<div class="nav-search">
-											<span class="input-icon">
-												<input type="text" placeholder="这里输入关键词" class="nav-search-input" id="nav-search-input" autocomplete="off" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词"/>
-												<i class="ace-icon fa fa-search nav-search-icon"></i>
-											</span>
-										</div>
+										<c:if test="${not empty listBusiDate}"> 	
+											<select class="form-control" id="busiDate" name="busiDate" style="width:150px;margin-left: 5px;">
+												<option value="" >请选择业务期间</option>
+												<c:forEach items="${listBusiDate}" var="var">
+													<option value="${var.BUSI_DATE}" <c:if test="${pd.busiDate == var.BUSI_DATE}">selected="selected"</c:if>>${var.BUSI_DATE}</option>
+												</c:forEach>
+											</select>
+										</c:if>
 									</td>
 									<td style="vertical-align:top;padding-left:5px;">
 									 	<span class="pull-left" style="margin-right: 5px;">
@@ -85,25 +87,24 @@
 											</span>
 									</td>
 									<td>
-										<select class="form-control" id="confirmState" name="confirmState" style="width:150px;">
-											<option value="">全部</option>
+										<select class="form-control" id="confirmState" name="confirmState" style="width:150px;" onchange="tosearch()">
 											<option value="2" <c:if test="${pd.confirmState == 2}">selected="selected"</c:if>>待审批</option>
 											<option value="3" <c:if test="${pd.confirmState == 3}">selected="selected"</c:if>>已审批</option>
 										</select>
 									</td>
 									<td style="vertical-align:top;padding-left:3px;">
 										<a class="btn btn-info btn-sm" onclick="tosearch()"><i class="ace-icon fa fa-search bigger-110"></i></a>
-										<a class="btn btn-white btn-info btn-bold" onclick="oaaReport('确定要审批当前数据吗?')"><i class="ace-icon fa fa-check-square-o bigger-110"></i>批量审批</a>
-										<a class="btn btn-white btn-info btn-bold" onclick="oaaBackReport('确定要驳回吗?');" title="批量驳回" ><i class="ace-icon fa fa-exclamation-triangle red bigger-110"></i>批量驳回</a>
+										<a class="btn btn-white btn-info btn-bold" onclick="daaReport('确定要审批当前数据吗?')"><i class="ace-icon fa fa-check-square-o bigger-110"></i>批量审批</a>
+										<a class="btn btn-white btn-info btn-bold" onclick="daaBackReport('确定要驳回吗?');" title="批量驳回" ><i class="ace-icon fa fa-exclamation-triangle red bigger-110"></i>批量驳回</a>
 										<a class="btn btn-white btn-info btn-bold" onclick="toExcel()"><span class="ace-icon fa fa-cloud-download"></span>导出</a>
 									</td>
 								</tr>
 							</table>
 							<table id="simple-table" class="mtable" style="margin-top:10px; width:1538px;">
-								<thead style="height: 40px;">
+								<thead>
 									<tr>
 										<th class="center" style="width:45px; background-color: #BEBEC5; padding-left: 5px;padding-right:5px;">序号</th>
-										<th style="width:110px; background-color: #BEBEC5; text-align: center; padding-left: 12px;padding-right:12px;height: 30px;">员工编号</th>
+										<th style="width:110px; height:30px; background-color: #BEBEC5; text-align: center; padding-left: 12px;padding-right:12px;height: 30px;">员工编号</th>
 										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">员工姓名</th>
 										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">二级单位</th>
 										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">三级单位</th>
@@ -123,7 +124,6 @@
 										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">审批状态</th>
 									</tr>
 								</thead>
-														
 								<tbody id="copyTable">
 								<!-- 开始循环 -->	
 										<c:forEach items="${varList}" var="var" varStatus="vs">
@@ -134,8 +134,8 @@
 												</th>
 												<th style="height: 30px;">${var.STAFF_CODE}</th>
 												<th>${var.STAFF_NAME}</th>
-												<th>${var.STAFF_UNIT_LEVEL2}</th>
-												<th>${var.STAFF_UNIT_LEVEL3}</th>
+												<th>${var.DEPART_CODE}</th>
+												<th>${var.UNITS_DEPART}</th>
 												<th>${var.STAFF_POSITION}</th>
 												<th>${var.STAFF_JOB}</th>
 												<th>${var.STAFF_MODULE}</th>
@@ -212,16 +212,17 @@
 		}
 		
 		/* ERP正式账号申请 */
-		function toERPOfficialAcctApplication(){
+		function toERPOaa(){
 			window.location.href='<%=basePath%>erp/erpOaaList.do';
 		}
 		
 		/* ERP临时账号申请 */
-		function toERPTempacctApplication(){
+		function toERPTaa(){
 			window.location.href='<%=basePath%>erp/erpTaaList.do';
 		}
+		
 		/* ERP删除账号申请 */
-		function toERPDelAcctApplication(){
+		function toERPDaa(){
 			window.location.href='<%=basePath%>erp/erpDaaList.do';
 		}
 		
@@ -233,6 +234,14 @@
 					for(var i=0;i < document.getElementsByName('ids').length;i++){
 					  	if(str=='') str += document.getElementsByName('ids')[i].value;
 					  	else str += ',' + document.getElementsByName('ids')[i].value;
+					}
+					if($("#confirmState").val() != 2){
+						bootbox.dialog({
+							message: "<span class='bigger-110'>只能对未审批数据进行操作!</span>",
+							buttons: 			
+							{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+						});
+						return;
 					}
 					if(msg == '确定要审批当前数据吗?'){
 						top.jzts();
@@ -268,7 +277,7 @@
 			});
 		};
 		
-		/*批量审批*/
+		/*批量驳回*/
 		function oaaBackReport(msg){
 			bootbox.confirm(msg, function(result) {
 				if(result) {
@@ -276,6 +285,14 @@
 					for(var i=0;i < document.getElementsByName('ids').length;i++){
 					  	if(str=='') str += document.getElementsByName('ids')[i].value;
 					  	else str += ',' + document.getElementsByName('ids')[i].value;
+					}
+					if($("#confirmState").val() != 2){
+						bootbox.dialog({
+							message: "<span class='bigger-110'>只能对未审批数据进行操作!</span>",
+							buttons: 			
+							{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+						});
+						return;
 					}
 					if(msg == '确定要驳回吗?'){
 						top.jzts();
@@ -313,7 +330,7 @@
 		
 		//导出excel
 		function toExcel(){
-			window.location.href='<%=basePath%>erp/excel.do';
+			window.location.href='<%=basePath%>erp/oaaExcel.do';
 		}
 		
 		//下拉树
