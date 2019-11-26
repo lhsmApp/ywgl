@@ -56,12 +56,12 @@
 									</div>
 								</td>
 								
-								<td style="vertical-align:top;padding-left:2px;">
+							<%-- 	<td style="vertical-align:top;padding-left:2px;">
 								 	<span class="pull-left" style="margin-right: 5px;">
 										<div class="selectTree" id="selectTree" multiMode="true" <c:if test="${pd.departTreeSource=='0'}">hidden</c:if> allSelectable="false" noGroup="false"></div>
 									    <input type="text" id="SelectedDepartCode" hidden></input>
 									</span>
-								</td>
+								</td> --%>
 								<td style="vertical-align:top;padding-left:3px;">
 									<a class="btn btn-info btn-sm" onclick="tosearch()"><i class="ace-icon fa fa-search bigger-110"></i></a>
 									<a class="btn btn-white btn-info btn-bold" onclick="addRows()"><span class="ace-icon fa fa-plus-circle purple"></span>添加</a>						
@@ -74,13 +74,13 @@
 							</tr>
 						</table>
 						<!-- 检索  -->
-						<table id="simple-table" class="mtable" style="margin-top:10px;">	
-							<thead style="height: 40px">
+						<table id="simple-table" class="mtable" style="margin-top:10px; width:99%;">	
+							<thead>
 								<tr>
 									<th class="center" style="width:35px;">
 									<label class="pos-rel"><input type="checkbox" class="ace" id="zcheckbox" /><span class="lbl"></span></label>
 									</th>
-									<th style="width:150px; background-color: #BEBEC5; text-align: center;">单位</th>
+									<th style="width:150px; height:30px; background-color: #BEBEC5; text-align: center;">单位</th>
 									<th style="width:150px; background-color: #BEBEC5; text-align: center;">机关计算机运维数量</th>
 									<th style="width:150px; background-color: #BEBEC5; text-align: center;">网络运维数量</th>
 									<th style="width:150px; background-color: #BEBEC5; text-align: center;">信息安全运维数量</th>
@@ -109,11 +109,11 @@
 							</tbody>
 						</table>
 						
-						<div class="position-relative">
+						<div class="position-relative page-header pull-right">
 						
 						<table style="width:100%;">
 							<tr>
-								<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
+								<td style="vertical-align:top;"><div class="pagination">${page.pageStr}</div></td>
 							</tr>
 						</table>
 						</div>

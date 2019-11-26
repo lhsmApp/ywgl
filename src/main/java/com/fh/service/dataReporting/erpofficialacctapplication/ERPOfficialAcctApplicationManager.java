@@ -61,5 +61,20 @@ public interface ERPOfficialAcctApplicationManager{
 	 */
 	public void grcUpdateDatabase(List<PageData> listData) throws Exception;
 	
+	/**
+	 *  批量审批
+	 * @param pageData
+	 * @throws Exception
+	 */
+	public void editReportState(PageData pageData)throws Exception;
+
+	/**
+	 * 业务期间集合
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public List<PageData> listBusiDate(PageData pd)throws Exception;
+	
 }
 

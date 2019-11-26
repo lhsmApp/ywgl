@@ -18,13 +18,15 @@
 <%@ include file="../../system/index/top.jsp"%>
 <!-- 日期框 -->
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
-<!-- 树形下拉框start -->
 <script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
+<!-- 树形下拉框start -->
 <script type="text/javascript" src="plugins/selectZtree/selectTree.js"></script>
 <script type="text/javascript" src="plugins/selectZtree/framework.js"></script>
-<link rel="stylesheet" type="text/css" href="plugins/selectZtree/import_fh.css" />
+<link rel="stylesheet" type="text/css"
+	href="plugins/selectZtree/import_fh.css" />
 <script type="text/javascript" src="plugins/selectZtree/ztree/ztree.js"></script>
-<link type="text/css" rel="stylesheet" href="plugins/selectZtree/ztree/ztree.css"></link>
+<link type="text/css" rel="stylesheet"
+	href="plugins/selectZtree/ztree/ztree.css"></link>
 <!-- 树形下拉框end -->
 </head>
 <body class="no-skin">
@@ -46,7 +48,7 @@
 							</span>
 							<input type="hidden" name="COURSE_TYPE" id="COURSE_TYPE"  value="${pd.COURSE_TYPE}"/>
 							<input type="hidden" name="COURSE_NAME" id="COURSE_NAME"  value="${pd.COURSE_NAME}"/>
-							<div class="inline"><div style="margin-top: 10px;" class="selectTree" id="selectTree"></div></div>
+							<div class="inline"><div class="selectTree" id="selectTree"></div></div>
 						  	<button style="margin-bottom:3px;" class="btn btn-info btn-sm" onclick="search();" title="检索">
 								<i class="ace-icon fa fa-search bigger-110"></i>
 							</button>
@@ -141,30 +143,15 @@
 			top.jzts();
 			$("#Form").submit();
 		}
-		$(function() {
-			//复选框全选控制
-			var active_class = 'active';
-			$('#simple-table > thead > tr > th input[type=checkbox]').eq(0).on('click', function(){
-				var th_checked = this.checked;//checkbox inside "TH" table header
-				$(this).closest('table').find('tbody > tr').each(function(){
-					var row = this;
-					if(th_checked) $(row).addClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', true);
-					else $(row).removeClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', false);
-				});
-			});
-		});
-		
+
 		/*树形下拉框*/
 		var defaultNodes = {"treeNodes":eval('${zTreeNodes}')};
 		function initComplete(){
 			//绑定change事件
 			$("#selectTree").bind("change",function(){
-				//$("#COURSE_TYPE_ID").val("");
 				if($(this).attr("relValue")){
 					$("#COURSE_TYPE").val($(this).attr("relValue"));
 					$("#COURSE_NAME").val($(this).attr("reltext"));
-					/*动态计算每种类型题数*/
-					countQuestion();
 			    }
 			});
 			//赋给data属性

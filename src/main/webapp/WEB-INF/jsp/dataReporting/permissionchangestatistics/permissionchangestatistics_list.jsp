@@ -48,33 +48,25 @@
 										</span>
 									</div>
 								</td>
-								<td style="vertical-align:top;padding-left:6px;">
-								 	<select class="chosen-select form-control" name="name" id="id" data-placeholder="请选择" style="vertical-align:top;width: 220px;">
-									<option value=""></option>
-									<option value="">全部</option>
-									<option value="">1</option>
-									<option value="">2</option>
-								  	</select>
-								</td>
 								<td style="vertical-align:top;padding-left:3px;">
-						<a class="btn btn-info btn-sm" onclick="tosearch()"><i class="ace-icon fa fa-search bigger-110"></i></a>
-						<a class="btn btn-white btn-info btn-bold" onclick="addRows()"><span class="ace-icon fa fa-plus-circle purple"></span>添加</a>						
-						<a class="btn btn-white btn-info btn-bold" onclick="edit()"><span class="ace-icon fa fa-pencil-square-o purple"></span>编辑</a>
-						<a class="btn btn-white btn-info btn-bold" onclick="save()"><i class="ace-icon fa fa-floppy-o bigger-120 blue"></i>保存</a>
-						<a class="btn btn-white btn-info btn-bold" onclick="makeAll('确定要删除选中的数据吗?');" title="批量删除" ><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>删除</a>
-						<a class="btn btn-white btn-info btn-bold" onclick="importExcel()"><span class="ace-icon fa fa-cloud-upload"></span>导入</a>
-						<a class="btn btn-white btn-info btn-bold" onclick="toExcel()"><span class="ace-icon fa fa-cloud-download"></span>导出</a>
-							</td>
+									<a class="btn btn-info btn-sm" onclick="tosearch()"><i class="ace-icon fa fa-search bigger-110"></i></a>
+									<a class="btn btn-white btn-info btn-bold" onclick="addRows()"><span class="ace-icon fa fa-plus-circle purple"></span>添加</a>						
+									<a class="btn btn-white btn-info btn-bold" onclick="edit()"><span class="ace-icon fa fa-pencil-square-o purple"></span>编辑</a>
+									<a class="btn btn-white btn-info btn-bold" onclick="save()"><i class="ace-icon fa fa-floppy-o bigger-120 blue"></i>保存</a>
+									<a class="btn btn-white btn-info btn-bold" onclick="makeAll('确定要删除选中的数据吗?');" title="批量删除" ><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>删除</a>
+									<a class="btn btn-white btn-info btn-bold" onclick="importExcel()"><span class="ace-icon fa fa-cloud-upload"></span>导入</a>
+									<a class="btn btn-white btn-info btn-bold" onclick="toExcel()"><span class="ace-icon fa fa-cloud-download"></span>导出</a>
+								</td>
 							</tr>
 						</table>
 						<!-- 检索  -->
-						<table id="simple-table" class="mtable" style="margin-top:10px;">		
-							<thead style="height: 40px">
+						<table id="simple-table" class="mtable" style="margin-top:10px; width: 99%;">		
+							<thead>
 								<tr>
 									<th class="center" style="width:35px;">
 									<label class="pos-rel"><input type="checkbox" class="ace" id="zcheckbox" /><span class="lbl"></span></label>
 									</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">公司名称</th>
+									<th style="width:110px; height:30px; background-color: #BEBEC5; text-align: center;">公司名称</th>
 									<th style="width:110px; background-color: #BEBEC5; text-align: center;">账号延期</th>
 									<th style="width:110px; background-color: #BEBEC5; text-align: center;">账号解除锁定</th>
 									<th style="width:110px; background-color: #BEBEC5; text-align: center;">新增角色</th>
@@ -110,10 +102,10 @@
 									</c:forEach>
 							</tbody>
 						</table>
-						<div class="position-relative">
+						<div class="position-relative page-header pull-right">
 						<table style="width:100%;">
 							<tr>
-								<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
+								<td style="vertical-align:top;"><div class="pagination">${page.pageStr}</div></td>
 							</tr>
 						</table>
 						</div>

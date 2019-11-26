@@ -9,10 +9,11 @@
 	
 	<!-- 字段 -->
 	<sql id="Field">
+		BUSI_DATE,	
 		STAFF_CODE,	
 		STAFF_NAME,	
-		STAFF_UNIT_LEVEL2,	
-		STAFF_UNIT_LEVEL3,	
+		DEPART_CODE,	
+		UNITS_DEPART,	
 		STAFF_POSITION,	
 		STAFF_JOB,	
 		STAFF_MODULE,	
@@ -23,11 +24,16 @@
 		APPLY_TEMP_REASON,	
 		UKEY_NUM,	
 		NOTE,
-		STATE
+		CONFIRM_STATE,
+		STATE,
+		BILL_USER,
+		USER_DEPART,
+		BILL_DATE
 	</sql>
 	
 	<!-- 字段值 -->
 	<sql id="FieldValue">
+		#{BUSI_DATE},
 		#{STAFF_CODE},	
 		#{STAFF_NAME},	
 		#{STAFF_UNIT_LEVEL2},	
@@ -42,7 +48,11 @@
 		#{APPLY_TEMP_REASON},	
 		#{UKEY_NUM},	
 		#{NOTE},
-		#{STATE}
+		#{CONFIRM_STATE},
+		#{STATE},
+		#{BILL_USER},
+		#{USER_DEPART},
+		#{BILL_DATE}
 	</sql>
 	
 	<!-- 新增-->
@@ -63,8 +73,8 @@
 		set 
 			STAFF_CODE = #{STAFF_CODE},
 			STAFF_NAME = #{STAFF_NAME},
-			STAFF_UNIT_LEVEL2 = #{STAFF_UNIT_LEVEL2},
-			STAFF_UNIT_LEVEL3 = #{STAFF_UNIT_LEVEL3},
+			DEPART_CODE = #{DEPART_CODE},
+			UNITS_DEPART = #{UNITS_DEPART},
 			STAFF_POSITION = #{STAFF_POSITION},
 			STAFF_JOB = #{STAFF_JOB},
 			STAFF_MODULE = #{STAFF_MODULE},
@@ -85,8 +95,8 @@
 			ID,
 			STAFF_CODE,	
 			STAFF_NAME,	
-			STAFF_UNIT_LEVEL2,	
-			STAFF_UNIT_LEVEL3,	
+			DEPART_CODE,	
+			UNITS_DEPART,	
 			STAFF_POSITION,	
 			STAFF_JOB,	
 			STAFF_MODULE,	
@@ -96,20 +106,35 @@
 			CANCEL_DATE,	
 			APPLY_TEMP_REASON,	
 			UKEY_NUM,	
-			NOTE
+			NOTE,
+			CONFIRM_STATE
 		from 
 		<include refid="tableName"></include>
 		where STATE=1
-		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
-			and
-				(
-				<!--	根据需求自己加检索条件
-					字段1 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
-					 or 
-					字段2 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
-				-->
-				)
+		<if test="pd.SelectedDepartCode != null and pd.SelectedDepartCode != ''">
+		and 
+			USER_DEPART = #{pd.SelectedDepartCode}
 		</if>
+		
+		<if test="pd.confirmState != null and pd.confirmState != ''">
+		and 
+			CONFIRM_STATE IN (${pd.confirmState})
+		</if>
+		<if test="pd.busiDate != null and pd.busiDate != ''">
+		and 
+			BUSI_DATE = #{pd.busiDate}
+		</if>
+		<if test="pd.USER_DEPART != null and pd.USER_DEPART != ''">
+		and 
+			USER_DEPART = #{pd.USER_DEPART}
+		</if>
+		order by
+			CONFIRM_STATE ASC
+	</select>
+	
+	<!--业务期间集合  -->
+	<select id="listBusiDate" parameterType="pd" resultType="pd">
+		select BUSI_DATE from  <include refid="tableName"></include> group by BUSI_DATE
 	</select>
 	
 	<!-- 批量删除 -->
@@ -125,6 +150,19 @@
 		</foreach>
 	</update>
 	
+	<!-- 批量审批/驳回 -->
+	<update id="editReportState" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+			CONFIRM_STATE = #{CONFIRM_STATE}
+		where 
+			ID in
+		<foreach item="item" index="index" collection="arrayDATA_IDS" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</update>
+	
 		<!-- *********************导入导出********************************* -->
 	<!-- 导出列表 -->
 	<select id="exportList" parameterType="Page" resultType="pd">
@@ -133,9 +171,11 @@
 		from 
 			<include refid="tableName"></include>
 		where
-			STATE = 1	
+			STATE = 1
+		and 
+			CONFIRM_STATE IN (${pd.confirmState})	
 		order by 
-			STAFF_UNIT_LEVEL2,STAFF_UNIT_LEVEL3
+			CONFIRM_STATE ASC
 	</select>
 	
 	<!-- 更新数据 -->
@@ -150,10 +190,11 @@
 		    (
 					<include refid="Field"></include>
 			) value (
+					#{item.BUSI_DATE},
 					#{item.STAFF_CODE},	
 					#{item.STAFF_NAME},	
-					#{item.STAFF_UNIT_LEVEL2},	
-					#{item.STAFF_UNIT_LEVEL3},	
+					#{item.DEPART_CODE},	
+					#{item.UNITS_DEPART},	
 					#{item.STAFF_POSITION},	
 					#{item.STAFF_JOB},	
 					#{item.STAFF_MODULE},	
@@ -164,7 +205,11 @@
 					#{item.APPLY_TEMP_REASON},	
 					#{item.UKEY_NUM},	
 					#{item.NOTE},	
-					"1"
+					#{item.CONFIRM_STATE},	
+					#{item.STATE},
+					#{item.BILL_USER},
+					#{item.USER_DEPART},
+					#{item.BILL_DATE}
 			);
 		</foreach>
 	</update>

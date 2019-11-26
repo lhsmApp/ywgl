@@ -70,6 +70,7 @@ public interface ApprovalConfigManager{
 	public List<PageData> listAllMain(PageData pd)throws Exception;
 	public List<PageData> listAllScheme(PageData pd)throws Exception;
 	public List<PageData> listApproval(PageData pd)throws Exception;
+	public List<PageData> queryApproval(PageData pd)throws Exception;
 	public List<PageData> ListDetailByBillCode(PageData pd)throws Exception;
 	
 	
