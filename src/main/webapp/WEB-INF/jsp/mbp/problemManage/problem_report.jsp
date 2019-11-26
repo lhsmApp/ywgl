@@ -517,6 +517,8 @@ $(function() {
 function ueditor(){
 	var ue = UE.getEditor('editor');
 	//UE.getEditor('editor').setDisabled();
+	
+	var ueAnswer = UE.getEditor('editorAnswer');
 }
 
 /**

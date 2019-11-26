@@ -158,6 +158,10 @@ public class ApprovalConfigService implements ApprovalConfigManager{
 		return (List<PageData>)dao.findForList("ApprovalConfigMapper.listApproval", pd);
 	}
 	@SuppressWarnings("unchecked")
+	public List<PageData> queryApproval(PageData pd)throws Exception{
+		return (List<PageData>)dao.findForList("ApprovalConfigMapper.queryApproval", pd);
+	}
+	@SuppressWarnings("unchecked")
 	public List<PageData> ListDetailByBillCode(PageData pd)throws Exception{
 		return (List<PageData>)dao.findForList("ApprovalConfigMapper.ListDetailByBillCode", pd);
 	}

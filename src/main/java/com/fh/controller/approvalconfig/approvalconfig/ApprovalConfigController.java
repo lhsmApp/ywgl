@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
 import com.fh.controller.base.BaseController;
+import com.fh.entity.CommonBase;
 import com.fh.entity.Page;
 import com.fh.entity.system.User;
 import com.fh.util.AppUtil;
@@ -518,4 +519,120 @@ public class ApprovalConfigController extends BaseController {
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(format,true));
 	}
+	
+	/*******************************手机端变更审批*****************************/
+	/**获取手机端当前待审批单据
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/listApprovalOfApp")
+	public @ResponseBody List<PageData> listApprovalOfApp() throws Exception{
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		//根据激活标识，审批单位，审批部门，审批角色和审批状态5个条件获取tb_approval_detail信息
+		pd.put("UNIT_CODE", pd.getString("UNIT_CODE"));//审批单位
+		pd.put("DEPART_CODE", pd.getString("DEPART_CODE"));//审批部门
+		pd.put("ROLE_CODE", pd.getString("ROLE_CODE"));//审批角色
+		pd.put("ACTIVE_FLAG", '1');//激活状态为1
+		pd.put("APPROVAL_STATE", "0");///审批状态为0
+		List<PageData>	varList = approvalconfigService.listApproval(pd);
+
+		return varList;
+	}
+	
+	/**根据查询条件获取手机端变更信息
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/queryApprovalOfApp")
+	public @ResponseBody List<PageData> queryApprovalOfApp() throws Exception{
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		//只能查自己审批过的单据 
+		pd.put("APPROVAL_USER", pd.getString("APPROVAL_USER"));//实际审批人
+		//其它界面查询条件
+		String keywords = pd.getString("keywords");//关键词检索条件（业务单号或者变更名称）
+		if(null != keywords && !"".equals(keywords)){
+			pd.put("keywords", keywords.trim());
+		}
+		pd.put("BUSINESS_CODE", pd.getString("BUSINESS_CODE"));//变更业务类型
+		pd.put("START_DATE", pd.getString("START_DATE"));//填表日期/申请日期
+		pd.put("END_DATE", pd.getString("END_DATE"));//填表日期/申请日期
+		pd.put("APPROVAL_STATE", pd.getString("APPROVAL_STATE"));///审批状态
+		List<PageData>	varList = approvalconfigService.queryApproval(pd);
+
+		return varList;
+	}
+	
+	/**审批通过
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/passApprovalOfApp")
+	@ResponseBody
+	public CommonBase passApprovalOfApp() throws Exception{
+		CommonBase commonBase = new CommonBase();
+		commonBase.setCode(-1);
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		try{
+			pd.put("BILL_CODE", pd.getString("BILL_CODE"));//业务单号
+		    pd.put("APPROVAL_USER",pd.getString("USER_ID"));//实际审批人
+			pd.put("APPROVAL_DATE", DateUtils.getCurrentTime());//审批日期
+			pd.put("APPROVAL_ADVICE",pd.getString("APPROVAL_ADVICE"));
+			pd.put("APPROVAL_STATE", "1");//审批状态(0未审批，1已审批)
+			pd.put("UNIT_CODE",pd.getString("UNIT_CODE"));//审批单位
+			pd.put("DEPART_CODE",pd.getString("DEPART_CODE"));//审批部门
+			pd.put("ROLE_CODE",pd.getString("ROLE_CODE"));//审批角色
+			pd.put("CURRENT_LEVEL", pd.getString("CURRENT_LEVEL"));
+			//当下一审批级别为0时，即最后一级审批更新审批主表为已完成
+			if (Integer.parseInt(pd.get("NEXT_LEVEL").toString())==0){
+				pd.put("APPROVAL_STATE_MAIN", "1");//审批完成
+			}else{
+				pd.put("APPROVAL_STATE_MAIN", "0");//审批中
+			}
+			//通过业务单据编码和当前审批级别更新审批明细表信息
+			approvalconfigService.editDetail(pd);
+			commonBase.setCode(0);
+			commonBase.setMessage("审批成功!");
+		}catch(Exception e){
+			commonBase.setCode(-1);
+			commonBase.setMessage(e.getMessage());
+		}	
+		return commonBase;
+	}
+	
+	/**审批退回
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/returnApprovalOfApp")
+	@ResponseBody
+	public CommonBase returnApprovalOfApp() throws Exception{
+		CommonBase commonBase = new CommonBase();
+		commonBase.setCode(-1);
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		try{
+			pd.put("BILL_CODE", pd.getString("BILL_CODE"));//业务单号
+		    pd.put("APPROVAL_USER",pd.getString("USER_ID"));//实际审批人
+			pd.put("APPROVAL_DATE", DateUtils.getCurrentTime());//审批日期
+			pd.put("APPROVAL_ADVICE", pd.getString("APPROVAL_ADVICE"));
+			pd.put("APPROVAL_STATE", "2");
+			pd.put("UNIT_CODE",pd.getString("UNIT_CODE"));//审批单位
+			pd.put("DEPART_CODE",pd.getString("DEPART_CODE"));//审批部门
+			pd.put("ROLE_CODE",pd.getString("ROLE_CODE"));//审批角色
+			pd.put("CURRENT_LEVEL", pd.getString("CURRENT_LEVEL"));
+			
+			//通过业务单据编码、审批单位、审批部门、审批角色更新审批明细表信息
+			approvalconfigService.editReturnDetail(pd);
+			commonBase.setCode(0);
+			commonBase.setMessage("审批退回成功!");
+		}catch(Exception e){
+			commonBase.setCode(-1);
+			commonBase.setMessage(e.getMessage());
+		}	
+		return commonBase;
+	}
+	/*******************************手机端变更审批*****************************/
 }

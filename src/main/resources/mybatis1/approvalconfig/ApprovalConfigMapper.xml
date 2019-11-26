@@ -867,6 +867,118 @@
 			 </if>
 			</where>
 	</select>
+	
+	<!-- 查询变更信息 -->
+	<select id="queryApproval" parameterType="pd" resultType="pd">
+		SELECT A.*,
+			B.BUSINESS_CODE,B.BILL_CODE,B.CURRENT_LEVEL,B.NEXT_LEVEL,B.ACTIVE_FLAG,B.UNIT_CODE AS SPUNIT_CODE,B.DEPART_CODE,B.APPROVAL_STATE,	
+			B.ROLE_CODE,B.APPROVAL_USER,B.APPROVAL_DATE,B.APPROVAL_ADVICE 
+		FROM (
+			SELECT b.BILL_CODE,
+				b.UNIT_CODE AS UNIT_CODE,b.DEPT_CODE,b.ENTRY_DATE,	
+				b.SERIAL_NUM,b.USER_CODE,b.USER_DEPT,b.USER_JOB,b.USER_CONTACT,b.BG_NAME,b.SYSTEM,b.BG_TYPE,b.BG_REASON as REASON,b.BILL_STATE,b.BILL_USER,b.BILL_DATE
+			FROM
+				tb_change_erp_xtbg b 
+			<where>
+				<if test="START_DATE!=null and START_DATE!=''"> 
+				 	and ENTRY_DATE >= #{START_DATE}
+				</if>
+				<if test="END_DATE!=null and END_DATE!=''"> 
+				 	and ENTRY_DATE &lt;= #{END_DATE}
+				</if>
+			</where>
+			UNION
+			SELECT b.BILL_CODE,
+				b.UNIT_CODE AS UNIT_CODE,b.DEPT_CODE,b.ENTRY_DATE,	
+				b.SERIAL_NUM,b.USER_CODE,b.USER_DEPT,b.USER_JOB,b.USER_CONTACT,b.BG_NAME,b.SYSTEM,b.BG_TYPE,b.BG_REASON as REASON,b.BILL_STATE,b.BILL_USER,b.BILL_DATE
+			FROM
+				tb_change_erp_jsbg b 
+		    <where>
+				<if test="START_DATE!=null and START_DATE!=''"> 
+				 	and ENTRY_DATE >= #{START_DATE}
+				</if>
+				<if test="END_DATE!=null and END_DATE!=''"> 
+				 	and ENTRY_DATE &lt;= #{END_DATE}
+				</if>
+			</where>
+			UNION
+			SELECT b.BILL_CODE,
+				b.UNIT_CODE AS UNIT_CODE,b.DEPT_CODE,b.ENTRY_DATE,	
+				b.SERIAL_NUM,b.USER_CODE,b.USER_DEPT,b.USER_JOB,b.USER_CONTACT,'' as BG_NAME,b.SYSTEM,b.BG_TYPE,b.BG_REASON as REASON,b.BILL_STATE,b.BILL_USER,b.BILL_DATE
+			FROM
+				tb_change_grc_qxbg b 
+			<where>
+				<if test="START_DATE!=null and START_DATE!=''"> 
+				 	and ENTRY_DATE >= #{START_DATE}
+				</if>
+				<if test="END_DATE!=null and END_DATE!=''"> 
+				 	and ENTRY_DATE &lt;= #{END_DATE}
+				</if>
+			</where>
+			UNION
+			SELECT b.BILL_CODE,
+				b.UNIT_CODE AS UNIT_CODE,b.DEPT_CODE,b.ENTRY_DATE,	
+				b.SERIAL_NUM,b.USER_CODE,b.USER_DEPT,b.USER_JOB,b.USER_CONTACT,'' as BG_NAME,b.SYSTEM,'' as BG_TYPE,b.ACCOUNT_REASON as REASON,b.BILL_STATE,b.BILL_USER,b.BILL_DATE
+			FROM
+				tb_change_grc_zhxz b 
+		    <where>
+		    	<if test="START_DATE!=null and START_DATE!=''"> 
+				 	and ENTRY_DATE >= #{START_DATE}
+				</if>
+				<if test="END_DATE!=null and END_DATE!=''"> 
+				 	and ENTRY_DATE &lt;= #{END_DATE}
+				</if>
+			</where>
+			UNION
+			SELECT b.BILL_CODE,
+				b.UNIT_CODE AS UNIT_CODE,b.DEPT_CODE,b.ENTRY_DATE,	
+				b.SERIAL_NUM,b.USER_CODE,b.USER_DEPT,b.USER_JOB,b.USER_CONTACT,'' as BG_NAME,b.SYSTEM,'' as BG_TYPE,b.CANCLE_REASON as REASON,b.BILL_STATE,b.BILL_USER,b.BILL_DATE
+			FROM
+				tb_change_grc_zhzx b 
+		    <where>
+		    	<if test="START_DATE!=null and START_DATE!=''"> 
+				 	and ENTRY_DATE >= #{START_DATE}
+				</if>
+				<if test="END_DATE!=null and END_DATE!=''"> 
+				 	and ENTRY_DATE &lt;= #{END_DATE}
+				</if>
+		    	
+			</where>
+		) A
+		<!-- 如果包含未上报数据，用left join，否则用join -->
+		<!-- left join -->
+		join 
+		tb_approval_detail B
+		on A.BILL_CODE=B.BILL_CODE
+		<where>
+			<!-- 只能查自己审批过的单据 -->
+			<if test="APPROVAL_USER!=null and APPROVAL_USER!=''"> 
+			 	and B.APPROVAL_USER = #{APPROVAL_USER}
+			</if>
+			
+			<!-- 其它界面查询条件 -->
+			<if test="keywords!=null and keywords!=''"> 
+			 	and (
+					A.BILL_CODE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					or
+					A.BG_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				)
+			 </if>
+			 <if test="BUSINESS_CODE!=null and BUSINESS_CODE!=''"> 
+			 	and B.BUSINESS_CODE = #{BUSINESS_CODE}
+			 </if>
+			 <if test="START_DATE!=null and START_DATE!=''"> 
+			 	and A.ENTRY_DATE >= #{START_DATE}
+			 </if>
+			 <if test="END_DATE!=null and END_DATE!=''"> 
+			 	and A.ENTRY_DATE &lt;= #{END_DATE}
+			 </if>
+			 <if test="APPROVAL_STATE!=null and APPROVAL_STATE!=''"> 
+			 	and B.APPROVAL_STATE = #{APPROVAL_STATE}
+			 </if>
+		</where>
+	</select>
+	
 	<!-- 系统变更上报-->
 	<insert id="save" parameterType="pd">
 		insert into TB_APPROVAL_MAIN
