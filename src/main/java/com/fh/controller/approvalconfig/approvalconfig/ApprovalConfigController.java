@@ -150,18 +150,6 @@ public class ApprovalConfigController extends BaseController {
 	
 		return pd;
 	}
-	/**显示变更统计数据
-	 * @param page
-	 * @throws Exception
-	 */
-	@RequestMapping(value="/listStatistic")
-	public @ResponseBody List<PageData> listStatistic() throws Exception{
-		PageData pd = new PageData();
-		pd = this.getPageData();
-		List<PageData>	varList = approvalconfigService.listStatistic(pd);	//
-	
-		return varList;
-	}
 	/**列表
 	 * @param page
 	 * @throws Exception
@@ -472,25 +460,7 @@ public class ApprovalConfigController extends BaseController {
 		mv.addObject("pd", pd);
 		return mv;
 	}	
-	/**变更统计列表
-	 * @param page
-	 * @throws Exception
-	 */
-	@RequestMapping(value="/listBgStatistic")
-	public ModelAndView listBgStatistic(Page page) throws Exception{
-		ModelAndView mv = this.getModelAndView();
-		PageData pd = new PageData();
-		pd = this.getPageData();
-		page.setPd(pd);
-		List<PageData>	varList = approvalconfigService.listBusiness(page);	
-		mv.setViewName("statisticAnalysis/bgStatistic/bgStatistic_list");
-		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
-		JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0",zdepartmentPdList));
-		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
-		mv.addObject("varList", varList);
-		mv.addObject("pd", pd);
-		return mv;
-	}
+	
 	 /**批量删除
 	 * @param
 	 * @throws Exception
@@ -541,6 +511,68 @@ public class ApprovalConfigController extends BaseController {
 			vpd.put("var1", varOList.get(i).getString("BUSINESS_CODE"));	    //1
 			vpd.put("var2", varOList.get(i).getString("BUSINESS_NAME"));	    //2
 			vpd.put("var3", varOList.get(i).getString("NOTE"));	    //3
+			varList.add(vpd);
+		}
+		dataMap.put("varList", varList);
+		ObjectExcelView erv = new ObjectExcelView();
+		mv = new ModelAndView(erv,dataMap);
+		return mv;
+	}
+	/**变更统计列表
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/listBgStatistic")
+	public ModelAndView listBgStatistic(Page page) throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		page.setPd(pd);
+		//List<PageData>	varList = approvalconfigService.listBusiness(page);	
+		mv.setViewName("statisticAnalysis/bgStatistic/bgStatistic_list");
+		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
+		JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0",zdepartmentPdList));
+		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
+		//mv.addObject("varList", varList);
+		mv.addObject("pd", pd);
+		return mv;
+	}
+	/**显示变更统计数据
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/listStatistic")
+	public @ResponseBody List<PageData> listStatistic() throws Exception{
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		List<PageData>	varList = approvalconfigService.listStatistic(pd);	//
+	
+		return varList;
+	}
+	 /**导出变更统计表到excel
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/listStatisticExcel")
+	public ModelAndView listStatisticExcel() throws Exception{
+		ModelAndView mv = new ModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		Map<String,Object> dataMap = new HashMap<String,Object>();
+		List<String> titles = new ArrayList<String>();
+		titles.add("运维类型");	//1
+		titles.add("提交变更总数");	//2
+		titles.add("已处理的变更");	//3
+		titles.add("解决率");	//4
+		dataMap.put("titles", titles);
+		List<PageData> varOList = approvalconfigService.listStatistic(pd);
+		List<PageData> varList = new ArrayList<PageData>();
+		for(int i=0;i<varOList.size();i++){
+			PageData vpd = new PageData();
+			vpd.put("var1", varOList.get(i).getString("BUSINESS_NAME"));	    //1
+			vpd.put("var2", varOList.get(i).get("total").toString());	    //2
+			vpd.put("var3", varOList.get(i).get("solve").toString());	    //3
+			vpd.put("var4", varOList.get(i).get("solverate").toString());	    //3
 			varList.add(vpd);
 		}
 		dataMap.put("varList", varList);

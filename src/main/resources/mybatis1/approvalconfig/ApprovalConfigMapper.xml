@@ -1044,7 +1044,7 @@
 		set
 		 
 			APPROVAL_STATE = #{APPROVAL_STATE},
-			ROLE_CODE = #{ROLE_CODE},
+<!-- 			ROLE_CODE = #{ROLE_CODE}, -->
 			APPROVAL_USER = #{APPROVAL_USER},
 			APPROVAL_DATE = #{APPROVAL_DATE},
 			APPROVAL_ADVICE = #{APPROVAL_ADVICE}
@@ -1092,19 +1092,19 @@
 	</select>	
 	<select id="listStatistic" parameterType="pd" resultType="pd">
 	SELECT c.BUSINESS_CODE,b.BUSINESS_NAME,c.total,c.solve,  CONCAT( ROUND( c.solve/c.total * 100, 2 ), '', '%' ) AS solverate FROM 
-(SELECT 
-  a.BUSINESS_CODE,a.APPLY_DATE,
-  COUNT(a.BUSINESS_CODE) AS total,
-  SUM(
-    CASE
-      WHEN a.APPROVAL_STATE = '1' 
-      THEN 1 
-      ELSE 0 
-    END
-  ) AS solve
-FROM
-  tb_approval_main a 
-  where 1=1
+		(SELECT 
+		  a.BUSINESS_CODE,a.APPLY_DATE,
+		  COUNT(a.BUSINESS_CODE) AS total,
+		  SUM(
+		    CASE
+		      WHEN a.APPROVAL_STATE = '1' 
+		      THEN 1 
+		      ELSE 0 
+		    END
+		  ) AS solve
+		FROM
+		  tb_approval_main a 
+		  where 1=1
 	<if test="START_DATE!=null and START_DATE!='' "> 
 			  and SUBSTRING(APPLY_DATE,1,10) &gt;= #{START_DATE} 
 			 </if>

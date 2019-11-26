@@ -87,6 +87,9 @@
 											</div>
 										</div>
 									</td>	
+									<td><a class="btn btn-primary btn-xs inline pull-right" onclick="toExcel()">
+								<i class="ace-icon fa fa-share bigger-110"></i> <span>导出</span>
+							</a></td>
 								</tr>
 							</table>
 						</form>
@@ -231,7 +234,11 @@
 		         }   
 		     });
 		}
-	    
+		  function toExcel(){
+			    	window.location.href='<%=basePath%>approvalconfig/listStatisticExcel.do?START_DATE='+$("#START_DATE").val()
+		             +'&END_DATE='+$("#END_DATE").val()
+		             +'&UNIT_CODE='+$("#UNIT_CODE").val();	    
+		    }
 		    function initComplete(){
 				//下拉树
 				var defaultNodes = {"treeNodes":${zTreeNodes}};
