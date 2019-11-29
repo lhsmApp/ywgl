@@ -72,7 +72,7 @@
 									</div>
 								</td>	
 									<td ><span>选择周：</span></td>
-										<input type="hidden" id="WEEKSTEXT" name="WEEKSTEXT" />
+									<input type="hidden" id="WEEKSTEXT" name="WEEKSTEXT" />
 									<td width="40%">
 										<select class="form-control" name="WEEKS" id="WEEKS"  >
 											
@@ -176,34 +176,50 @@
 	 var gridBase_selector = "#jqGridBase";  
 	    var pagerBase_selector = "#jqGridBasePager";  
 			$(top.hangge());//关闭加载状态
-			//开始日期
-			$("#YEAR_MONTH" ).datepicker({
-			showOtherMonths: true,
-			selectOtherMonths: false,
-			autoclose: true,
-			todayHighlight: true
-			});
+			console.log('css');
+			
 				
 			//检索
 			function tosearch(){
 				top.jzts();	
 				var value=$("#WEEKS").val();
 				opts= $("#WEEKS").find("option[value="+ value +"]").text();
-				$("#WEEKSTEXT").val(opts );			
+				$("#WEEKSTEXT").val(opts);			
 				$("#Form").submit();
 			}
 			$(function() {
+				//开始日期
+				$("#YEAR_MONTH").datepicker({
+				showOtherMonths: true,
+				selectOtherMonths: false,
+				autoclose: true,
+				todayHighlight: true,
+				onSelect: function(dateText, inst) {
+				    $(this).val(dateText);
+				    $(this).change();
+				  },
+				  dateUpdated:function(){console.log('rrr');},
+// 				onSelect: function(dateText, inst) {
+// 					console.log('rrr');
+// 	             },
+// 				onSelect : function(dateText, inst) {
+// 					getWeeks();
+// 				},
+				onChangeMonthYear: function(year, month, inst) {console.log('222');},
+				onClose: function(dateText, inst) { console.log('111'); } 
+				});
+				
 				var date = new Date();	
 				var year=date.getFullYear(); //获取完整的年份(4位)
 				var month=date.getMonth()+1; //获取当前月份
 				$("#YEAR_MONTH").val(year+'-'+month);
 				getWeeks();
 			})
-			$("#YEAR_MONTH").change(function(){
-				$('#WEEKS').empty();
-				getWeeks();
-			});
+// 			$("#YEAR_MONTH").unbind('change').bind("change",function(){
+// 				getWeeks();
+// 			});
 			function getWeeks(){
+		        console.log(1);
 				$('#WEEKS').empty();
 				$.ajax({
 					   type: "POST",
@@ -211,12 +227,13 @@
 					   data: {'YEAR_MONTH':$("#YEAR_MONTH").val()},
 					   dataType:'json',
 					   cache: false,
-					      success: function (data) {
+					   success: function (data) {
 					                //$('#WEEKS').append("<option value='0'>--请选择周--</option>");
 					                //遍历成功返回的数据
 					                $.each(data, function (index,item) {
 					                    var Id = data[index].ID;
 					                    var name = data[index].Name;
+					            
 					                    //构造动态option
 					                    $('#WEEKS').append("<option value='"+Id+"'>"+name+"</option>")
 					                });
