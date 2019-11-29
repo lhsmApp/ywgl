@@ -894,7 +894,7 @@ public class MBPController extends BaseController {
 		mv.addObject("varList",varList);
 		return mv;
 	}
-	/**根据课程分类获取课程信息
+	/**按月获取周及日期范围
 	 * @param
 	 * @throws Exception
 	 */
