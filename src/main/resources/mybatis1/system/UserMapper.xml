@@ -143,6 +143,31 @@
 		</if>
 	</select>
 	
+	<!-- 判断用户名和密码,手机端需要返回单位名称、部门名称、角色名称等 -->
+	<select id="getUserInfoOfApp" parameterType="pd" resultType="pd">
+		select u.*,depart.NAME DEPARTMENT_NAME,unit.NAME UNIT_NAME,role.ROLE_NAME from
+		<include refid="tableName"></include> u
+		left join 
+		<include refid="roleTableName"></include> role 
+		on u.ROLE_ID=role.ROLE_ID 
+		left join 
+		oa_department depart
+		on u.DEPARTMENT_ID=depart.DEPARTMENT_CODE 
+		
+		left join 
+		oa_department unit
+		on u.UNIT_CODE=unit.DEPARTMENT_CODE 
+		
+		<where>
+			<if test="USERNAME!=null and PASSWORD!=null">
+			and u.USERNAME = #{USERNAME} and u.PASSWORD=#{PASSWORD}
+			</if>
+			<if test="USER_ID!=null and USER_ID>0">
+			and u.USER_ID = #{USER_ID}
+			</if>
+		</where>
+	</select>
+	
 	<!-- 更新登录时间 -->
 	<update id="updateLastLogin" parameterType="pd" >
 		update

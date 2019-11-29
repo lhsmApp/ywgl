@@ -37,13 +37,13 @@
 								<label class="inline">
 									<span class="list-item-info"> 作者：</span>
 									<span class="list-item-value">${pd.AUTHOR}</span>
-								</label>
-								<label class="inline">
+									&nbsp;&nbsp;
 									<span class="list-item-info"><i class="ace-icon fa fa-clock-o"></i> 时间：</span>
 									<span class="list-item-value grey">
 										<span>${pd.CREATE_DATE}</span>
 									</span>
 								</label>
+								
 							</div>
 
 							

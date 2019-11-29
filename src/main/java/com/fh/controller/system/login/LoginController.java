@@ -188,24 +188,25 @@ public class LoginController extends BaseController {
 			pd.put("USERNAME", USERNAME);
 			String passwd = new SimpleHash("SHA-1", USERNAME, PASSWORD).toString(); // 密码加密
 			pd.put("PASSWORD", passwd);
-			pd = userService.getUserByNameAndPwd(pd); // 根据用户名和密码去读取用户信息
+			pd = userService.getUserByNameAndPwdOfApp(pd); // 根据用户名和密码去读取用户信息
 			if (pd != null) {
 				pd.put("LAST_LOGIN", DateUtil.getTime().toString());
 				userService.updateLastLogin(pd);
-				User user = new User();
+				/*User user = new User();
 				user.setUSER_ID(StringUtil.toString(pd.get("USER_ID"), ""));
 				user.setUSERNAME(pd.getString("USERNAME"));
 				user.setPASSWORD(pd.getString("PASSWORD"));
 				user.setNAME(pd.getString("NAME"));
 				user.setRIGHTS(pd.getString("RIGHTS"));
 				user.setROLE_ID(pd.getString("ROLE_ID"));
+				user.setROLE_NAME(pd.getString("ROLE_NAME"));
 				user.setDEPARTMENT_ID(pd.getString("DEPARTMENT_ID"));
 				user.setDEPARTMENT_NAME(pd.getString("DEPARTMENT_NAME"));
 				user.setUNIT_CODE(pd.getString("UNIT_CODE"));
 				user.setUNIT_NAME(pd.getString("UNIT_NAME"));
 				user.setLAST_LOGIN(pd.getString("LAST_LOGIN"));
 				user.setIP(pd.getString("IP"));
-				user.setSTATUS(pd.getString("STATUS"));
+				user.setSTATUS(pd.getString("STATUS"));*/
 
 				// shiro加入身份验证
 				Subject subject = SecurityUtils.getSubject();
@@ -213,9 +214,9 @@ public class LoginController extends BaseController {
 				try {
 					subject.login(token);
 					commonBase.setCode(0);
-					PageData pageData=new PageData();
-					pageData.put("userInfo", user);
-					listPd.add(pageData);
+					/*PageData pageData=new PageData();
+					pageData.put("userInfo", user);*/
+					listPd.add(pd);
 					commonBaseAndList.setList(listPd);
 				} catch (AuthenticationException e) {
 					commonBase.setCode(-1);

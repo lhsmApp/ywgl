@@ -102,7 +102,7 @@
 										<th class="center">更新时间</th>
 										<th class="center">单据状态</th>
 										
-										<th class="center">操作</th>
+										<th class="center">详情</th>
 									</tr>
 								</thead>
 														

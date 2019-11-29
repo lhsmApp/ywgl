@@ -24,6 +24,13 @@ public interface UserManager {
 	 */
 	public PageData getUserByNameAndPwd(PageData pd)throws Exception;
 	
+	/**登录判断,手机端
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public PageData getUserByNameAndPwdOfApp(PageData pd)throws Exception;
+	
 	/**更新登录时间
 	 * @param pd
 	 * @throws Exception

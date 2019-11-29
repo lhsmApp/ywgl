@@ -136,7 +136,7 @@
 												</div>
 												
 												<div style="margin:10px 0px;">
-													<label for="form-field-select-2">提问系统</label>
+													<label for="form-field-select-2">问题模块</label>
 													<select class="form-control" id="form-field-select-2">
 														<option value=""></option>
 														<option value="AL">ERP系统</option>

@@ -159,7 +159,7 @@
 															</div>
 															
 															<div style="margin:10px 0px;">
-																<label for="form-field-pro-sys-type">提问系统</label>
+																<label for="form-field-pro-sys-type">问题模块</label>
 																<select class="form-control" name="PRO_SYS_TYPE" id="form-field-pro-sys-type">
 																	<option value=""></option>
 																	<c:forEach items="${systemList}" var="system">
@@ -195,7 +195,13 @@
 															
 															<div style="margin:10px 0px;">
 																<label for="form-field-pro-resolve-time">问题解决时间</label>
-																<input type="text" name="PRO_RESOLVE_TIME" id="form-field-pro-resolve-time" class="form-control" placeholder="请输入问题解决时间"/>
+																<!-- <input type="text" name="PRO_RESOLVE_TIME" id="form-field-pro-resolve-time" class="form-control" placeholder="请输入问题解决时间"/> -->
+																<div class="input-group">
+																<input type="text" name="PRO_RESOLVE_TIME" id="form-field-pro-resolve-time" class="form-control date-picker" placeholder="请输入问题解决时间" data-date-format="yyyy-mm-dd" />
+																<span class="input-group-addon">
+																	<i class="fa fa-calendar bigger-110"></i>
+																</span>
+																</div>
 															</div>
 															<textarea name="PRO_CONTENT" id="form-field-pro-content" style="display:none" ></textarea>
 															<!-- <div style="margin:10px 0px;">
