@@ -125,8 +125,8 @@ public class ApprovalConfigService implements ApprovalConfigManager{
 		return (List<PageData>)dao.findForList("ApprovalConfigMapper."+mapStr, page);
 	}
 	@SuppressWarnings("unchecked")
-	public List<PageData> listStatistic(PageData pd)throws Exception{
-		return (List<PageData>)dao.findForList("ApprovalConfigMapper.listStatistic", pd);
+	public List<PageData> listStatistic(Page page)throws Exception{
+		return (List<PageData>)dao.findForList("ApprovalConfigMapper.listStatistic", page);
 	}
 	/**列表(全部)
 	 * @param pd
@@ -190,6 +190,7 @@ public class ApprovalConfigService implements ApprovalConfigManager{
 	public PageData findByIdSchemeUnit(PageData pd)throws Exception{
 		return (PageData)dao.findForObject("ApprovalConfigMapper.findByIdSchemeUnit", pd);
 	}
+	@SuppressWarnings("unchecked")
 	public List<PageData> findLevelById(PageData pd)throws Exception{
 		return (List<PageData>)dao.findForList("ApprovalConfigMapper.findByIdLevel", pd);
 	}

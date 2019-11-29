@@ -529,11 +529,12 @@ public class ApprovalConfigController extends BaseController {
 		pd = this.getPageData();
 		page.setPd(pd);
 		//List<PageData>	varList = approvalconfigService.listBusiness(page);	
+		List<PageData>	varList = approvalconfigService.listStatistic(page);
 		mv.setViewName("statisticAnalysis/bgStatistic/bgStatistic_list");
 		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
 		JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0",zdepartmentPdList));
 		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
-		//mv.addObject("varList", varList);
+		mv.addObject("varList", varList);
 		mv.addObject("pd", pd);
 		return mv;
 	}
@@ -542,10 +543,11 @@ public class ApprovalConfigController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/listStatistic")
-	public @ResponseBody List<PageData> listStatistic() throws Exception{
+	public @ResponseBody List<PageData> listStatistic(Page page) throws Exception{
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		List<PageData>	varList = approvalconfigService.listStatistic(pd);	//
+		page.setPd(pd);
+		List<PageData>	varList = approvalconfigService.listStatistic(page);	
 	
 		return varList;
 	}
@@ -554,18 +556,19 @@ public class ApprovalConfigController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/listStatisticExcel")
-	public ModelAndView listStatisticExcel() throws Exception{
+	public ModelAndView listStatisticExcel(Page page) throws Exception{
 		ModelAndView mv = new ModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
+		page.setPd(pd);
 		Map<String,Object> dataMap = new HashMap<String,Object>();
 		List<String> titles = new ArrayList<String>();
-		titles.add("运维类型");	//1
+		titles.add("变更类型");	//1
 		titles.add("提交变更总数");	//2
 		titles.add("已处理的变更");	//3
 		titles.add("解决率");	//4
 		dataMap.put("titles", titles);
-		List<PageData> varOList = approvalconfigService.listStatistic(pd);
+		List<PageData> varOList = approvalconfigService.listStatistic(page);
 		List<PageData> varList = new ArrayList<PageData>();
 		for(int i=0;i<varOList.size();i++){
 			PageData vpd = new PageData();

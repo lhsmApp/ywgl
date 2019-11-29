@@ -1090,10 +1090,10 @@
 		where 
 			BILL_CODE = #{BILL_CODE}
 	</select>	
-	<select id="listStatistic" parameterType="pd" resultType="pd">
-	SELECT c.BUSINESS_CODE,b.BUSINESS_NAME,c.total,c.solve,  CONCAT( ROUND( c.solve/c.total * 100, 2 ), '', '%' ) AS solverate FROM 
+	<select id="listStatistic" parameterType="page" resultType="pd">
+	SELECT c.BUSINESS_CODE,CASE WHEN b.BUSINESS_NAME IS NOT NULL THEN b.BUSINESS_NAME ELSE '合计' END BUSINESS_NAME,c.total,c.solve,  CONCAT( ROUND( c.solve/c.total * 100, 2 ), '', '%' ) AS solverate FROM 
 		(SELECT 
-		  a.BUSINESS_CODE,a.APPLY_DATE,
+		  a.BUSINESS_CODE,a.APPLY_DATE,d.UNIT_CODE,
 		  COUNT(a.BUSINESS_CODE) AS total,
 		  SUM(
 		    CASE
@@ -1102,15 +1102,22 @@
 		      ELSE 0 
 		    END
 		  ) AS solve
-		FROM
-		  tb_approval_main a 
+	FROM
+ 		tb_approval_main a 
+ 		LEFT JOIN view_change_bg d 
+ 		ON a.BILL_CODE=d.BILL_CODE
 		  where 1=1
-	<if test="START_DATE!=null and START_DATE!='' "> 
-			  and SUBSTRING(APPLY_DATE,1,10) &gt;= #{START_DATE} 
-			 </if>
-	<if test="END_DATE!=null and END_DATE!=''"> 
-			  and SUBSTRING(APPLY_DATE,1,10) &lt;= #{END_DATE} 
-			 </if> 
-GROUP BY a.BUSINESS_CODE)AS c LEFT JOIN tb_approval_business_config b ON  c.BUSINESS_CODE=b.BUSINESS_CODE
+		<if test="pd.START_DATE!=null and pd.START_DATE!='' "> 
+			  and SUBSTRING(a.APPLY_DATE,1,10) &gt;= #{pd.START_DATE} 
+		</if>
+		<if test="pd.END_DATE!=null and pd.END_DATE!=''"> 
+			  and SUBSTRING(a.APPLY_DATE,1,10) &lt;= #{pd.END_DATE} 
+		</if> 
+		<if test="pd.UNIT_CODE!=null and pd.UNIT_CODE!=''"> 
+			  and d.UNIT_CODE= #{pd.UNIT_CODE} 
+		</if> 
+		GROUP BY a.BUSINESS_CODE WITH ROLLUP)AS c 
+		LEFT JOIN tb_approval_business_config b 
+		ON  c.BUSINESS_CODE=b.BUSINESS_CODE
 	</select>
 </mapper>
