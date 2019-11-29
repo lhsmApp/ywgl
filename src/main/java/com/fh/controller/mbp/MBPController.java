@@ -3,6 +3,7 @@ package com.fh.controller.mbp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.james.mime4j.field.datetime.DateTime;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
@@ -32,6 +34,8 @@ import com.fh.service.sysConfig.sysconfig.SysConfigManager;
 import com.fh.service.system.dictionaries.DictionariesManager;
 import com.fh.service.system.user.UserManager;
 import com.fh.util.Const;
+import com.fh.util.DateUtil;
+import com.fh.util.DateWeek;
 import com.fh.util.Jurisdiction;
 import com.fh.util.ObjectExcelView;
 import com.fh.util.PageData;
@@ -860,4 +864,78 @@ public class MBPController extends BaseController {
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(format,true));
 	}
+	/**显示问题统计列表
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/listProblemStatistic")
+	public ModelAndView listProblemStatistic(Page page) throws Exception{
+		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = this.getPageData();
+		page.setPd(pd);	
+		if(null!=pd.getString("YEAR_MONTH")&&!"".equals(pd.getString("YEAR_MONTH"))){
+			pd.put("YEAR", pd.getString("YEAR_MONTH").split("-")[0]);
+		}
+		if(null!=pd.getString("WEEKSTEXT")&&!"".equals(pd.getString("WEEKSTEXT"))){
+			String startDate=pd.getString("WEEKSTEXT").substring(4, 14);
+			String endDate=pd.getString("WEEKSTEXT").substring(15, 25);
+			pd.put("START_DATE", startDate);
+			pd.put("END_DATE", endDate);
+		}
+		List<PageData> varList=new ArrayList<PageData>();
+		if("1".equals(pd.getString("level_select"))){
+			varList =mbpService.listProModStatistic(page);
+		}
+		if("2".equals(pd.getString("level_select"))){
+			varList =mbpService.listProTypeStatistic(page);
+		}
+		mv.setViewName("statisticAnalysis/problemStatistic/problemStatistic_list");
+		mv.addObject("varList",varList);
+		return mv;
+	}
+	/**根据课程分类获取课程信息
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/getWeeks")
+	public @ResponseBody List<PageData> getWeeks()throws Exception{
+		PageData pd = this.getPageData();
+		List<PageData> lists=new ArrayList<PageData>();
+		if(null!=pd.getString("YEAR_MONTH")&&!"".equals(pd.getString("YEAR_MONTH"))){
+			String year=pd.getString("YEAR_MONTH").split("-")[0];
+			String month=pd.getString("YEAR_MONTH").split("-")[1];
+			int i = 1;
+			//当前月第一天
+			String weekStart=pd.getString("YEAR_MONTH")+"-01";
+			//当前月第一天是星期几
+			int dayOfWeek=DateWeek.getTheFirstDayWeekOfMonth(Integer.parseInt(year), Integer.parseInt(month),1);
+			//该月的最后一天
+			String monEnd=DateWeek.getLastDayOfMonth(Integer.parseInt(year),Integer.parseInt(month));
+			//该月第一周结束日期
+			 String weekEnd = dayOfWeek == 0 ? weekStart : DateWeek.addDays(weekStart,(7 - dayOfWeek));
+			 String str = "第" + i + "周(" + weekStart +"/" + weekEnd+ ")";
+			 PageData p = new PageData();
+			 p.put("ID",i);
+			 p.put("Name",str);
+			 lists.add(p);
+			 //当日期小于或等于该月的最后一天
+			 while (DateWeek.addDays(weekEnd,1).compareTo(monEnd)<=0)
+			 {
+			   i++;
+			  //该周的开始时间
+			  weekStart = DateWeek.addDays(weekEnd,1);
+			  //该周结束时间
+			  weekEnd = (DateWeek.addDays(weekEnd,1).compareTo(monEnd)>0) ? monEnd : DateWeek.addDays(weekEnd,7);
+			  str = "第" + i + "周(" + weekStart + "/" + weekEnd + ")";
+			  PageData p1 = new PageData();
+				 p1.put("ID",i);
+				 p1.put("Name",str);
+				 lists.add(p1);
+			 }		
+		}
+		return lists;
+	}
+	
+	
 }

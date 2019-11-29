@@ -416,7 +416,7 @@
 		            //返回数据的格式
 		        	dataType:'json',		          
 		            success:function(datas){
-		            	console.log(datas);
+		            	//console.log(datas);
 		            	var html = '';
 		      		     html += setDetail(datas);
 		      			$('#detail-tab').html(html);
@@ -466,7 +466,7 @@
 				title='GRC帐号撤销';
 				reason=item.CANCLE_REASON;
 			}
-			console.log(value);
+			//console.log(value);
 		    var div = '<div class="profile-user-info"><div class="profile-info-row"><div class="profile-info-name">变更名称：</div><div class="profile-info-value"><span>'
 		    	+title
 		        + '</span></div></div><div class="profile-info-row"><div class="profile-info-name">申请单号：</div><div class="profile-info-value"><i class="fa fa-map-marker light-orange bigger-110"></i><span>'

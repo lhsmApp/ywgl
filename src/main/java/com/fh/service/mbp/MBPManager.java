@@ -38,6 +38,16 @@ public interface MBPManager{
 	 * @throws Exception
 	 */
 	public List<PageData> list(Page page)throws Exception;
+	/**问题统计列表（按类型）
+	 * @param page
+	 * @throws Exception
+	 */
+	public List<PageData> listProTypeStatistic(Page page)throws Exception;
+	/**问题统计列表（按模块）
+	 * @param page
+	 * @throws Exception
+	 */
+	public List<PageData> listProModStatistic(Page page)throws Exception;
 	
 	/**列表(全部)
 	 * @param pd

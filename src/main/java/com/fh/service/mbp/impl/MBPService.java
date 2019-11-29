@@ -64,6 +64,22 @@ public class MBPService implements MBPManager{
 		}
 		return list;
 	}
+	/**问题统计列表（按类型）
+	 * @param page
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PageData> listProTypeStatistic(Page page)throws Exception{
+		return (List<PageData>)dao.findForList("MBPMapper.listProTypeStatistic", page);
+	}
+	/**问题统计列表（按模块）
+	 * @param page
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PageData> listProModStatistic(Page page)throws Exception{
+		return (List<PageData>)dao.findForList("MBPMapper.listProModStatistic", page);
+	}
 	
 	/**列表(全部)
 	 * @param pd
