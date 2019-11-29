@@ -70,5 +70,12 @@ public interface GRCPersonManager{
 	 */
 	public List<PageData> listBusiDate(PageData pd)throws Exception;
 	
+	/**
+	 * 获取业务权限日期
+	 * @param pd
+	 * @return
+	 */
+	public PageData findSysDeptTime(PageData pd)throws Exception;
+	
 }
 

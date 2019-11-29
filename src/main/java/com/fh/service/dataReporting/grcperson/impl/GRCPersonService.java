@@ -99,5 +99,14 @@ public class GRCPersonService implements GRCPersonManager{
 		return (List<PageData>)dao.findForList("GRCPersonMapper.listBusiDate", pd);
 	}
 	
+	/**
+	 * 获取业务权限日期
+	 * @param pd
+	 * @return
+	 */
+	public PageData findSysDeptTime(PageData pd) throws Exception {
+		return (PageData)dao.findForObject("GRCPersonMapper.findSysDeptTime", pd);
+	}
+	
 }
 

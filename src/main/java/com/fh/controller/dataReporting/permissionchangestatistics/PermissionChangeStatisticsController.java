@@ -28,6 +28,7 @@ import com.fh.entity.TableColumns;
 import com.fh.entity.TmplConfigDetail;
 import com.fh.entity.system.User;
 import com.fh.exception.CustomException;
+import com.fh.service.dataReporting.grcperson.GRCPersonManager;
 import com.fh.service.dataReporting.permissionchangestatistics.PermissionChangeStatisticsManager;
 import com.fh.service.sysConfig.sysconfig.SysConfigManager;
 import com.fh.service.tmplconfig.tmplconfig.impl.TmplConfigService;
@@ -39,6 +40,7 @@ import com.fh.util.PageData;
 import com.fh.util.StringUtil;
 import com.fh.util.date.DateFormatUtils;
 import com.fh.util.date.DateUtils;
+import com.fh.util.enums.SysDeptTime;
 import com.fh.util.excel.LeadingInExcelToPageData;
 import com.fh.util.excel.TransferSbcDbc;
 
@@ -60,7 +62,9 @@ public class PermissionChangeStatisticsController extends BaseController {
 	private TmplConfigService tmplconfigService;
 	@Resource(name = "sysconfigService")
 	private SysConfigManager sysconfigService;
-	String TableNameDetail = "TB_DI_PERMISSION_CHANGE_STATISTICS"; // 表名  tb_di_permission_change_statistics
+	@Resource(name="grcpersonService")
+	private GRCPersonManager grcpersonService;
+	
 	Map<String, TableColumns> Map_HaveColumnsList = new LinkedHashMap<String, TableColumns>();
 	Map<String, TmplConfigDetail> Map_SetColumnsList = new LinkedHashMap<String, TmplConfigDetail>();
 	
@@ -125,16 +129,24 @@ public class PermissionChangeStatisticsController extends BaseController {
 		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
+		PageData data = new PageData();
 		User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 		pd = this.getPageData();
 		String busiDate = pd.getString("busiDate");
 		pd.put("KEY_CODE","SystemDataTime");
-		String date = sysconfigService.getSysConfigByKey(pd);
 		pd.put("USER_DEPART",user.getUNIT_CODE());
+		data.put("BUSI_TYPE",SysDeptTime.PERMISSION_CHANGE_STATISTICS.getNameKey());
+		data.put("DEPT_CODE",user.getUNIT_CODE());
+		String date = sysconfigService.getSysConfigByKey(pd);
 		if(null == busiDate || StringUtil.isEmpty(busiDate)) {
 			pd.put("busiDate",date);
 		}
+		pd.put("month",date);
 		page.setPd(pd);
+		PageData pageData = grcpersonService.findSysDeptTime(data);
+		if(null != pageData && pageData.size()>0) {
+			pd.putAll(pageData);
+		}
 		List<PageData>  listBusiDate = DateUtil.getMonthList("BUSI_DATE", date);
 		List<PageData>	varList = permissionchangestatisticsService.list(page);	//列出PermissionChangeStatistics列表
 		mv.setViewName("dataReporting/permissionchangestatistics/permissionchangestatistics_list");

@@ -238,6 +238,39 @@
 		});
 	});
 	
+	/*初始化数据*/
+	var month = '${pd.month}';
+	var day = '${pd.LTD_DAY}';
+	var date = new Date();
+    var year = '${pd.busiDate}';
+    var strDate = date.getDate();
+	
+    /*权限控制*/
+    function checkPermission(){
+		var state = false;
+		if(day == ''){
+			return true;
+		}
+		if(month == year){//先判断月份
+		    if(day < strDate){
+				bootbox.dialog({
+					message: '<span class="bigger-110">请在'+day+'号前进行操作!</span>',
+					buttons: 			
+					{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+				});
+		    }else{
+		    	state = true;
+		    }
+	  	}else {
+	  		bootbox.dialog({
+				message: "<span class='bigger-110'>当前业务期间不支持操作!</span>",
+				buttons: 			
+				{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+			});
+		} 
+		return state;
+	}
+	
 	/* 检索 */
 	function tosearch(){
 		top.jzts();
@@ -260,11 +293,13 @@
 	
 	/* 新增一行 */
 	function addRows(){
+		if(!checkPermission()){return;} //权限控制
     	$("#hideTable table tbody tr").clone().appendTo("#copyTable");	           
     }
 	
 	/* 去除所有input标签的只读属性 */
 	function edit(){
+		if(!checkPermission()){return;} //权限控制
 		if($("#confirmState").val() == 2){
 			bootbox.dialog({
 				message: "<span class='bigger-110'>已上报内容不可修改!</span>",
@@ -278,6 +313,7 @@
 	
 	/* 保存 */
 	function save(){
+		if(!checkPermission()){return;} //权限控制
 		var listData = new Array();
 		for(var i=0;i < document.getElementsByName('STAFF_CODE').length-1;i++){
 				//length-1 : 页面中有用于复制的隐藏文本
@@ -342,6 +378,7 @@
 	
 	//批量操作
 	function makeAll(msg){
+		if(!checkPermission()){return;} //权限控制
 		bootbox.confirm(msg, function(result) {
 			if(result) {
 				var str = '';
@@ -419,6 +456,7 @@
 	
 	/* 导入Excel */
 	function importExcel(){
+		   if(!checkPermission()){return;} //权限控制
 		   top.jzts();
     	   var diag = new top.Dialog();
     	   diag.Drag=true;
@@ -437,6 +475,7 @@
 	
 	/*全部上报*/
 	function report(msg){
+		if(!checkPermission()){return;} //权限控制
 		bootbox.confirm(msg, function(result) {
 		  	if(result){
 		  		var str = '';
@@ -501,6 +540,7 @@
 	
 	/*撤销上报*/
 	function backReport(msg){
+		if(!checkPermission()){return;} //权限控制
 		bootbox.confirm(msg, function(result) {
 			if(result){
 				var str = '';

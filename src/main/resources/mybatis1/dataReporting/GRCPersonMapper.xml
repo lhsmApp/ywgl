@@ -167,4 +167,23 @@
 			STATE = 1 
 		limit 1
 	</select>
+	<!-- 导出模板 -->
+	<select id="findSysDeptTime" parameterType="pd" resultType="pd">
+		select 
+			BUSI_TYPE,
+			LTD_DAY
+		from
+			tb_sys_dept_ltd_time
+		where
+			STATE = 1
+		<if test="DEPT_CODE != null and DEPT_CODE != ''">
+		and 
+			DEPT_CODE = #{DEPT_CODE}
+		</if>
+		<if test="BUSI_TYPE != null and BUSI_TYPE != ''">
+		and 
+			BUSI_TYPE = #{BUSI_TYPE}
+		</if>
+	</select>
+	
 </mapper>

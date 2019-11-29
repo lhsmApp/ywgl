@@ -26,9 +26,9 @@ import com.fh.entity.TmplConfigDetail;
 import com.fh.entity.system.User;
 import com.fh.exception.CustomException;
 import com.fh.service.dataReporting.erpuserlist.ERPUserListManager;
+import com.fh.service.dataReporting.grcperson.GRCPersonManager;
 import com.fh.service.sysConfig.sysconfig.SysConfigManager;
 import com.fh.service.tmplconfig.tmplconfig.impl.TmplConfigService;
-import com.fh.util.AppUtil;
 import com.fh.util.Const;
 import com.fh.util.DateUtil;
 import com.fh.util.Jurisdiction;
@@ -37,13 +37,14 @@ import com.fh.util.PageData;
 import com.fh.util.StringUtil;
 import com.fh.util.date.DateFormatUtils;
 import com.fh.util.date.DateUtils;
+import com.fh.util.enums.SysDeptTime;
 import com.fh.util.excel.LeadingInExcelToPageData;
 import com.fh.util.excel.TransferSbcDbc;
 import net.sf.json.JSONArray;
 
 /** 
  * 说明：ERP用户清单
- * 创建人：jiachao
+ * 创建人：xunyuLo
  * 创建时间：2019-11-27
  */
 @Controller
@@ -57,7 +58,9 @@ public class ERPUserListController extends BaseController {
 	private TmplConfigService tmplconfigService;
 	@Resource(name = "sysconfigService")
 	private SysConfigManager sysconfigService;
-	String TableNameDetail = "TB_DI_GRC_PERSON"; //表名
+	@Resource(name="grcpersonService")
+	private GRCPersonManager grcpersonService;
+	
 	Map<String, TableColumns> Map_HaveColumnsList = new LinkedHashMap<String, TableColumns>();
 	Map<String, TmplConfigDetail> Map_SetColumnsList = new LinkedHashMap<String, TmplConfigDetail>();
 	
@@ -121,16 +124,24 @@ public class ERPUserListController extends BaseController {
 		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
+		PageData data = new PageData();
 		User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 		pd = this.getPageData();
 		String busiDate = pd.getString("busiDate");
 		pd.put("USER_DEPART",user.getUNIT_CODE());
 		pd.put("KEY_CODE","SystemDataTime");
+		data.put("BUSI_TYPE",SysDeptTime.ERP_USER_LIST.getNameKey());
+		data.put("DEPT_CODE",user.getUNIT_CODE());
 		String date = sysconfigService.getSysConfigByKey(pd);
 		if(null == busiDate || StringUtil.isEmpty(busiDate)) {
 			pd.put("busiDate",date);
 		}
+		pd.put("month",date);
 		page.setPd(pd);
+		PageData pageData = grcpersonService.findSysDeptTime(data);
+		if(null != pageData && pageData.size()>0) {
+			pd.putAll(pageData);
+		}
 		List<PageData>  listBusiDate = DateUtil.getMonthList("BUSI_DATE", date);
 		List<PageData>	varList = erpuserlistService.list(page);	//列出GRCPerson列表
 		mv.setViewName("dataReporting/erpuserlist/erpuserlist_list");
@@ -219,11 +230,7 @@ public class ERPUserListController extends BaseController {
 	@RequestMapping(value = "/excel")
 	public ModelAndView exportExcel(Page page) throws Exception {
 		logBefore(logger, Jurisdiction.getUsername() + "导出ERPUserList到excel");
-		// if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;}
-
 		PageData getPd = this.getPageData();
-		// 页面显示数据的年月
-		// getPd.put("SystemDateTime", SystemDateTime);
 		page.setPd(getPd);
 		List<PageData> varOList = erpuserlistService.exportList(page);
 		return export(varOList, "", Map_SetColumnsList);

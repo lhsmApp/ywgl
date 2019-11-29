@@ -165,7 +165,39 @@
 	<script type="text/javascript">
 	/* 关闭加载状态 */
 	$(top.hangge());
+	/*初始化数据*/
+	var month = '${pd.month}';
+	var day = '${pd.LTD_DAY}';
+	var date = new Date();
+    var year = '${pd.busiDate}';
+    var strDate = date.getDate();
 	
+    /*权限控制*/
+    function checkPermission(){
+		var state = false;
+		if(day == ''){
+			return true;
+		}
+		if(month == year){//先判断月份
+		    if(day < strDate){
+				bootbox.dialog({
+					message: '<span class="bigger-110">请在'+day+'号前进行操作!</span>',
+					buttons: 			
+					{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+				});
+		    }else{
+		    	state = true;
+		    }
+	  	}else {
+	  		bootbox.dialog({
+				message: "<span class='bigger-110'>当前业务期间不支持操作!</span>",
+				buttons: 			
+				{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+			});
+		} 
+		return state;
+	}
+    
 	/* 复选框全选控制 */
 	$(function() {
 		//table自由拉动
@@ -200,16 +232,19 @@
 	
 	/* 新增一行 */
 	function addRows(){
+		if(!checkPermission()){return;} //权限控制
     	$("#hideTable table tbody tr").clone().appendTo("#copyTable");	           
     }
 	
 	/* 去除所有input标签的只读属性 */
 	function edit(){
+		if(!checkPermission()){return;} //权限控制
 		$('input,select,textarea',$('form[name="Form"]')).prop('readonly',false);
 	}
 	
 	/* 保存 */
 	function save(){
+		if(!checkPermission()){return;} //权限控制
 		var ID = '';
 		var USER_NAME = '';
 		var NAME = '';
@@ -294,6 +329,7 @@
 	
 	/* 批量操作 */
 	function makeAll(msg){
+		if(!checkPermission()){return;} //权限控制
 		bootbox.confirm(msg, function(result) {
 			if(result) {
 				var str = '';
@@ -368,6 +404,7 @@
 	
 	/* 导入Excel */
 	function importExcel(){
+		   if(!checkPermission()){return;} //权限控制
 		   top.jzts();
     	   var diag = new top.Dialog();
     	   diag.Drag=true;
@@ -383,115 +420,6 @@
            };
            diag.show();
 	}
-	</script>
-	<script type="text/javascript">
-		<%-- $(top.hangge());//关闭加载状态
-		//检索
-		function tosearch(){
-			top.jzts();
-			$("#Form").submit();
-		}
-		$(function() {
-		
-			//复选框全选控制
-			var active_class = 'active';
-			$('#simple-table > thead > tr > th input[type=checkbox]').eq(0).on('click', function(){
-				var th_checked = this.checked;//checkbox inside "TH" table header
-				$(this).closest('table').find('tbody > tr').each(function(){
-					var row = this;
-					if(th_checked) $(row).addClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', true);
-					else $(row).removeClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', false);
-				});
-			});
-		});
-		
-		//删除
-		function del(Id){
-			bootbox.confirm("确定要删除吗?", function(result) {
-				if(result) {
-					top.jzts();
-					var url = "<%=basePath%>erpuserlist/delete.do?ERPUSERLIST_ID="+Id+"&tm="+new Date().getTime();
-					$.get(url,function(data){
-						nextPage(${page.currentPage});
-					});
-				}
-			});
-		}
-		
-		//修改
-		function edit(Id){
-			 top.jzts();
-			 var diag = new top.Dialog();
-			 diag.Drag=true;
-			 diag.Title ="编辑";
-			 diag.URL = '<%=basePath%>erpuserlist/goEdit.do?ERPUSERLIST_ID='+Id;
-			 diag.Width = 450;
-			 diag.Height = 355;
-			 diag.Modal = true;				//有无遮罩窗口
-			 diag. ShowMaxButton = true;	//最大化按钮
-		     diag.ShowMinButton = true;		//最小化按钮 
-			 diag.CancelEvent = function(){ //关闭事件
-				 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
-					 nextPage(${page.currentPage});
-				}
-				diag.close();
-			 };
-			 diag.show();
-		}
-		
-		//批量操作
-		function makeAll(msg){
-			bootbox.confirm(msg, function(result) {
-				if(result) {
-					var str = '';
-					for(var i=0;i < document.getElementsByName('ids').length;i++){
-					  if(document.getElementsByName('ids')[i].checked){
-					  	if(str=='') str += document.getElementsByName('ids')[i].value;
-					  	else str += ',' + document.getElementsByName('ids')[i].value;
-					  }
-					}
-					if(str==''){
-						bootbox.dialog({
-							message: "<span class='bigger-110'>您没有选择任何内容!</span>",
-							buttons: 			
-							{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
-						});
-						$("#zcheckbox").tips({
-							side:1,
-				            msg:'点这里全选',
-				            bg:'#AE81FF',
-				            time:8
-				        });
-						return;
-					}else{
-						if(msg == '确定要删除选中的数据吗?'){
-							top.jzts();
-							$.ajax({
-								type: "POST",
-								url: '<%=basePath%>erpuserlist/deleteAll.do?tm='+new Date().getTime(),
-						    	data: {DATA_IDS:str},
-								dataType:'json',
-								//beforeSend: validateData,
-								cache: false,
-								success: function(data){
-									 $.each(data.list, function(i, list){
-											nextPage(${page.currentPage});
-									 });
-								}
-							});
-						}
-					}
-				}
-			});
-		};
-		
-		
-		//导出excel
-		function toExcel(){
-			window.location.href='<%=basePath%>erpuserlist/excel.do';
-		}
-
- --%>
-	</script>
+</script>
 </body>
 </html>

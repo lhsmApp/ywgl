@@ -29,6 +29,7 @@ import com.fh.entity.TmplConfigDetail;
 import com.fh.entity.system.User;
 import com.fh.exception.CustomException;
 import com.fh.service.dataReporting.erptempacctapplication.ERPTempAcctApplicationManager;
+import com.fh.service.dataReporting.grcperson.GRCPersonManager;
 import com.fh.service.sysConfig.sysconfig.SysConfigManager;
 import com.fh.service.tmplconfig.tmplconfig.impl.TmplConfigService;
 import com.fh.util.Const;
@@ -39,6 +40,7 @@ import com.fh.util.PageData;
 import com.fh.util.StringUtil;
 import com.fh.util.date.DateFormatUtils;
 import com.fh.util.date.DateUtils;
+import com.fh.util.enums.SysDeptTime;
 import com.fh.util.excel.LeadingInExcelToPageData;
 import com.fh.util.excel.TransferSbcDbc;
 
@@ -60,7 +62,9 @@ public class ERPTempAcctApplicationController extends BaseController {
 	private TmplConfigService tmplconfigService;
 	@Resource(name = "sysconfigService")
 	private SysConfigManager sysconfigService;
-	String TableNameDetail = "TB_DI_ERP_TAA"; // 表名  tb_di_erp_taa
+	@Resource(name="grcpersonService")
+	private GRCPersonManager grcpersonService;
+
 	Map<String, TableColumns> Map_HaveColumnsList = new LinkedHashMap<String, TableColumns>();
 	Map<String, TmplConfigDetail> Map_SetColumnsList = new LinkedHashMap<String, TmplConfigDetail>();
 	
@@ -74,11 +78,14 @@ public class ERPTempAcctApplicationController extends BaseController {
 		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
+		PageData data = new PageData();
 		User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 		pd = this.getPageData();
 		String confirmState = pd.getString("confirmState");
 		String busiDate = pd.getString("busiDate");
 		pd.put("KEY_CODE","SystemDataTime");
+		data.put("BUSI_TYPE",SysDeptTime.ERP_TAA.getNameKey());
+		data.put("DEPT_CODE",user.getUNIT_CODE());
 		String date = sysconfigService.getSysConfigByKey(pd);
 		if(null == confirmState || StringUtil.isEmpty(confirmState)) {
 			pd.put("confirmState", "1");  //1未上报 2已上报 3撤销上报 4已驳回
@@ -86,9 +93,14 @@ public class ERPTempAcctApplicationController extends BaseController {
 		if(null == busiDate || StringUtil.isEmpty(busiDate)) {
 			pd.put("busiDate",date);
 		}
+		pd.put("month",date);
 		pd.put("DEPART_CODE",user.getUNIT_NAME());
 		pd.put("USER_DEPART",user.getUNIT_CODE());
 		page.setPd(pd);
+		PageData pageData = grcpersonService.findSysDeptTime(data);
+		if(null != pageData && pageData.size()>0) {
+			pd.putAll(pageData);
+		}
 		//获取业务期间
 		List<PageData>  listBusiDate = DateUtil.getMonthList("BUSI_DATE", date);
 		List<PageData>	varList = erptempacctapplicationService.list(page);	//列出ERPTempAcctApplication列表
