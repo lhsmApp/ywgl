@@ -1,17 +1,16 @@
-package com.fh.service.dataReporting.grcperson;
+package com.fh.service.dataReporting.erpuserlist;
 
 import java.util.List;
-
 import com.fh.entity.Page;
 import com.fh.util.PageData;
 
 /** 
- * 说明： GRC人员信息处理类接口
- * 创建人：xinyuLo
- * 创建时间：2019-09-20
+ * 说明： ERP用户清单接口
+ * 创建人：jiachao
+ * 创建时间：2019-11-27
  * @version
  */
-public interface GRCPersonManager{
+public interface ERPUserListManager{
 
 	/**新增
 	 * @param pd
@@ -37,18 +36,30 @@ public interface GRCPersonManager{
 	 */
 	public List<PageData> list(Page page)throws Exception;
 	
+	/**列表(全部)
+	 * @param pd
+	 * @throws Exception
+	 */
+	public List<PageData> listAll(PageData pd)throws Exception;
+	
+	/**通过id获取数据
+	 * @param pd
+	 * @throws Exception
+	 */
+	public PageData findById(PageData pd)throws Exception;
+	
 	/**批量删除
 	 * @param ArrayDATA_IDS
 	 * @throws Exception
 	 */
 	public void deleteAll(String[] ArrayDATA_IDS)throws Exception;
-	
+
 	/**下载模板
 	 * @param PageData
 	 * @throws Exception
 	 */
 	public List<PageData> exportModel(PageData getPd) throws Exception;
-
+	
 	/**
 	 * 导出列表
 	 * @param page
@@ -61,14 +72,6 @@ public interface GRCPersonManager{
 	 * @throws Exception
 	 */
 	public void grcUpdateDatabase(List<PageData> listData) throws Exception;
-	
-	/**
-	 * 获取业务期间
-	 * @param pd
-	 * @return
-	 * @throws Exception
-	 */
-	public List<PageData> listBusiDate(PageData pd)throws Exception;
 	
 }
 

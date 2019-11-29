@@ -86,5 +86,16 @@ public class GRCApprovalMatrixService implements GRCApprovalMatrixManager{
 	public void grcUpdateDatabase(List<PageData> listData)throws Exception {
 		dao.update("GRCApprovalMatrixMapper.delAndIns", listData);
 	}
+	
+	/**
+	 * 获取业务期间
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PageData> listBusiDate(PageData pd) throws Exception {
+		return (List<PageData>)dao.findForList("GRCApprovalMatrixMapper.listBusiDate", pd);
+	}
 }
 

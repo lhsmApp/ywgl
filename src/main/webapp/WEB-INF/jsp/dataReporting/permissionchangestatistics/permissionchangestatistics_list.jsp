@@ -34,19 +34,19 @@
 		<div class="main-content">
 			<div class="main-content-inner">
 				<div class="page-content">
-					<div class="row" style="width:100%;overflow: auto;">
+					<div class="row">
 						<div class="col-xs-12">
 						<!-- 检索  -->
 						<form action="permissionchangestatistics/list.do" method="post" name="Form" id="Form">
 						<table style="margin-top:15px;">
 							<tr>
 								<td>
-									<div class="nav-search">
-										<span class="input-icon">
-											<input type="text" placeholder="这里输入关键词" class="nav-search-input" id="nav-search-input" autocomplete="off" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词"/>
-											<i class="ace-icon fa fa-search nav-search-icon"></i>
-										</span>
-									</div>
+									<select class="form-control" id="busiDate" name="busiDate" style="vertical-align:top; width:150px;margin-left: 5px;" data-placeholder="请选择业务期间" onchange="tosearch()">
+										<option value=""></option>
+										<c:forEach items="${listBusiDate}" var="var">
+											<option value="${var.BUSI_DATE}" <c:if test="${pd.busiDate == var.BUSI_DATE}">selected="selected"</c:if>>${var.BUSI_DATE}</option>
+										</c:forEach>
+									</select>
 								</td>
 								<td style="vertical-align:top;padding-left:3px;">
 									<a class="btn btn-info btn-sm" onclick="tosearch()"><i class="ace-icon fa fa-search bigger-110"></i></a>
@@ -60,6 +60,7 @@
 							</tr>
 						</table>
 						<!-- 检索  -->
+						<div style="width:100%;overflow: auto; height: 450px;">
 						<table id="simple-table" class="mtable" style="margin-top:10px; width: 99%;">		
 							<thead>
 								<tr>
@@ -102,6 +103,7 @@
 									</c:forEach>
 							</tbody>
 						</table>
+						</div>
 						<div class="position-relative page-header pull-right">
 						<table style="width:100%;">
 							<tr>

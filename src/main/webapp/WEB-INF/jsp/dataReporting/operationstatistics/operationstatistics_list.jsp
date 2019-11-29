@@ -14,14 +14,6 @@
 <base href="<%=basePath%>">
 <!-- 下拉框 -->
 <link rel="stylesheet" href="static/ace/css/chosen.css" />
- <!-- 树形下拉框start -->
-<script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
-<script type="text/javascript" src="plugins/selectZtree/selectTree.js"></script>
-<script type="text/javascript" src="plugins/selectZtree/framework.js"></script>
-<link rel="stylesheet" type="text/css" href="plugins/selectZtree/import_fh.css" />
-<script type="text/javascript" src="plugins/selectZtree/ztree/ztree.js"></script>
-<link type="text/css" rel="stylesheet" href="plugins/selectZtree/ztree/ztree.css"></link>
-<!-- 树形下拉框end -->
 <!-- jsp文件头和头部 -->
 <%@ include file="../../system/index/top.jsp"%>
 <!--自由拉动  -->
@@ -40,28 +32,21 @@
 		<div class="main-content">
 			<div class="main-content-inner">
 				<div class="page-content">
-					<div class="row" style="width: 100%;overflow: auto;">
+					<div class="row">
 						<div class="col-xs-12">
 							
 						<!-- 检索  -->
 						<form action="operationstatistics/list.do" method="post" name="Form" id="Form">
-						<table style="margin-top:15px;">
+						<table style="margin-top: 10px;">
 							<tr>
 								<td>
-									<div class="nav-search">
-										<span class="input-icon">
-											<input type="text" placeholder="这里输入关键词" class="nav-search-input" id="nav-search-input" autocomplete="off" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词"/>
-											<i class="ace-icon fa fa-search nav-search-icon"></i>
-										</span>
-									</div>
+									<select class="form-control" id="busiDate" name="busiDate" style="vertical-align:top; width:150px;margin-left: 5px;" data-placeholder="请选择业务期间">
+										<option value=""></option>
+										<c:forEach items="${listBusiDate}" var="var">
+											<option value="${var.BUSI_DATE}" <c:if test="${pd.busiDate == var.BUSI_DATE}">selected="selected"</c:if>>${var.BUSI_DATE}</option>
+										</c:forEach>
+									</select>
 								</td>
-								
-							<%-- 	<td style="vertical-align:top;padding-left:2px;">
-								 	<span class="pull-left" style="margin-right: 5px;">
-										<div class="selectTree" id="selectTree" multiMode="true" <c:if test="${pd.departTreeSource=='0'}">hidden</c:if> allSelectable="false" noGroup="false"></div>
-									    <input type="text" id="SelectedDepartCode" hidden></input>
-									</span>
-								</td> --%>
 								<td style="vertical-align:top;padding-left:3px;">
 									<a class="btn btn-info btn-sm" onclick="tosearch()"><i class="ace-icon fa fa-search bigger-110"></i></a>
 									<a class="btn btn-white btn-info btn-bold" onclick="addRows()"><span class="ace-icon fa fa-plus-circle purple"></span>添加</a>						
@@ -74,6 +59,7 @@
 							</tr>
 						</table>
 						<!-- 检索  -->
+						<div style="width: 100%;overflow: auto;height: 450px;">
 						<table id="simple-table" class="mtable" style="margin-top:10px; width:99%;">	
 							<thead>
 								<tr>
@@ -108,7 +94,7 @@
 									</c:forEach>
 							</tbody>
 						</table>
-						
+						</div>
 						<div class="position-relative page-header pull-right">
 						
 						<table style="width:100%;">
@@ -357,22 +343,6 @@
 		//导出excel
 		function toExcel(){
 			window.location.href='<%=basePath%>operationstatistics/excel.do';
-		}
-		
-		//下拉树
-		var defaultNodes = {"treeNodes":${zTreeNodes}};
-		function initComplete(){
-			//绑定change事件
-			$("#selectTree").bind("change",function(){
-				$("#SelectedDepartCode").val("");
-				if($(this).attr("relValue")){
-					$("#SelectedDepartCode").val($(this).attr("relValue"));
-			    }
-			});
-			//赋给data属性
-			$("#selectTree").data("data",defaultNodes);  
-			$("#selectTree").render();
-			$("#selectTree2_input").val("请选择单位");
 		}
 	</script>
 

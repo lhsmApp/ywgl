@@ -22,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fh.controller.base.BaseController;
-import com.fh.controller.common.Common;
 import com.fh.entity.CommonBase;
 import com.fh.entity.Page;
 import com.fh.entity.TableColumns;
@@ -30,8 +29,10 @@ import com.fh.entity.TmplConfigDetail;
 import com.fh.entity.system.User;
 import com.fh.exception.CustomException;
 import com.fh.service.dataReporting.erptempacctapplication.ERPTempAcctApplicationManager;
+import com.fh.service.sysConfig.sysconfig.SysConfigManager;
 import com.fh.service.tmplconfig.tmplconfig.impl.TmplConfigService;
 import com.fh.util.Const;
+import com.fh.util.DateUtil;
 import com.fh.util.Jurisdiction;
 import com.fh.util.ObjectExcelView;
 import com.fh.util.PageData;
@@ -57,7 +58,8 @@ public class ERPTempAcctApplicationController extends BaseController {
 	private ERPTempAcctApplicationManager erptempacctapplicationService;
 	@Resource(name="tmplconfigService")
 	private TmplConfigService tmplconfigService;
-	
+	@Resource(name = "sysconfigService")
+	private SysConfigManager sysconfigService;
 	String TableNameDetail = "TB_DI_ERP_TAA"; // 表名  tb_di_erp_taa
 	Map<String, TableColumns> Map_HaveColumnsList = new LinkedHashMap<String, TableColumns>();
 	Map<String, TmplConfigDetail> Map_SetColumnsList = new LinkedHashMap<String, TmplConfigDetail>();
@@ -72,18 +74,24 @@ public class ERPTempAcctApplicationController extends BaseController {
 		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
-		User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USER);
+		User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 		pd = this.getPageData();
 		String confirmState = pd.getString("confirmState");
+		String busiDate = pd.getString("busiDate");
+		pd.put("KEY_CODE","SystemDataTime");
+		String date = sysconfigService.getSysConfigByKey(pd);
 		if(null == confirmState || StringUtil.isEmpty(confirmState)) {
 			pd.put("confirmState", "1");  //1未上报 2已上报 3撤销上报 4已驳回
+		}
+		if(null == busiDate || StringUtil.isEmpty(busiDate)) {
+			pd.put("busiDate",date);
 		}
 		pd.put("DEPART_CODE",user.getUNIT_NAME());
 		pd.put("USER_DEPART",user.getUNIT_CODE());
 		page.setPd(pd);
-		List<PageData>	varList = erptempacctapplicationService.list(page);	//列出ERPTempAcctApplication列表
 		//获取业务期间
-		List<PageData>  listBusiDate = erptempacctapplicationService.listBusiDate(pd);
+		List<PageData>  listBusiDate = DateUtil.getMonthList("BUSI_DATE", date);
+		List<PageData>	varList = erptempacctapplicationService.list(page);	//列出ERPTempAcctApplication列表
 		mv.setViewName("dataReporting/erptempacctapplication/erptempacctapplication_list");
 		mv.addObject("listBusiDate",listBusiDate);
 		mv.addObject("varList", varList);
@@ -91,7 +99,6 @@ public class ERPTempAcctApplicationController extends BaseController {
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		
 		//***********************************************************
-		Map_HaveColumnsList = Common.GetHaveColumnsMapByTableName(TableNameDetail, tmplconfigService);
 		Map_SetColumnsList.put("STAFF_CODE", new TmplConfigDetail("STAFF_CODE", "员工编号", "1", false));
 		Map_SetColumnsList.put("STAFF_NAME", new TmplConfigDetail("STAFF_NAME", "员工姓名", "1", false));
 		Map_SetColumnsList.put("DEPART_CODE", new TmplConfigDetail("DEPART_CODE", "二级单位", "1", false));
@@ -123,7 +130,7 @@ public class ERPTempAcctApplicationController extends BaseController {
 		String staffId = null;
 		PageData pd = new PageData();
 		CommonBase commonBase = new CommonBase();
-		User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USER);
+		User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 		commonBase.setCode(-1);
 		pd = this.getPageData();
 		listData = pd.getString("listData");
@@ -355,7 +362,7 @@ public class ERPTempAcctApplicationController extends BaseController {
 			judgement = true;
 		}
 		if (judgement) {
-			User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USER);
+			User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 			for (PageData pageData : listUploadAndRead) {
 			//将每条数据插入新内容
 				pageData.put("CONFIRM_STATE", "1"); //1未上报 2已上报 3撤销上报 4已驳回

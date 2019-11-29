@@ -9,23 +9,30 @@
 	
 	<!-- 字段 -->
 	<sql id="Field">
+		BUSI_DATE,
 		BUSINESS_MODULE,	
 		STAFF_CODE,	
 		STAFF_NAME,	
 		STAFF_CODE_APPROVAL1,	
 		STAFF_NAME_APPROVAL1,
-		STATE
+		STATE,
+		BILL_USER,	
+		USER_DEPART,
+		BILL_DATE
 	</sql>
 	
 	<!-- 字段值 -->
 	<sql id="FieldValue">
+		#{BUSI_DATE},
 		#{BUSINESS_MODULE},	
 		#{STAFF_CODE},	
 		#{STAFF_NAME},	
 		#{STAFF_CODE_APPROVAL1},	
 		#{STAFF_NAME_APPROVAL1},	
-		#{STATE}
-	
+		#{STATE},
+		#{BILL_USER},	
+		#{USER_DEPART},
+		#{BILL_DATE}
 	</sql>
 	
 	<!-- 新增-->
@@ -65,15 +72,21 @@
 		from 
 		<include refid="tableName"></include>
 		where STATE = 1
-		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
-			and
-				(
-					STAFF_CODE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
-				or
-					STAFF_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
-				)
+		<if test="pd.busiDate != null and pd.busiDate != ''">
+		and 
+			BUSI_DATE = #{pd.busiDate}
+		</if>
+		<if test="pd.USER_DEPART != null and pd.USER_DEPART != ''">
+		and 
+			USER_DEPART = #{pd.USER_DEPART}
 		</if>
 	</select>
+	
+	<!--业务期间集合  -->
+	<select id="listBusiDate" parameterType="pd" resultType="pd">
+		select BUSI_DATE from  <include refid="tableName"></include> group by BUSI_DATE
+	</select>
+	
 	<!-- 批量删除 -->
 	<delete id="deleteAll" parameterType="String">
 		update
@@ -112,12 +125,16 @@
 		    (
 				<include refid="Field"></include>
 			) value (
+				#{item.BUSI_DATE},
 				#{item.BUSINESS_MODULE},	
 				#{item.STAFF_CODE},	
 				#{item.STAFF_NAME},	
 				#{item.STAFF_CODE_APPROVAL1},	
 				#{item.STAFF_NAME_APPROVAL1},	
-				"1"
+				#{item.STATE},
+				#{item.BILL_USER},	
+				#{item.USER_DEPART},
+				#{item.BILL_DATE}
 			);
 		</foreach>
 	</update>

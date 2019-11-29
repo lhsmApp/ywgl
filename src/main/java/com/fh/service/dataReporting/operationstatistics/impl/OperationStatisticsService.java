@@ -79,5 +79,16 @@ public class OperationStatisticsService implements OperationStatisticsManager{
 		dao.update("OperationStatisticsMapper.delAndIns", listData);
 		
 	}
+	
+	/**
+	 * 获取业务期间
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PageData> listBusiDate(PageData pd) throws Exception {
+		return (List<PageData>)dao.findForList("OperationStatisticsMapper.listBusiDate", pd);
+	}
 }
 

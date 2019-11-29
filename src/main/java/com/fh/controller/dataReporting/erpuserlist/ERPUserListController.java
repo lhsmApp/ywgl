@@ -1,4 +1,4 @@
-package com.fh.controller.dataReporting.operationstatistics;
+package com.fh.controller.dataReporting.erpuserlist;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -8,9 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Resource;
-
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.fh.controller.base.BaseController;
 import com.fh.entity.CommonBase;
 import com.fh.entity.Page;
@@ -28,10 +25,10 @@ import com.fh.entity.TableColumns;
 import com.fh.entity.TmplConfigDetail;
 import com.fh.entity.system.User;
 import com.fh.exception.CustomException;
-import com.fh.service.dataReporting.operationstatistics.OperationStatisticsManager;
-import com.fh.service.fhoa.department.impl.DepartmentService;
+import com.fh.service.dataReporting.erpuserlist.ERPUserListManager;
 import com.fh.service.sysConfig.sysconfig.SysConfigManager;
 import com.fh.service.tmplconfig.tmplconfig.impl.TmplConfigService;
+import com.fh.util.AppUtil;
 import com.fh.util.Const;
 import com.fh.util.DateUtil;
 import com.fh.util.Jurisdiction;
@@ -42,28 +39,25 @@ import com.fh.util.date.DateFormatUtils;
 import com.fh.util.date.DateUtils;
 import com.fh.util.excel.LeadingInExcelToPageData;
 import com.fh.util.excel.TransferSbcDbc;
-
 import net.sf.json.JSONArray;
 
 /** 
- * 说明：运维工作统计处理模块
- * 创建人：xinyuLo
- * 创建时间：2019-10-11
+ * 说明：ERP用户清单
+ * 创建人：jiachao
+ * 创建时间：2019-11-27
  */
 @Controller
-@RequestMapping(value="/operationstatistics")
-public class OperationStatisticsController extends BaseController {
+@RequestMapping(value="/erpuserlist")
+public class ERPUserListController extends BaseController {
 	
-	String menuUrl = "operationstatistics/list.do"; //菜单地址(权限用)
-	@Resource(name="operationstatisticsService")
-	private OperationStatisticsManager operationstatisticsService;
+	String menuUrl = "erpuserlist/list.do"; //菜单地址(权限用)
+	@Resource(name="erpuserlistService")
+	private ERPUserListManager erpuserlistService;
 	@Resource(name="tmplconfigService")
 	private TmplConfigService tmplconfigService;
-	@Resource(name="departmentService")
-	private DepartmentService departmentService;
 	@Resource(name = "sysconfigService")
 	private SysConfigManager sysconfigService;
-	String TableNameDetail = "TB_DI_OPERATION_STATISTICS"; //表名tb_di_operation_statistics
+	String TableNameDetail = "TB_DI_GRC_PERSON"; //表名
 	Map<String, TableColumns> Map_HaveColumnsList = new LinkedHashMap<String, TableColumns>();
 	Map<String, TmplConfigDetail> Map_SetColumnsList = new LinkedHashMap<String, TmplConfigDetail>();
 	
@@ -74,7 +68,7 @@ public class OperationStatisticsController extends BaseController {
 	@RequestMapping(value="/saveAndEdit")
 	@ResponseBody 
 	public CommonBase saveAndEdit() throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"新增与修改GRCPerson");
+		logBefore(logger, Jurisdiction.getUsername()+"新增与修改ERPUserList");
 		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "add")){return null;} //校验权限
 		//初始化变量
 		String listData = null;	
@@ -97,87 +91,92 @@ public class OperationStatisticsController extends BaseController {
 			pageData.put("BILL_USER",user.getUSER_ID());
 			pageData.put("BILL_DATE",DateUtils.getCurrentTime(DateFormatUtils.TIME_NOFUll_FORMAT));
 			pageData.put("ID",listTransferData.get(i++));
-			pageData.put("COMPANY_NAME",listTransferData.get(i++).trim());
-			pageData.put("AGENCY_OPER_NUM",listTransferData.get(i++).trim());
-			pageData.put("NETWORK_OPER_NUM",listTransferData.get(i++).trim());
-			pageData.put("SECURITY_OPER_NUM",listTransferData.get(i++).trim());
-			pageData.put("ERP_OPER_NUM",listTransferData.get(i++).trim());
-			pageData.put("CLOUD_OPER_NUM",listTransferData.get(i++).trim());
-			pageData.put("TOTAL_OPER_NUM",listTransferData.get(i).trim());
+			pageData.put("USER_NAME",listTransferData.get(i++).trim());
+			pageData.put("NAME",listTransferData.get(i++).trim());
+			pageData.put("USER_GROUP",listTransferData.get(i++).trim());
+			pageData.put("ACCOUNT_STATE",listTransferData.get(i++).trim());
+			pageData.put("START_DATE",listTransferData.get(i++).trim());
+			pageData.put("END_DATE",listTransferData.get(i++).trim());
+			pageData.put("DEPART",listTransferData.get(i++).trim());
+			pageData.put("JOB",listTransferData.get(i++).trim());
+			pageData.put("CHANGE_NO",listTransferData.get(i++).trim());
+			pageData.put("PHONE",listTransferData.get(i).trim());
 			if(null != staffId && !"".equals(staffId)) {//如果有ID则进行修改
-				operationstatisticsService.edit(pageData);
+				erpuserlistService.edit(pageData);
 			}else {//如果无ID则进行新增
-				operationstatisticsService.save(pageData);
+				erpuserlistService.save(pageData);
 			}
 		}
 		commonBase.setCode(0);
 		return commonBase;
 	}
-	
-	
+
 	/**列表
 	 * @param page
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/list")
 	public ModelAndView list(Page page) throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"列表OperationStatistics");
+		logBefore(logger, Jurisdiction.getUsername()+"列表ERPUserList");
 		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 		pd = this.getPageData();
 		String busiDate = pd.getString("busiDate");
+		pd.put("USER_DEPART",user.getUNIT_CODE());
 		pd.put("KEY_CODE","SystemDataTime");
 		String date = sysconfigService.getSysConfigByKey(pd);
-		pd.put("USER_DEPART",user.getUNIT_CODE());
 		if(null == busiDate || StringUtil.isEmpty(busiDate)) {
 			pd.put("busiDate",date);
 		}
 		page.setPd(pd);
 		List<PageData>  listBusiDate = DateUtil.getMonthList("BUSI_DATE", date);
-		List<PageData>	varList = operationstatisticsService.list(page);	//列出OperationStatistics列表
-		mv.setViewName("dataReporting/operationstatistics/operationstatistics_list");
+		List<PageData>	varList = erpuserlistService.list(page);	//列出GRCPerson列表
+		mv.setViewName("dataReporting/erpuserlist/erpuserlist_list");
 		mv.addObject("varList", varList);
 		mv.addObject("listBusiDate",listBusiDate);
 		mv.addObject("pd", pd);
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		
 		//***********************************************************
-		Map_SetColumnsList.put("COMPANY_NAME", new TmplConfigDetail("COMPANY_NAME", "单位", "1", false));
-		Map_SetColumnsList.put("AGENCY_OPER_NUM", new TmplConfigDetail("AGENCY_OPER_NUM", "机关计算机运维数量", "1", false));
-		Map_SetColumnsList.put("NETWORK_OPER_NUM", new TmplConfigDetail("NETWORK_OPER_NUM", "网络运维数量", "1", false));
-		Map_SetColumnsList.put("SECURITY_OPER_NUM", new TmplConfigDetail("SECURITY_OPER_NUM", "信息安全运维数量", "1", false));
-		Map_SetColumnsList.put("ERP_OPER_NUM", new TmplConfigDetail("ERP_OPER_NUM", "ERP运维数量", "1", false));
-		Map_SetColumnsList.put("CLOUD_OPER_NUM", new TmplConfigDetail("CLOUD_OPER_NUM", "云桌面运维数量", "1", false));
-		Map_SetColumnsList.put("TOTAL_OPER_NUM", new TmplConfigDetail("TOTAL_OPER_NUM", "合计", "1", false));
-		
+		Map_SetColumnsList.put("USER_NAME", new TmplConfigDetail("USER_NAME", "用户名", "1", false));
+		Map_SetColumnsList.put("NAME", new TmplConfigDetail("NAME", "姓名", "1", false));
+		Map_SetColumnsList.put("USER_GROUP", new TmplConfigDetail("USER_GROUP", "用户组", "1", false));
+		Map_SetColumnsList.put("ACCOUNT_STATE", new TmplConfigDetail("ACCOUNT_STATE", "账号状态", "1", false));
+		Map_SetColumnsList.put("START_DATE", new TmplConfigDetail("START_DATE", "有效期自", "1", false));
+		Map_SetColumnsList.put("END_DATE", new TmplConfigDetail("END_DATE", "有效期至", "1", false));
+		Map_SetColumnsList.put("DEPART", new TmplConfigDetail("DEPART", "单位", "1", false));
+		Map_SetColumnsList.put("JOB", new TmplConfigDetail("JOB", "岗位", "1", false));
+		Map_SetColumnsList.put("CHANGE_NO", new TmplConfigDetail("CHANGE_NO", "变更序号", "1", false));
+		Map_SetColumnsList.put("PHONE", new TmplConfigDetail("PHONE", "电话", "1", false));
+
 		return mv;
 	}
 	
-	/**批量删除
-	 * @param
-	 * @throws Exception
-	 */
-	@RequestMapping(value="/deleteAll")
-	@ResponseBody
-	public CommonBase deleteAll() throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"批量删除GRCPerson");
-		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return null;} //校验权限
-		PageData pd = new PageData();
-		CommonBase commonBase = new CommonBase();
-		commonBase.setCode(-1);
-		pd = this.getPageData();
-		String DATA_IDS = pd.getString("DATA_IDS");
-		if(null != DATA_IDS && !"".equals(DATA_IDS)){
-			String ArrayDATA_IDS[] = DATA_IDS.split(",");
-			operationstatisticsService.deleteAll(ArrayDATA_IDS);
-			commonBase.setCode(0);
-		}else{
+	 /**批量删除
+		 * @param
+		 * @throws Exception
+		 */
+		@RequestMapping(value="/deleteAll")
+		@ResponseBody
+		public CommonBase deleteAll() throws Exception{
+			logBefore(logger, Jurisdiction.getUsername()+"批量删除ERPUserList");
+			//if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return null;} //校验权限
+			PageData pd = new PageData();
+			CommonBase commonBase = new CommonBase();
 			commonBase.setCode(-1);
+			pd = this.getPageData();
+			String DATA_IDS = pd.getString("DATA_IDS");
+			if(null != DATA_IDS && !"".equals(DATA_IDS)){
+				String ArrayDATA_IDS[] = DATA_IDS.split(",");
+				erpuserlistService.deleteAll(ArrayDATA_IDS);
+				commonBase.setCode(0);
+			}else{
+				commonBase.setCode(-1);
+			}
+			return commonBase;
 		}
-		return commonBase;
-	}
 	
 	/**
 	 * 打开上传EXCEL页面
@@ -189,10 +188,9 @@ public class OperationStatisticsController extends BaseController {
 	public ModelAndView goUploadExcel() throws Exception {
 		CommonBase commonBase = new CommonBase();
 		commonBase.setCode(-1);
-		//PageData getPd = this.getPageData();
 		ModelAndView mv = this.getModelAndView();
 		mv.setViewName("common/uploadExcel");
-		mv.addObject("local", "operationstatistics");
+		mv.addObject("local", "erpuserlist");
 		mv.addObject("commonBaseCode", commonBase.getCode());
 		mv.addObject("commonMessage", commonBase.getMessage());
 		return mv;
@@ -208,8 +206,8 @@ public class OperationStatisticsController extends BaseController {
 	public ModelAndView downExcel(Page page) throws Exception {
 
 		PageData getPd = this.getPageData();
-		List<PageData> varOList = operationstatisticsService.exportModel(getPd);
-		return export(varOList, "OperationStatistic",Map_SetColumnsList);
+		List<PageData> varOList = erpuserlistService.exportModel(getPd);
+		return export(varOList, "ERPUserList",Map_SetColumnsList);
 	}
 	
 	/**
@@ -220,14 +218,14 @@ public class OperationStatisticsController extends BaseController {
 	 */
 	@RequestMapping(value = "/excel")
 	public ModelAndView exportExcel(Page page) throws Exception {
-		logBefore(logger, Jurisdiction.getUsername() + "导出OperationStatistics到excel");
+		logBefore(logger, Jurisdiction.getUsername() + "导出ERPUserList到excel");
 		// if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;}
 
 		PageData getPd = this.getPageData();
 		// 页面显示数据的年月
 		// getPd.put("SystemDateTime", SystemDateTime);
 		page.setPd(getPd);
-		List<PageData> varOList = operationstatisticsService.exportList(page);
+		List<PageData> varOList = erpuserlistService.exportList(page);
 		return export(varOList, "", Map_SetColumnsList);
 	}
 	
@@ -282,9 +280,6 @@ public class OperationStatisticsController extends BaseController {
 			throws Exception {
 		CommonBase commonBase = new CommonBase();
 		commonBase.setCode(-1);
-
-		//String strErrorMessage = "";
-		//PageData getPd = this.getPageData();
 		Map<String, Object> DicList = new HashMap<String, Object>();
 
 		// 局部变量
@@ -334,7 +329,7 @@ public class OperationStatisticsController extends BaseController {
 				pageData.put("BILL_USER",user.getUSER_ID());
 				pageData.put("BILL_DATE",DateUtils.getCurrentTime(DateFormatUtils.TIME_NOFUll_FORMAT));
 			}
-			operationstatisticsService.grcUpdateDatabase(listUploadAndRead);
+			erpuserlistService.grcUpdateDatabase(listUploadAndRead);
 			commonBase.setCode(0);
 		} else {
 			commonBase.setCode(-1);
@@ -342,7 +337,7 @@ public class OperationStatisticsController extends BaseController {
 		}
 		ModelAndView mv = this.getModelAndView();
 		mv.setViewName("common/uploadExcel");
-		mv.addObject("local", "operationstatistics");
+		mv.addObject("local", "grcperson");
 		mv.addObject("commonBaseCode", commonBase.getCode());
 		mv.addObject("commonMessage", commonBase.getMessage());
 		return mv;
