@@ -50,10 +50,10 @@
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">文件:</td>
 								<td>
-									<!-- <div id="fileQueue"> -->
+									<div id="fileQueue">
 										<input type="file" name="File_name" id="uploadify1" keepDefaultStyle = "true"/>
 										<input type="hidden" name="ATTACHMENT_PATH" id="ATTACHMENT_PATH" value=""/>
-									<!-- </div>  -->
+									</div>
 								</td>
 							</tr>
 							<tr>
@@ -178,7 +178,7 @@
 		        //取消按钮图片  
 		        'cancelImg': '<%=basePath%>plugins/uploadify3.2.1/uploadify-cancel.png',  
 		        //与下面的上传文件列表id对应  
-		        /* 'queueID': 'fileQueue', */
+		        'queueID': 'fileQueue',
 		        //上传文件的数量  
 		        'queueSizeLimit': 1,  
 		        //上传文件类型说明  

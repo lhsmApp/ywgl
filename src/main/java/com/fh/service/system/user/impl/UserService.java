@@ -35,6 +35,15 @@ public class UserService implements UserManager{
 		return (PageData)dao.findForObject("UserMapper.getUserInfo", pd);
 	}
 	
+	/**登录判断，手机端
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public PageData getUserByNameAndPwdOfApp(PageData pd)throws Exception{
+		return (PageData)dao.findForObject("UserMapper.getUserInfoOfApp", pd);
+	}
+	
 	/**更新登录时间
 	 * @param pd
 	 * @throws Exception

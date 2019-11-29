@@ -28,7 +28,9 @@ import com.fh.service.dataReporting.erpdelacctapplication.ERPDelAcctApplicationM
 import com.fh.service.dataReporting.erpofficialacctapplication.ERPOfficialAcctApplicationManager;
 import com.fh.service.dataReporting.erptempacctapplication.ERPTempAcctApplicationManager;
 import com.fh.service.fhoa.department.impl.DepartmentService;
+import com.fh.service.sysConfig.sysconfig.SysConfigManager;
 import com.fh.service.tmplconfig.tmplconfig.impl.TmplConfigService;
+import com.fh.util.DateUtil;
 import com.fh.util.Jurisdiction;
 import com.fh.util.ObjectExcelView;
 import com.fh.util.PageData;
@@ -54,7 +56,8 @@ public class ERPController extends BaseController {
 	private TmplConfigService tmplconfigService;
 	@Resource(name="departmentService")
 	private DepartmentService departmentService;
-	
+	@Resource(name = "sysconfigService")
+	private SysConfigManager sysconfigService;
 	Map<String, TableColumns> Map_HaveColumnsList = new LinkedHashMap<String, TableColumns>();
 	Map<String, TmplConfigDetail> Map_SetColumnsList = new LinkedHashMap<String, TmplConfigDetail>();
 	
@@ -71,13 +74,19 @@ public class ERPController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		String confirmState = pd.getString("confirmState");
+		String busiDate = pd.getString("busiDate");
+		pd.put("KEY_CODE","SystemDataTime");
+		String date = sysconfigService.getSysConfigByKey(pd);
 		if(null == confirmState || StringUtil.isEmpty(confirmState)) {
 			pd.put("confirmState", "2"); //2待审批 3已审批
 		}
+		if(null == busiDate || StringUtil.isEmpty(busiDate)) {
+			pd.put("busiDate",date);
+		}
 		page.setPd(pd);
-		List<PageData>	varList = erpdelacctapplicationService.list(page);	//列出ERPDelAcctApplication列表
 		//获取业务期间
-		List<PageData>  listBusiDate = erpdelacctapplicationService.listBusiDate(pd);
+		List<PageData>  listBusiDate = DateUtil.getMonthList("BUSI_DATE", date);
+		List<PageData>	varList = erpdelacctapplicationService.list(page);	//列出ERPDelAcctApplication列表
 		String DepartmentSelectTreeSource=DictsUtil.getDepartmentSelectTreeSource(departmentService,"00");
 		if(DepartmentSelectTreeSource.equals("0"))
 		{
@@ -122,13 +131,19 @@ public class ERPController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		String confirmState = pd.getString("confirmState");
+		String busiDate = pd.getString("busiDate");
+		pd.put("KEY_CODE","SystemDataTime");
+		String date = sysconfigService.getSysConfigByKey(pd);
 		if(null == confirmState || StringUtil.isEmpty(confirmState)) {
 			pd.put("confirmState", "2"); //2待审批 3已审批
 		}
+		if(null == busiDate || StringUtil.isEmpty(busiDate)) {
+			pd.put("busiDate",date);
+		}
 		page.setPd(pd);
-		List<PageData>	varList = erpofficialacctapplicationService.list(page);	//列出ERPOfficialAcctApplication列表
 		//获取业务期间
-		List<PageData>  listBusiDate = erpofficialacctapplicationService.listBusiDate(pd);
+		List<PageData>  listBusiDate = DateUtil.getMonthList("BUSI_DATE", date);
+		List<PageData>	varList = erpofficialacctapplicationService.list(page);	//列出ERPOfficialAcctApplication列表
 		String DepartmentSelectTreeSource=DictsUtil.getDepartmentSelectTreeSource(departmentService,"00");
 		if(DepartmentSelectTreeSource.equals("0"))
 		{
@@ -177,13 +192,19 @@ public class ERPController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		String confirmState = pd.getString("confirmState");
+		String busiDate = pd.getString("busiDate");
+		pd.put("KEY_CODE","SystemDataTime");
+		String date = sysconfigService.getSysConfigByKey(pd);
 		if(null == confirmState || StringUtil.isEmpty(confirmState)) {
 			pd.put("confirmState", "2"); //2待审批 3已审批
+		}
+		if(null == busiDate || StringUtil.isEmpty(busiDate)) {
+			pd.put("busiDate",date);
 		}
 		page.setPd(pd);
 		List<PageData>	varList = erptempacctapplicationService.list(page);	//列出ERPTempAcctApplication列表
 		//获取业务期间
-		List<PageData>  listBusiDate = erpdelacctapplicationService.listBusiDate(pd);
+		List<PageData>  listBusiDate = DateUtil.getMonthList("BUSI_DATE", date);
 		String DepartmentSelectTreeSource=DictsUtil.getDepartmentSelectTreeSource(departmentService,"00");
 		if(DepartmentSelectTreeSource.equals("0"))
 		{

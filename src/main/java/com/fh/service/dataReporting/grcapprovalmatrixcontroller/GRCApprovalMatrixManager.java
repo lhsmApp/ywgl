@@ -61,5 +61,13 @@ public interface GRCApprovalMatrixManager{
 	 */
 	public void grcUpdateDatabase(List<PageData> listData)throws Exception;
 	
+	/**
+	 * 获取业务期间
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public List<PageData> listBusiDate(PageData pd)throws Exception;
+	
 }
 

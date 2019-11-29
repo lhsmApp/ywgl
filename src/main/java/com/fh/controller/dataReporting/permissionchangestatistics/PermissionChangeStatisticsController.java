@@ -20,20 +20,28 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+
 import com.fh.controller.base.BaseController;
-import com.fh.controller.common.Common;
 import com.fh.entity.CommonBase;
 import com.fh.entity.Page;
 import com.fh.entity.TableColumns;
 import com.fh.entity.TmplConfigDetail;
+import com.fh.entity.system.User;
 import com.fh.exception.CustomException;
 import com.fh.service.dataReporting.permissionchangestatistics.PermissionChangeStatisticsManager;
+import com.fh.service.sysConfig.sysconfig.SysConfigManager;
 import com.fh.service.tmplconfig.tmplconfig.impl.TmplConfigService;
+import com.fh.util.Const;
+import com.fh.util.DateUtil;
 import com.fh.util.Jurisdiction;
 import com.fh.util.ObjectExcelView;
 import com.fh.util.PageData;
+import com.fh.util.StringUtil;
+import com.fh.util.date.DateFormatUtils;
+import com.fh.util.date.DateUtils;
 import com.fh.util.excel.LeadingInExcelToPageData;
 import com.fh.util.excel.TransferSbcDbc;
+
 import net.sf.json.JSONArray;
 
 /** 
@@ -50,7 +58,8 @@ public class PermissionChangeStatisticsController extends BaseController {
 	private PermissionChangeStatisticsManager permissionchangestatisticsService;
 	@Resource(name="tmplconfigService")
 	private TmplConfigService tmplconfigService;
-	
+	@Resource(name = "sysconfigService")
+	private SysConfigManager sysconfigService;
 	String TableNameDetail = "TB_DI_PERMISSION_CHANGE_STATISTICS"; // 表名  tb_di_permission_change_statistics
 	Map<String, TableColumns> Map_HaveColumnsList = new LinkedHashMap<String, TableColumns>();
 	Map<String, TmplConfigDetail> Map_SetColumnsList = new LinkedHashMap<String, TmplConfigDetail>();
@@ -69,6 +78,7 @@ public class PermissionChangeStatisticsController extends BaseController {
 		String staffId = null;
 		PageData pd = new PageData();
 		CommonBase commonBase = new CommonBase();
+		User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 		commonBase.setCode(-1);
 		pd = this.getPageData();
 		listData = pd.getString("listData");
@@ -78,7 +88,11 @@ public class PermissionChangeStatisticsController extends BaseController {
 		for (int i = 0; i < listTransferData.size(); i++) {
 			staffId = listTransferData.get(i).trim();
 			PageData pageData = new PageData();
+			pageData.put("USER_DEPART",user.getUNIT_CODE());
+			pageData.put("BUSI_DATE",DateUtils.getCurrentDateMonth()); //业务期间
 			pageData.put("STATE","1");
+			pageData.put("BILL_USER",user.getUSER_ID());
+			pageData.put("BILL_DATE",DateUtils.getCurrentTime(DateFormatUtils.TIME_NOFUll_FORMAT));
 			pageData.put("ID",listTransferData.get(i++));
 			pageData.put("COMPANY_NAME",listTransferData.get(i++).trim());
 			pageData.put("ACCOUNT_DELAY",listTransferData.get(i++).trim());
@@ -111,19 +125,24 @@ public class PermissionChangeStatisticsController extends BaseController {
 		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
+		User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 		pd = this.getPageData();
-		String keywords = pd.getString("keywords");				//关键词检索条件
-		if(null != keywords && !"".equals(keywords)){
-			pd.put("keywords", keywords.trim());
+		String busiDate = pd.getString("busiDate");
+		pd.put("KEY_CODE","SystemDataTime");
+		String date = sysconfigService.getSysConfigByKey(pd);
+		pd.put("USER_DEPART",user.getUNIT_CODE());
+		if(null == busiDate || StringUtil.isEmpty(busiDate)) {
+			pd.put("busiDate",date);
 		}
 		page.setPd(pd);
+		List<PageData>  listBusiDate = DateUtil.getMonthList("BUSI_DATE", date);
 		List<PageData>	varList = permissionchangestatisticsService.list(page);	//列出PermissionChangeStatistics列表
 		mv.setViewName("dataReporting/permissionchangestatistics/permissionchangestatistics_list");
 		mv.addObject("varList", varList);
+		mv.addObject("listBusiDate",listBusiDate);
 		mv.addObject("pd", pd);
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		
-		Map_HaveColumnsList = Common.GetHaveColumnsMapByTableName(TableNameDetail, tmplconfigService);
 		Map_SetColumnsList.put("COMPANY_NAME", new TmplConfigDetail("COMPANY_NAME", "单位", "1", false));
 		Map_SetColumnsList.put("ACCOUNT_DELAY", new TmplConfigDetail("AGENCY_OPER_NUM", "机关计算机运维数量", "1", false));
 		Map_SetColumnsList.put("ACCOUNT_DELAY", new TmplConfigDetail("NETWORK_OPER_NUM", "网络运维数量", "1", false));
@@ -303,6 +322,15 @@ public class PermissionChangeStatisticsController extends BaseController {
 			judgement = true;
 		}
 		if (judgement) {
+			User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+			for (PageData pageData : listUploadAndRead) {
+				//将每条数据插入新内容
+				pageData.put("USER_DEPART",StringUtil.toString(user.getUNIT_CODE(), ""));
+				pageData.put("BUSI_DATE",DateUtils.getCurrentDateMonth()); //业务期间
+				pageData.put("STATE","1");
+				pageData.put("BILL_USER",user.getUSER_ID());
+				pageData.put("BILL_DATE",DateUtils.getCurrentTime(DateFormatUtils.TIME_NOFUll_FORMAT));
+			}
 			permissionchangestatisticsService.grcUpdateDatabase(listUploadAndRead);
 			commonBase.setCode(0);
 		} else {

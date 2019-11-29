@@ -53,18 +53,17 @@
 							</tbody>
 						</table>
 					</div>
-						<div class="row" style="width: 100%;overflow: auto;">
+						<div class="row">
 						<form action="grcapprovalmatrix/list.do" method="post" name="Form" id="Form">					
-							
-							<table style="margin-top:0px;">
+							<table style="margin-bottom: 6px;">
 								<tr>
 									<td>
-										<div class="nav-search">
-											<span class="input-icon">
-												<input type="text" placeholder="这里输入关键词" class="nav-search-input" id="nav-search-input" autocomplete="off" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词"/>
-												<i class="ace-icon fa fa-search nav-search-icon"></i>
-											</span>
-										</div>
+										<select class="form-control" id="busiDate" name="busiDate" style="vertical-align:top; width:150px;margin-left: 5px;" data-placeholder="请选择业务期间" onchange="tosearch()">
+											<option value=""></option>
+											<c:forEach items="${listBusiDate}" var="var">
+												<option value="${var.BUSI_DATE}" <c:if test="${pd.busiDate == var.BUSI_DATE}">selected="selected"</c:if>>${var.BUSI_DATE}</option>
+											</c:forEach>
+										</select>
 									</td>
 								<td style="vertical-align:top;padding-left:2px;">
 								<a class="btn btn-info btn-sm" onclick="tosearch()"><i class="ace-icon fa fa-search bigger-110"></i></a>
@@ -76,6 +75,7 @@
 								<a class="btn btn-white btn-info btn-bold" onclick="toExcel()"><span class="ace-icon fa fa-cloud-download"></span>导出</a>
 								</tr>
 							</table>
+							<div style="width: 100%;overflow: auto;height: 430px;">
 							<table id="simple-table" class="mtable" style="margin-top:5px; width: 99%;">	
 								<thead style="height: 40px">
 									<tr>
@@ -105,6 +105,7 @@
 										</c:forEach>
 								</tbody>
 							</table>
+							</div>
 							<!-- 分页 -->
 							<div class="position-relative page-header pull-right">
 								<table style="width:100%;">

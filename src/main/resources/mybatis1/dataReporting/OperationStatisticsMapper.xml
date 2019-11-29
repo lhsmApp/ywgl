@@ -9,6 +9,7 @@
 	
 	<!-- 字段 -->
 	<sql id="Field">
+		BUSI_DATE,
 		COMPANY_NAME,	
 		AGENCY_OPER_NUM,	
 		NETWORK_OPER_NUM,	
@@ -16,11 +17,15 @@
 		ERP_OPER_NUM,	
 		CLOUD_OPER_NUM,	
 		TOTAL_OPER_NUM,	
-		STATE	
+		STATE,
+		BILL_USER,	
+		USER_DEPART,
+		BILL_DATE	
 	</sql>
 	
 	<!-- 字段值 -->
 	<sql id="FieldValue">
+		#{BUSI_DATE},
 		#{COMPANY_NAME},	
 		#{AGENCY_OPER_NUM},	
 		#{NETWORK_OPER_NUM},	
@@ -28,7 +33,10 @@
 		#{ERP_OPER_NUM},	
 		#{CLOUD_OPER_NUM},	
 		#{TOTAL_OPER_NUM},	
-		#{STATE}
+		#{STATE},
+		#{BILL_USER},	
+		#{USER_DEPART},
+		#{BILL_DATE}
 	</sql>
 	
 	<!-- 新增-->
@@ -72,15 +80,13 @@
 		from 
 		<include refid="tableName"></include>
 		where STATE = 1
-		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
-			and
-				(
-				<!--	根据需求自己加检索条件
-					字段1 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
-					 or 
-					字段2 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
-				-->
-				)
+		<if test="pd.busiDate != null and pd.busiDate != ''">
+		and 
+			BUSI_DATE = #{pd.busiDate}
+		</if>
+		<if test="pd.USER_DEPART != null and pd.USER_DEPART != ''">
+		and 
+			USER_DEPART = #{pd.USER_DEPART}
 		</if>
 	</select>
 	
@@ -96,6 +102,11 @@
                  #{item}
 		</foreach>
 	</update>
+	
+	<!--业务期间集合  -->
+	<select id="listBusiDate" parameterType="pd" resultType="pd">
+		select BUSI_DATE from  <include refid="tableName"></include> group by BUSI_DATE
+	</select>
 	
 	<!-- 导出列表 -->
 	<select id="exportList" parameterType="Page" resultType="pd">
@@ -119,6 +130,7 @@
 		       (
 					<include refid="Field"></include>
 				) value (
+					#{item.BUSI_DATE},
 					#{item.COMPANY_NAME},	
 					#{item.AGENCY_OPER_NUM},	
 					#{item.NETWORK_OPER_NUM},	
@@ -126,7 +138,10 @@
 					#{item.ERP_OPER_NUM},	
 					#{item.CLOUD_OPER_NUM},	
 					#{item.TOTAL_OPER_NUM},	
-					"1"
+					#{item.STATE},
+					#{item.BILL_USER},	
+					#{item.USER_DEPART},
+					#{item.BILL_DATE}
 				);
 		</foreach>
 	</update>

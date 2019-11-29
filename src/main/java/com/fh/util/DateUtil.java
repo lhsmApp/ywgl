@@ -3,8 +3,10 @@ package com.fh.util;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 日期处理
@@ -239,6 +241,25 @@ public class DateUtil {
         SimpleDateFormat sdf = new SimpleDateFormat("E");
         String dateStr = sdf.format(date);
         return dateStr;
+    }
+    
+    /**
+         *    根据年份返回当前12月集合
+         *    格式: {param=xxxx01},{param=xxxx02}... 
+     * @param param 集合所需参数
+     * @param date	传入日期 格式:YYYYMM
+     * @return List<pageData> 
+     */
+    public static List<PageData>  getMonthList(String param,String date){
+    	String[] month = {"01","02","03","04","05","06","07","08","09","10","11","12"};
+    	List<PageData> array = new ArrayList<PageData>();
+    	String year = date.substring(0,4);
+    	for (int i = 0; i < month.length; i++) {
+    		PageData pageData = new PageData();
+			pageData.put(param,year+month[i]);
+			array.add(pageData);
+		}
+    	return array; 
     }
     
     public static void main(String[] args) {

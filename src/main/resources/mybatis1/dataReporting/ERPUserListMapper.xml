@@ -1,45 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="GRCPersonMapper">
+<mapper namespace="ERPUserListMapper">
 	
 	<!--表名 -->
 	<sql id="tableName">
-		tb_di_grc_person
+		tb_di_erp_user_list
 	</sql>
 	
 	<!-- 字段 -->
 	<sql id="Field">
-		BUSI_DATE,
-		STAFF_CODE,	
-		STAFF_NAME,	
-		STAFF_UNIT,	
-		STAFF_DEPART,	
-		STAFF_POSITION,	
-		STAFF_JOB,	
+		BUSI_DATE,	
+		USER_NAME,	
+		NAME,	
+		USER_GROUP,	
+		ACCOUNT_STATE,	
+		START_DATE,	
+		END_DATE,	
+		DEPART,	
+		JOB,	
+		CHANGE_NO,	
 		PHONE,	
-		MOBILE_PHONE,
-		ZSY_MAIL,
-		STATE,
+		STATE,	
 		BILL_USER,	
-		USER_DEPART,
-		BILL_DATE
+		USER_DEPART,	
+		BILL_DATE	
 	</sql>
 	
 	<!-- 字段值 -->
 	<sql id="FieldValue">
-		#{BUSI_DATE},
-		#{STAFF_CODE},	
-		#{STAFF_NAME},	
-		#{STAFF_UNIT},	
-		#{STAFF_DEPART},	
-		#{STAFF_POSITION},	
-		#{STAFF_JOB},	
+		#{BUSI_DATE},	
+		#{USER_NAME},	
+		#{NAME},	
+		#{USER_GROUP},	
+		#{ACCOUNT_STATE},	
+		#{START_DATE},	
+		#{END_DATE},	
+		#{DEPART},	
+		#{JOB},	
+		#{CHANGE_NO},	
 		#{PHONE},	
-		#{MOBILE_PHONE},	
-		#{ZSY_MAIL},
-		#{STATE},
+		#{STATE},	
 		#{BILL_USER},	
-		#{USER_DEPART},
+		#{USER_DEPART},	
 		#{BILL_DATE}
 	</sql>
 	
@@ -48,9 +50,9 @@
 		insert into 
 	<include refid="tableName"></include>
 		(
-			<include refid="Field"></include>
-		) value (
-			<include refid="FieldValue"></include>
+	<include refid="Field"></include>
+		) values (
+	<include refid="FieldValue"></include>
 		)
 	</insert>
 	
@@ -59,35 +61,50 @@
 		update
 		<include refid="tableName"></include>
 		set 
-			STAFF_CODE = #{STAFF_CODE},
-			STAFF_NAME = #{STAFF_NAME},
-			STAFF_UNIT = #{STAFF_UNIT},
-			STAFF_DEPART = #{STAFF_DEPART},
-			STAFF_POSITION = #{STAFF_POSITION},
-			STAFF_JOB = #{STAFF_JOB},
-			PHONE = #{PHONE},
-			MOBILE_PHONE = #{MOBILE_PHONE},
-			ZSY_MAIL = #{ZSY_MAIL}
+			USER_NAME = #{USER_NAME},
+			NAME = #{NAME},
+			USER_GROUP = #{USER_GROUP},
+			ACCOUNT_STATE = #{ACCOUNT_STATE},
+			START_DATE = #{START_DATE},
+			END_DATE = #{END_DATE},
+			DEPART = #{DEPART},
+			JOB = #{JOB},
+			CHANGE_NO = #{CHANGE_NO},
+			PHONE = #{PHONE}
 		where 
 		ID = #{ID}
 	</update>
 	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			ID = #{ID}
+	</select>
+	
 	<!-- 列表 -->
 	<select id="datalistPage" parameterType="page" resultType="pd">
 		select
-			ID,	
-			STAFF_CODE,	
-			STAFF_NAME,	
-			STAFF_UNIT,	
-			STAFF_DEPART,	
-			STAFF_POSITION,	
-			STAFF_JOB,	
+			ID,
+			USER_NAME,	
+			NAME,	
+			USER_GROUP,	
+			ACCOUNT_STATE,	
+			START_DATE,	
+			END_DATE,	
+			DEPART,	
+			JOB,	
+			CHANGE_NO,	
 			PHONE,	
-			MOBILE_PHONE,	
-			ZSY_MAIL
+			STATE,	
+			BILL_USER,	
+			USER_DEPART	
 		from 
 		<include refid="tableName"></include>
-		where STATE = 1
+		where STATE=1
 		<if test="pd.busiDate != null and pd.busiDate != ''">
 		and 
 			BUSI_DATE = #{pd.busiDate}
@@ -96,11 +113,6 @@
 		and 
 			USER_DEPART = #{pd.USER_DEPART}
 		</if>
-	</select>
-	
-	<!--业务期间集合  -->
-	<select id="listBusiDate" parameterType="pd" resultType="pd">
-		select BUSI_DATE from  <include refid="tableName"></include> group by BUSI_DATE
 	</select>
 	
 	<!-- 批量删除 -->
@@ -116,7 +128,7 @@
 		</foreach>
 	</update>
 	
-	<!-- *********************导入导出********************************* -->
+		<!-- *********************导入导出********************************* -->
 	<!-- 导出列表 -->
 	<select id="exportList" parameterType="Page" resultType="pd">
 		select 
@@ -126,7 +138,7 @@
 		where 
 			STATE = 1
 		order by 
-			ID,STAFF_NAME
+			ID,BUSI_DATE
 	</select>
 	
 	<!-- 更新数据 -->
@@ -139,19 +151,20 @@
 		       (
 					<include refid="Field"></include>
 				) value (
-					#{item.BUSI_DATE},
-					#{item.STAFF_CODE},	
-					#{item.STAFF_NAME},	
-					#{item.STAFF_UNIT},	
-					#{item.STAFF_DEPART},	
-					#{item.STAFF_POSITION},	
-					#{item.STAFF_JOB},	
+					#{item.BUSI_DATE},	
+					#{item.USER_NAME},	
+					#{item.NAME},	
+					#{item.USER_GROUP},	
+					#{item.ACCOUNT_STATE},	
+					#{item.START_DATE},	
+					#{item.END_DATE},	
+					#{item.DEPART},	
+					#{item.JOB},	
+					#{item.CHANGE_NO},	
 					#{item.PHONE},	
-					#{item.MOBILE_PHONE},	
-					#{item.ZSY_MAIL},
-					#{item.STATE},
+					#{item.STATE},	
 					#{item.BILL_USER},	
-					#{item.USER_DEPART},
+					#{item.USER_DEPART},	
 					#{item.BILL_DATE}
 				);
 		</foreach>

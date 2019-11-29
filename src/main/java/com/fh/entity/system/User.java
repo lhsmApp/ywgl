@@ -17,6 +17,7 @@ public class User {
 	private String NAME;		//姓名
 	private String RIGHTS;		//权限
 	private String ROLE_ID;		//角色id
+	private String ROLE_NAME;		//角色id
 	private String LAST_LOGIN;	//最后登录时间
 	private String IP;			//用户登录ip地址
 	private String STATUS;		//状态
@@ -70,6 +71,12 @@ public class User {
 	}
 	public void setROLE_ID(String rOLE_ID) {
 		ROLE_ID = rOLE_ID;
+	}
+	public String getROLE_NAME() {
+		return ROLE_NAME;
+	}
+	public void setROLE_NAME(String rOLE_NAME) {
+		ROLE_NAME = rOLE_NAME;
 	}
 	public String getLAST_LOGIN() {
 		return LAST_LOGIN;

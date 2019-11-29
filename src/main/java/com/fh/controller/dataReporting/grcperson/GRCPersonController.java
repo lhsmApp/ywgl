@@ -22,17 +22,23 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fh.controller.base.BaseController;
-import com.fh.controller.common.Common;
 import com.fh.entity.CommonBase;
 import com.fh.entity.Page;
 import com.fh.entity.TableColumns;
 import com.fh.entity.TmplConfigDetail;
+import com.fh.entity.system.User;
 import com.fh.exception.CustomException;
 import com.fh.service.dataReporting.grcperson.GRCPersonManager;
+import com.fh.service.sysConfig.sysconfig.SysConfigManager;
 import com.fh.service.tmplconfig.tmplconfig.impl.TmplConfigService;
+import com.fh.util.Const;
+import com.fh.util.DateUtil;
 import com.fh.util.Jurisdiction;
 import com.fh.util.ObjectExcelView;
 import com.fh.util.PageData;
+import com.fh.util.StringUtil;
+import com.fh.util.date.DateFormatUtils;
+import com.fh.util.date.DateUtils;
 import com.fh.util.excel.LeadingInExcelToPageData;
 import com.fh.util.excel.TransferSbcDbc;
 
@@ -52,6 +58,8 @@ public class GRCPersonController extends BaseController {
 	private GRCPersonManager grcpersonService;
 	@Resource(name="tmplconfigService")
 	private TmplConfigService tmplconfigService;
+	@Resource(name = "sysconfigService")
+	private SysConfigManager sysconfigService;
 	
 	String TableNameDetail = "TB_DI_GRC_PERSON"; //表名
 	Map<String, TableColumns> Map_HaveColumnsList = new LinkedHashMap<String, TableColumns>();
@@ -71,6 +79,7 @@ public class GRCPersonController extends BaseController {
 		String staffId = null;
 		PageData pd = new PageData();
 		CommonBase commonBase = new CommonBase();
+		User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 		commonBase.setCode(-1);
 		pd = this.getPageData();
 		listData = pd.getString("listData");
@@ -80,7 +89,11 @@ public class GRCPersonController extends BaseController {
 		for (int i = 0; i < listTransferData.size(); i++) {
 			staffId = listTransferData.get(i).trim();
 			PageData pageData = new PageData();
+			pageData.put("USER_DEPART",user.getUNIT_CODE());
+			pageData.put("BUSI_DATE",DateUtils.getCurrentDateMonth()); //业务期间
 			pageData.put("STATE","1");
+			pageData.put("BILL_USER",user.getUSER_ID());
+			pageData.put("BILL_DATE",DateUtils.getCurrentTime(DateFormatUtils.TIME_NOFUll_FORMAT));
 			pageData.put("ID",listTransferData.get(i++));
 			pageData.put("STAFF_CODE",listTransferData.get(i++).trim());
 			pageData.put("STAFF_NAME",listTransferData.get(i++).trim());
@@ -111,20 +124,25 @@ public class GRCPersonController extends BaseController {
 		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
+		User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 		pd = this.getPageData();
-		String keywords = pd.getString("keywords");				//关键词检索条件
-		if(null != keywords && !"".equals(keywords)){
-			pd.put("keywords", keywords.trim());
+		String busiDate = pd.getString("busiDate");
+		pd.put("USER_DEPART",user.getUNIT_CODE());
+		pd.put("KEY_CODE","SystemDataTime");
+		String date = sysconfigService.getSysConfigByKey(pd);
+		if(null == busiDate || StringUtil.isEmpty(busiDate)) {
+			pd.put("busiDate",date);
 		}
 		page.setPd(pd);
+		List<PageData>  listBusiDate = DateUtil.getMonthList("BUSI_DATE", date);
 		List<PageData>	varList = grcpersonService.list(page);	//列出GRCPerson列表
 		mv.setViewName("dataReporting/grcperson/grcperson_list");
 		mv.addObject("varList", varList);
+		mv.addObject("listBusiDate",listBusiDate);
 		mv.addObject("pd", pd);
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		
 		//***********************************************************
-		Map_HaveColumnsList = Common.GetHaveColumnsMapByTableName(TableNameDetail, tmplconfigService);
 		Map_SetColumnsList.put("STAFF_CODE", new TmplConfigDetail("STAFF_CODE", "员工编号", "1", false));
 		Map_SetColumnsList.put("STAFF_NAME", new TmplConfigDetail("STAFF_NAME", "员工姓名", "1", false));
 		Map_SetColumnsList.put("STAFF_UNIT", new TmplConfigDetail("STAFF_UNIT", "单位", "1", false));
@@ -308,6 +326,15 @@ public class GRCPersonController extends BaseController {
 			judgement = true;
 		}
 		if (judgement) {
+			User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+			for (PageData pageData : listUploadAndRead) {
+				//将每条数据插入新内容
+				pageData.put("USER_DEPART",StringUtil.toString(user.getUNIT_CODE(), ""));
+				pageData.put("BUSI_DATE",DateUtils.getCurrentDateMonth()); //业务期间
+				pageData.put("STATE","1");
+				pageData.put("BILL_USER",user.getUSER_ID());
+				pageData.put("BILL_DATE",DateUtils.getCurrentTime(DateFormatUtils.TIME_NOFUll_FORMAT));
+			}
 			grcpersonService.grcUpdateDatabase(listUploadAndRead);
 			commonBase.setCode(0);
 		} else {

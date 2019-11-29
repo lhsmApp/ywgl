@@ -209,7 +209,7 @@
 													</div>
 													
 													<div style="margin:10px 0px;">
-														<label for="ff-assign-pro-sys-type">提问系统</label>
+														<label for="ff-assign-pro-sys-type">问题模块</label>
 														<select class="form-control" name="PRO_SYS_TYPE" id="ff-assign-pro-sys-type">
 															<option value=""></option>
 															<c:forEach items="${systemList}" var="system">
@@ -451,7 +451,7 @@
 															</div>
 															
 															<div style="margin:10px 0px;">
-																<label for="form-field-pro-sys-type">提问系统</label>
+																<label for="form-field-pro-sys-type">问题模块</label>
 																<select class="form-control" name="PRO_SYS_TYPE" id="form-field-pro-sys-type">
 																	<option value=""></option>
 																	<c:forEach items="${systemList}" var="system">

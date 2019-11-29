@@ -87,5 +87,16 @@ public class PermissionChangeStatisticsService implements PermissionChangeStatis
 		dao.update("PermissionChangeStatisticsMapper.delAndIns", listData);
 		
 	}
+	
+	/**
+	 * 获取业务期间
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PageData> listBusiDate(PageData pd) throws Exception {
+		return (List<PageData>)dao.findForList("PermissionChangeStatisticsMapper.listBusiDate", pd);
+	}
 }
 

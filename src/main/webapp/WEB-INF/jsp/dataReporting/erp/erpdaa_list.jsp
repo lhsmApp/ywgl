@@ -65,7 +65,7 @@
 							  </tbody>
 						</table>
 					</div>
-						<div class="row" style="width:100%;overflow: auto;">
+						<div class="row">
 						<!-- 检索  -->
 						<form action="erp/erpDaaList.do" method="post" name="Form" id="Form">
 							<table style="margin-bottom:6px; float: left;">
@@ -73,7 +73,7 @@
 									<td>
 										<c:if test="${not empty listBusiDate}"> 	
 											<select class="form-control" id="busiDate" name="busiDate" style="width:150px;margin-left: 5px;">
-												<option value="" >请选择业务期间</option>
+												<option value=""></option>
 												<c:forEach items="${listBusiDate}" var="var">
 													<option value="${var.BUSI_DATE}" <c:if test="${pd.busiDate == var.BUSI_DATE}">selected="selected"</c:if>>${var.BUSI_DATE}</option>
 												</c:forEach>
@@ -102,6 +102,7 @@
 								</tr>
 							</table>
 						<!-- 检索  -->
+						<div style="width:100%;overflow: auto;height: 500px;">
 						<table id="simple-table" class="mtable" style="margin-top:5px;width: 1575px;">	
 							<thead>
 								<tr>
@@ -152,6 +153,7 @@
 									</c:forEach>
 							</tbody>
 						</table>
+						</div>
 						<div class="position-relative page-header pull-right">
 							<table style="width:100%;">
 								<tr>
