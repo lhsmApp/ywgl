@@ -107,6 +107,36 @@
 		</if>
 	</select>
 	
+	<!-- 按单位合计列表 -->
+	<select id="datalistPageByUnit" parameterType="page" resultType="pd">
+		select
+			ID,
+			COMPANY_NAME,	
+			SUM(ACCOUNT_DELAY) ACCOUNT_DELAY,	
+			SUM(ACCOUNT_UNLOCK) ACCOUNT_UNLOCK,	
+			SUM(NEW_ROLES) NEW_ROLES,	
+			SUM(DELETE_ROLES) DELETE_ROLES,	
+			SUM(NEW_ACCOUNTS) NEW_ACCOUNTS,	
+			SUM(DELETE_ACCOUNTS) DELETE_ACCOUNTS,	
+			SUM(NEW_FMIS_ROLES) NEW_FMIS_ROLES,	
+			SUM(DELETE_FMIS_ROLES) DELETE_FMIS_ROLES,	
+			SUM(CHANGE_USER_GROUP) CHANGE_USER_GROUP,	
+			SUM(CHANGE_PERSON_COUNT) CHANGE_PERSON_COUNT	
+		from 
+		<include refid="tableName"></include>
+		where STATE = 1
+		<if test="pd.START_DATE!=null and pd.START_DATE!='' "> 
+			  and SUBSTRING(BILL_DATE,1,8) &gt;= #{pd.START_DATE} 
+		</if>
+		<if test="pd.END_DATE!=null and pd.END_DATE!=''"> 
+			  and SUBSTRING(BILL_DATE,1,8) &lt;= #{pd.END_DATE} 
+		</if> 	
+		<if test="pd.YEAR_MONTH!=null and pd.YEAR_MONTH!=''"> 
+			  and BUSI_DATE  LIKE #{pd.YEAR_MONTH} 
+		</if>
+		GROUP BY COMPANY_NAME
+		
+	</select>
 	<!--业务期间集合  -->
 	<select id="listBusiDate" parameterType="pd" resultType="pd">
 		select BUSI_DATE from  <include refid="tableName"></include> group by BUSI_DATE

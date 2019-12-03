@@ -52,7 +52,14 @@ public class PermissionChangeStatisticsService implements PermissionChangeStatis
 	public List<PageData> list(Page page)throws Exception{
 		return (List<PageData>)dao.findForList("PermissionChangeStatisticsMapper.datalistPage", page);
 	}
-
+	/**列表
+	 * @param page
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PageData> listByUnit(Page page)throws Exception{
+		return (List<PageData>)dao.findForList("PermissionChangeStatisticsMapper.datalistPageByUnit", page);
+	}
 	/**批量删除
 	 * @param ArrayDATA_IDS
 	 * @throws Exception

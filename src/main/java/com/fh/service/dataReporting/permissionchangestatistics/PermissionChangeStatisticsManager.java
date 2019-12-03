@@ -35,6 +35,11 @@ public interface PermissionChangeStatisticsManager{
 	 * @throws Exception
 	 */
 	public List<PageData> list(Page page)throws Exception;
+	/**列表
+	 * @param page
+	 * @throws Exception
+	 */
+	public List<PageData> listByUnit(Page page)throws Exception;
 	
 	/**批量删除
 	 * @param ArrayDATA_IDS
@@ -60,7 +65,7 @@ public interface PermissionChangeStatisticsManager{
 	 * @throws Exception
 	 */
 	public void grcUpdateDatabase(List<PageData> listData) throws Exception;
-
+	
 	/**
 	 * 获取业务期间
 	 * @param pd

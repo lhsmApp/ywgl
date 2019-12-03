@@ -27,6 +27,7 @@ import com.fh.entity.system.User;
 import com.fh.exception.CustomException;
 import com.fh.service.dataReporting.erpuserlist.ERPUserListManager;
 import com.fh.service.dataReporting.grcperson.GRCPersonManager;
+import com.fh.service.fhoa.department.DepartmentManager;
 import com.fh.service.sysConfig.sysconfig.SysConfigManager;
 import com.fh.service.tmplconfig.tmplconfig.impl.TmplConfigService;
 import com.fh.util.Const;
@@ -60,6 +61,9 @@ public class ERPUserListController extends BaseController {
 	private SysConfigManager sysconfigService;
 	@Resource(name="grcpersonService")
 	private GRCPersonManager grcpersonService;
+	
+	@Resource(name="departmentService")
+	private DepartmentManager departmentService;
 	
 	Map<String, TableColumns> Map_HaveColumnsList = new LinkedHashMap<String, TableColumns>();
 	Map<String, TmplConfigDetail> Map_SetColumnsList = new LinkedHashMap<String, TmplConfigDetail>();
@@ -354,5 +358,58 @@ public class ERPUserListController extends BaseController {
 	public void initBinder(WebDataBinder binder){
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(format,true));
+	}
+	/**列表
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/queryList")
+	public ModelAndView queryList(Page page) throws Exception{
+		logBefore(logger, Jurisdiction.getUsername()+"列表ERPUserList");
+		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		PageData data = new PageData();
+		User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		pd = this.getPageData();
+		String busiDate = pd.getString("busiDate");
+		pd.put("USER_DEPART",user.getUNIT_CODE());
+		pd.put("KEY_CODE","SystemDataTime");
+		data.put("BUSI_TYPE",SysDeptTime.ERP_USER_LIST.getNameKey());
+		data.put("DEPT_CODE",user.getUNIT_CODE());
+		String date = sysconfigService.getSysConfigByKey(pd);
+		if(null == busiDate || StringUtil.isEmpty(busiDate)) {
+			pd.put("busiDate",date);
+		}
+		pd.put("month",date);
+		page.setPd(pd);
+		PageData pageData = grcpersonService.findSysDeptTime(data);
+		if(null != pageData && pageData.size()>0) {
+			pd.putAll(pageData);
+		}
+		List<PageData>  listBusiDate = DateUtil.getMonthList("BUSI_DATE", date);
+		List<PageData>	varList = erpuserlistService.list(page);	//列出GRCPerson列表
+		mv.setViewName("statisticAnalysis/erpuserliststatistics/erpuUserListStatistic_list");
+		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
+		JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0",zdepartmentPdList));
+		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
+		mv.addObject("varList", varList);
+		mv.addObject("listBusiDate",listBusiDate);
+		mv.addObject("pd", pd);
+		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
+		
+		//***********************************************************
+		Map_SetColumnsList.put("USER_NAME", new TmplConfigDetail("USER_NAME", "用户名", "1", false));
+		Map_SetColumnsList.put("NAME", new TmplConfigDetail("NAME", "姓名", "1", false));
+		Map_SetColumnsList.put("USER_GROUP", new TmplConfigDetail("USER_GROUP", "用户组", "1", false));
+		Map_SetColumnsList.put("ACCOUNT_STATE", new TmplConfigDetail("ACCOUNT_STATE", "账号状态", "1", false));
+		Map_SetColumnsList.put("START_DATE", new TmplConfigDetail("START_DATE", "有效期自", "1", false));
+		Map_SetColumnsList.put("END_DATE", new TmplConfigDetail("END_DATE", "有效期至", "1", false));
+		Map_SetColumnsList.put("DEPART", new TmplConfigDetail("DEPART", "单位", "1", false));
+		Map_SetColumnsList.put("JOB", new TmplConfigDetail("JOB", "岗位", "1", false));
+		Map_SetColumnsList.put("CHANGE_NO", new TmplConfigDetail("CHANGE_NO", "变更序号", "1", false));
+		Map_SetColumnsList.put("PHONE", new TmplConfigDetail("PHONE", "电话", "1", false));
+
+		return mv;
 	}
 }

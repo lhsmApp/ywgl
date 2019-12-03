@@ -936,6 +936,54 @@ public class MBPController extends BaseController {
 		}
 		return lists;
 	}
-	
+	 /**导出问题统计表到excel
+		 * @param
+		 * @throws Exception
+		 */
+		@RequestMapping(value="/listProStatisticExcel")
+		public ModelAndView listStatisticExcel(Page page) throws Exception{
+			ModelAndView mv = new ModelAndView();
+			PageData pd = new PageData();
+			pd = this.getPageData();
+			page.setPd(pd);
+			Map<String,Object> dataMap = new HashMap<String,Object>();
+			List<String> titles = new ArrayList<String>();
+			titles.add("类型");	//1
+			titles.add("问题数");	//2
+			titles.add("已解决");	//3
+			titles.add("未解决");	//4
+			titles.add("解决率");	//5
+			titles.add("问题数");	//6
+			titles.add("已解决");	//7
+			titles.add("未解决");	//8
+			titles.add("解决率");	//9
+			dataMap.put("titles", titles);
+			List<PageData> varOList=new ArrayList<PageData>();
+			if("1".equals(pd.getString("level_select"))){
+				varOList =mbpService.listProModStatistic(page);
+			}
+			if("2".equals(pd.getString("level_select"))){
+				varOList =mbpService.listProTypeStatistic(page);
+			}
+			List<PageData> varList = new ArrayList<PageData>();
+			for(int i=0;i<varOList.size();i++){
+				PageData vpd = new PageData();
+				vpd.put("var1", varOList.get(i).getString(""));
+				vpd.put("var2", varOList.get(i).getString("NOWWEEK"));
+				vpd.put("var3", varOList.get(i).get("NOWWEEKSOLVE").toString());
+				vpd.put("var4", varOList.get(i).get("NOWWEEKNOTSOLVE").toString());
+				vpd.put("var5", varOList.get(i).get("NOWWEEKSOLVERATE").toString());
+				vpd.put("var6", varOList.get(i).getString("NOWYEAR"));
+				vpd.put("var7", varOList.get(i).get("NOWYEARSOLVE").toString());
+				vpd.put("var8", varOList.get(i).get("NOWYEARNOTSOLVE").toString());
+				vpd.put("var9", varOList.get(i).get("NOWYEARSOLVERATE").toString());
+				varList.add(vpd);
+			}
+			dataMap.put("varList", varList);
+			ObjectExcelView erv = new ObjectExcelView();
+			mv = new ModelAndView(erv,dataMap);
+			return mv;
+		}
 	
 }
+

@@ -41,43 +41,29 @@
 		<div class="main-content">
 			<div class="main-content-inner">
 				<div class="page-content">
-				<form action="mbp/listProblemStatistic.do" method="post" name="Form" id="Form">
-					<div class="pull-right">
-						<span class="green middle bolder">类型: &nbsp;</span>
-						<div class="btn-toolbar inline middle no-margin">
-								<div data-toggle="buttons" class="btn-group no-margin">
-									<label class="btn btn-sm btn-primary active">
-										<input type="radio" class="level_select"  name="level_select" value="1" checked>模块统计
-									</label>
-									<label class="btn btn-sm btn-primary"> 
-										<input type="radio" class="level_select" name="level_select" value="2">类型统计
-									</label>
-									<label class="btn btn-sm btn-primary">
-										<input type="radio" class="level_select" name="level_select" value="3">运维情况统计
-									</label>																
-								</div>
-						</div>
-					</div>
 					<div class="row">
 						<div class="col-xs-12">							
 						<!-- 检索  -->
-							<table style="margin-top:5px;" >
+						<form action="erpuserlist/queryList.do" method="post" name="Form" id="Form">
+							<table style="margin-top:5px;">
 								<tr>							
 								<td style="padding-left:2px;">
 									<div class="input-group input-group-sm">
-										<input type="text" id="YEAR_MONTH" name="YEAR_MONTH"  class="form-control"  data-date-format="yyyy-mm" placeholder="请选择查询年月" />
+										<input type="text" id="YEAR_MONTH" name="YEAR_MONTH"  class="form-control"   placeholder="请选择查询年月" />
 										<span class="input-group-addon">
 											<i class="ace-icon fa fa-calendar" ></i>
 										</span>
 									</div>
-								</td>	
-									<td ><span>选择周：</span></td>
-									<input type="hidden" id="WEEKSTEXT" name="WEEKSTEXT" />
-									<td width="40%">
-										<select class="form-control" name="WEEKS" id="WEEKS"  >
-											
-										</select>					
-									</td>					
+								</td>								
+	<!-- 								<td style="padding-left:2px;"><input class="span10 date-picker" name="START_DATE" id="START_DATE"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="开始日期" title="开始日期"/></td> -->
+	<!-- 								<td style="padding-left:2px;"><input class="span10 date-picker" name="END_DATE" name="END_DATE"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="结束日期"/></td> -->
+									<td><label> <i class="ace-icon  bigger-110"></i>请选择单位：</label> </td>
+									<td>
+											<div style="margin:10px 0px;">
+													<input type="hidden" name="UNIT_CODE" id="UNIT_CODE"   />
+													<div class="selectTree" id="selectTree" style="float:none;display:block;"></div>												
+												</div>				
+										</td>	
 									<td style="padding-left:2px;">																		 
 													<button type="button" class="btn btn-info btn-xs" onclick="tosearch();">
 													    <i class="ace-icon fa fa-search bigger-110"></i>
@@ -88,28 +74,23 @@
 							</a></td>
 								</tr>
 							</table>
-						</div>
-					</div>
 						</form>
 						<!-- 检索  -->
 					
 						<table id="simple-table" class="mtable" style="margin-top:20px; width: 100%;">	
 							<thead>
 								<tr>
-									<th rowspan="2" style="background-color: #BEBEC5; text-align: center;">类型</th>
-									<th colspan="4" style="background-color: #BEBEC5; text-align: center;">本周</th>
-									<th colspan="4" style="background-color: #BEBEC5; text-align: center;">本年</th>
-
-								</tr>
-									<tr>
-									<th style="background-color: #BEBEC5; text-align: center;">问题数</th>
-									<th  style="background-color: #BEBEC5; text-align: center;">已解决</th>
-									<th  style="background-color: #BEBEC5; text-align: center;">未解决</th>
-									<th style="background-color: #BEBEC5; text-align: center;">解决率</th>
-										<th style="background-color: #BEBEC5; text-align: center;">问题数</th>
-									<th  style="background-color: #BEBEC5; text-align: center;">已解决</th>
-									<th  style="background-color: #BEBEC5; text-align: center;">未解决</th>
-									<th style="background-color: #BEBEC5; text-align: center;">解决率</th>
+									<th style="background-color: #BEBEC5; text-align: center;">序号</th>
+									<th style="background-color: #BEBEC5; text-align: center;">用户名</th>
+									<th style="background-color: #BEBEC5; text-align: center;">姓名</th>
+									<th  style="background-color: #BEBEC5; text-align: center;">用户组</th>
+									<th style="background-color: #BEBEC5; text-align: center;">帐号状态</th>
+									<th style="background-color: #BEBEC5; text-align: center;">有效期自</th>
+									<th style="background-color: #BEBEC5; text-align: center;">有效期至</th>
+									<th  style="background-color: #BEBEC5; text-align: center;">单位</th>
+									<th style="background-color: #BEBEC5; text-align: center;">岗位</th>
+									<th style="background-color: #BEBEC5; text-align: center;">变更序号</th>
+									<th style="background-color: #BEBEC5; text-align: center;">电话</th>
 								</tr>
 							</thead>												
 							<tbody>
@@ -118,21 +99,23 @@
 									<c:when test="${not empty varList}">
 										<c:forEach items="${varList}" var="var" varStatus="vs">	
 										<tr>
-											<td class='center'>${var.TYPE}</td>
-											<td class='center'>${var.NOWWEEK}</td>
-											<td class='center'>${var.NOWWEEKSOLVE}</td>
-											<td class='center'>${var.NOWWEEKNOTSOLVE}</td>
-											<td class='center'>${var.NOWWEEKSOLVERATE}%</td>
-											<td class='center'>${var.NOWYEAR}</td>
-											<td class='center'>${var.NOWYEARSOLVE}</td>
-											<td class='center'>${var.NOWYEARNOTSOLVE}</td>
-											<td class='center'>${var.NOWYEARSOLVERATE}%</td>
+											<td class='center'>${vs.index+1}</td>
+											<td class='center'>${var.USER_NAME}</td>
+											<td class='center'>${var.NAME}</td>
+											<td class='center'>${var.USER_GROUP}</td>
+											<td class='center'>${var.ACCOUNT_STATE}</td>
+											<td class='center'>${var.START_DATE}</td>
+											<td class='center'>${var.END_DATE}</td>
+											<td class='center'>${var.DEPART}</td>
+											<td class='center'>${var.JOB}</td>
+											<td class='center'>${var.CHANGE_NO}</td>
+											<td class='center'>${var.PHONE}</td>
 										</tr>									
 									</c:forEach>																		
 								</c:when>
 								<c:otherwise>
 									<tr class="main_info">
-										<td colspan="100" class="center" >请选择统计类型</td>
+										<td colspan="100" class="center" >没有相关数据</td>
 									</tr>
 								</c:otherwise>
 							</c:choose>
@@ -148,6 +131,9 @@
 						</div>
 					</div>
 				</div>
+			</div>
+		</div>
+
 		<!-- 返回顶部 -->
 		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
 			<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
@@ -173,19 +159,14 @@
 	 var gridBase_selector = "#jqGridBase";  
 	    var pagerBase_selector = "#jqGridBasePager";  
 			$(top.hangge());//关闭加载状态
-			console.log('css');
-			
-				
+		
 			//检索
 			function tosearch(){
-				top.jzts();	
-				var value=$("#WEEKS").val();
-				opts= $("#WEEKS").find("option[value="+ value +"]").text();
-				$("#WEEKSTEXT").val(opts);			
+				top.jzts();
 				$("#Form").submit();
 			}
 			$(function() {
-				//开始日期
+				//日期
 				$("#YEAR_MONTH").datepicker({
 					format: 'yyyy-mm',
 				    language: "zh-CN",
@@ -194,52 +175,30 @@
 				    minViewMode: 1,
 				    maxViewMode: 1
 				});
-				
-				var date = new Date();	
-				var year=date.getFullYear(); //获取完整的年份(4位)
-				var month=date.getMonth()+1; //获取当前月份
-				$("#YEAR_MONTH").val(year+'-'+month);
-				getWeeks();
 			})
-			$("#YEAR_MONTH").unbind('change').bind("change",function(){
-				getWeeks();
-			});
-			function getWeeks(){
-		        console.log(1);
-				$('#WEEKS').empty();
-				$.ajax({
-					   type: "POST",
-					   url: '<%=basePath%>mbp/getWeeks.do',
-					   data: {'YEAR_MONTH':$("#YEAR_MONTH").val()},
-					   dataType:'json',
-					   cache: false,
-					   success: function (data) {
-					                //$('#WEEKS').append("<option value='0'>--请选择周--</option>");
-					                //遍历成功返回的数据
-					                $.each(data, function (index,item) {
-					                    var Id = data[index].ID;
-					                    var name = data[index].Name;
-					            
-					                    //构造动态option
-					                    $('#WEEKS').append("<option value='"+Id+"'>"+name+"</option>")
-					                });
-					            },
-					            error: function () {
-			
-					            }
-					  });
-			}
+		
 			  function toExcel(){
-					var value=$("#WEEKS").val();
-					var level_select=$("#level_select").val();
-					opts= $("#WEEKS").find("option[value="+ value +"]").text();
-					$("#WEEKSTEXT").val(opts);		
-				    	window.location.href='<%=basePath%>mbp/listProStatisticExcel.do?START_DATE='+$("#YEAR_MONTH").val()
-			             +'&WEEKSTEXT='+$("#WEEKSTEXT").val()
-			             +'&level_select='+level_select;
-    
+				    	window.location.href='<%=basePath%>approvalconfig/listStatisticExcel.do?START_DATE='+$("#START_DATE").val()
+			             +'&END_DATE='+$("#END_DATE").val()
+			             +'&UNIT_CODE='+$("#UNIT_CODE").val();	    
 			    }
+			function initComplete(){
+					//下拉树
+					var defaultNodes = {"treeNodes":${zTreeNodes}};
+					//绑定change事件
+					$("#selectTree").bind("change",function(){
+
+						if(!$(this).attr("relValue")){
+					    }else{
+							$("#UNIT_CODE").val($(this).attr("relValue"));	
+					    }
+					});
+					//赋给data属性
+					$("#selectTree").data("data",defaultNodes);  
+					$("#selectTree").render();
+				}	
 	</script>
+
 
 </body>
 </html>

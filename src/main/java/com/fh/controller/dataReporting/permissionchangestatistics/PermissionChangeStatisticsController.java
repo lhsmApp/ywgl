@@ -34,6 +34,7 @@ import com.fh.service.sysConfig.sysconfig.SysConfigManager;
 import com.fh.service.tmplconfig.tmplconfig.impl.TmplConfigService;
 import com.fh.util.Const;
 import com.fh.util.DateUtil;
+import com.fh.util.DateWeek;
 import com.fh.util.Jurisdiction;
 import com.fh.util.ObjectExcelView;
 import com.fh.util.PageData;
@@ -360,5 +361,130 @@ public class PermissionChangeStatisticsController extends BaseController {
 	public void initBinder(WebDataBinder binder){
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(format,true));
+	}
+	/**显示问题统计列表
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/listPermissonChangeStatistic")
+	public ModelAndView listPermissonChangeStatistic(Page page) throws Exception{
+		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = this.getPageData();
+		page.setPd(pd);	
+		if(null!=pd.getString("YEAR_MONTH")&&!"".equals(pd.getString("YEAR_MONTH"))){
+			pd.put("YEAR_MONTH", pd.getString("YEAR_MONTH").replace("-", ""));
+		}
+		if(null!=pd.getString("WEEKSTEXT")&&!"".equals(pd.getString("WEEKSTEXT"))){
+			String startDate=pd.getString("WEEKSTEXT").substring(4, 14);
+			String endDate=pd.getString("WEEKSTEXT").substring(15, 25);
+			pd.put("START_DATE", startDate.replace("-", ""));
+			pd.put("END_DATE", endDate.replace("-", ""));
+			//当选择"周"时，按周查询，不按期间查询
+			pd.put("YEAR_MONTH","");
+		}
+		List<PageData> varList=permissionchangestatisticsService.listByUnit(page);
+		mv.setViewName("statisticAnalysis/permissionchangestatistics/permissionChangeStatistics_list");
+		mv.addObject("varList",varList);
+		return mv;
+	}
+	/**按月获取周及日期范围
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/getWeeks")
+	public @ResponseBody List<PageData> getWeeks()throws Exception{
+		PageData pd = this.getPageData();
+		List<PageData> lists=new ArrayList<PageData>();
+		if(null!=pd.getString("YEAR_MONTH")&&!"".equals(pd.getString("YEAR_MONTH"))){
+			String year=pd.getString("YEAR_MONTH").split("-")[0];
+			String month=pd.getString("YEAR_MONTH").split("-")[1];
+			int i = 1;
+			//当前月第一天
+			String weekStart=pd.getString("YEAR_MONTH")+"-01";
+			//当前月第一天是星期几
+			int dayOfWeek=DateWeek.getTheFirstDayWeekOfMonth(Integer.parseInt(year), Integer.parseInt(month),1);
+			//该月的最后一天
+			String monEnd=DateWeek.getLastDayOfMonth(Integer.parseInt(year),Integer.parseInt(month));
+			//该月第一周结束日期
+			 String weekEnd = dayOfWeek == 0 ? weekStart : DateWeek.addDays(weekStart,(7 - dayOfWeek));
+			 String str = "第" + i + "周(" + weekStart +"/" + weekEnd+ ")";
+			 PageData p = new PageData();
+			 p.put("ID",i);
+			 p.put("Name",str);
+			 lists.add(p);
+			 //当日期小于或等于该月的最后一天
+			 while (DateWeek.addDays(weekEnd,1).compareTo(monEnd)<=0)
+			 {
+			   i++;
+			  //该周的开始时间
+			  weekStart = DateWeek.addDays(weekEnd,1);
+			  //该周结束时间
+			  weekEnd = (DateWeek.addDays(weekEnd,1).compareTo(monEnd)>0) ? monEnd : DateWeek.addDays(weekEnd,7);
+			  str = "第" + i + "周(" + weekStart + "/" + weekEnd + ")";
+			  PageData p1 = new PageData();
+				 p1.put("ID",i);
+				 p1.put("Name",str);
+				 lists.add(p1);
+			 }		
+		}
+		return lists;
+	}
+	 /**导出权限变更统计表到excel
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/qxStatisticExcel")
+	public ModelAndView listStatisticExcel(Page page) throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = this.getPageData();
+		page.setPd(pd);	
+		if(null!=pd.getString("YEAR_MONTH")&&!"".equals(pd.getString("YEAR_MONTH"))){
+			pd.put("YEAR_MONTH", pd.getString("YEAR_MONTH").replace("-", ""));
+		}
+		if(null!=pd.getString("WEEKSTEXT")&&!"".equals(pd.getString("WEEKSTEXT"))){
+			String startDate=pd.getString("WEEKSTEXT").substring(4, 14);
+			String endDate=pd.getString("WEEKSTEXT").substring(15, 25);
+			pd.put("START_DATE", startDate.replace("-", ""));
+			pd.put("END_DATE", endDate.replace("-", ""));
+			//当选择"周"时，按周查询，不按期间查询
+			pd.put("YEAR_MONTH","");
+		}
+		Map<String,Object> dataMap = new HashMap<String,Object>();
+		List<String> titles = new ArrayList<String>();
+		titles.add("公司名称");	//1
+		titles.add("帐号延期");	//2
+		titles.add("帐号解除锁定");	//3
+		titles.add("新增角色");	//4
+		titles.add("删除角色");	//5
+		titles.add("帐号新增");	//6
+		titles.add("帐号删除");	//7
+		titles.add("增加FMIS角色");	//8
+		titles.add("删除FMIS角色");	//9
+		titles.add("变更用户组");	//10
+		titles.add("变更人次");	//11
+		dataMap.put("titles", titles);
+		List<PageData> varOList = permissionchangestatisticsService.listByUnit(page);
+		List<PageData> varList = new ArrayList<PageData>();
+		for(int i=0;i<varOList.size();i++){
+			PageData vpd = new PageData();
+			vpd.put("var1", varOList.get(i).getString("COMPANY_NAME"));	    //1
+			vpd.put("var2", varOList.get(i).get("ACCOUNT_DELAY").toString());	    //2
+			vpd.put("var3", varOList.get(i).get("ACCOUNT_UNLOCK").toString());	    //3
+			vpd.put("var4", varOList.get(i).get("NEW_ROLES").toString());	    //4
+			vpd.put("var5", varOList.get(i).get("DELETE_ROLES").toString());	    //5
+			vpd.put("var6", varOList.get(i).get("NEW_ACCOUNTS").toString());	    //6
+			vpd.put("var7", varOList.get(i).get("DELETE_ACCOUNTS").toString());	    //7
+			vpd.put("var8", varOList.get(i).get("NEW_FMIS_ROLES").toString());	    //8
+			vpd.put("var9", varOList.get(i).get("DELETE_FMIS_ROLES").toString());	    //9
+			vpd.put("var10", varOList.get(i).get("CHANGE_USER_GROUP").toString());	    //10
+			vpd.put("var11", varOList.get(i).get("CHANGE_PERSON_COUNT").toString());	    //11
+			varList.add(vpd);
+		}
+		dataMap.put("varList", varList);
+		ObjectExcelView erv = new ObjectExcelView();
+		mv = new ModelAndView(erv,dataMap);
+		return mv;
+		
 	}
 }

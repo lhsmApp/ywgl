@@ -41,23 +41,7 @@
 		<div class="main-content">
 			<div class="main-content-inner">
 				<div class="page-content">
-				<form action="mbp/listProblemStatistic.do" method="post" name="Form" id="Form">
-					<div class="pull-right">
-						<span class="green middle bolder">类型: &nbsp;</span>
-						<div class="btn-toolbar inline middle no-margin">
-								<div data-toggle="buttons" class="btn-group no-margin">
-									<label class="btn btn-sm btn-primary active">
-										<input type="radio" class="level_select"  name="level_select" value="1" checked>模块统计
-									</label>
-									<label class="btn btn-sm btn-primary"> 
-										<input type="radio" class="level_select" name="level_select" value="2">类型统计
-									</label>
-									<label class="btn btn-sm btn-primary">
-										<input type="radio" class="level_select" name="level_select" value="3">运维情况统计
-									</label>																
-								</div>
-						</div>
-					</div>
+				<form action="permissionchangestatistics/listPermissonChangeStatistic.do" method="post" name="Form" id="Form">
 					<div class="row">
 						<div class="col-xs-12">							
 						<!-- 检索  -->
@@ -65,7 +49,7 @@
 								<tr>							
 								<td style="padding-left:2px;">
 									<div class="input-group input-group-sm">
-										<input type="text" id="YEAR_MONTH" name="YEAR_MONTH"  class="form-control"  data-date-format="yyyy-mm" placeholder="请选择查询年月" />
+										<input type="text" id="YEAR_MONTH" name="YEAR_MONTH"  class="form-control"   placeholder="请选择查询年月" />
 										<span class="input-group-addon">
 											<i class="ace-icon fa fa-calendar" ></i>
 										</span>
@@ -95,21 +79,18 @@
 					
 						<table id="simple-table" class="mtable" style="margin-top:20px; width: 100%;">	
 							<thead>
-								<tr>
-									<th rowspan="2" style="background-color: #BEBEC5; text-align: center;">类型</th>
-									<th colspan="4" style="background-color: #BEBEC5; text-align: center;">本周</th>
-									<th colspan="4" style="background-color: #BEBEC5; text-align: center;">本年</th>
-
-								</tr>
 									<tr>
-									<th style="background-color: #BEBEC5; text-align: center;">问题数</th>
-									<th  style="background-color: #BEBEC5; text-align: center;">已解决</th>
-									<th  style="background-color: #BEBEC5; text-align: center;">未解决</th>
-									<th style="background-color: #BEBEC5; text-align: center;">解决率</th>
-										<th style="background-color: #BEBEC5; text-align: center;">问题数</th>
-									<th  style="background-color: #BEBEC5; text-align: center;">已解决</th>
-									<th  style="background-color: #BEBEC5; text-align: center;">未解决</th>
-									<th style="background-color: #BEBEC5; text-align: center;">解决率</th>
+									<th style="background-color: #BEBEC5; text-align: center;">公司名称</th>
+									<th  style="background-color: #BEBEC5; text-align: center;">帐号延期</th>
+									<th  style="background-color: #BEBEC5; text-align: center;">帐号解除锁定</th>
+									<th style="background-color: #BEBEC5; text-align: center;">新增角色</th>
+									<th style="background-color: #BEBEC5; text-align: center;">删除角色</th>
+									<th  style="background-color: #BEBEC5; text-align: center;">帐号新增</th>
+									<th  style="background-color: #BEBEC5; text-align: center;">帐号删除</th>
+									<th style="background-color: #BEBEC5; text-align: center;">增加FMIS角色</th>
+									<th style="background-color: #BEBEC5; text-align: center;">删除FMIS角色</th>
+									<th style="background-color: #BEBEC5; text-align: center;">变更用户组</th>
+									<th style="background-color: #BEBEC5; text-align: center;">变更人次</th>
 								</tr>
 							</thead>												
 							<tbody>
@@ -118,21 +99,23 @@
 									<c:when test="${not empty varList}">
 										<c:forEach items="${varList}" var="var" varStatus="vs">	
 										<tr>
-											<td class='center'>${var.TYPE}</td>
-											<td class='center'>${var.NOWWEEK}</td>
-											<td class='center'>${var.NOWWEEKSOLVE}</td>
-											<td class='center'>${var.NOWWEEKNOTSOLVE}</td>
-											<td class='center'>${var.NOWWEEKSOLVERATE}%</td>
-											<td class='center'>${var.NOWYEAR}</td>
-											<td class='center'>${var.NOWYEARSOLVE}</td>
-											<td class='center'>${var.NOWYEARNOTSOLVE}</td>
-											<td class='center'>${var.NOWYEARSOLVERATE}%</td>
+											<td class='center'>${var.COMPANY_NAME}</td>
+											<td class='center'>${var.ACCOUNT_DELAY}</td>
+											<td class='center'>${var.ACCOUNT_UNLOCK}</td>
+											<td class='center'>${var.NEW_ROLES}</td>
+											<td class='center'>${var.DELETE_ROLES}</td>
+											<td class='center'>${var.NEW_ACCOUNTS}</td>
+											<td class='center'>${var.DELETE_ACCOUNTS}</td>
+											<td class='center'>${var.NEW_FMIS_ROLES}</td>
+											<td class='center'>${var.DELETE_FMIS_ROLES}</td>
+											<td class='center'>${var.CHANGE_USER_GROUP}</td>
+											<td class='center'>${var.CHANGE_PERSON_COUNT}</td>
 										</tr>									
 									</c:forEach>																		
 								</c:when>
 								<c:otherwise>
 									<tr class="main_info">
-										<td colspan="100" class="center" >请选择统计类型</td>
+										<td colspan="100" class="center" >没有相关数据</td>
 									</tr>
 								</c:otherwise>
 							</c:choose>
@@ -170,12 +153,9 @@
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 	<script type="text/javascript">
-	 var gridBase_selector = "#jqGridBase";  
-	    var pagerBase_selector = "#jqGridBasePager";  
-			$(top.hangge());//关闭加载状态
-			console.log('css');
-			
-				
+             var year_month=undefined;
+             var choiceWeek=undefined;
+			$(top.hangge());//关闭加载状态				
 			//检索
 			function tosearch(){
 				top.jzts();	
@@ -185,7 +165,7 @@
 				$("#Form").submit();
 			}
 			$(function() {
-				//开始日期
+				//日期
 				$("#YEAR_MONTH").datepicker({
 					format: 'yyyy-mm',
 				    language: "zh-CN",
@@ -209,12 +189,12 @@
 				$('#WEEKS').empty();
 				$.ajax({
 					   type: "POST",
-					   url: '<%=basePath%>mbp/getWeeks.do',
+					   url: '<%=basePath%>permissionchangestatistics/getWeeks.do',
 					   data: {'YEAR_MONTH':$("#YEAR_MONTH").val()},
 					   dataType:'json',
 					   cache: false,
 					   success: function (data) {
-					                //$('#WEEKS').append("<option value='0'>--请选择周--</option>");
+					                $('#WEEKS').append("<option value='0'></option>");
 					                //遍历成功返回的数据
 					                $.each(data, function (index,item) {
 					                    var Id = data[index].ID;
@@ -234,7 +214,7 @@
 					var level_select=$("#level_select").val();
 					opts= $("#WEEKS").find("option[value="+ value +"]").text();
 					$("#WEEKSTEXT").val(opts);		
-				    	window.location.href='<%=basePath%>mbp/listProStatisticExcel.do?START_DATE='+$("#YEAR_MONTH").val()
+				    	window.location.href='<%=basePath%>permissionchangestatistics/qxStatisticExcel.do?START_DATE='+$("#YEAR_MONTH").val()
 			             +'&WEEKSTEXT='+$("#WEEKSTEXT").val()
 			             +'&level_select='+level_select;
     
