@@ -21,9 +21,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fh.controller.base.BaseController;
+import com.fh.controller.common.BillnumUtil;
 import com.fh.entity.CommonBase;
 import com.fh.entity.Page;
 import com.fh.entity.system.User;
+import com.fh.service.billnum.BillNumManager;
 import com.fh.service.testquestion.testquestion.TestQuestionManager;
 import com.fh.service.trainBase.CourseTypeManager;
 import com.fh.util.AppUtil;
@@ -33,6 +35,7 @@ import com.fh.util.PageData;
 import com.fh.util.StringUtil;
 import com.fh.util.date.DateFormatUtils;
 import com.fh.util.date.DateUtils;
+import com.fh.util.enums.ExamBillNum;
 import com.fh.util.enums.QuestionDifficulty;
 import com.fh.util.enums.QuestionType;
 
@@ -52,6 +55,9 @@ public class TestQuestionController extends BaseController {
 	private TestQuestionManager testquestionService;
 	@Resource(name="coursetypeService")
 	private CourseTypeManager coursetypeService;
+	@Resource(name = "billnumService")
+	private BillNumManager billNumService;
+	
 	/**保存
 	 * @param
 	 * @throws Exception
@@ -70,7 +76,7 @@ public class TestQuestionController extends BaseController {
 		//初始化变量
 		String listData = pd.getString("listData");
 		String questionItem = null;
-		String questionId = this.getId();
+		String questionId = BillnumUtil.getExamBillnum(billNumService, ExamBillNum.EXAM_QUESTION);
 		String questionType = null;
 		JSONArray array = JSONArray.fromObject(listData);
 		
@@ -273,18 +279,6 @@ public class TestQuestionController extends BaseController {
 		return AppUtil.returnObject(pd, map);
 	}
 	
-	/**
-	 * 获取当前时间到秒加3位随机数字组成17位ID
-	 * @return ID
-	 */
-   private synchronized String getId(){
-        String id = null;
-        Random random = new Random();
-        SimpleDateFormat sdfTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        id = sdfTime.format(new Date()).replaceAll("-","").trim().replaceAll(":","").replaceAll(" ","") + random.nextInt(999);
-        return id;
-    }
-   
    /**
         *  批量保存答案
     * @param questionId 题目ID
