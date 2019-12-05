@@ -92,7 +92,8 @@
 			b.TEST_PLAN_ID,
 			b.TEST_PAPER_ID,
 			b.START_DATE,
-			b.END_DATE, 
+			b.END_DATE,
+			b.TEST_PLAN_NAME, 
 			b.TEST_PLAN_PERSONS,
 			c.TEST_PAPER_TITLE,
 			c.COURSE_TYPE_ID,
@@ -135,7 +136,8 @@
 	<select id="datalistPage" parameterType="page" resultType="pd">
 		SELECT
 			a.TEST_PLAN_ID,	
-			a.TEST_PAPER_ID,	
+			a.TEST_PAPER_ID,
+			e.TEST_PLAN_NAME,
 			a.TEST_USER,	
 			a.TEST_TIME,	
 			a.TEST_COUNT,	
@@ -152,8 +154,11 @@
 		LEFT JOIN tb_train_student AS b ON a.TEST_USER = b.STUDENT_ID
 		LEFT JOIN oa_department AS c ON b.DEPART_CODE = c.DEPARTMENT_CODE
 		LEFT JOIN tb_test_paper AS d ON d.TEST_PAPER_ID = a.TEST_PAPER_ID
+		LEFT JOIN tb_test_plan AS e ON a.TEST_PLAN_ID = e.TEST_PLAN_ID
 		WHERE 
 			a.STATE=1
+		AND
+			e.STATE=1
 		<if test="pd.TEST_PLAN_ID != null and pd.TEST_PLAN_ID != ''">
 		AND
 			a.TEST_PLAN_ID = #{pd.TEST_PLAN_ID}		

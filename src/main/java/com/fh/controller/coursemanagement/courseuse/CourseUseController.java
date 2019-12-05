@@ -96,7 +96,7 @@ public class CourseUseController extends BaseController {
 		pd = this.getPageData();
 		String keywords = pd.getString("keywords");				//关键词检索条件
 		String nowDate = DateUtil.getDays();
-		String userId = user.getUSER_ID();
+		String userId = user.getUSER_ID();// 用户/学员ID
 		if(null != keywords && !"".equals(keywords)){
 			pd.put("keywords", keywords.trim());
 		}

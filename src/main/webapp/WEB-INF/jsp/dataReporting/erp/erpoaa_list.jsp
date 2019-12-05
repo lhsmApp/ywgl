@@ -94,14 +94,14 @@
 									</td>
 									<td style="vertical-align:top;padding-left:3px;">
 										<a class="btn btn-info btn-sm" onclick="tosearch()"><i class="ace-icon fa fa-search bigger-110"></i></a>
-										<a class="btn btn-white btn-info btn-bold" onclick="daaReport('确定要审批当前数据吗?')"><i class="ace-icon fa fa-check-square-o bigger-110"></i>批量审批</a>
-										<a class="btn btn-white btn-info btn-bold" onclick="daaBackReport('确定要驳回吗?');" title="批量驳回" ><i class="ace-icon fa fa-exclamation-triangle red bigger-110"></i>批量驳回</a>
+										<a class="btn btn-white btn-info btn-bold" onclick="oaaReport('确定要审批当前数据吗?')"><i class="ace-icon fa fa-check-square-o bigger-110"></i>批量审批</a>
+										<a class="btn btn-white btn-info btn-bold" onclick="oaaBackReport('确定要驳回吗?');" title="批量驳回" ><i class="ace-icon fa fa-exclamation-triangle red bigger-110"></i>批量驳回</a>
 										<a class="btn btn-white btn-info btn-bold" onclick="toExcel()"><span class="ace-icon fa fa-cloud-download"></span>导出</a>
 									</td>
 								</tr>
 							</table>
 							<div style="width:100%;overflow: auto; height: 500px;">
-							<table id="simple-table" class="mtable" style="margin-top:10px; width:1538px;">
+							<table id="simple-table" class="mtable" style="margin-top:10px; width:2015px;">
 								<thead>
 									<tr>
 										<th class="center" style="width:45px; background-color: #BEBEC5; padding-left: 5px;padding-right:5px;">序号</th>
