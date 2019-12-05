@@ -44,7 +44,7 @@
 					<div class="row">
 						<div class="col-xs-12">							
 						<!-- 检索  -->
-						<form action="erpuserlist/queryList.do" method="post" name="Form" id="Form">
+						<form action="grcperson/queryList.do" method="post" name="Form" id="Form">
 							<table style="margin-top:5px;">
 								<tr>							
 								<td style="padding-left:2px;">
@@ -80,17 +80,16 @@
 						<table id="simple-table" class="mtable" style="margin-top:20px; width: 100%;">	
 							<thead>
 								<tr>
-									<th style="background-color: #BEBEC5; text-align: center;">序号</th>
-									<th style="background-color: #BEBEC5; text-align: center;">用户名</th>
-									<th style="background-color: #BEBEC5; text-align: center;">姓名</th>
-									<th  style="background-color: #BEBEC5; text-align: center;">用户组</th>
-									<th style="background-color: #BEBEC5; text-align: center;">帐号状态</th>
-									<th style="background-color: #BEBEC5; text-align: center;">有效期自</th>
-									<th style="background-color: #BEBEC5; text-align: center;">有效期至</th>
-									<th  style="background-color: #BEBEC5; text-align: center;">单位</th>
-									<th style="background-color: #BEBEC5; text-align: center;">岗位</th>
-									<th style="background-color: #BEBEC5; text-align: center;">变更序号</th>
-									<th style="background-color: #BEBEC5; text-align: center;">电话</th>
+									<th style="width:60px; height:30px; background-color: #BEBEC5; text-align: center;">序号</th>
+									<th style="width:110px; height:30px; background-color: #BEBEC5; text-align: center;">员工编号</th>
+									<th style="width:110px; background-color: #BEBEC5; text-align: center;">员工姓名</th>
+									<th style="width:110px; background-color: #BEBEC5; text-align: center;">单位</th>
+									<th style="width:110px; background-color: #BEBEC5; text-align: center;">部门</th>
+									<th style="width:110px; background-color: #BEBEC5; text-align: center;">职务</th>
+									<th style="width:110px; background-color: #BEBEC5; text-align: center;">岗位</th>
+									<th style="width:100px; background-color: #BEBEC5; text-align: center;">办公室电话</th>
+									<th style="width:110px; background-color: #BEBEC5; text-align: center;">手机号</th>
+									<th style="width:120px; background-color: #BEBEC5; text-align: center;">中国石油邮箱</th>
 								</tr>
 							</thead>												
 							<tbody>
@@ -100,16 +99,15 @@
 										<c:forEach items="${varList}" var="var" varStatus="vs">	
 										<tr>
 											<td class='center'>${vs.index+1}</td>
-											<td class='center'>${var.USER_NAME}</td>
-											<td class='center'>${var.NAME}</td>
-											<td class='center'>${var.USER_GROUP}</td>
-											<td class='center'>${var.ACCOUNT_STATE}</td>
-											<td class='center'>${var.START_DATE}</td>
-											<td class='center'>${var.END_DATE}</td>
-											<td class='center'>${var.DEPART}</td>
-											<td class='center'>${var.JOB}</td>
-											<td class='center'>${var.CHANGE_NO}</td>
+											<td class='center'>${var.STAFF_CODE}</td>
+											<td class='center'>${var.STAFF_NAME}</td>
+											<td class='center'>${var.STAFF_UNIT}</td>
+											<td class='center'>${var.STAFF_DEPART}</td>
+											<td class='center'>${var.STAFF_POSITION}</td>
+											<td class='center'>${var.STAFF_JOB}</td>
 											<td class='center'>${var.PHONE}</td>
+											<td class='center'>${var.MOBILE_PHONE}</td>
+											<td class='center'>${var.ZSY_MAIL}</td>
 										</tr>									
 									</c:forEach>																		
 								</c:when>
@@ -178,7 +176,7 @@
 			})
 		
 			  function toExcel(){
-					window.location.href='<%=basePath%>erpuserlist/excel.do';	    
+				window.location.href='<%=basePath%>grcperson/excel.do';    
 			    }
 			function initComplete(){
 					//下拉树

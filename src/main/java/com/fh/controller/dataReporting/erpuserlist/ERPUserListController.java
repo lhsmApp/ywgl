@@ -3,6 +3,7 @@ package com.fh.controller.dataReporting.erpuserlist;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -359,42 +360,49 @@ public class ERPUserListController extends BaseController {
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(format,true));
 	}
-	/**列表
+	/**查询统计列表
 	 * @param page
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/queryList")
 	public ModelAndView queryList(Page page) throws Exception{
 		logBefore(logger, Jurisdiction.getUsername()+"列表ERPUserList");
-		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
-		PageData data = new PageData();
 		User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		String roleId=user.getRole().getROLE_ID();
 		pd = this.getPageData();
-		String busiDate = pd.getString("busiDate");
 		pd.put("USER_DEPART",user.getUNIT_CODE());
-		pd.put("KEY_CODE","SystemDataTime");
-		data.put("BUSI_TYPE",SysDeptTime.ERP_USER_LIST.getNameKey());
-		data.put("DEPT_CODE",user.getUNIT_CODE());
-		String date = sysconfigService.getSysConfigByKey(pd);
-		if(null == busiDate || StringUtil.isEmpty(busiDate)) {
-			pd.put("busiDate",date);
+		pd.put("KEY_CODE","xxglbRoles");
+		String roleStr = sysconfigService.getSysConfigByKey(pd);
+		String[] roles=null;
+		if(StringUtil.isNotEmpty(roleStr)) {
+			if(roleStr.contains(",")){
+				roles=roleStr.split(",");
+			}else{
+				roles=new String[1];
+				roles[0]=roleStr;
+			}
 		}
-		pd.put("month",date);
-		page.setPd(pd);
-		PageData pageData = grcpersonService.findSysDeptTime(data);
-		if(null != pageData && pageData.size()>0) {
-			pd.putAll(pageData);
-		}
-		List<PageData>  listBusiDate = DateUtil.getMonthList("BUSI_DATE", date);
-		List<PageData>	varList = erpuserlistService.list(page);	//列出GRCPerson列表
-		mv.setViewName("statisticAnalysis/erpuserliststatistics/erpuUserListStatistic_list");
 		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
-		JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0",zdepartmentPdList));
-		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
+		//判断是否为信息管理部管理角色
+		if(null!=roles){
+			if(Arrays.asList(roles).contains(roleId)){
+				//若是则树形结构加载所有单位，并将用户单位查询条件更新为所选单位
+				JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0",zdepartmentPdList));
+				mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
+				pd.put("USER_DEPART",pd.getString("UNIT_CODE"));
+				
+			}else{
+				mv.addObject("zTreeNodes", pd.getString("USER_DEPART"));//若不是则只显示本单位数据
+			}
+		}else{
+			mv.addObject("zTreeNodes", pd.getString("USER_DEPART"));//未维护管理单位查询配置，则只显示各单位数据
+		}		
+		page.setPd(pd);
+		List<PageData>	varList = erpuserlistService.list(page);	//列出GRCPerson列表
+		mv.setViewName("statisticAnalysis/erpuserliststatistics/erpuUserListStatistic_list");		
 		mv.addObject("varList", varList);
-		mv.addObject("listBusiDate",listBusiDate);
 		mv.addObject("pd", pd);
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		

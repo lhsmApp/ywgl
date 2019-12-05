@@ -3,6 +3,7 @@ package com.fh.controller.dataReporting.grcperson;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -29,6 +30,7 @@ import com.fh.entity.TmplConfigDetail;
 import com.fh.entity.system.User;
 import com.fh.exception.CustomException;
 import com.fh.service.dataReporting.grcperson.GRCPersonManager;
+import com.fh.service.fhoa.department.DepartmentManager;
 import com.fh.service.sysConfig.sysconfig.SysConfigManager;
 import com.fh.service.tmplconfig.tmplconfig.impl.TmplConfigService;
 import com.fh.util.Const;
@@ -61,6 +63,9 @@ public class GRCPersonController extends BaseController {
 	private TmplConfigService tmplconfigService;
 	@Resource(name = "sysconfigService")
 	private SysConfigManager sysconfigService;
+	
+	@Resource(name="departmentService")
+	private DepartmentManager departmentService;
 	
 	Map<String, TableColumns> Map_HaveColumnsList = new LinkedHashMap<String, TableColumns>();
 	Map<String, TmplConfigDetail> Map_SetColumnsList = new LinkedHashMap<String, TmplConfigDetail>();
@@ -361,5 +366,64 @@ public class GRCPersonController extends BaseController {
 	public void initBinder(WebDataBinder binder){
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(format,true));
+	}
+	/**列表
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/queryList")
+	public ModelAndView queryList(Page page) throws Exception{
+		logBefore(logger, Jurisdiction.getUsername()+"列表GRCPerson");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		String roleId=user.getRole().getROLE_ID();
+		pd = this.getPageData();
+		pd.put("USER_DEPART",user.getUNIT_CODE());
+		pd.put("STAFF_UNIT",pd.getString("UNIT_CODE"));
+		pd.put("KEY_CODE","xxglbRoles");
+		String roleStr = sysconfigService.getSysConfigByKey(pd);
+		String[] roles=null;
+		if(StringUtil.isNotEmpty(roleStr)) {
+			if(roleStr.contains(",")){
+				roles=roleStr.split(",");
+			}else{
+				roles=new String[1];
+				roles[0]=roleStr;
+			}
+		}
+		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
+		//判断是否为信息管理部管理角色
+		if(null!=roles){
+			if(Arrays.asList(roles).contains(roleId)){
+				//若是则树形结构加载所有单位，并将用户单位查询条件更新为所选单位
+				JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0",zdepartmentPdList));
+				mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
+				pd.put("USER_DEPART",pd.getString("UNIT_CODE"));
+				
+			}else{
+				mv.addObject("zTreeNodes", pd.getString("USER_DEPART"));//若不是则只显示本单位数据
+			}
+		}else{
+			mv.addObject("zTreeNodes", pd.getString("USER_DEPART"));//未维护管理单位查询配置，则只显示各单位数据
+		}	
+		page.setPd(pd);
+		List<PageData>	varList = grcpersonService.list(page);	//列出GRCPerson列表
+		mv.setViewName("statisticAnalysis/grcdatastatistics/grcDataStatistic_list");
+		mv.addObject("varList", varList);
+		mv.addObject("pd", pd);
+		
+		//***********************************************************
+		Map_SetColumnsList.put("STAFF_CODE", new TmplConfigDetail("STAFF_CODE", "员工编号", "1", false));
+		Map_SetColumnsList.put("STAFF_NAME", new TmplConfigDetail("STAFF_NAME", "员工姓名", "1", false));
+		Map_SetColumnsList.put("STAFF_UNIT", new TmplConfigDetail("STAFF_UNIT", "单位", "1", false));
+		Map_SetColumnsList.put("STAFF_DEPART", new TmplConfigDetail("STAFF_DEPART", "部门", "1", false));
+		Map_SetColumnsList.put("STAFF_POSITION", new TmplConfigDetail("STAFF_POSITION", "职务", "1", false));
+		Map_SetColumnsList.put("STAFF_JOB", new TmplConfigDetail("STAFF_JOB", "岗位", "1", false));
+		Map_SetColumnsList.put("PHONE", new TmplConfigDetail("PHONE", "办公室电话", "1", false));
+		Map_SetColumnsList.put("MOBILE_PHONE", new TmplConfigDetail("MOBILE_PHONE", "手机号", "1", false));
+		Map_SetColumnsList.put("ZSY_MAIL", new TmplConfigDetail("ZSY_MAIL", "中国石油邮箱", "1", false));
+
+		return mv;
 	}
 }

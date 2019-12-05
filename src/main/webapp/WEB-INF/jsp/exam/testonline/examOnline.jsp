@@ -227,10 +227,12 @@
 		//提交时,获取单选和复选框选择答案
 		function report(type){
 			 //report()数字1代表自动提交，2代表手工提交
-			 var message;
+			 console.log("已提交");
+			var message;
 			if(type==2){
-				message=confirm('确定提交吗?')//手动提交
-			}else{
+				message=confirm('确定提交吗?');//手动提交
+			}
+			if(type==1){
 				message=true;//自动提交
 			}	
 			 var paperId=undefined;
@@ -244,8 +246,7 @@
 				        	//获取单选题选项
 					        var nameRadio='${vas.TEST_PAPER_ID}'+'-'+'${vas.TEST_QUESTION_ID}';
 							var val=$('input:radio[name="'+nameRadio+'"]:checked').val();
-					        if(val==null){				        	
-					        }else{
+					        if(val!=null){
 					        	 //m.put('${vas.TEST_QUESTION_ID}',val );
 					        	 data.${vas.TEST_QUESTION_ID}=val;					           
 					        }
