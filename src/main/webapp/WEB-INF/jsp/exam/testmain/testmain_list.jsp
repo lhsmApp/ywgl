@@ -196,7 +196,7 @@
 	<!-- 删除时确认窗口 -->
 	<script src="static/ace/js/bootbox.js"></script>
 	<!-- ace scripts -->
-	<script src="static/ace/js/ace/ace.js"></script>>
+	<script src="static/ace/js/ace/ace.js"></script>
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 	<script type="text/javascript">
