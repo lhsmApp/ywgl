@@ -1,38 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="CourseUseMapper">
+<mapper namespace="NoticeMapper">
 	
 	<!--表名 -->
 	<sql id="tableName">
-		tb_course_use
+		tb_notice
 	</sql>
 	
 	<!-- 字段 -->
 	<sql id="Field">
-		COURSE_ID,	
-		CHAPTER_ID,	
-		VIEW_USER,	
-		RPT_TIME,	
-		COURSE_NAME,	
-		COURSE_TYPE,	
-		CHAPTER_NAME,	
-		PLAY_TIME	
-	<!--VIDEO_DURATION,	
-		TIME_RATING	 -->
+		NOTICE_CONTENT,	
+		NOTICE_USER,	
+		NOTICE_TYPE,	
+		START_TIME,	
+		END_TIME,	
+		ATTACHMENT_PATH,	
+		STATE,	
+		CREATE_USER,	
+		USER_DEPART,	
+		CREATE_DATE,	
+		NOTICE_ID
 	</sql>
 	
 	<!-- 字段值 -->
 	<sql id="FieldValue">
-		#{COURSE_ID},	
-		#{CHAPTER_ID},	
-		#{VIEW_USER},	
-		#{RPT_TIME},	
-		#{COURSE_NAME},	
-		#{COURSE_TYPE},	
-		#{CHAPTER_NAME},	
-		#{PLAY_TIME}
-	<!--#{VIDEO_DURATION},	
-		#{TIME_RATING} -->
+		#{NOTICE_CONTENT},	
+		#{NOTICE_USER},	
+		#{NOTICE_TYPE},	
+		#{START_TIME},	
+		#{END_TIME},	
+		#{ATTACHMENT_PATH},	
+		#{STATE},	
+		#{CREATE_USER},	
+		#{USER_DEPART},	
+		#{CREATE_DATE},	
+		#{NOTICE_ID}
 	</sql>
 	
 	<!-- 新增-->
@@ -51,7 +53,7 @@
 		delete from
 		<include refid="tableName"></include>
 		where 
-			COURSEUSE_ID = #{COURSEUSE_ID}
+			NOTICE_ID = #{NOTICE_ID}
 	</delete>
 	
 	<!-- 修改 -->
@@ -59,18 +61,15 @@
 		update
 		<include refid="tableName"></include>
 		set 
-			COURSE_ID = #{COURSE_ID},
-			CHAPTER_ID = #{CHAPTER_ID},
-			VIEW_USER = #{VIEW_USER},
-			RPT_TIME = #{RPT_TIME},
-			COURSE_NAME = #{COURSE_NAME},
-			COURSE_TYPE = #{COURSE_TYPE},
-			CHAPTER_NAME = #{CHAPTER_NAME},
-			VIDEO_DURATION = #{VIDEO_DURATION},
-			PLAY_TIME = #{PLAY_TIME},
-			TIME_RATING = #{TIME_RATING}
-		where 
-			COURSE_ID = #{COURSE_ID}
+			NOTICE_CONTENT = #{NOTICE_CONTENT},
+			NOTICE_USER = #{NOTICE_USER},
+			NOTICE_TYPE = #{NOTICE_TYPE},
+			START_TIME = #{START_TIME},
+			END_TIME = #{END_TIME},
+			ATTACHMENT_PATH = #{ATTACHMENT_PATH},
+			NOTICE_ID = NOTICE_ID
+			where 
+			NOTICE_ID = #{NOTICE_ID}
 	</update>
 	
 	<!-- 通过ID获取数据 -->
@@ -80,41 +79,25 @@
 		from 
 		<include refid="tableName"></include>
 		where 
-			COURSEUSE_ID = #{COURSEUSE_ID}
+			NOTICE_ID = #{NOTICE_ID}
 	</select>
 	
 	<!-- 列表 -->
 	<select id="datalistPage" parameterType="page" resultType="pd">
-		SELECT 
-			a.COURSE_ID,	
-			a.CHAPTER_ID,	
-			a.VIEW_USER,	
-			a.RPT_TIME,	
-			a.COURSE_NAME,	
-			a.COURSE_TYPE,	
-			a.CHAPTER_NAME,	
-			LEFT(SEC_TO_TIME(a.PLAY_TIME),LENGTH(SEC_TO_TIME(a.PLAY_TIME))-3) AS PLAY_TIME,
-			b.COURSE_TYPE_NAME,
-			c.STUDENT_NAME	
-		FROM 
-			tb_course_use AS a
-		LEFT JOIN tb_course_type AS b ON a.COURSE_TYPE = b.COURSE_TYPE_ID
-		LEFT JOIN tb_train_student AS c ON a.VIEW_USER = c.STUDENT_ID
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
 		where 1=1
-			<if test="pd.COURSE_TYPE != null and pd.COURSE_TYPE != ''">
-			and
-				a.COURSE_TYPE = #{pd.COURSE_TYPE}
-			</if>
 		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
 			and
-			(
-			c.STUDENT_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
-			<!--	根据需求自己加检索条件
-				字段1 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
-				 or 
-				字段2 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
-			-->
-			)
+				(
+				<!--	根据需求自己加检索条件
+					字段1 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or 
+					字段2 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+				-->
+				)
 		</if>
 	</select>
 	
@@ -131,7 +114,7 @@
 		delete from
 		<include refid="tableName"></include>
 		where 
-			COURSEUSE_ID in
+			NOTICE_ID in
 		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
                  #{item}
 		</foreach>
