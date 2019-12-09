@@ -28,6 +28,14 @@ public class User {
 	private String DEPARTMENT_NAME;
 	private String UNIT_CODE;
 	private String UNIT_NAME;
+	private String USER_TYPE;//1、系统用户、2、学员
+	
+	public String getUSER_TYPE() {
+		return USER_TYPE;
+	}
+	public void setUSER_TYPE(String userType) {
+		USER_TYPE = userType;
+	}
 	
 	public String getSKIN() {
 		return SKIN;

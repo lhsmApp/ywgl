@@ -134,22 +134,6 @@ public class TrainLeaderController extends BaseController {
 		mv.addObject("msg", "save");
 		mv.addObject("pd", pd);
 		
-		String unitName = "";
-		pd.put("DEPARTMENT_CODE", pd.getString("UNIT_CODE"));
-		PageData dpd = trainDepartService.findByCode(pd);
-		if(null != dpd){
-			unitName = dpd.getString("NAME");
-		}
-		mv.addObject("unitName", unitName);
-		
-		String departName ="";
-		pd.put("DEPARTMENT_CODE", pd.getString("DEPART_CODE"));
-		PageData dpd1 = trainDepartService.findByCode(pd);
-		if(null != dpd1){
-			departName = dpd1.getString("NAME");
-		}
-		mv.addObject("departName", departName);
-		
 		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
 		JSONArray arr = JSONArray.fromObject(trainDepartService.listAllTrainDepartToSelect("0",zdepartmentPdList));
 		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
@@ -172,21 +156,21 @@ public class TrainLeaderController extends BaseController {
 		mv.addObject("msg", "edit");
 		mv.addObject("pd", pd);
 		
-		String unitName = "";
-		pd.put("DEPARTMENT_CODE", pd.getString("UNIT_CODE"));
-		PageData dpd = trainDepartService.findByCode(pd);
-		if(null != dpd){
-			unitName = dpd.getString("NAME");
-		}
-		mv.addObject("unitName", unitName);
-		
 		String departName ="";
-		pd.put("DEPARTMENT_CODE", pd.getString("DEPART_CODE"));
+		pd.put("DEPART_CODE", pd.getString("DEPART_CODE"));
 		PageData dpd1 = trainDepartService.findByCode(pd);
 		if(null != dpd1){
-			departName = dpd1.getString("NAME");
+			departName = dpd1.getString("DEPART_NAME");
 		}
 		mv.addObject("departName", departName);
+		
+		String unitName = "";
+		pd.put("DEPART_CODE", pd.getString("UNIT_CODE"));
+		PageData dpd = trainDepartService.findByCode(pd);
+		if(null != dpd){
+			unitName = dpd.getString("DEPART_NAME");
+		}
+		mv.addObject("unitName", unitName);
 		
 		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
 		JSONArray arr = JSONArray.fromObject(trainDepartService.listAllTrainDepartToSelect("0",zdepartmentPdList));

@@ -61,9 +61,11 @@
 									<th class="center" style="width:50px;">序号</th>
 									<th class="center">学员编号</th>
 									<th class="center">学员名称</th>
-									<th class="center">员工账户</th>
+									<!-- <th class="center">员工账户</th> -->
+									
 									<th class="center">所属单位</th>
 									<th class="center">所属部门</th>
+									<th class="center">角色</th>
 									<th class="center">备注</th>
 									<th class="center">状态</th>
 									<th class="center">操作</th>
@@ -84,9 +86,11 @@
 											
 											<td class='center'>${var.STUDENT_CODE}</td>
 											<td class='center'>${var.STUDENT_NAME}</td>
-											<td class='center'>${var.ACCOUNT_NAME}</td>
+											<%-- <td class='center'>${var.ACCOUNT_NAME}</td> --%>
+											
 											<td class='center'>${var.UNIT_NAME}</td>
 											<td class='center'>${var.DEPART_NAME}</td>
+											<td class='center'>${var.ROLE_NAME}</td>
 											<td class='center'>${var.MEMO}</td>
 											<td style="width: 60px;" class="center">
 												<c:if test="${var.STATE == '0' }"><span class="label label-important arrowed-in">停用</span></c:if>

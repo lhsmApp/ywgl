@@ -10,9 +10,11 @@
 	<!-- 字段 -->
 	<sql id="Field">
 		STUDENT_ID,	
-		STUDENT_CODE,	
+		STUDENT_CODE,
+		PASSWORD,	
 		STUDENT_NAME,	
-		ACCOUNT,	
+		ACCOUNT,
+		ROLE_ID,	
 		UNIT_CODE,	
 		DEPART_CODE,	
 		MEMO,	
@@ -21,8 +23,10 @@
 	
 	<!-- 字段 -->
 	<sql id="InsertField">
-		STUDENT_CODE,	
-		STUDENT_NAME,	
+		STUDENT_CODE,
+		PASSWORD,	
+		STUDENT_NAME,
+		ROLE_ID,	
 		ACCOUNT,	
 		UNIT_CODE,	
 		DEPART_CODE,	
@@ -32,9 +36,11 @@
 	
 	<!-- 字段值 -->
 	<sql id="FieldValue">
-		#{STUDENT_CODE},	
+		#{STUDENT_CODE},
+		#{PASSWORD},
 		#{STUDENT_NAME},	
 		#{ACCOUNT},	
+		#{ROLE_ID},
 		#{UNIT_CODE},	
 		#{DEPART_CODE},	
 		#{MEMO},	
@@ -66,8 +72,10 @@
 		<include refid="tableName"></include>
 		set 
 			STUDENT_CODE = #{STUDENT_CODE},
+			PASSWORD = #{PASSWORD},
 			STUDENT_NAME = #{STUDENT_NAME},
 			ACCOUNT = #{ACCOUNT},
+			ROLE_ID = #{ROLE_ID},
 			UNIT_CODE = #{UNIT_CODE},
 			DEPART_CODE = #{DEPART_CODE},
 			MEMO = #{MEMO},
@@ -88,7 +96,7 @@
 	
 	<!-- 列表 -->
 	<select id="datalistPage" parameterType="page" resultType="pd">
-		select A.*,unit.DEPART_NAME UNIT_NAME,depart.DEPART_NAME DEPART_NAME,user.USERNAME ACCOUNT_NAME
+		select A.*,unit.DEPART_NAME UNIT_NAME,depart.DEPART_NAME DEPART_NAME,user.USERNAME ACCOUNT_NAME,role.ROLE_NAME
 		from 
 		<include refid="tableName"></include> A
 		
@@ -100,6 +108,9 @@
 		
 		LEFT JOIN sys_user user
 		ON A.ACCOUNT=user.USER_ID
+		
+		LEFT JOIN sys_role role
+		ON A.ROLE_ID=role.ROLE_ID
 		
 		<where>
 			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->

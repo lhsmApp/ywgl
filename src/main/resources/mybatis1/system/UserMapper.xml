@@ -143,6 +143,16 @@
 		</if>
 	</select>
 	
+	<!-- 判断用户名和密码 -->
+	<select id="getStudentInfo" parameterType="pd" resultType="pd">
+		select * from tb_train_student 
+		<where>
+			<if test="STUDENT_CODE!=null and PASSWORD!=null">
+				and STUDENT_CODE = #{STUDENT_CODE} and PASSWORD=#{PASSWORD}
+			</if>
+		</where>
+	</select>
+	
 	<!-- 判断用户名和密码,手机端需要返回单位名称、部门名称、角色名称等 -->
 	<select id="getUserInfoOfApp" parameterType="pd" resultType="pd">
 		select u.*,depart.NAME DEPARTMENT_NAME,unit.NAME UNIT_NAME,role.ROLE_NAME from
@@ -209,6 +219,39 @@
 		on u.UNIT_CODE=e.DEPARTMENT_CODE 
 		where u.STATUS=1 
 		and u.USER_ID=#{USER_ID}
+	</select>
+	
+	<!-- 通过用户ID获取学员信息和角色信息 -->
+	<select id="getStudentAndRoleById" parameterType="String" resultMap="userAndRoleResultMap">
+		select  u.STUDENT_ID USER_ID,
+				u.STUDENT_CODE USERNAME,
+				u.STUDENT_NAME NAME,
+				
+				u.PASSWORD,
+				r.ROLE_ID,
+				r.ROLE_NAME,
+				r.RIGHTS as ROLE_RIGHTS,
+				d.NAME DEPARTMENT_NAME,
+				u.DEPART_CODE DEPARTMENT_ID,
+				
+				e.NAME UNIT_NAME,
+				u.UNIT_CODE,
+				u.STATE STATUS,
+				u.MEMO BZ  
+		from 
+		tb_train_student u 
+		left join 
+		<include refid="roleTableName"></include> r 
+		on u.ROLE_ID=r.ROLE_ID 
+		left join 
+		oa_department d
+		on u.DEPART_CODE=d.DEPARTMENT_CODE 
+		
+		left join 
+		oa_department e
+		on u.UNIT_CODE=e.DEPARTMENT_CODE 
+		where u.STATE=1 
+		and u.STUDENT_ID=#{USER_ID}
 	</select>
 	
 	<!-- 通过USERNAME获取数据 -->

@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.shiro.crypto.hash.SimpleHash;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
@@ -22,6 +23,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fh.controller.base.BaseController;
 import com.fh.controller.common.DictsUtil;
 import com.fh.entity.Page;
+import com.fh.entity.system.Role;
+import com.fh.service.system.role.RoleManager;
 import com.fh.service.system.user.UserManager;
 import com.fh.service.trainBase.TrainDepartManager;
 import com.fh.service.trainBase.TrainStudentManager;
@@ -47,8 +50,11 @@ public class TrainStudentController extends BaseController {
 	@Resource(name="traindepartService")
 	private TrainDepartManager trainDepartService;
 	
-	@Resource(name = "userService")
-	private UserManager userService;
+	/*@Resource(name = "userService")
+	private UserManager userService;*/
+	
+	@Resource(name="roleService")
+	private RoleManager roleService;
 	
 	/**保存
 	 * @param
@@ -60,7 +66,9 @@ public class TrainStudentController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		
+		if(pd.getString("PASSWORD") != null && !"".equals(pd.getString("PASSWORD"))){
+			pd.put("PASSWORD", new SimpleHash("SHA-1", pd.getString("STUDENT_CODE"), pd.getString("PASSWORD")).toString());
+		}
 		trainstudentService.save(pd);
 		mv.addObject("msg","success");
 		mv.setViewName("save_result");
@@ -91,6 +99,9 @@ public class TrainStudentController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
+		if(pd.getString("PASSWORD") != null && !"".equals(pd.getString("PASSWORD"))){
+			pd.put("PASSWORD", new SimpleHash("SHA-1", pd.getString("STUDENT_CODE"), pd.getString("PASSWORD")).toString());
+		}
 		trainstudentService.edit(pd);
 		mv.addObject("msg","success");
 		mv.setViewName("save_result");
@@ -133,27 +144,14 @@ public class TrainStudentController extends BaseController {
 		mv.addObject("msg", "save");
 		mv.addObject("pd", pd);
 		
-		String unitName = "";
-		pd.put("DEPARTMENT_CODE", pd.getString("UNIT_CODE"));
-		PageData dpd = trainDepartService.findByCode(pd);
-		if(null != dpd){
-			unitName = dpd.getString("NAME");
-		}
-		mv.addObject("unitName", unitName);
-		
-		String departName ="";
-		pd.put("DEPARTMENT_CODE", pd.getString("DEPART_CODE"));
-		PageData dpd1 = trainDepartService.findByCode(pd);
-		if(null != dpd1){
-			departName = dpd1.getString("NAME");
-		}
-		mv.addObject("departName", departName);
-		
 		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
 		JSONArray arr = JSONArray.fromObject(trainDepartService.listAllTrainDepartToSelect("0",zdepartmentPdList));
 		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
 		
-		mv.addObject("userList", DictsUtil.getSysUserDic(userService));//用户
+		//mv.addObject("userList", DictsUtil.getSysUserDic(userService));//用户
+		pd.put("ROLE_ID", "1");
+		List<Role> roleList = roleService.listAllRolesByPId(pd);//列出所有系统用户角色
+		mv.addObject("roleList", roleList);
 		return mv;
 	}	
 	
@@ -165,33 +163,38 @@ public class TrainStudentController extends BaseController {
 	public ModelAndView goEdit()throws Exception{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
+		pd.put("ROLE_ID", "1");
+		List<Role> roleList = roleService.listAllRolesByPId(pd);//列出所有系统用户角色
+		mv.addObject("roleList", roleList);
+		
 		pd = this.getPageData();
 		pd = trainstudentService.findById(pd);	//根据ID读取
 		mv.setViewName("trainBase/trainstudent/trainstudent_edit");
 		mv.addObject("msg", "edit");
 		mv.addObject("pd", pd);
 		
-		String unitName = "";
-		pd.put("DEPARTMENT_CODE", pd.getString("UNIT_CODE"));
-		PageData dpd = trainDepartService.findByCode(pd);
-		if(null != dpd){
-			unitName = dpd.getString("NAME");
-		}
-		mv.addObject("unitName", unitName);
-		
 		String departName ="";
-		pd.put("DEPARTMENT_CODE", pd.getString("DEPART_CODE"));
+		pd.put("DEPART_CODE", pd.getString("DEPART_CODE"));
 		PageData dpd1 = trainDepartService.findByCode(pd);
 		if(null != dpd1){
-			departName = dpd1.getString("NAME");
+			departName = dpd1.getString("DEPART_NAME");
 		}
 		mv.addObject("departName", departName);
+		
+		String unitName = "";
+		pd.put("DEPART_CODE", pd.getString("UNIT_CODE"));
+		PageData dpd = trainDepartService.findByCode(pd);
+		if(null != dpd){
+			unitName = dpd.getString("DEPART_NAME");
+		}
+		mv.addObject("unitName", unitName);
 		
 		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
 		JSONArray arr = JSONArray.fromObject(trainDepartService.listAllTrainDepartToSelect("0",zdepartmentPdList));
 		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
 		
-		mv.addObject("userList", DictsUtil.getSysUserDic(userService));//用户
+		//mv.addObject("userList", DictsUtil.getSysUserDic(userService));//用户
+		
 		return mv;
 	}	
 	

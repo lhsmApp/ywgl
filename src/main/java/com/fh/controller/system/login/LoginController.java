@@ -114,25 +114,26 @@ public class LoginController extends BaseController {
 				String USERNAME = KEYDATA[0]; // 登录过来的用户名
 				String PASSWORD = KEYDATA[1]; // 登录过来的密码
 				pd.put("USERNAME", USERNAME);
+				String passwd = new SimpleHash("SHA-1", USERNAME, PASSWORD).toString(); // 密码加密
+				pd.put("PASSWORD", passwd);
 				if (Tools.notEmpty(sessionCode) && sessionCode.equalsIgnoreCase(code)) { // 判断登录验证码
-					String passwd = new SimpleHash("SHA-1", USERNAME, PASSWORD).toString(); // 密码加密
-					pd.put("PASSWORD", passwd);
-					pd = userService.getUserByNameAndPwd(pd); // 根据用户名和密码去读取用户信息
-					if (pd != null) {
-						pd.put("LAST_LOGIN", DateUtil.getTime().toString());
-						userService.updateLastLogin(pd);
+					PageData pdUser = userService.getUserByNameAndPwd(pd); // 根据用户名和密码去读取用户信息
+					if (pdUser != null) {
+						pdUser.put("LAST_LOGIN", DateUtil.getTime().toString());
+						userService.updateLastLogin(pdUser);
 						User user = new User();
-						user.setUSER_ID(StringUtil.toString(pd.get("USER_ID"), ""));
-						user.setUSERNAME(pd.getString("USERNAME"));
-						user.setPASSWORD(pd.getString("PASSWORD"));
-						user.setNAME(pd.getString("NAME"));
-						user.setRIGHTS(pd.getString("RIGHTS"));
-						user.setROLE_ID(pd.getString("ROLE_ID"));
-						user.setDEPARTMENT_ID(pd.getString("DEPARTMENT_ID"));
-						user.setDEPARTMENT_NAME(pd.getString("DEPARTMENT_NAME"));
-						user.setLAST_LOGIN(pd.getString("LAST_LOGIN"));
-						user.setIP(pd.getString("IP"));
-						user.setSTATUS(pd.getString("STATUS"));
+						user.setUSER_TYPE("1");//系统用户
+						user.setUSER_ID(StringUtil.toString(pdUser.get("USER_ID"), ""));
+						user.setUSERNAME(pdUser.getString("USERNAME"));
+						user.setPASSWORD(pdUser.getString("PASSWORD"));
+						user.setNAME(pdUser.getString("NAME"));
+						user.setRIGHTS(pdUser.getString("RIGHTS"));
+						user.setROLE_ID(pdUser.getString("ROLE_ID"));
+						user.setDEPARTMENT_ID(pdUser.getString("DEPARTMENT_ID"));
+						user.setDEPARTMENT_NAME(pdUser.getString("DEPARTMENT_NAME"));
+						user.setLAST_LOGIN(pdUser.getString("LAST_LOGIN"));
+						user.setIP(pdUser.getString("IP"));
+						user.setSTATUS(pdUser.getString("STATUS"));
 
 						session.setAttribute(Const.SESSION_USER, user); // 把用户信息放session中
 						session.removeAttribute(Const.SESSION_SECURITY_CODE); // 清除登录验证码的session
@@ -145,9 +146,36 @@ public class LoginController extends BaseController {
 							errInfo = "身份验证失败！";
 						}
 					} else {
-						errInfo = "usererror"; // 用户名或密码有误
-						logBefore(logger, USERNAME + "登录系统密码或用户名错误");
-						FHLOG.save(USERNAME, "登录系统密码或用户名错误");
+						pd.put("STUDENT_CODE", USERNAME);
+						PageData pdStudent = userService.getStudentByNameAndPwd(pd); // 根据用户名和密码去读取学员信息
+						if (pdStudent != null) {
+							User user = new User();
+							user.setUSER_TYPE("2");//学员
+							user.setUSER_ID(StringUtil.toString(pdStudent.get("STUDENT_ID"), ""));
+							user.setUSERNAME(pdStudent.getString("STUDENT_CODE"));
+							user.setPASSWORD(pdStudent.getString("PASSWORD"));
+							user.setNAME(pdStudent.getString("STUDENT_NAME"));
+							//user.setRIGHTS(pdStudent.getString("RIGHTS"));
+							user.setROLE_ID(pdStudent.getString("ROLE_ID"));
+							user.setDEPARTMENT_ID(pdStudent.getString("DEPART_CODE"));
+							user.setDEPARTMENT_NAME(pdStudent.getString("DEPART_NAME"));
+							user.setSTATUS(pd.getString("STATE"));
+
+							session.setAttribute(Const.SESSION_USER, user); // 把用户信息放session中
+							session.removeAttribute(Const.SESSION_SECURITY_CODE); // 清除登录验证码的session
+							// shiro加入身份验证
+							Subject subject = SecurityUtils.getSubject();
+							UsernamePasswordToken token = new UsernamePasswordToken(USERNAME, PASSWORD);
+							try {
+								subject.login(token);
+							} catch (AuthenticationException e) {
+								errInfo = "身份验证失败！";
+							}
+						}else{
+							errInfo = "usererror"; // 用户名或密码有误
+							logBefore(logger, USERNAME + "登录系统密码或用户名错误");
+							FHLOG.save(USERNAME, "登录系统密码或用户名错误");
+						}
 					}
 				} else {
 					errInfo = "codeerror"; // 验证码输入有误
@@ -251,46 +279,56 @@ public class LoginController extends BaseController {
 			HttpSession session = Jurisdiction.getSession();
 			User user = (User) session.getAttribute(Const.SESSION_USER); // 读取session中的用户信息(单独用户信息)
 			if (user != null) {
-				/*
-				 * User userr =
-				 * (User)session.getAttribute(Const.SESSION_USERROL);
-				 * //读取session中的用户信息(含角色信息) if(null == userr){ user =
-				 * userService.getUserAndRoleById(user.getUSER_ID());
-				 * //通过用户ID读取用户信息和角色信息
-				 * session.setAttribute(Const.SESSION_USERROL, user);
-				 * //存入session }else{ user = userr; }
-				 */
-				user = userService.getUserAndRoleById(StringUtil.toString(user.getUSER_ID(), "1")); // 通过用户ID读取用户信息和角色信息
-				session.setAttribute(Const.SESSION_USERROL, user); // 存入session
-
-				String USERNAME = user.getUSERNAME();
-				Role role = user.getRole(); // 获取用户角色
-				String roleRights = role != null ? role.getRIGHTS() : ""; // 角色权限(菜单权限)
-				session.setAttribute(USERNAME + Const.SESSION_ROLE_RIGHTS, roleRights); // 将角色权限存入session
-				session.setAttribute(Const.SESSION_USERNAME, USERNAME); // 放入用户名到session
-				pd.put("USERNAME", USERNAME); // 读取用户名称
-				this.setAttributeToAllDEPARTMENT_ID(session, USERNAME); // 把用户的组织机构权限放到session里面
-				/*
-				 * List<Menu> allmenuList = new ArrayList<Menu>(); allmenuList =
-				 * this.getAttributeMenu(session, USERNAME, roleRights); //菜单缓存
-				 * List<Menu> menuList = new ArrayList<Menu>(); menuList =
-				 * this.changeMenuF(allmenuList, session, USERNAME, changeMenu);
-				 * //切换菜单
-				 */
-				List<Menu> menuList = null;
-				if (null == session.getAttribute(USERNAME + Const.SESSION_menuList)) {
-					menuList = this.getAttributeMenu(session, USERNAME, roleRights); // 菜单缓存
-				} else {
-					menuList = (List<Menu>) session.getAttribute(USERNAME + Const.SESSION_menuList);
+				if(user.getUSER_TYPE().equals("1")){
+					user = userService.getUserAndRoleById(StringUtil.toString(user.getUSER_ID(), "1")); // 通过用户ID读取用户信息和角色信息
+					session.setAttribute(Const.SESSION_USERROL, user); // 存入session
+	
+					String USERNAME = user.getUSERNAME();
+					Role role = user.getRole(); // 获取用户角色
+					String roleRights = role != null ? role.getRIGHTS() : ""; // 角色权限(菜单权限)
+					session.setAttribute(USERNAME + Const.SESSION_ROLE_RIGHTS, roleRights); // 将角色权限存入session
+					session.setAttribute(Const.SESSION_USERNAME, USERNAME); // 放入用户名到session
+					pd.put("USERNAME", USERNAME); // 读取用户名称
+					this.setAttributeToAllDEPARTMENT_ID(session, USERNAME); // 把用户的组织机构权限放到session里面
+	
+					List<Menu> menuList = null;
+					if (null == session.getAttribute(USERNAME + Const.SESSION_menuList)) {
+						menuList = this.getAttributeMenu(session, USERNAME, roleRights); // 菜单缓存
+					} else {
+						menuList = (List<Menu>) session.getAttribute(USERNAME + Const.SESSION_menuList);
+					}
+	
+					if (null == session.getAttribute(USERNAME + Const.SESSION_QX)) {
+						session.setAttribute(USERNAME + Const.SESSION_QX, this.getUQX(USERNAME));// 按钮权限放到session中
+					}
+					this.getRemortIP(USERNAME); // 更新登录IP
+					mv.setViewName("system/index/main");
+					mv.addObject("user", user);
+					mv.addObject("menuList", menuList);
+				}else{
+					user = userService.getStudentAndRoleById(StringUtil.toString(user.getUSER_ID(), "1")); // 通过用户ID读取用户信息和角色信息
+					session.setAttribute(Const.SESSION_USERROL, user); // 存入session
+	
+					String USERNAME = user.getUSERNAME();
+					Role role = user.getRole(); // 获取用户角色
+					String roleRights = role != null ? role.getRIGHTS() : ""; // 角色权限(菜单权限)
+					session.setAttribute(USERNAME + Const.SESSION_ROLE_RIGHTS, roleRights); // 将角色权限存入session
+					session.setAttribute(Const.SESSION_USERNAME, USERNAME); // 放入用户名到session
+					pd.put("USERNAME", USERNAME); // 读取用户名称
+					
+					List<Menu> menuList = null;
+					if (null == session.getAttribute(USERNAME + Const.SESSION_menuList)) {
+						menuList = this.getAttributeMenu(session, USERNAME, roleRights); // 菜单缓存
+					} else {
+						menuList = (List<Menu>) session.getAttribute(USERNAME + Const.SESSION_menuList);
+					}
+					if (null == session.getAttribute(USERNAME + Const.SESSION_QX)) {
+						session.setAttribute(USERNAME + Const.SESSION_QX, this.getUQX(USERNAME));// 按钮权限放到session中
+					}
+					mv.setViewName("system/index/main");
+					mv.addObject("user", user);
+					mv.addObject("menuList", menuList);
 				}
-
-				if (null == session.getAttribute(USERNAME + Const.SESSION_QX)) {
-					session.setAttribute(USERNAME + Const.SESSION_QX, this.getUQX(USERNAME));// 按钮权限放到session中
-				}
-				this.getRemortIP(USERNAME); // 更新登录IP
-				mv.setViewName("system/index/main");
-				mv.addObject("user", user);
-				mv.addObject("menuList", menuList);
 			} else {
 				mv.setViewName("system/index/login");// session失效后跳转登录页面
 			}

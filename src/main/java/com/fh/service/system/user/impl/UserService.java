@@ -35,6 +35,15 @@ public class UserService implements UserManager{
 		return (PageData)dao.findForObject("UserMapper.getUserInfo", pd);
 	}
 	
+	/**登录判断,查询学员表
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public PageData getStudentByNameAndPwd(PageData pd)throws Exception{
+		return (PageData)dao.findForObject("UserMapper.getStudentInfo", pd);
+	}
+	
 	/**登录判断，手机端
 	 * @param pd
 	 * @return
@@ -59,6 +68,15 @@ public class UserService implements UserManager{
 	 */
 	public User getUserAndRoleById(String USER_ID) throws Exception {
 		return (User) dao.findForObject("UserMapper.getUserAndRoleById", USER_ID);
+	}
+	
+	/**通过用户ID获取学员信息和角色信息
+	 * @param USER_ID
+	 * @return
+	 * @throws Exception
+	 */
+	public User getStudentAndRoleById(String USER_ID) throws Exception {
+		return (User) dao.findForObject("UserMapper.getStudentAndRoleById", USER_ID);
 	}
 	
 	/**通过USERNAEME获取数据

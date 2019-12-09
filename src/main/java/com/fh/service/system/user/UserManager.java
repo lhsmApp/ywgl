@@ -24,6 +24,13 @@ public interface UserManager {
 	 */
 	public PageData getUserByNameAndPwd(PageData pd)throws Exception;
 	
+	/**登录判断,查询学员表
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public PageData getStudentByNameAndPwd(PageData pd)throws Exception;
+	
 	/**登录判断,手机端
 	 * @param pd
 	 * @return
@@ -43,6 +50,13 @@ public interface UserManager {
 	 * @throws Exception
 	 */
 	public User getUserAndRoleById(String USER_ID) throws Exception;
+	
+	/**通过用户ID获取学员信息和角色信息
+	 * @param USER_ID
+	 * @return
+	 * @throws Exception
+	 */
+	public User getStudentAndRoleById(String USER_ID) throws Exception;
 	
 	/**通过USERNAEME获取数据
 	 * @param pd

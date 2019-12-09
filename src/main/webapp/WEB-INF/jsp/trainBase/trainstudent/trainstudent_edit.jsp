@@ -48,10 +48,14 @@
 								<td><input type="text" name="STUDENT_CODE" id="STUDENT_CODE" value="${pd.STUDENT_CODE}" maxlength="20" placeholder="这里输入学员编号" title="学员编号" style="width:98%;"/></td>
 							</tr>
 							<tr>
+								<td style="width:100px;text-align: right;padding-top: 13px;">密码:</td>
+								<td><input type="text" name="PASSWORD" id="PASSWORD" maxlength="20" placeholder="这里输入密码" title="密码" style="width:98%;"/></td>
+							</tr>
+							<tr>
 								<td style="width:100px;text-align: right;padding-top: 13px;">学员名称:</td>
 								<td><input type="text" name="STUDENT_NAME" id="STUDENT_NAME" value="${pd.STUDENT_NAME}" maxlength="30" placeholder="这里输入学员名称" title="学员名称" style="width:98%;"/></td>
 							</tr>
-							<tr>
+							<%-- <tr>
 								<td style="width:100px;text-align: right;padding-top: 13px;">负责人账户:</td>
 								<td>
 									<select class="chosen-select form-control" name="ACCOUNT"
@@ -61,6 +65,20 @@
 											<c:forEach items="${userList}" var="user">
 												<option value="${user.USER_ID}"
 													<c:if test="${pd.ACCOUNT==user.USER_ID}">selected</c:if>>${user.USERNAME}</option>
+											</c:forEach>
+									</select>
+								</td>
+							</tr> --%>
+							<tr>
+								<td style="width:100px;text-align: right;padding-top: 13px;">角色:</td>
+								<td>
+									<select class="chosen-select form-control" name="ROLE_ID"
+										id="ROLE_ID" data-placeholder="请选择角色"
+										style="vertical-align: top; height: 32px; width: 150px;">
+											<option value="">请选择角色</option>
+											<c:forEach items="${roleList}" var="role">
+												<option value="${role.ROLE_ID}"
+													<c:if test="${pd.ROLE_ID==role.ROLE_ID}">selected</c:if>>${role.ROLE_NAME}</option>
 											</c:forEach>
 									</select>
 								</td>
@@ -141,6 +159,16 @@
 				$("#STUDENT_CODE").focus();
 			return false;
 			}
+			if($("#PASSWORD").val()==""){
+				$("#PASSWORD").tips({
+					side:3,
+		            msg:'请输入密码',
+		            bg:'#AE81FF',
+		            time:2
+		        });
+				$("#PASSWORD").focus();
+			return false;
+			}
 			if($("#STUDENT_NAME").val()==""){
 				$("#STUDENT_NAME").tips({
 					side:3,
@@ -151,7 +179,7 @@
 				$("#STUDENT_NAME").focus();
 			return false;
 			}
-			if($("#ACCOUNT").val()==""){
+			/* if($("#ACCOUNT").val()==""){
 				$("#ACCOUNT").tips({
 					side:3,
 		            msg:'请选择员工账户',
@@ -159,6 +187,16 @@
 		            time:2
 		        });
 				$("#ACCOUNT").focus();
+			return false;
+			} */
+			if($("#ROLE_ID").val()==""){
+				$("#ROLE_ID").tips({
+					side:3,
+		            msg:'请选择角色',
+		            bg:'#AE81FF',
+		            time:2
+		        });
+				$("#ROLE_ID").focus();
 			return false;
 			}
 			if($("#UNIT_CODE").val()==""){
