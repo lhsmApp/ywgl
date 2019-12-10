@@ -92,7 +92,7 @@
 									<th style="width:120px; background-color: #BEBEC5; text-align: center;">中国石油邮箱</th>
 								</tr>
 							</thead>												
-							<tbody>
+							<tbody id="tobodyUser">
 							<!-- 开始循环 -->	
 							<c:choose>
 									<c:when test="${not empty varList}">
@@ -159,7 +159,7 @@
 			$(top.hangge());//关闭加载状态
 		
 			//检索
-			function tosearch(){
+			function tosearch1111(){
 				top.jzts();
 				$("#Form").submit();
 			}
@@ -176,8 +176,56 @@
 			})
 		
 			  function toExcel(){
-				window.location.href='<%=basePath%>grcperson/excel.do';    
+				window.location.href='<%=basePath%>grcperson/listStatisticExcel.do?busiDate='+$("#busiDate").val()+'&UNIT_CODE='+$("#UNIT_CODE").val();  
 			    }
+			//检索
+			function tosearch(){
+				$("#tobodyUser tr").remove();
+				top.jzts();
+				var busiDate = $("#busiDate").val();
+				var unitCode = $("#UNIT_CODE").val();				
+				$.ajax({
+						type: "POST",
+						url: '<%=basePath%>grcperson/queryDataList.do',
+				    	data: {busiDate:busiDate,UNIT_CODE:unitCode},
+						dataType:'json',
+						cache: false,
+						success: function(data){
+							if(data.length>0){
+								$.each(data, function(i, item){
+							    	var html = '';
+							        html += setUserTable(item,i+1);
+								$("#tobodyUser").append(html);
+							 	});
+							}
+							top.hangge();
+						}
+				});
+			}
+			function setUserTable(item,i){
+				rows='<tr><td class="center" style="width: 30px;">'
+					+i 
+					+"</td><td class='center'>"
+					+item.STAFF_CODE
+					+"</td><td class='center'>"
+					+item.STAFF_NAME
+					+"</td><td class='center'>"
+					+item.STAFF_UNIT
+					+"</td><td class='center'>"
+					+item.STAFF_DEPART
+					+"</td><td class='center'>"
+					+item.STAFF_POSITION
+					+"</td><td class='center'>"
+					+item.STAFF_JOB
+					+"</td><td class='center'>"
+					+item.PHONE
+					+"</td><td class='center'>"
+					+item.MOBILE_PHONE
+					+"</td><td class='center'>"
+					+item.ZSY_MAIL
+					+'</td></tr>';				
+					return rows;	
+			}		
 			function initComplete(){
 					//下拉树
 					var defaultNodes = {"treeNodes":${zTreeNodes}};
