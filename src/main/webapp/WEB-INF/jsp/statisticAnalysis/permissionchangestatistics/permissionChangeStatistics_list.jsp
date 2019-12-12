@@ -80,6 +80,7 @@
 						<table id="simple-table" class="mtable" style="margin-top:20px; width: 100%;">	
 							<thead>
 									<tr>
+									<th style="background-color: #BEBEC5; text-align: center;">序号</th>
 									<th style="background-color: #BEBEC5; text-align: center;">公司名称</th>
 									<th  style="background-color: #BEBEC5; text-align: center;">帐号延期</th>
 									<th  style="background-color: #BEBEC5; text-align: center;">帐号解除锁定</th>
@@ -93,12 +94,13 @@
 									<th style="background-color: #BEBEC5; text-align: center;">变更人次</th>
 								</tr>
 							</thead>												
-							<tbody>
+							<tbody id="tobodyUser">
 							<!-- 开始循环 -->	
 							<c:choose>
 									<c:when test="${not empty varList}">
 										<c:forEach items="${varList}" var="var" varStatus="vs">	
 										<tr>
+											<td class='center'>${vs.index+1}</td>
 											<td class='center'>${var.COMPANY_NAME}</td>
 											<td class='center'>${var.ACCOUNT_DELAY}</td>
 											<td class='center'>${var.ACCOUNT_UNLOCK}</td>
@@ -153,11 +155,9 @@
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 	<script type="text/javascript">
-             var year_month=undefined;
-             var choiceWeek=undefined;
 			$(top.hangge());//关闭加载状态				
 			//检索
-			function tosearch(){
+			function tosearch111(){
 				top.jzts();	
 				var value=$("#WEEKS").val();
 				opts= $("#WEEKS").find("option[value="+ value +"]").text();
@@ -185,7 +185,6 @@
 				getWeeks();
 			});
 			function getWeeks(){
-		        console.log(1);
 				$('#WEEKS').empty();
 				$.ajax({
 					   type: "POST",
@@ -209,17 +208,69 @@
 					            }
 					  });
 			}
+			//检索
+			function tosearch(){
+				$("#tobodyUser tr").remove();
+				top.jzts();	
+				var value=$("#WEEKS").val();
+				opts= $("#WEEKS").find("option[value="+ value +"]").text();
+				$("#WEEKSTEXT").val(opts);	
+				var yearMonth=$("#YEAR_MONTH").val();
+				$.ajax({
+						type: "POST",
+						url: '<%=basePath%>permissionchangestatistics/queryPermissonData.do',
+				    	data: {WEEKS:value,WEEKSTEXT:opts,YEAR_MONTH:yearMonth},
+						dataType:'json',
+						cache: false,
+						success: function(data){
+							if(data.length>0){
+								$.each(data, function(i, item){
+							    	var html = '';
+							        html += setUserTable(item,i+1);
+								$("#tobodyUser").append(html);
+							 	});
+							}
+							top.hangge();
+						}
+				});
+			}
+			function setUserTable(item,i){
+				rows='<tr><td class="center" style="width: 30px;">'
+					+i 
+					+"</td><td class='center'>"
+					+item.COMPANY_NAME
+					+"</td><td class='center'>"
+					+item.ACCOUNT_DELAY
+					+"</td><td class='center'>"
+					+item.ACCOUNT_UNLOCK
+					+"</td><td class='center'>"
+					+item.NEW_ROLES
+					+"</td><td class='center'>"
+					+item.DELETE_ROLES
+					+"</td><td class='center'>"
+					+item.NEW_ACCOUNTS
+					+"</td><td class='center'>"
+					+item.DELETE_ACCOUNTS
+					+"</td><td class='center'>"
+					+item.NEW_FMIS_ROLES
+					+"</td><td class='center'>"
+					+item.DELETE_FMIS_ROLES
+					+"</td><td class='center'>"
+					+item.CHANGE_USER_GROUP
+					+"</td><td class='center'>"
+					+item.CHANGE_PERSON_COUNT
+					+'</td></tr>';				
+					return rows;	
+			}	
 			  function toExcel(){
 					var value=$("#WEEKS").val();
 					var level_select=$("#level_select").val();
-					opts= $("#WEEKS").find("option[value="+ value +"]").text();
-					$("#WEEKSTEXT").val(opts);		
-				    	window.location.href='<%=basePath%>permissionchangestatistics/qxStatisticExcel.do?START_DATE='+$("#YEAR_MONTH").val()
-			             +'&WEEKSTEXT='+$("#WEEKSTEXT").val()
-			             +'&level_select='+level_select;
+					opts= $("#WEEKS").find("option[value="+ value +"]").text();		
+				    	window.location.href='<%=basePath%>permissionchangestatistics/qxStatisticExcel.do?YEAR_MONTH='+$("#YEAR_MONTH").val()
+			             +'&WEEKSTEXT='+opts
+			             +'&WEEKS='+value;
     
 			    }
 	</script>
-
 </body>
 </html>

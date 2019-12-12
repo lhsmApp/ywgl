@@ -96,6 +96,7 @@
 						<table id="simple-table" class="mtable" style="margin-top:20px; width: 100%;">	
 							<thead>
 								<tr>
+									<th rowspan="2" style="background-color: #BEBEC5; text-align: center;">序号</th>
 									<th rowspan="2" style="background-color: #BEBEC5; text-align: center;">类型</th>
 									<th colspan="4" style="background-color: #BEBEC5; text-align: center;">本周</th>
 									<th colspan="4" style="background-color: #BEBEC5; text-align: center;">本年</th>
@@ -106,18 +107,19 @@
 									<th  style="background-color: #BEBEC5; text-align: center;">已解决</th>
 									<th  style="background-color: #BEBEC5; text-align: center;">未解决</th>
 									<th style="background-color: #BEBEC5; text-align: center;">解决率</th>
-										<th style="background-color: #BEBEC5; text-align: center;">问题数</th>
+									<th style="background-color: #BEBEC5; text-align: center;">问题数</th>
 									<th  style="background-color: #BEBEC5; text-align: center;">已解决</th>
 									<th  style="background-color: #BEBEC5; text-align: center;">未解决</th>
 									<th style="background-color: #BEBEC5; text-align: center;">解决率</th>
 								</tr>
 							</thead>												
-							<tbody>
+						<tbody id="tobodyUser">
 							<!-- 开始循环 -->	
 							<c:choose>
 									<c:when test="${not empty varList}">
 										<c:forEach items="${varList}" var="var" varStatus="vs">	
 										<tr>
+											<td class='center'>${vs.index+1}</td>
 											<td class='center'>${var.TYPE}</td>
 											<td class='center'>${var.NOWWEEK}</td>
 											<td class='center'>${var.NOWWEEKSOLVE}</td>
@@ -172,12 +174,9 @@
 	<script type="text/javascript">
 	 var gridBase_selector = "#jqGridBase";  
 	    var pagerBase_selector = "#jqGridBasePager";  
-			$(top.hangge());//关闭加载状态
-			console.log('css');
-			
-				
+			$(top.hangge());//关闭加载状态				
 			//检索
-			function tosearch(){
+			function tosearch111(){
 				top.jzts();	
 				var value=$("#WEEKS").val();
 				opts= $("#WEEKS").find("option[value="+ value +"]").text();
@@ -205,7 +204,6 @@
 				getWeeks();
 			});
 			function getWeeks(){
-		        console.log(1);
 				$('#WEEKS').empty();
 				$.ajax({
 					   type: "POST",
@@ -229,13 +227,64 @@
 					            }
 					  });
 			}
+			//检索
+			function tosearch(){
+				$("#tobodyUser tr").remove();
+				top.jzts();	
+				var value=$("#WEEKS").val();
+				opts= $("#WEEKS").find("option[value="+ value +"]").text();
+				$("#WEEKSTEXT").val(opts);	
+				var yearMonth=$("#YEAR_MONTH").val();
+			    var level_select= $(".level_select:checked").val();
+				$.ajax({
+						type: "POST",
+						url: '<%=basePath%>mbp/queryProblemStatistic.do',
+				    	data: {WEEKS:value,WEEKSTEXT:opts,YEAR_MONTH:yearMonth,level_select:level_select},
+						dataType:'json',
+						cache: false,
+						success: function(data){
+							if(data.length>0){
+								$.each(data, function(i, item){
+							    	var html = '';
+							        html += setUserTable(item,i+1);
+								$("#tobodyUser").append(html);
+							 	});
+							}
+							top.hangge();
+						}
+				});
+			}
+			function setUserTable(item,i){
+				rows='<tr><td class="center" style="width: 30px;">'
+					+i 
+					+"</td><td class='center'>"
+					+item.TYPE
+					+"</td><td class='center'>"
+					+item.NOWWEEK
+					+"</td><td class='center'>"
+					+item.NOWWEEKSOLVE
+					+"</td><td class='center'>"
+					+item.NOWWEEKNOTSOLVE
+					+"</td><td class='center'>"
+					+item.NOWWEEKSOLVERATE
+					+"</td><td class='center'>"
+					+item.NOWYEAR
+					+"</td><td class='center'>"
+					+item.NOWYEARSOLVE
+					+"</td><td class='center'>"
+					+item.NOWYEARNOTSOLVE
+					+"</td><td class='center'>"
+					+item.NOWYEARSOLVERATE+'%'
+					+'</td></tr>';				
+					return rows;	
+			}
 			  function toExcel(){
 					var value=$("#WEEKS").val();
-					var level_select=$("#level_select").val();
-					opts= $("#WEEKS").find("option[value="+ value +"]").text();
-					$("#WEEKSTEXT").val(opts);		
-				    	window.location.href='<%=basePath%>mbp/listProStatisticExcel.do?START_DATE='+$("#YEAR_MONTH").val()
-			             +'&WEEKSTEXT='+$("#WEEKSTEXT").val()
+					opts= $("#WEEKS").find("option[value="+ value +"]").text();	
+				    var level_select= $(".level_select:checked").val();
+				    	window.location.href='<%=basePath%>mbp/listProStatisticExcel.do?YEAR_MONTH='
+				    	+$("#YEAR_MONTH").val()
+			             +'&WEEKSTEXT='+opts
 			             +'&level_select='+level_select;
     
 			    }

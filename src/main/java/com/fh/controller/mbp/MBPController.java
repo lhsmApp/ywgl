@@ -894,6 +894,32 @@ public class MBPController extends BaseController {
 		mv.addObject("varList",varList);
 		return mv;
 	}
+	/**显示问题统计列表
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/queryProblemStatistic")
+	public @ResponseBody List<PageData> queryProblemStatistic(Page page) throws Exception{
+		PageData pd = this.getPageData();
+		if(null!=pd.getString("YEAR_MONTH")&&!"".equals(pd.getString("YEAR_MONTH"))){
+			pd.put("YEAR", pd.getString("YEAR_MONTH").split("-")[0]);
+		}
+		if(null!=pd.getString("WEEKSTEXT")&&!"".equals(pd.getString("WEEKSTEXT"))){
+			String startDate=pd.getString("WEEKSTEXT").substring(4, 14);
+			String endDate=pd.getString("WEEKSTEXT").substring(15, 25);
+			pd.put("START_DATE", startDate);
+			pd.put("END_DATE", endDate);
+		}
+		page.setPd(pd);	
+		List<PageData> varList=new ArrayList<PageData>();
+		if("1".equals(pd.getString("level_select"))){
+			varList =mbpService.listProModStatistic(page);
+		}
+		if("2".equals(pd.getString("level_select"))){
+			varList =mbpService.listProTypeStatistic(page);
+		}
+		return varList;
+	}
 	/**按月获取周及日期范围
 	 * @param
 	 * @throws Exception
@@ -945,6 +971,15 @@ public class MBPController extends BaseController {
 			ModelAndView mv = new ModelAndView();
 			PageData pd = new PageData();
 			pd = this.getPageData();
+			if(null!=pd.getString("YEAR_MONTH")&&!"".equals(pd.getString("YEAR_MONTH"))){
+				pd.put("YEAR", pd.getString("YEAR_MONTH").split("-")[0]);
+			}
+			if(null!=pd.getString("WEEKSTEXT")&&!"".equals(pd.getString("WEEKSTEXT"))){
+				String startDate=pd.getString("WEEKSTEXT").substring(4, 14);
+				String endDate=pd.getString("WEEKSTEXT").substring(15, 25);
+				pd.put("START_DATE", startDate);
+				pd.put("END_DATE", endDate);
+			}
 			page.setPd(pd);
 			Map<String,Object> dataMap = new HashMap<String,Object>();
 			List<String> titles = new ArrayList<String>();
@@ -968,12 +1003,12 @@ public class MBPController extends BaseController {
 			List<PageData> varList = new ArrayList<PageData>();
 			for(int i=0;i<varOList.size();i++){
 				PageData vpd = new PageData();
-				vpd.put("var1", varOList.get(i).getString(""));
-				vpd.put("var2", varOList.get(i).getString("NOWWEEK"));
+				vpd.put("var1", varOList.get(i).get("TYPE").toString());
+				vpd.put("var2", varOList.get(i).get("NOWWEEK").toString());
 				vpd.put("var3", varOList.get(i).get("NOWWEEKSOLVE").toString());
 				vpd.put("var4", varOList.get(i).get("NOWWEEKNOTSOLVE").toString());
 				vpd.put("var5", varOList.get(i).get("NOWWEEKSOLVERATE").toString());
-				vpd.put("var6", varOList.get(i).getString("NOWYEAR"));
+				vpd.put("var6", varOList.get(i).get("NOWYEAR").toString());
 				vpd.put("var7", varOList.get(i).get("NOWYEARSOLVE").toString());
 				vpd.put("var8", varOList.get(i).get("NOWYEARNOTSOLVE").toString());
 				vpd.put("var9", varOList.get(i).get("NOWYEARSOLVERATE").toString());

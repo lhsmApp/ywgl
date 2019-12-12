@@ -388,6 +388,29 @@ public class PermissionChangeStatisticsController extends BaseController {
 		mv.addObject("varList",varList);
 		return mv;
 	}
+	/**显示问题统计列表
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/queryPermissonData")
+	public @ResponseBody List<PageData> queryPermissonData(Page page) throws Exception{
+		PageData pd = this.getPageData();
+		page.setPd(pd);	
+		if(null!=pd.getString("YEAR_MONTH")&&!"".equals(pd.getString("YEAR_MONTH"))){
+			pd.put("YEAR_MONTH", pd.getString("YEAR_MONTH").replace("-", ""));
+		}
+		if(null!=pd.getString("WEEKSTEXT")&&!"".equals(pd.getString("WEEKSTEXT"))){
+			String startDate=pd.getString("WEEKSTEXT").substring(4, 14);
+			String endDate=pd.getString("WEEKSTEXT").substring(15, 25);
+			pd.put("START_DATE", startDate.replace("-", ""));
+			pd.put("END_DATE", endDate.replace("-", ""));
+			//当选择"周"时，按周查询，不按期间查询
+			pd.put("YEAR_MONTH","");
+		}
+		List<PageData> varList=permissionchangestatisticsService.listByUnit(page);
+
+		return varList;
+	}
 	/**按月获取周及日期范围
 	 * @param
 	 * @throws Exception
