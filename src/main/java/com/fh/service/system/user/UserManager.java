@@ -65,6 +65,14 @@ public interface UserManager {
 	 */
 	public PageData findByUsername(PageData pd)throws Exception;
 	
+	/**通过StudentCode获取数据
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public PageData findByStudentCode(PageData pd)throws Exception;
+	
+	
 	/**列出某角色下的所有用户
 	 * @param pd
 	 * @return

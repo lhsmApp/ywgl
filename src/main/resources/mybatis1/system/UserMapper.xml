@@ -267,6 +267,22 @@
 		</if>
 	</select>
 	
+	<!-- 通过StudentCode获取数据 -->
+	<select id="findByStudentCode" parameterType="pd" resultType="pd" >
+		select STUDENT_ID USER_ID,
+		STUDENT_CODE USERNAME,
+		PASSWORD,
+		STUDENT_NAME NAME,
+		ROLE_ID,
+		DEPART_CODE DEPARTMENT_ID,
+		UNIT_CODE,
+		STATE STATUS,
+		MEMO BZ
+		from tb_train_student
+		where 
+			STUDENT_CODE = #{USERNAME}
+	</select>
+	
 	<!-- 存入IP -->
 	<update id="saveIP" parameterType="pd" >
 		update 
