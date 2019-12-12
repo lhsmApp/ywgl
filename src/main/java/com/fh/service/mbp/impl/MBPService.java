@@ -196,7 +196,14 @@ public class MBPService implements MBPManager{
 	public List<PageData> getProLog(PageData pd)throws Exception{
 		return (List<PageData>)dao.findForList("MBPMapper.getProLog", pd);
 	}
-	
+	/**获取问题回复信息各节点时间信息
+	 * @param pd
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PageData> getProLogTime(Page page)throws Exception{
+		return (List<PageData>)dao.findForList("MBPMapper.getProLogTime", page);
+	}
 	/**
 	 * 增加问题日志
 	 * @param pd

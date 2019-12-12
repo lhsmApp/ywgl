@@ -150,7 +150,11 @@ public interface MBPManager{
 	 * @throws Exception
 	 */
 	public List<PageData> getProLog(PageData pd)throws Exception;
-	
+	/**获取问题回复信息各节点时间信息
+	 * @param pd
+	 * @throws Exception
+	 */
+	public List<PageData> getProLogTime(Page page)throws Exception;
 	/**问题日志
 	 * @param pd
 	 * @throws Exception
