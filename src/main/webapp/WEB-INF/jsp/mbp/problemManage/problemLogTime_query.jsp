@@ -44,7 +44,7 @@
 					<div class="row">
 						<div class="col-xs-12">							
 						<!-- 检索  -->
-						<form action="approvalconfig/listBgStatistic.do" method="post" name="Form" id="Form">
+						<form action="mbp/queryProblemLog.do" method="post" name="Form" id="Form">
 							<table style="margin-top:5px;">
 								<tr>							
 								<td style="padding-left:2px;">
@@ -167,7 +167,7 @@
 				todayHighlight: true
 			});
 			//检索
-			function tosearch111(){
+			function tosearch(){
 				top.jzts();
 				$("#Form").submit();
 			}
@@ -175,7 +175,7 @@
 				
 			})
 		//检索
-			function tosearch(){
+			function tosearch111(){
 				$("#tobodyUser tr").remove();
 				top.jzts();	
 				var startDate=$("#START_DATE").val();
