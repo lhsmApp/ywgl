@@ -405,19 +405,105 @@ public class ERPUserListController extends BaseController {
 		mv.addObject("varList", varList);
 		mv.addObject("pd", pd);
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
-		
-		//***********************************************************
-		Map_SetColumnsList.put("USER_NAME", new TmplConfigDetail("USER_NAME", "用户名", "1", false));
-		Map_SetColumnsList.put("NAME", new TmplConfigDetail("NAME", "姓名", "1", false));
-		Map_SetColumnsList.put("USER_GROUP", new TmplConfigDetail("USER_GROUP", "用户组", "1", false));
-		Map_SetColumnsList.put("ACCOUNT_STATE", new TmplConfigDetail("ACCOUNT_STATE", "账号状态", "1", false));
-		Map_SetColumnsList.put("START_DATE", new TmplConfigDetail("START_DATE", "有效期自", "1", false));
-		Map_SetColumnsList.put("END_DATE", new TmplConfigDetail("END_DATE", "有效期至", "1", false));
-		Map_SetColumnsList.put("DEPART", new TmplConfigDetail("DEPART", "单位", "1", false));
-		Map_SetColumnsList.put("JOB", new TmplConfigDetail("JOB", "岗位", "1", false));
-		Map_SetColumnsList.put("CHANGE_NO", new TmplConfigDetail("CHANGE_NO", "变更序号", "1", false));
-		Map_SetColumnsList.put("PHONE", new TmplConfigDetail("PHONE", "电话", "1", false));
-
 		return mv;
 	}
-}
+	/**查询统计列表
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/queryDataList")
+	public @ResponseBody List<PageData>  queryDataList(Page page) throws Exception{
+
+		PageData pd = new PageData();
+		User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		String roleId=user.getRole().getROLE_ID();
+		pd = this.getPageData();
+		pd.put("USER_DEPART",user.getUNIT_CODE());	
+		pd.put("KEY_CODE","xxglbRoles");
+		String roleStr = sysconfigService.getSysConfigByKey(pd);
+		String[] roles=null;
+		if(StringUtil.isNotEmpty(roleStr)) {
+			if(roleStr.contains(",")){
+				roles=roleStr.split(",");
+			}else{
+				roles=new String[1];
+				roles[0]=roleStr;
+			}
+		}
+		//判断是否为信息管理部管理角色
+				if(null!=roles){
+					if(Arrays.asList(roles).contains(roleId)){
+						//若是则树形结构加载所有单位，并将用户单位查询条件更新为所选单位
+						pd.put("USER_DEPART",pd.getString("UNIT_CODE"));					
+					}
+				}	
+		page.setPd(pd);
+		List<PageData>	varList = erpuserlistService.list(page);	//列出GRCPerson列表		
+		return varList;
+	}
+	 /**导出用户清单统计表到excel
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/listStatisticExcel")
+	public ModelAndView listStatisticExcel(Page page) throws Exception{
+		ModelAndView mv = new ModelAndView();
+		PageData pd = new PageData();
+		User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		String roleId=user.getRole().getROLE_ID();
+		pd = this.getPageData();
+		pd.put("USER_DEPART",user.getUNIT_CODE());	
+		pd.put("KEY_CODE","xxglbRoles");
+		String roleStr = sysconfigService.getSysConfigByKey(pd);
+		String[] roles=null;
+		if(StringUtil.isNotEmpty(roleStr)) {
+			if(roleStr.contains(",")){
+				roles=roleStr.split(",");
+			}else{
+				roles=new String[1];
+				roles[0]=roleStr;
+			}
+		}
+		//判断是否为信息管理部管理角色
+				if(null!=roles){
+					if(Arrays.asList(roles).contains(roleId)){
+						//若是则树形结构加载所有单位，并将用户单位查询条件更新为所选单位
+						pd.put("USER_DEPART",pd.getString("UNIT_CODE"));					
+					}
+				}	
+		page.setPd(pd);
+		Map<String,Object> dataMap = new HashMap<String,Object>();
+		List<String> titles = new ArrayList<String>();
+		titles.add("用户名");	//1
+		titles.add("姓名");	//2
+		titles.add("用户组");	//3
+		titles.add("账号状态");	//4
+		titles.add("有效期自");	//5
+		titles.add("有效期至");	//6
+		titles.add("单位");	//7
+		titles.add("岗位");	//8
+		titles.add("变更序号");	//9
+		titles.add("电话");	//10
+		dataMap.put("titles", titles);
+		List<PageData>	varOList = erpuserlistService.list(page);	//列出GRCPerson列表	
+		List<PageData> varList = new ArrayList<PageData>();
+		for(int i=0;i<varOList.size();i++){
+			PageData vpd = new PageData();
+			vpd.put("var1", varOList.get(i).getString("USER_NAME"));	    //1
+			vpd.put("var2", varOList.get(i).get("NAME").toString());	    //2
+			vpd.put("var3", varOList.get(i).get("USER_GROUP").toString());	    //3
+			vpd.put("var4", varOList.get(i).get("ACCOUNT_STATE").toString());	    //4
+			vpd.put("var5", varOList.get(i).getString("START_DATE"));	    //5
+			vpd.put("var6", varOList.get(i).get("END_DATE").toString());	    //6
+			vpd.put("var7", varOList.get(i).get("DEPART").toString());	    //7
+			vpd.put("var8", varOList.get(i).get("JOB").toString());	    //8
+			vpd.put("var9", varOList.get(i).get("CHANGE_NO").toString());	    //9
+			vpd.put("var10", varOList.get(i).get("PHONE").toString());	    //10
+			varList.add(vpd);
+		}
+		dataMap.put("varList", varList);
+		ObjectExcelView erv = new ObjectExcelView();
+		mv = new ModelAndView(erv,dataMap);
+		return mv;
+	}
+}	

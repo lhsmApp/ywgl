@@ -87,13 +87,13 @@
 									<th style="background-color: #BEBEC5; text-align: center;">帐号状态</th>
 									<th style="background-color: #BEBEC5; text-align: center;">有效期自</th>
 									<th style="background-color: #BEBEC5; text-align: center;">有效期至</th>
-									<th  style="background-color: #BEBEC5; text-align: center;">单位</th>
+									<th style="background-color: #BEBEC5; text-align: center;">单位</th>
 									<th style="background-color: #BEBEC5; text-align: center;">岗位</th>
 									<th style="background-color: #BEBEC5; text-align: center;">变更序号</th>
 									<th style="background-color: #BEBEC5; text-align: center;">电话</th>
 								</tr>
 							</thead>												
-							<tbody>
+							<tbody id="tobodyUser">
 							<!-- 开始循环 -->	
 							<c:choose>
 									<c:when test="${not empty varList}">
@@ -161,10 +161,10 @@
 			$(top.hangge());//关闭加载状态
 		
 			//检索
-			function tosearch(){
+			function tosearch9999(){
 				top.jzts();
 				$("#Form").submit();
-			}
+			}			
 			$(function() {
 				//日期
 				$("#busiDate").datepicker({
@@ -175,11 +175,60 @@
 				    minViewMode: 1,
 				    maxViewMode: 1
 				});
-			})
-		
+			})		
 			  function toExcel(){
-					window.location.href='<%=basePath%>erpuserlist/excel.do';	    
+					window.location.href='<%=basePath%>erpuserlist/listStatisticExcel.do?busiDate='+$("#busiDate").val()+'&UNIT_CODE='+$("#UNIT_CODE").val();	    
 			    }
+			//检索
+			function tosearch(){
+				$("#tobodyUser tr").remove();
+				top.jzts();
+				var busiDate = $("#busiDate").val();
+				var unitCode = $("#UNIT_CODE").val();				
+				$.ajax({
+						type: "POST",
+						url: '<%=basePath%>erpuserlist/queryDataList.do',
+				    	data: {busiDate:busiDate,UNIT_CODE:unitCode},
+						dataType:'json',
+						cache: false,
+						success: function(data){
+							if(data.length>0){
+								$.each(data, function(i, item){
+							    	var html = '';
+							        html += setUserTable(item,i+1);
+								$("#tobodyUser").append(html);
+							 	});
+							}
+							top.hangge();
+						}
+				});
+			}
+			function setUserTable(item,i){
+				rows='<tr><td class="center" style="width: 30px;">'
+					+i 
+					+"</td><td class='center'>"
+					+item.USER_NAME
+					+"</td><td class='center'>"
+					+item.NAME
+					+"</td><td class='center'>"
+					+item.USER_GROUP
+					+"</td><td class='center'>"
+					+item.ACCOUNT_STATE
+					+"</td><td class='center'>"
+					+item.START_DATE
+					+"</td><td class='center'>"
+					+item.END_DATE
+					+"</td><td class='center'>"
+					+item.DEPART
+					+"</td><td class='center'>"
+					+item.JOB
+					+"</td><td class='center'>"
+					+item.CHANGE_NO
+					+"</td><td class='center'>"
+					+item.PHONE
+					+'</td></tr>';				
+					return rows;	
+			}			
 			function initComplete(){
 					//下拉树
 					var defaultNodes = {"treeNodes":${zTreeNodes}};

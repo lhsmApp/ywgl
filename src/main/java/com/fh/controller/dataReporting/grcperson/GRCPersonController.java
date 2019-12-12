@@ -412,18 +412,106 @@ public class GRCPersonController extends BaseController {
 		mv.setViewName("statisticAnalysis/grcdatastatistics/grcDataStatistic_list");
 		mv.addObject("varList", varList);
 		mv.addObject("pd", pd);
-		
-		//***********************************************************
-		Map_SetColumnsList.put("STAFF_CODE", new TmplConfigDetail("STAFF_CODE", "员工编号", "1", false));
-		Map_SetColumnsList.put("STAFF_NAME", new TmplConfigDetail("STAFF_NAME", "员工姓名", "1", false));
-		Map_SetColumnsList.put("STAFF_UNIT", new TmplConfigDetail("STAFF_UNIT", "单位", "1", false));
-		Map_SetColumnsList.put("STAFF_DEPART", new TmplConfigDetail("STAFF_DEPART", "部门", "1", false));
-		Map_SetColumnsList.put("STAFF_POSITION", new TmplConfigDetail("STAFF_POSITION", "职务", "1", false));
-		Map_SetColumnsList.put("STAFF_JOB", new TmplConfigDetail("STAFF_JOB", "岗位", "1", false));
-		Map_SetColumnsList.put("PHONE", new TmplConfigDetail("PHONE", "办公室电话", "1", false));
-		Map_SetColumnsList.put("MOBILE_PHONE", new TmplConfigDetail("MOBILE_PHONE", "手机号", "1", false));
-		Map_SetColumnsList.put("ZSY_MAIL", new TmplConfigDetail("ZSY_MAIL", "中国石油邮箱", "1", false));
-
 		return mv;
 	}
+	/**列表
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/queryDataList")
+	public @ResponseBody List<PageData>  queryDataList(Page page) throws Exception{
+		logBefore(logger, Jurisdiction.getUsername()+"列表GRCPerson");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		String roleId=user.getRole().getROLE_ID();
+		pd = this.getPageData();
+		pd.put("USER_DEPART",user.getUNIT_CODE());
+		pd.put("STAFF_UNIT",pd.getString("UNIT_CODE"));
+		pd.put("KEY_CODE","xxglbRoles");
+		String roleStr = sysconfigService.getSysConfigByKey(pd);
+		String[] roles=null;
+		if(StringUtil.isNotEmpty(roleStr)) {
+			if(roleStr.contains(",")){
+				roles=roleStr.split(",");
+			}else{
+				roles=new String[1];
+				roles[0]=roleStr;
+			}
+		}
+		//判断是否为信息管理部管理角色
+		if(null!=roles){
+			if(Arrays.asList(roles).contains(roleId)){
+				pd.put("USER_DEPART",pd.getString("UNIT_CODE"));				
+			}
+		}	
+		page.setPd(pd);
+		List<PageData>	varList = grcpersonService.list(page);	//列出GRCPerson列表
+		mv.addObject("varList", varList);
+		mv.addObject("pd", pd);
+		return varList;
+	}
+	 /**导出GRC人员信息统计表到excel
+		 * @param
+		 * @throws Exception
+		 */
+		@RequestMapping(value="/listStatisticExcel")
+		public ModelAndView listStatisticExcel(Page page) throws Exception{
+			ModelAndView mv = new ModelAndView();
+			PageData pd = new PageData();
+			User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+			String roleId=user.getRole().getROLE_ID();
+			pd = this.getPageData();
+			pd.put("USER_DEPART",user.getUNIT_CODE());	
+			pd.put("KEY_CODE","xxglbRoles");
+			String roleStr = sysconfigService.getSysConfigByKey(pd);
+			String[] roles=null;
+			if(StringUtil.isNotEmpty(roleStr)) {
+				if(roleStr.contains(",")){
+					roles=roleStr.split(",");
+				}else{
+					roles=new String[1];
+					roles[0]=roleStr;
+				}
+			}
+			//判断是否为信息管理部管理角色
+					if(null!=roles){
+						if(Arrays.asList(roles).contains(roleId)){
+							//若是则树形结构加载所有单位，并将用户单位查询条件更新为所选单位
+							pd.put("USER_DEPART",pd.getString("UNIT_CODE"));					
+						}
+					}	
+			page.setPd(pd);
+			Map<String,Object> dataMap = new HashMap<String,Object>();
+			List<String> titles = new ArrayList<String>();
+			titles.add("员工编号");	//1
+			titles.add("员工姓名");	//2
+			titles.add("单位");	//3
+			titles.add("部门");	//4
+			titles.add("职务");	//5
+			titles.add("岗位");	//6
+			titles.add("办公室电话");	//7
+			titles.add("手机号");	//8
+			titles.add("中国石油邮箱");	//9
+			dataMap.put("titles", titles);
+			List<PageData>	varOList = grcpersonService.list(page);	//列出GRCPerson列表	
+			List<PageData> varList = new ArrayList<PageData>();
+			for(int i=0;i<varOList.size();i++){
+				PageData vpd = new PageData();
+				vpd.put("var1", varOList.get(i).getString("STAFF_CODE"));	    //1
+				vpd.put("var2", varOList.get(i).get("STAFF_NAME").toString());	    //2
+				vpd.put("var3", varOList.get(i).get("STAFF_UNIT").toString());	    //3
+				vpd.put("var4", varOList.get(i).get("STAFF_DEPART").toString());	    //4
+				vpd.put("var5", varOList.get(i).getString("STAFF_POSITION"));	    //5
+				vpd.put("var6", varOList.get(i).get("STAFF_JOB").toString());	    //6
+				vpd.put("var7", varOList.get(i).get("PHONE").toString());	    //7
+				vpd.put("var8", varOList.get(i).get("MOBILE_PHONE").toString());	    //8
+				vpd.put("var9", varOList.get(i).get("ZSY_MAIL").toString());	    //9
+				varList.add(vpd);
+			}
+			dataMap.put("varList", varList);
+			ObjectExcelView erv = new ObjectExcelView();
+			mv = new ModelAndView(erv,dataMap);
+			return mv;
+		}
 }

@@ -94,7 +94,7 @@
 									<th style="background-color: #BEBEC5; text-align: center;">解决率</th>
 								</tr>
 							</thead>												
-							<tbody>
+							<tbody id="tobodyUser" >
 							<!-- 开始循环 -->	
 							<c:choose>
 									<c:when test="${not empty varList}">
@@ -168,14 +168,50 @@
 				todayHighlight: true
 			});
 			//检索
-			function tosearch(){
+			function tosearch111(){
 				top.jzts();
 				$("#Form").submit();
 			}
 			$(function() {
 				
 			})
-		
+		//检索
+			function tosearch(){
+				$("#tobodyUser tr").remove();
+				top.jzts();	
+				var startDate=$("#START_DATE").val();
+				var endDate=$("#END_DATE").val();
+				var unitCode = $("#UNIT_CODE").val();
+				$.ajax({
+						type: "POST",
+						url: '<%=basePath%>approvalconfig/listStatistic.do',
+				    	data: {START_DATE:startDate,END_DATE:endDate,UNIT_CODE:unitCode},
+						dataType:'json',
+						cache: false,
+						success: function(data){
+							if(data.length>0){
+								$.each(data, function(i, item){
+							    	var html = '';
+							        html += setUserTable(item,i+1);
+								$("#tobodyUser").append(html);
+							 	});
+							}
+							top.hangge();
+						}
+				});
+			}
+			function setUserTable(item,i){
+				rows="<tr></td><td class='center'>"
+					+item.BUSINESS_NAME
+					+"</td><td class='center'>"
+					+item.total
+					+"</td><td class='center'>"
+					+item.solve
+					+"</td><td class='center'>"
+					+item.solverate
+					+'</td></tr>';				
+					return rows;	
+			}
 			  function toExcel(){
 				    	window.location.href='<%=basePath%>approvalconfig/listStatisticExcel.do?START_DATE='+$("#START_DATE").val()
 			             +'&END_DATE='+$("#END_DATE").val()

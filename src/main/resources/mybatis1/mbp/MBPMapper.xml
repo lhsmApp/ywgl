@@ -473,4 +473,45 @@
 		SUM(CASE WHEN SUBSTRING(BILL_DATE,1,4)=#{pd.YEAR} AND t.PRO_STATE<![CDATA[<>]]>'1'  THEN 1 ELSE 0 END) AS NOWYEARNOTSOLVE
 		FROM tb_problem_info t GROUP BY t.PRO_TYPE_ID) AS t
 	</select>
+		<!-- 获取问题日志各节点信息列表，用于时效分析 -->
+	<select id="getProLogTime" parameterType="page" resultType="pd">	
+	SELECT tb_problem_log.PRO_CODE PRO_CODE,WTFQ,WTFP,WTLQ,WTHF,WTGB,WTQX FROM
+	tb_problem_log
+	LEFT JOIN 
+	(SELECT PRO_CODE,PRO_EVENT,MAX(CREATE_DATE) WTFQ FROM tb_problem_log WHERE  PRO_EVENT='发起问题' GROUP BY PRO_CODE) A
+	ON tb_problem_log.PRO_CODE=A.PRO_CODE  
+	 LEFT JOIN
+	(SELECT PRO_CODE,PRO_EVENT,MAX(CREATE_DATE) WTFP FROM tb_problem_log WHERE  PRO_EVENT='问题分配' GROUP BY PRO_CODE) B
+	 ON tb_problem_log.PRO_CODE=B.PRO_CODE  
+	 LEFT JOIN
+	(SELECT PRO_CODE,PRO_EVENT,MAX(CREATE_DATE) WTLQ FROM tb_problem_log WHERE  PRO_EVENT='问题领取' GROUP BY PRO_CODE) C
+	ON tb_problem_log.PRO_CODE=C.PRO_CODE  
+	LEFT JOIN
+	(SELECT PRO_CODE,PRO_EVENT,MAX(CREATE_DATE) WTHF FROM tb_problem_log WHERE  PRO_EVENT='问题回复' GROUP BY PRO_CODE) D
+	ON tb_problem_log.PRO_CODE=D.PRO_CODE  
+	LEFT JOIN
+	(SELECT PRO_CODE,PRO_EVENT,MAX(CREATE_DATE) WTGB FROM tb_problem_log WHERE  PRO_EVENT='关闭问题' GROUP BY PRO_CODE) E
+	ON tb_problem_log.PRO_CODE=E.PRO_CODE  
+	LEFT JOIN
+	(SELECT PRO_CODE,PRO_EVENT,MAX(CREATE_DATE) WTQX FROM tb_problem_log WHERE  PRO_EVENT='取消关闭问题' GROUP BY PRO_CODE) F
+	ON tb_problem_log.PRO_CODE=F.PRO_CODE  
+	LEFT JOIN
+	(SELECT PRO_CODE,PRO_EVENT,MAX(CREATE_DATE) WTCH FROM tb_problem_log WHERE  PRO_EVENT='问题撤回' GROUP BY PRO_CODE) G
+	ON tb_problem_log.PRO_CODE=G.PRO_CODE  
+	LEFT JOIN
+	(SELECT PRO_CODE,PRO_EVENT,MAX(CREATE_DATE) WTFPQX FROM tb_problem_log WHERE  PRO_EVENT='问题分配取消' GROUP BY PRO_CODE) H
+	ON tb_problem_log.PRO_CODE=H.PRO_CODE  
+	LEFT JOIN
+	(SELECT PRO_CODE,PRO_EVENT,MAX(CREATE_DATE) WTLQQX FROM tb_problem_log WHERE  PRO_EVENT='问题领取取消' GROUP BY PRO_CODE) I
+	ON tb_problem_log.PRO_CODE=I.PRO_CODE  	
+	WHERE 
+	1=1
+		<if test="pd.START_DATE!=null and pd.START_DATE!='' "> 
+			  and  SUBSTRING(CREATE_DATE,1,10) &gt;= #{pd.START_DATE} 
+		</if>
+		<if test="pd.END_DATE!=null and pd.END_DATE!=''"> 
+			 and  SUBSTRING(CREATE_DATE,1,10) &lt;= #{pd.END_DATE} 
+		</if> 
+			GROUP BY tb_problem_log.PRO_CODE
+	</select>
 </mapper>

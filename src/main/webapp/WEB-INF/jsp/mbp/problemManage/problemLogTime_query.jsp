@@ -44,26 +44,25 @@
 					<div class="row">
 						<div class="col-xs-12">							
 						<!-- 检索  -->
-						<form action="grcperson/queryList.do" method="post" name="Form" id="Form">
+						<form action="approvalconfig/listBgStatistic.do" method="post" name="Form" id="Form">
 							<table style="margin-top:5px;">
 								<tr>							
 								<td style="padding-left:2px;">
 									<div class="input-group input-group-sm">
-										<input type="text" id="busiDate" name="busiDate"  class="form-control"   placeholder="请选择查询年月" />
+										<input type="text" id="START_DATE" name="START_DATE"  class="form-control"  data-date-format="yyyy-mm-dd" placeholder="请选择开始日期"/>
 										<span class="input-group-addon">
 											<i class="ace-icon fa fa-calendar" ></i>
 										</span>
 									</div>
-								</td>								
-	<!-- 								<td style="padding-left:2px;"><input class="span10 date-picker" name="START_DATE" id="START_DATE"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="开始日期" title="开始日期"/></td> -->
-	<!-- 								<td style="padding-left:2px;"><input class="span10 date-picker" name="END_DATE" name="END_DATE"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="结束日期"/></td> -->
-									<td><label> <i class="ace-icon  bigger-110"></i>请选择单位：</label> </td>
-									<td>
-											<div style="margin:10px 0px;">
-													<input type="hidden" name="UNIT_CODE" id="UNIT_CODE"   />
-													<div class="selectTree" id="selectTree" style="float:none;display:block;"></div>												
-												</div>				
-										</td>	
+								</td>	
+								<td style="padding-left:2px;">
+									<div class="input-group input-group-sm">
+										<input type="text" id="END_DATE" name="END_DATE"  class="form-control"  data-date-format="yyyy-mm-dd" placeholder="请选择结束日期"/>
+										<span class="input-group-addon">
+											<i class="ace-icon fa fa-calendar" ></i>
+										</span>
+									</div>
+								</td>							
 									<td style="padding-left:2px;">																		 
 													<button type="button" class="btn btn-info btn-xs" onclick="tosearch();">
 													    <i class="ace-icon fa fa-search bigger-110"></i>
@@ -80,34 +79,30 @@
 						<table id="simple-table" class="mtable" style="margin-top:20px; width: 100%;">	
 							<thead>
 								<tr>
-									<th style="width:60px; height:30px; background-color: #BEBEC5; text-align: center;">序号</th>
-									<th style="width:110px; height:30px; background-color: #BEBEC5; text-align: center;">员工编号</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">员工姓名</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">单位</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">部门</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">职务</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">岗位</th>
-									<th style="width:100px; background-color: #BEBEC5; text-align: center;">办公室电话</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">手机号</th>
-									<th style="width:120px; background-color: #BEBEC5; text-align: center;">中国石油邮箱</th>
+									<th style="background-color: #BEBEC5; text-align: center;">问题编号</th>
+									<th style="background-color: #BEBEC5; text-align: center;">问题发起时间</th>
+									<th style="background-color: #BEBEC5; text-align: center;">发起-分配处理时间</th>
+									<th  style="background-color: #BEBEC5; text-align: center;">问题分配时间</th>
+									<th style="background-color: #BEBEC5; text-align: center;">分配-领取处理时间</th>
+									<th style="background-color: #BEBEC5; text-align: center;">问题领取时间</th>
+									<th style="background-color: #BEBEC5; text-align: center;">问题回复时间</th>
+									<th style="background-color: #BEBEC5; text-align: center;">问题关闭时间</th>
 								</tr>
 							</thead>												
-							<tbody id="tobodyUser">
+							<tbody id="tobodyUser" >
 							<!-- 开始循环 -->	
 							<c:choose>
 									<c:when test="${not empty varList}">
 										<c:forEach items="${varList}" var="var" varStatus="vs">	
 										<tr>
-											<td class='center'>${vs.index+1}</td>
-											<td class='center'>${var.STAFF_CODE}</td>
-											<td class='center'>${var.STAFF_NAME}</td>
-											<td class='center'>${var.STAFF_UNIT}</td>
-											<td class='center'>${var.STAFF_DEPART}</td>
-											<td class='center'>${var.STAFF_POSITION}</td>
-											<td class='center'>${var.STAFF_JOB}</td>
-											<td class='center'>${var.PHONE}</td>
-											<td class='center'>${var.MOBILE_PHONE}</td>
-											<td class='center'>${var.ZSY_MAIL}</td>
+											<td class='center'>${var.PRO_CODE}</td>
+											<td class='center'>${var.WTFQ}</td>
+											<td class='center'>${var.FQ_FP}</td>										
+											<td class='center'>${var.WTFP}</td>
+											<td class='center'>${var.LQ_FP}</td>
+											<td class='center'>${var.WTLQ}</td>
+											<td class='center'>${var.WTHF}</td>
+											<td class='center'>${var.WTGB}</td>
 										</tr>									
 									</c:forEach>																		
 								</c:when>
@@ -157,37 +152,39 @@
 	 var gridBase_selector = "#jqGridBase";  
 	    var pagerBase_selector = "#jqGridBasePager";  
 			$(top.hangge());//关闭加载状态
-		
+			//开始日期
+			$("#START_DATE" ).datepicker({
+			showOtherMonths: true,
+			selectOtherMonths: false,
+			autoclose: true,
+			todayHighlight: true
+			});
+				//结束日期
+				$("#END_DATE" ).datepicker({
+				showOtherMonths: true,
+				selectOtherMonths: false,
+				autoclose: true,
+				todayHighlight: true
+			});
 			//检索
-			function tosearch1111(){
+			function tosearch111(){
 				top.jzts();
 				$("#Form").submit();
 			}
 			$(function() {
-				//日期
-				$("#busiDate").datepicker({
-					format: 'yyyymm',
-				    language: "zh-CN",
-				    autoclose:true,
-				    startView: 1,
-				    minViewMode: 1,
-				    maxViewMode: 1
-				});
+				
 			})
-		
-			  function toExcel(){
-				window.location.href='<%=basePath%>grcperson/listStatisticExcel.do?busiDate='+$("#busiDate").val()+'&UNIT_CODE='+$("#UNIT_CODE").val();  
-			    }
-			//检索
+		//检索
 			function tosearch(){
 				$("#tobodyUser tr").remove();
-				top.jzts();
-				var busiDate = $("#busiDate").val();
-				var unitCode = $("#UNIT_CODE").val();				
+				top.jzts();	
+				var startDate=$("#START_DATE").val();
+				var endDate=$("#END_DATE").val();
+				var unitCode = $("#UNIT_CODE").val();
 				$.ajax({
 						type: "POST",
-						url: '<%=basePath%>grcperson/queryDataList.do',
-				    	data: {busiDate:busiDate,UNIT_CODE:unitCode},
+						url: '<%=basePath%>approvalconfig/listStatistic.do',
+				    	data: {START_DATE:startDate,END_DATE:endDate,UNIT_CODE:unitCode},
 						dataType:'json',
 						cache: false,
 						success: function(data){
@@ -203,44 +200,22 @@
 				});
 			}
 			function setUserTable(item,i){
-				rows='<tr><td class="center" style="width: 30px;">'
-					+i 
+				rows="<tr></td><td class='center'>"
+					+item.BUSINESS_NAME
 					+"</td><td class='center'>"
-					+item.STAFF_CODE
+					+item.total
 					+"</td><td class='center'>"
-					+item.STAFF_NAME
+					+item.solve
 					+"</td><td class='center'>"
-					+item.STAFF_UNIT
-					+"</td><td class='center'>"
-					+item.STAFF_DEPART
-					+"</td><td class='center'>"
-					+item.STAFF_POSITION
-					+"</td><td class='center'>"
-					+item.STAFF_JOB
-					+"</td><td class='center'>"
-					+item.PHONE
-					+"</td><td class='center'>"
-					+item.MOBILE_PHONE
-					+"</td><td class='center'>"
-					+item.ZSY_MAIL
+					+item.solverate
 					+'</td></tr>';				
 					return rows;	
-			}		
-			function initComplete(){
-					//下拉树
-					var defaultNodes = {"treeNodes":${zTreeNodes}};
-					//绑定change事件
-					$("#selectTree").bind("change",function(){
-
-						if(!$(this).attr("relValue")){
-					    }else{
-							$("#UNIT_CODE").val($(this).attr("relValue"));	
-					    }
-					});
-					//赋给data属性
-					$("#selectTree").data("data",defaultNodes);  
-					$("#selectTree").render();
-				}	
+			}
+			  function toExcel(){
+				    	window.location.href='<%=basePath%>approvalconfig/listStatisticExcel.do?START_DATE='+$("#START_DATE").val()
+			             +'&END_DATE='+$("#END_DATE").val()
+			             +'&UNIT_CODE='+$("#UNIT_CODE").val();	    
+			    }
 	</script>
 
 

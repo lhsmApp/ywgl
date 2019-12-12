@@ -824,7 +824,58 @@ public class MBPController extends BaseController {
 		pd.put("CLIENT_IP", ip);
 		mbpService.addLog(pd);
 	}
-		
+	/**显示问题日志各节点时间信息
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/queryProblemLog")
+	public ModelAndView queryProblemLog(Page page) throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = this.getPageData();
+//		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+//		String userId = user.getUSER_ID();
+//		pd.put("BILL_USER", userId);
+		page.setPd(pd);
+		List<PageData> varList = mbpService.getProLogTime(page);
+		for(PageData p:varList){
+			if((!"".equals(p.getString("WTFQ"))&&null!=(p.getString("WTFQ")))&&(!"".equals(p.getString("WTFP"))&&null!=(p.getString("WTFP")))){
+				DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+				 Date date2  = format1.parse(p.getString("WTFP"));
+				 Date date1  = format1.parse(p.getString("WTFQ"));
+				String fqpf=getDatePoor(date2,date1);
+				p.put("FQ_FP", fqpf);
+			}
+			if((!"".equals(p.getString("WTLQ"))&&null!=(p.getString("WTLQ")))&&(!"".equals(p.getString("WTFP"))&&null!=(p.getString("WTFP")))){
+				DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+				 Date date2  = format1.parse(p.getString("WTLQ"));
+				 Date date1  = format1.parse(p.getString("WTFP"));
+				String lqfp=getDatePoor(date2,date1);
+				p.put("LQ_FP", lqfp);
+			}
+		}
+		mv.addObject("pd", pd);
+		mv.addObject("varList", varList);		
+		mv.setViewName("mbp/problemManage/problemLogTime_query");
+		return mv;
+	}
+	public static String getDatePoor(Date endDate, Date nowDate) {
+		long nd = 1000 * 24 * 60 * 60;
+		long nh = 1000 * 60 * 60;
+		long nm = 1000 * 60;
+		long ns=1000;
+		// 获得两个时间的毫秒时间差异
+		long diff = endDate.getTime() - nowDate.getTime();
+		// 计算差多少天
+		long day = diff / nd;
+		// 计算差多少小时
+		long hour = diff % nd / nh;
+		// 计算差多少分钟
+		long min = diff % nd % nh / nm;
+		// 计算差多少秒//输出结果
+		 long sec = diff % nd % nh % nm / ns;
+		return day + "天" + hour + "小时" + min + "分钟"+sec+"秒";
+
+		}
 	 /**导出到excel
 	 * @param
 	 * @throws Exception
@@ -894,6 +945,32 @@ public class MBPController extends BaseController {
 		mv.addObject("varList",varList);
 		return mv;
 	}
+	/**显示问题统计列表
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/queryProblemStatistic")
+	public @ResponseBody List<PageData> queryProblemStatistic(Page page) throws Exception{
+		PageData pd = this.getPageData();
+		if(null!=pd.getString("YEAR_MONTH")&&!"".equals(pd.getString("YEAR_MONTH"))){
+			pd.put("YEAR", pd.getString("YEAR_MONTH").split("-")[0]);
+		}
+		if(null!=pd.getString("WEEKSTEXT")&&!"".equals(pd.getString("WEEKSTEXT"))){
+			String startDate=pd.getString("WEEKSTEXT").substring(4, 14);
+			String endDate=pd.getString("WEEKSTEXT").substring(15, 25);
+			pd.put("START_DATE", startDate);
+			pd.put("END_DATE", endDate);
+		}
+		page.setPd(pd);	
+		List<PageData> varList=new ArrayList<PageData>();
+		if("1".equals(pd.getString("level_select"))){
+			varList =mbpService.listProModStatistic(page);
+		}
+		if("2".equals(pd.getString("level_select"))){
+			varList =mbpService.listProTypeStatistic(page);
+		}
+		return varList;
+	}
 	/**按月获取周及日期范围
 	 * @param
 	 * @throws Exception
@@ -945,6 +1022,15 @@ public class MBPController extends BaseController {
 			ModelAndView mv = new ModelAndView();
 			PageData pd = new PageData();
 			pd = this.getPageData();
+			if(null!=pd.getString("YEAR_MONTH")&&!"".equals(pd.getString("YEAR_MONTH"))){
+				pd.put("YEAR", pd.getString("YEAR_MONTH").split("-")[0]);
+			}
+			if(null!=pd.getString("WEEKSTEXT")&&!"".equals(pd.getString("WEEKSTEXT"))){
+				String startDate=pd.getString("WEEKSTEXT").substring(4, 14);
+				String endDate=pd.getString("WEEKSTEXT").substring(15, 25);
+				pd.put("START_DATE", startDate);
+				pd.put("END_DATE", endDate);
+			}
 			page.setPd(pd);
 			Map<String,Object> dataMap = new HashMap<String,Object>();
 			List<String> titles = new ArrayList<String>();
@@ -968,12 +1054,12 @@ public class MBPController extends BaseController {
 			List<PageData> varList = new ArrayList<PageData>();
 			for(int i=0;i<varOList.size();i++){
 				PageData vpd = new PageData();
-				vpd.put("var1", varOList.get(i).getString(""));
-				vpd.put("var2", varOList.get(i).getString("NOWWEEK"));
+				vpd.put("var1", varOList.get(i).get("TYPE").toString());
+				vpd.put("var2", varOList.get(i).get("NOWWEEK").toString());
 				vpd.put("var3", varOList.get(i).get("NOWWEEKSOLVE").toString());
 				vpd.put("var4", varOList.get(i).get("NOWWEEKNOTSOLVE").toString());
 				vpd.put("var5", varOList.get(i).get("NOWWEEKSOLVERATE").toString());
-				vpd.put("var6", varOList.get(i).getString("NOWYEAR"));
+				vpd.put("var6", varOList.get(i).get("NOWYEAR").toString());
 				vpd.put("var7", varOList.get(i).get("NOWYEARSOLVE").toString());
 				vpd.put("var8", varOList.get(i).get("NOWYEARNOTSOLVE").toString());
 				vpd.put("var9", varOList.get(i).get("NOWYEARSOLVERATE").toString());
