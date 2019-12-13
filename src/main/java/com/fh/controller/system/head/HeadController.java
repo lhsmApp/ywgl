@@ -81,8 +81,10 @@ public class HeadController extends BaseController {
 			}*/
 			pd.put("USERNAME", Jurisdiction.getUsername());//当前登录者用户名
 			pds = userService.findByUsername(pd);
-			session.setAttribute(Const.SESSION_userpds, pds);
+			if(pds==null)
+				pds=userService.findByStudentCode(pd);
 			
+			session.setAttribute(Const.SESSION_userpds, pds);
 			pdList.add(pds);
 			map.put("list", pdList);
 			PageData pdPhoto = userphotoService.findById(pds);

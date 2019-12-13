@@ -10,7 +10,7 @@
 	<!-- 字段 -->
 	<sql id="Field">
 		RPT_DUR,
-		BILL_OFF,
+		<!-- BILL_OFF, -->
 		DEPT_CODE,
 		TABLE_CODE,
 		COL_CODE,
@@ -20,7 +20,7 @@
 		COL_HIDE,
 		COL_SUM,
 		COL_AVE,
-		COL_TRANSFER,
+		<!-- COL_TRANSFER, -->
 		COL_FORMULA,
 		CAL_ORDER,
 		NUM_DGT,
@@ -29,7 +29,7 @@
 	<!-- 字段 -->
 	<sql id="FieldTmpl">
 		RPT_DUR,
-		BILL_OFF,
+		<!-- BILL_OFF, -->
 		DEPT_CODE,
 		TABLE_CODE,
 		COL_CODE,
@@ -38,14 +38,14 @@
 		DICT_TRANS,
 		COL_HIDE,
 		COL_SUM,
-		COL_AVE,
-		COL_TRANSFER
+		COL_AVE<!-- ,
+		COL_TRANSFER -->
 	</sql>
 
 	<!-- 字段 -->
 	<sql id="FieldTmplCopy">
 		RPT_DUR,
-		BILL_OFF,
+		<!-- BILL_OFF, -->
 		DEPT_CODE,
 		TABLE_CODE,
 		COL_CODE,
@@ -55,7 +55,7 @@
 		COL_HIDE,
 		COL_SUM,
 		COL_AVE,
-		COL_TRANSFER,
+		<!-- COL_TRANSFER, -->
 		COL_FORMULA,
 		CAL_ORDER,
 		NUM_DGT,
@@ -63,7 +63,7 @@
 	</sql>
 
 	<sql id="FieldColumns">
-		BILL_OFF,
+		<!-- BILL_OFF, -->
 		RPT_DUR,
 		DEPT_CODE,
 		TABLE_CODE,
@@ -74,7 +74,7 @@
 		COL_HIDE,
 		COL_SUM,
 		COL_AVE,
-		COL_TRANSFER,
+		<!-- COL_TRANSFER, -->
 		COL_FORMULA,
 		CAL_ORDER,
 		NUM_DGT,
@@ -123,8 +123,8 @@
 		and
 		TABLE_CODE =
 		#{TABLE_CODE}
-		and
-		BILL_OFF = #{BILL_OFF}
+		<!-- and
+		BILL_OFF = #{BILL_OFF} -->
 		and
 		COL_CODE = #{COL_CODE}
 	</delete>
@@ -140,8 +140,8 @@
 		and
 		TABLE_CODE =
 		#{TABLE_CODE}
-		and
-		BILL_OFF = #{BILL_OFF}
+		<!-- and
+		BILL_OFF = #{BILL_OFF} -->
 	</delete>
 
 	<!-- 修改 -->
@@ -174,8 +174,8 @@
 		and
 		TABLE_CODE =
 		#{TABLE_CODE}
-		and
-		BILL_OFF = #{BILL_OFF}
+		<!-- and
+		BILL_OFF = #{BILL_OFF} -->
 		and
 		COL_CODE = #{COL_CODE}
 	</update>
@@ -221,9 +221,9 @@
 			<if test="pd.TABLE_CODE!= null and pd.TABLE_CODE != ''"><!-- 检索 -->
 				and TABLE_CODE = #{pd.TABLE_CODE}
 			</if>
-			<if test="pd.BILL_OFF!= null and pd.BILL_OFF != ''"><!-- 检索 -->
+			<!-- <if test="pd.BILL_OFF!= null and pd.BILL_OFF != ''">检索
 				and BILL_OFF = #{pd.BILL_OFF}
-			</if>
+			</if> -->
 			<if test="pd.RPT_DUR!= null and pd.RPT_DUR != ''"><!-- 检索 -->
 				and RPT_DUR = #{pd.RPT_DUR}
 			</if>
@@ -234,7 +234,7 @@
 	<select id="listAll" parameterType="pd" resultType="pd">
 		SELECT
 		a.RPT_DUR,
-		a.BILL_OFF,
+		<!-- a.BILL_OFF, -->
 		a.DEPT_CODE,
 		a.TABLE_CODE,
 		a.COL_CODE,
@@ -244,7 +244,7 @@
 		a.COL_HIDE,
 		a.COL_SUM,
 		a.COL_AVE,
-		a.COL_TRANSFER,
+		<!-- a.COL_TRANSFER, -->
 		a.COL_FORMULA,
 		a.CAL_ORDER,
 		a.NUM_DGT,
@@ -270,9 +270,9 @@
 			<if test="TABLE_CODE!= null and TABLE_CODE != ''">
 				and a.TABLE_CODE = #{TABLE_CODE}
 			</if>
-			<if test="BILL_OFF!= null and BILL_OFF != ''">
+			<!-- <if test="BILL_OFF!= null and BILL_OFF != ''">
 				and a.BILL_OFF = #{BILL_OFF}
-			</if>
+			</if> -->
 			<if test="RPT_DUR!= null and RPT_DUR != ''">
 				and a.RPT_DUR = #{RPT_DUR}
 			</if>
@@ -318,7 +318,7 @@
 		from
 		<include refid="tableName"></include>
 		where DEPT_CODE = #{DEPT_CODE}
-		and BILL_OFF = #{BILL_OFF}
+		<!-- and BILL_OFF = #{BILL_OFF} -->
 		and
 		UPPER(TABLE_CODE) = UPPER(#{TABLE_CODE})
 		and RPT_DUR in (select
@@ -341,12 +341,12 @@
 	<select id="temporaryList" parameterType="page" resultType="pd">
 		SELECT column_name AS COL_CODE, column_comment AS COL_NAME,
 		#{pd.RPT_DUR} as RPT_DUR,
-		#{pd.BILL_OFF} as BILL_OFF,
+		<!-- #{pd.BILL_OFF} as BILL_OFF, -->
 		#{pd.DEPARTMENT_CODE} AS DEPT_CODE,#{pd.TABLE_CODE} AS
 		TABLE_CODE,#{pd.DNAME} AS DNAME,#{pd.TABLE_NAME} AS TABLE_NAME,
 		'0' AS
 		DISP_ORDER,'0' AS DICT_TRANS,'1' AS COL_HIDE,'0' AS COL_SUM,'0' AS
-		COL_AVE,'0' AS COL_TRANSFER
+		COL_AVE<!-- ,'0' AS COL_TRANSFER -->
 		FROM
 		information_schema.columns
 		WHERE
@@ -363,12 +363,12 @@
 		    DICT_TRANS =#{DICT_TRANS}, 
 		    COL_HIDE = #{COL_HIDE}, 
 			COL_SUM = #{COL_SUM}, 
-			COL_AVE =#{COL_AVE}, 
-			COL_TRANSFER =#{COL_TRANSFER} 
+			COL_AVE =#{COL_AVE}<!-- , 
+			COL_TRANSFER =#{COL_TRANSFER}  -->
 		where RPT_DUR = #{RPT_DUR}
 		and DEPT_CODE = #{DEPT_CODE}
 		and TABLE_CODE = #{TABLE_CODE}
-		and BILL_OFF = #{BILL_OFF}
+		<!-- and BILL_OFF = #{BILL_OFF} -->
 		and COL_CODE = #{COL_CODE}
 	</insert>
 
@@ -384,9 +384,9 @@
 			separator=", " close=" ">
 			<if test="item!=null">
 				<trim prefix="(" suffix=")" suffixOverrides=",">
-					#{item.RPT_DUR},#{item.BILL_OFF},#{item.DEPT_CODE},#{item.TABLE_CODE},
+					#{item.RPT_DUR},<!-- #{item.BILL_OFF}, -->#{item.DEPT_CODE},#{item.TABLE_CODE},
 					#{item.COL_CODE},#{item.COL_NAME},#{item.DISP_ORDER},#{item.DICT_TRANS},
-					#{item.COL_HIDE},#{item.COL_SUM},#{item.COL_AVE},#{item.COL_TRANSFER}
+					#{item.COL_HIDE},#{item.COL_SUM},#{item.COL_AVE}<!-- ,#{item.COL_TRANSFER} -->
 					<!-- <include refid="FieldValue"></include> -->
 				</trim>
 			</if>
@@ -418,9 +418,9 @@
 		<foreach item="item" index="index" collection="DEPT_CODES"
 			open=" " separator="union all " close=" ">
 			<if test="item!=null">
-				SELECT RPT_DUR,BILL_OFF,#{item} AS 'DEPT_CODE',
+				SELECT RPT_DUR,<!-- BILL_OFF, -->#{item} AS 'DEPT_CODE',
 				TABLE_CODE,COL_CODE,COL_NAME,DISP_ORDER,DICT_TRANS,
-				COL_HIDE,COL_SUM,COL_AVE,COL_TRANSFER,COL_FORMULA,
+				COL_HIDE,COL_SUM,COL_AVE,<!-- COL_TRANSFER, -->COL_FORMULA,
 				CAL_ORDER,NUM_DGT,DEC_PRECISION
 				FROM tb_tmpl_config_detail WHERE DEPT_CODE=#{DEPT_CODE} AND
 				TABLE_CODE=#{TABLE_CODE}
@@ -450,12 +450,12 @@
 	<select id="listNeedSpecial" parameterType="pd"
 		resultType="pd">
 		select
-		TYPE_CODE,TABLE_NAME_MAPPING,BILL_OFF,BUSI_DATE,COL_MAPPING_CODE,COL_MAPPING_NAME,DISP_ORDER,COL_DGT,DEC_PRECISION,DICT_TRANS,COL_HIDE,COL_SUM,COL_AVE,COL_TRANSFER
+		TYPE_CODE,TABLE_NAME_MAPPING,<!-- BILL_OFF, -->BUSI_DATE,COL_MAPPING_CODE,COL_MAPPING_NAME,DISP_ORDER,COL_DGT,DEC_PRECISION,DICT_TRANS,COL_HIDE,COL_SUM,COL_AVE<!-- ,COL_TRANSFER -->
 		from tb_sys_stru_mapping
 		where TYPE_CODE = #{TYPE_CODE}
 		and UPPER(TABLE_NAME_MAPPING) = UPPER(#{TABLE_CODE})
 		and BUSI_DATE = #{BUSI_DATE}
-		and BILL_OFF = #{FMISACC}
+		<!-- and BILL_OFF = #{FMISACC} -->
 		order
 		by COL_HIDE desc, DISP_ORDER
 		<!-- COL_HIDE必修倒序排列，关系添加或修改弹出框的显示 -->
@@ -527,9 +527,9 @@
 		    (
 		    <include refid="FieldTmplCopy"></include>
 		    )
-		    SELECT #{NEXT_RPT_DUR} as RPT_DUR,BILL_OFF,DEPT_CODE,
+		    SELECT #{NEXT_RPT_DUR} as RPT_DUR,<!-- BILL_OFF, -->DEPT_CODE,
 		    TABLE_CODE,COL_CODE,COL_NAME,DISP_ORDER,DICT_TRANS,
-		    COL_HIDE,COL_SUM,COL_AVE,COL_TRANSFER,COL_FORMULA,
+		    COL_HIDE,COL_SUM,COL_AVE,<!-- COL_TRANSFER, -->COL_FORMULA,
 		    CAL_ORDER,NUM_DGT,DEC_PRECISION
 		    FROM tb_tmpl_config_detail WHERE RPT_DUR=#{CUR_RPT_DUR};
 		</if>
@@ -539,10 +539,10 @@
 		insert into
 		tb_sys_stru_mapping
 		(
-			TYPE_CODE,TABLE_NAME,TABLE_NAME_MAPPING,COL_CODE,COL_MAPPING_CODE,COL_MAPPING_NAME,COL_VALUE,COL_MAPPING_VALUE,BILL_OFF,BUSI_DATE,DISP_ORDER,COL_DGT,DEC_PRECISION,DICT_TRANS,COL_HIDE,COL_SUM,COL_AVE,COL_TRANSFER,COL_ENABLE
+			TYPE_CODE,TABLE_NAME,TABLE_NAME_MAPPING,COL_CODE,COL_MAPPING_CODE,COL_MAPPING_NAME,COL_VALUE,COL_MAPPING_VALUE,<!-- BILL_OFF, -->BUSI_DATE,DISP_ORDER,COL_DGT,DEC_PRECISION,DICT_TRANS,COL_HIDE,COL_SUM,COL_AVE,<!-- COL_TRANSFER, -->COL_ENABLE
 		)
 		SELECT 
-		TYPE_CODE,TABLE_NAME,TABLE_NAME_MAPPING,COL_CODE,COL_MAPPING_CODE,COL_MAPPING_NAME,COL_VALUE,COL_MAPPING_VALUE,BILL_OFF,#{NEXT_RPT_DUR} as BUSI_DATE,DISP_ORDER,COL_DGT,DEC_PRECISION,DICT_TRANS,COL_HIDE,COL_SUM,COL_AVE,COL_TRANSFER,COL_ENABLE
+		TYPE_CODE,TABLE_NAME,TABLE_NAME_MAPPING,COL_CODE,COL_MAPPING_CODE,COL_MAPPING_NAME,COL_VALUE,COL_MAPPING_VALUE,<!-- BILL_OFF, -->#{NEXT_RPT_DUR} as BUSI_DATE,DISP_ORDER,COL_DGT,DEC_PRECISION,DICT_TRANS,COL_HIDE,COL_SUM,COL_AVE,<!-- COL_TRANSFER, -->COL_ENABLE
 		FROM tb_sys_stru_mapping WHERE BUSI_DATE=#{CUR_RPT_DUR};
 		</if>
 		
@@ -551,10 +551,10 @@
 		insert into
 		tb_sys_table_mapping
 		(
-			TYPE_CODE,BUSI_DATE,TABLE_NAME,TABLE_NAME_MAPPING,STATE,BILL_OFF
+			TYPE_CODE,BUSI_DATE,TABLE_NAME,TABLE_NAME_MAPPING,STATE<!-- ,BILL_OFF -->
 		)
 		SELECT 
-		TYPE_CODE,#{NEXT_RPT_DUR} as BUSI_DATE,TABLE_NAME,TABLE_NAME_MAPPING,STATE,BILL_OFF
+		TYPE_CODE,#{NEXT_RPT_DUR} as BUSI_DATE,TABLE_NAME,TABLE_NAME_MAPPING,STATE<!-- ,BILL_OFF -->
 		FROM tb_sys_table_mapping WHERE BUSI_DATE=#{CUR_RPT_DUR};
 		</if>
 		<!-- 插入保存 -->
@@ -562,17 +562,17 @@
 		    insert into
 		    tb_cert_parm_config
 		    (
-			    TYPE_CODE,BILL_OFF,DEPT_CODE,GROUP_COND,GROUP_COND1,QUERY_COND,CUST_PARM1,CUST_PARM1_DESC,CUST_PARM2,CUST_PARM2_DESC,CUST_PARM3,CUST_PARM3_DESC,BUSI_DATE
+			    TYPE_CODE,<!-- BILL_OFF, -->DEPT_CODE,GROUP_COND,GROUP_COND1,QUERY_COND,CUST_PARM1,CUST_PARM1_DESC,CUST_PARM2,CUST_PARM2_DESC,CUST_PARM3,CUST_PARM3_DESC,BUSI_DATE
 		    )
 		    SELECT 
-		    TYPE_CODE,BILL_OFF,DEPT_CODE,GROUP_COND,GROUP_COND1,QUERY_COND,CUST_PARM1,CUST_PARM1_DESC,CUST_PARM2,CUST_PARM2_DESC,CUST_PARM3,CUST_PARM3_DESC,#{NEXT_RPT_DUR} as BUSI_DATE
+		    TYPE_CODE,<!-- BILL_OFF, -->DEPT_CODE,GROUP_COND,GROUP_COND1,QUERY_COND,CUST_PARM1,CUST_PARM1_DESC,CUST_PARM2,CUST_PARM2_DESC,CUST_PARM3,CUST_PARM3_DESC,#{NEXT_RPT_DUR} as BUSI_DATE
 		    FROM tb_cert_parm_config WHERE BUSI_DATE=#{CUR_RPT_DUR};
 		</if>
 		<if test="CopyGlItemUser!= null and CopyGlItemUser != ''">
 		    insert into
 		    tb_gl_item_user
 		    (
-			       USER_CODE,USER_NAME,STAFF_IDENT,DEPT_CODE,UNITS_CODE,BILL_OFF,
+			       USER_CODE,USER_NAME,STAFF_IDENT,DEPT_CODE,UNITS_CODE,<!-- BILL_OFF, -->
 			       ITEM1_CODE,ITEM1_NAME,ITEM1_BUD,ITEM2_CODE,ITEM2_NAME,ITEM2_BUD,
 			       ITEM3_CODE,ITEM3_NAME,ITEM3_BUD,ITEM4_CODE,ITEM4_NAME,ITEM4_BUD,
 			       ITEM5_CODE,ITEM5_NAME,ITEM5_BUD,ITEM6_CODE,ITEM6_NAME,ITEM6_BUD,
@@ -580,7 +580,7 @@
 			       ITEM9_CODE,ITEM9_NAME,ITEM9_BUD,ITEM10_CODE,ITEM10_NAME,ITEM10_BUD,
 			       BUSI_DATE
 		    )
-		    SELECT USER_CODE,USER_NAME,STAFF_IDENT,DEPT_CODE,UNITS_CODE,BILL_OFF,
+		    SELECT USER_CODE,USER_NAME,STAFF_IDENT,DEPT_CODE,UNITS_CODE,<!-- BILL_OFF, -->
 			       ITEM1_CODE,ITEM1_NAME,ITEM1_BUD,ITEM2_CODE,ITEM2_NAME,ITEM2_BUD,
 			       ITEM3_CODE,ITEM3_NAME,ITEM3_BUD,ITEM4_CODE,ITEM4_NAME,ITEM4_BUD,
 			       ITEM5_CODE,ITEM5_NAME,ITEM5_BUD,ITEM6_CODE,ITEM6_NAME,ITEM6_BUD,
@@ -637,7 +637,7 @@
 	<select id="datalistJqPageTmplInputTips" parameterType="page" resultType="pd">
 		select t.RPT_DUR,
 		    '${pd.SelectedDepartCode}' DEPT_CODE, b.NAME DEPT_NAME,
-		             t.BILL_OFF,
+		             <!-- t.BILL_OFF, -->
 		             t.TABLE_CODE, c.TABLE_NAME TABLE_NAME,
 		             t.COL_CODE, t.COL_NAME,
 		             
@@ -647,7 +647,7 @@
 		             
 		             t.RPT_DUR RPT_DUR__,
 		             '${pd.SelectedDepartCode}' DEPT_CODE__,
-		             t.BILL_OFF BILL_OFF__,
+		             <!-- t.BILL_OFF BILL_OFF__, -->
 		             t.TABLE_CODE TABLE_CODE__,
 		             t.COL_CODE COL_CODE__,
 		             
@@ -672,7 +672,7 @@
 		      <where>
 				  and DEPT_CODE = #{pd.ShowStruDepartCode}
 				  and TABLE_CODE = #{pd.ShowStruTableCode}
-				  and BILL_OFF = #{pd.ShowStruBillOff}
+				  <!-- and BILL_OFF = #{pd.ShowStruBillOff} -->
 				  and RPT_DUR = #{pd.ShowStruRptDur}
 		      </where>
 		      <if test="sidx != null">
@@ -683,7 +683,7 @@
 		           from <include refid="tableNameTmplInputCond"></include> 
 		           where DEPT_CODE = #{pd.SelectedDepartCode}
 				   and TABLE_CODE = #{pd.ShowStruTableCode}
-				   and BILL_OFF = #{pd.ShowStruBillOff}) input
+				   <!-- and BILL_OFF = #{pd.ShowStruBillOff} -->) input
 		on t.COL_CODE = input.COL_CODE
 		
 		left join <include refid="tableNameTmplTips"></include> tip
@@ -701,7 +701,7 @@
 	        delete from <include refid="tableNameTmplInputCond"></include>
 		    where DEPT_CODE = #{item.DEPT_CODE__}
 		    and TABLE_CODE = #{item.TABLE_CODE__}
-		    and BILL_OFF = #{item.BILL_OFF__}
+		    <!-- and BILL_OFF = #{item.BILL_OFF__} -->
 			and COL_CODE = #{item.COL_CODE__};
 			
 	        delete from <include refid="tableNameTmplTips"></include>
@@ -709,10 +709,10 @@
 			and COL_CODE = #{item.COL_CODE__};
 		    
 		    insert into <include refid="tableNameTmplInputCond"></include>
-		    (DEPT_CODE, TABLE_CODE, COL_CODE, BILL_OFF, 
+		    (DEPT_CODE, TABLE_CODE, COL_CODE, <!-- BILL_OFF,  -->
 		     DICT_TRANS, COL_COND, COL_MAPPING, COL_NULL, COL_STATE)
 		    values
-		    (#{item.DEPT_CODE}, #{item.TABLE_CODE}, #{item.COL_CODE}, #{item.BILL_OFF},
+		    (#{item.DEPT_CODE}, #{item.TABLE_CODE}, #{item.COL_CODE}, <!-- #{item.BILL_OFF}, -->
 		     #{item.DICT_TRANS}, #{item.COL_COND}, #{item.COL_MAPPING}, #{item.COL_NULL}, #{item.COL_STATE});
 		    
 		    insert into <include refid="tableNameTmplTips"></include>
@@ -730,7 +730,7 @@
 		select 
 		             input.DEPT_CODE,
 		             input.TABLE_CODE,
-		             input.BILL_OFF,
+		             <!-- input.BILL_OFF, -->
 		             input.COL_CODE,
 		             
 		             input.DICT_TRANS,
@@ -755,7 +755,7 @@
 		      from <include refid="tableNameTmplInputCond"></include> 
 		      where DEPT_CODE = #{SelectedDepartCode}
 		      and TABLE_CODE = #{ShowStruTableCode}
-		      and BILL_OFF = #{ShowStruBillOff}
+		      <!-- and BILL_OFF = #{ShowStruBillOff} -->
 		      and COL_STATE = '1'
 		      ) input
 		
@@ -766,7 +766,7 @@
 		          <where>
 				      and DEPT_CODE = #{ShowStruDepartCode}
 				      and TABLE_CODE = #{ShowStruTableCode}
-				      and BILL_OFF = #{ShowStruBillOff}
+				      <!-- and BILL_OFF = #{ShowStruBillOff} -->
 				      and RPT_DUR = #{ShowStruRptDur}
 		          </where>) t
 		on t.COL_CODE = input.COL_CODE
