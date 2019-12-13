@@ -832,31 +832,99 @@ public class MBPController extends BaseController {
 	public ModelAndView queryProblemLog(Page page) throws Exception{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = this.getPageData();
-//		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
-//		String userId = user.getUSER_ID();
-//		pd.put("BILL_USER", userId);
+		PageData pd1 = new PageData();
 		page.setPd(pd);
 		List<PageData> varList = mbpService.getProLogTime(page);
 		for(PageData p:varList){
-			if((!"".equals(p.getString("WTFQ"))&&null!=(p.getString("WTFQ")))&&(!"".equals(p.getString("WTFP"))&&null!=(p.getString("WTFP")))){
-				DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
-				 Date date2  = format1.parse(p.getString("WTFP"));
-				 Date date1  = format1.parse(p.getString("WTFQ"));
-				String fqpf=getDatePoor(date2,date1);
-				p.put("FQ_FP", fqpf);
-			}
-			if((!"".equals(p.getString("WTLQ"))&&null!=(p.getString("WTLQ")))&&(!"".equals(p.getString("WTFP"))&&null!=(p.getString("WTFP")))){
+			if((!"".equals(p.getString("WTFQ"))&&null!=(p.getString("WTFQ")))&&(!"".equals(p.getString("WTLQ"))&&null!=(p.getString("WTLQ")))){
 				DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
 				 Date date2  = format1.parse(p.getString("WTLQ"));
-				 Date date1  = format1.parse(p.getString("WTFP"));
-				String lqfp=getDatePoor(date2,date1);
-				p.put("LQ_FP", lqfp);
+				 Date date1  = format1.parse(p.getString("WTFQ"));
+				String fqlq=getDatePoor(date2,date1);
+				p.put("FQ_LQ", fqlq);
+				if("".equals(fqlq)){
+				p.put("WTLQ", "");
+					continue;
+				}
+			}
+			if((!"".equals(p.getString("WTLQ"))&&null!=(p.getString("WTLQ")))&&(!"".equals(p.getString("WTGB"))&&null!=(p.getString("WTGB")))){
+				DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+				 Date date2  = format1.parse(p.getString("WTGB"));
+				 Date date1  = format1.parse(p.getString("WTLQ"));
+				String lqgb=getDatePoor(date2,date1);
+				p.put("LQ_GB", lqgb);
+				if("".equals(lqgb)){
+					p.put("WTGB", "");
+					continue;
+				}
+			}
+			if((!"".equals(p.getString("WTFQ"))&&null!=(p.getString("WTFQ")))&&(!"".equals(p.getString("WTGB"))&&null!=(p.getString("WTGB")))){
+				DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+				 Date date2  = format1.parse(p.getString("WTGB"));
+				 Date date1  = format1.parse(p.getString("WTFQ"));
+				String zys=getDatePoor(date2,date1);//总用时
+				p.put("ZYS", zys);
+				if("".equals(zys)){
+					p.put("ZYS", "");
+					continue;
+				}
+			}else{
+				p.put("ZYS", "问题未解决");
 			}
 		}
 		mv.addObject("pd", pd);
-		mv.addObject("varList", varList);		
+		mv.addObject("varList", varList);	
+		mv.addObject("pd1", varList.get(0));
 		mv.setViewName("mbp/problemManage/problemLogTime_query");
 		return mv;
+	}
+	/**显示问题日志各节点时间信息
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/dataListProblemLog")
+	public @ResponseBody List<PageData> dataListProblemLog(Page page) throws Exception{
+		PageData pd = this.getPageData();
+		page.setPd(pd);
+		List<PageData> varList = mbpService.getProLogTime(page);
+		for(PageData p:varList){
+			if((!"".equals(p.getString("WTFQ"))&&null!=(p.getString("WTFQ")))&&(!"".equals(p.getString("WTLQ"))&&null!=(p.getString("WTLQ")))){
+				DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+				 Date date2  = format1.parse(p.getString("WTLQ"));
+				 Date date1  = format1.parse(p.getString("WTFQ"));
+				String fqlq=getDatePoor(date2,date1);
+				p.put("FQ_LQ", fqlq);
+				if("".equals(fqlq)){
+				p.put("WTLQ", "");
+					continue;
+				}
+			}
+			if((!"".equals(p.getString("WTLQ"))&&null!=(p.getString("WTLQ")))&&(!"".equals(p.getString("WTGB"))&&null!=(p.getString("WTGB")))){
+				DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+				 Date date2  = format1.parse(p.getString("WTGB"));
+				 Date date1  = format1.parse(p.getString("WTLQ"));
+				String lqgb=getDatePoor(date2,date1);
+				p.put("LQ_GB", lqgb);
+				if("".equals(lqgb)){
+					p.put("WTGB", "");
+					continue;
+				}
+			}
+			if((!"".equals(p.getString("WTFQ"))&&null!=(p.getString("WTFQ")))&&(!"".equals(p.getString("WTGB"))&&null!=(p.getString("WTGB")))){
+				DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+				 Date date2  = format1.parse(p.getString("WTGB"));
+				 Date date1  = format1.parse(p.getString("WTFQ"));
+				String zys=getDatePoor(date2,date1);//总用时
+				p.put("ZYS", zys);
+				if("".equals(zys)){
+					p.put("ZYS", "");
+					continue;
+				}
+			}else{
+				p.put("ZYS", "问题未解决");
+			}
+		}
+		return varList;
 	}
 	public static String getDatePoor(Date endDate, Date nowDate) {
 		long nd = 1000 * 24 * 60 * 60;
@@ -873,7 +941,12 @@ public class MBPController extends BaseController {
 		long min = diff % nd % nh / nm;
 		// 计算差多少秒//输出结果
 		 long sec = diff % nd % nh % nm / ns;
-		return day + "天" + hour + "小时" + min + "分钟"+sec+"秒";
+		 if(diff<0){
+			 return "";
+		 }else{
+			 return day + "天" + hour + "小时" + min + "分钟"+sec+"秒";
+		 }
+		
 
 		}
 	 /**导出到excel

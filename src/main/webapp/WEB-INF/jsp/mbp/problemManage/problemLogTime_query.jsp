@@ -81,12 +81,13 @@
 								<tr>
 									<th style="background-color: #BEBEC5; text-align: center;">问题编号</th>
 									<th style="background-color: #BEBEC5; text-align: center;">问题发起时间</th>
-									<th style="background-color: #BEBEC5; text-align: center;">发起-分配处理时间</th>
-									<th  style="background-color: #BEBEC5; text-align: center;">问题分配时间</th>
-									<th style="background-color: #BEBEC5; text-align: center;">分配-领取处理时间</th>
+<!-- 									<th style="background-color: #BEBEC5; text-align: center;">发起-分配处理时间</th> -->
+<!-- 									<th  style="background-color: #BEBEC5; text-align: center;">问题分配时间</th> -->
+									<th style="background-color: #BEBEC5; text-align: center;">发起-领取处理时间</th>
 									<th style="background-color: #BEBEC5; text-align: center;">问题领取时间</th>
-									<th style="background-color: #BEBEC5; text-align: center;">问题回复时间</th>
+									<th style="background-color: #BEBEC5; text-align: center;">领取-关闭处理时间</th>
 									<th style="background-color: #BEBEC5; text-align: center;">问题关闭时间</th>
+									<th style="background-color: #BEBEC5; text-align: center;">解决总用时</th>
 								</tr>
 							</thead>												
 							<tbody id="tobodyUser" >
@@ -94,15 +95,16 @@
 							<c:choose>
 									<c:when test="${not empty varList}">
 										<c:forEach items="${varList}" var="var" varStatus="vs">	
-										<tr>
+										<tr onclick="showProTime('${var.PRO_CODE}')">
 											<td class='center'>${var.PRO_CODE}</td>
 											<td class='center'>${var.WTFQ}</td>
-											<td class='center'>${var.FQ_FP}</td>										
-											<td class='center'>${var.WTFP}</td>
-											<td class='center'>${var.LQ_FP}</td>
+<%-- 											<td class='center'>${var.FQ_FP}</td>										 --%>
+<%-- 											<td class='center'>${var.WTFP}</td> --%>
+											<td class='center'>${var.FQ_LQ}</td>
 											<td class='center'>${var.WTLQ}</td>
-											<td class='center'>${var.WTHF}</td>
+											<td class='center'>${var.LQ_GB}</td>
 											<td class='center'>${var.WTGB}</td>
+											<td class='center'>${var.ZYS}</td>
 										</tr>									
 									</c:forEach>																		
 								</c:when>
@@ -120,19 +122,81 @@
 								<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
 							</tr>
 						</table>
-						</div>					
-						</div>
-					</div>
+					</div>					
+				</div>
+					<div class="row">
+				<div class="col-xs-12 col-sm-10 col-sm-offset-1">
+					<!-- #section:pages/timeline.style2 -->
+					<div class="timeline-container timeline-style2">
+						<span class="timeline-label">
+							<b>处理流程</b>
+						</span>
+						<div class="timeline-items">
+							<div class="timeline-item clearfix">
+								<div class="timeline-info">
+									<span class="timeline-date">发起时间</span>
+	
+									<i class="timeline-indicator btn btn-info no-hover"></i>
+								</div>
+	
+								<div class="widget-box transparent">
+									<div class="widget-body">
+										<div class="widget-main no-padding">
+											<span class="bigger-110">
+												${pd1.WTFQ}
+											</span>
+										</div>
+									</div>
+								</div>
+							</div>
+	
+							<div class="timeline-item clearfix">
+								<div class="timeline-info">
+									<span class="timeline-date">领取时间</span>
+	
+									<i class="timeline-indicator btn btn-info no-hover"></i>
+								</div>
+	
+								<div class="widget-box transparent">
+									<div class="widget-body">
+										<div class="widget-main no-padding">
+											<span class="bigger-110">${pd1.WTLQ}</span>
+										</div>
+									</div>
+								</div>
+							</div>
+	
+							<div class="timeline-item clearfix">
+								<div class="timeline-info">
+									<span class="timeline-date">关闭时间</span>
+	
+									<i class="timeline-indicator btn btn-info no-hover"></i>
+								</div>
+	
+								<div class="widget-box transparent">
+									<div class="widget-body">
+										<div class="widget-main no-padding">
+											${pd1.WTGB}
+									</div>
+								</div>
+							</div>
+						</div><!-- /.timeline-items -->
+					</div><!-- /.timeline-container -->
 				</div>
 			</div>
+			</div>
 		</div>
-
+	</div>
+</div>
+		
 		<!-- 返回顶部 -->
 		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
 			<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
 		</a>
 
 	</div>
+		
+											
 	<!-- /.main-container -->
 
 	<!-- basic scripts -->
@@ -167,24 +231,29 @@
 				todayHighlight: true
 			});
 			//检索
-			function tosearch(){
+			function tosearch111(){
 				top.jzts();
 				$("#Form").submit();
 			}
 			$(function() {
-				
+// 				$("#tobodyUser tr").click(function(){ //给每个tr 绑定点击事件 主要锁定每个tr
+// 					var trs = $(this).parent().find('tr'); //获取所有tr
+// 				})
+			
 			})
+			function showProTime(proCode){
+				console.log(proCode);
+			}
 		//检索
-			function tosearch111(){
+			function tosearch(){
 				$("#tobodyUser tr").remove();
 				top.jzts();	
 				var startDate=$("#START_DATE").val();
 				var endDate=$("#END_DATE").val();
-				var unitCode = $("#UNIT_CODE").val();
 				$.ajax({
 						type: "POST",
-						url: '<%=basePath%>approvalconfig/listStatistic.do',
-				    	data: {START_DATE:startDate,END_DATE:endDate,UNIT_CODE:unitCode},
+						url: '<%=basePath%>mbp/dataListProblemLog.do',
+				    	data: {START_DATE:startDate,END_DATE:endDate},
 						dataType:'json',
 						cache: false,
 						success: function(data){
@@ -200,21 +269,27 @@
 				});
 			}
 			function setUserTable(item,i){
-				rows="<tr></td><td class='center'>"
-					+item.BUSINESS_NAME
+				rows='<tr  onclick="showProTime(\''+item.PRO_CODE+'\');">'
 					+"</td><td class='center'>"
-					+item.total
+					+item.PRO_CODE
 					+"</td><td class='center'>"
-					+item.solve
+					+item.WTFQ
 					+"</td><td class='center'>"
-					+item.solverate
+					+item.FQ_LQ
+					+"</td><td class='center'>"
+					+item.WTLQ
+					+"</td><td class='center'>"
+					+item.LQ_GB
+					+"</td><td class='center'>"
+					+item.WTGB
+					+"</td><td class='center'>"
+					+item.ZYS
 					+'</td></tr>';				
 					return rows;	
 			}
 			  function toExcel(){
 				    	window.location.href='<%=basePath%>approvalconfig/listStatisticExcel.do?START_DATE='+$("#START_DATE").val()
-			             +'&END_DATE='+$("#END_DATE").val()
-			             +'&UNIT_CODE='+$("#UNIT_CODE").val();	    
+			             +'&END_DATE='+$("#END_DATE").val() 
 			    }
 	</script>
 
