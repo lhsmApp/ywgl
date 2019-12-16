@@ -625,10 +625,19 @@
 				},
 				{
 					"Type":"FieldBox",
+					"Name":"FieldBox8",
+					"Left":3.99521,
+					"Top":5.21229,
+					"Width":2.59292,
+					"Height":0.396875,
+					"DataField":"BG_NAME"
+				},
+				{
+					"Type":"FieldBox",
 					"Name":"FieldBox9",
-					"Left":3.81,
+					"Left":12.991,
 					"Top":5.00063,
-					"Width":2.98979,
+					"Width":3.01625,
 					"Height":0.608542,
 					"DataField":"USER_CONTACT"
 				},
@@ -718,15 +727,6 @@
 					"Height":1.79917,
 					"LnSpacing":7,
 					"Text":" 1 如申请人为非中国石油的外部人员，应明确填写单位信息。\r\n 2 填写该变更应在SAP系统中生效的日期，例如填写申请人岗位变动的日期\r\n"
-				},
-				{
-					"Type":"FieldBox",
-					"Name":"FieldBox13",
-					"Left":12.5942,
-					"Top":5.00063,
-					"Width":2.80458,
-					"Height":0.608542,
-					"DataField":"EFFECTIVE_DATE"
 				}
 			]
 		}

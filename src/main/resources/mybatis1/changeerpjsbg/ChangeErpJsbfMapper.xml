@@ -32,7 +32,8 @@
 		CUS_COLUMN3,	
 		CUS_COLUMN4,	
 		CUS_COLUMN5,	
-		EFFECTIVE_DATE
+		EFFECTIVE_DATE,
+		BG_CONTENT
 	</sql>
 	
 	<!-- 字段值 -->
@@ -60,7 +61,8 @@
 		#{CUS_COLUMN3},	
 		#{CUS_COLUMN4},	
 		#{CUS_COLUMN5},	
-		#{EFFECTIVE_DATE}
+		#{EFFECTIVE_DATE},
+		#{BG_CONTENT}
 	</sql>
 	
 	<!-- 新增-->
@@ -110,7 +112,8 @@
 			CUS_COLUMN3 = #{CUS_COLUMN3},
 			CUS_COLUMN4 = #{CUS_COLUMN4},
 			CUS_COLUMN5 = #{CUS_COLUMN5},
-			EFFECTIVE_DATE = #{EFFECTIVE_DATE}
+			EFFECTIVE_DATE = #{EFFECTIVE_DATE},
+			BG_CONTENT = #{BG_CONTENT}
 		where 
 		BILL_CODE = #{BILL_CODE}
 	</update>
@@ -142,6 +145,7 @@
 				a.CUS_COLUMN4,	
 				a.CUS_COLUMN5,	
 				a.EFFECTIVE_DATE,
+				a.BG_CONTENT,
 				b.APPROVAL_STATE AS APPROVAL_STATE
 			FROM
 				TB_CHANGE_ERP_JSBG a  left join tb_approval_main b		

@@ -242,7 +242,25 @@
 			
 			})
 			function showProTime(proCode){
-				console.log(proCode);
+				//console.log(proCode);
+				$.ajax({
+					type: "POST",
+					url: '<%=basePath%>mbp/dataListProblemLog.do',
+			    	data: {START_DATE:startDate,END_DATE:endDate,PRO_CODE:proCode},
+					dataType:'json',
+					cache: false,
+					success: function(data){
+						if(data.length>0){
+							$.each(data, function(i, item){
+						    	var html = '';
+						        html += setTimeNode(item,i+1);
+							//$("#tobodyUser").append(html);
+						    	console.log(html);
+						 	});
+						}
+						top.hangge();
+					}
+			});
 			}
 		//检索
 			function tosearch(){
@@ -271,6 +289,24 @@
 			function setUserTable(item,i){
 				rows='<tr  onclick="showProTime(\''+item.PRO_CODE+'\');">'
 					+"</td><td class='center'>"
+					+item.PRO_CODE
+					+"</td><td class='center'>"
+					+item.WTFQ
+					+"</td><td class='center'>"
+					+item.FQ_LQ
+					+"</td><td class='center'>"
+					+item.WTLQ
+					+"</td><td class='center'>"
+					+item.LQ_GB
+					+"</td><td class='center'>"
+					+item.WTGB
+					+"</td><td class='center'>"
+					+item.ZYS
+					+'</td></tr>';				
+					return rows;	
+			}
+			function setTimeNode(item,i){
+				rows="<tr><td class='center'>"
 					+item.PRO_CODE
 					+"</td><td class='center'>"
 					+item.WTFQ

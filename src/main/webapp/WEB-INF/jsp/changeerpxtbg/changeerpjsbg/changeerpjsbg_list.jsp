@@ -578,7 +578,7 @@
 			 diag.Title ="系统变更申请单打印";
 			 diag.URL = '<%=basePath%>changeerpjsbg/goPrint.do?BILL_CODE='+encodeURI(Id);
 			 diag.Width = 800;
-			 diag.Height = 650;
+			 diag.Height = 550;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮 

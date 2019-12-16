@@ -313,7 +313,7 @@ public class ChangeErpJsbgController extends BaseController {
 			PageData pd = new PageData();
 			pd = this.getPageData();
 			pd = changeerpjsbgService.findById(pd);	//根据ID读取
-			JSONArray json = JSONArray.fromObject(pd); 
+			//JSONArray json = JSONArray.fromObject(pd); 
 			mv.setViewName("changeerpxtbg/changeerpxtbg/PrintReport");
 			mv.addObject("ReportURL", "static/js/gridReport/grf/changeErpJsbg.grf");
 			mv.addObject("DataURL", "changeerpjsbg/PrintJsbg.do?BILL_CODE="+pd.getString("BILL_CODE"));
