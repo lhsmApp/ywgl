@@ -356,9 +356,9 @@
 			<if test="pd.UNIT_CODE != null and pd.UNIT_CODE != ''"><!-- 单位检索 -->
 				and u.UNIT_CODE=#{pd.UNIT_CODE} 
 			</if>
-			<if test="pd.DEPARTMENT_ID != null and pd.DEPARTMENT_ID != ''"><!-- 部门检索 -->
+			<!-- <if test="pd.DEPARTMENT_ID != null and pd.DEPARTMENT_ID != ''">部门检索
 				and u.DEPARTMENT_ID=#{pd.DEPARTMENT_ID} 
-			</if>
+			</if> -->
 			<if test="pd.STATUS != null and pd.STATUS != ''"><!-- 状态检索 -->
 				and u.STATUS=#{pd.STATUS} 
 			</if>
@@ -492,6 +492,14 @@
 			</if>
 			where 
 				USER_ID = #{USER_ID}
+	</update>
+	
+	<!-- 修改 -->
+	<update id="editStudentMy" parameterType="pd" >
+		update  tb_train_student 
+			set PASSWORD= #{PASSWORD}
+			where 
+				STUDENT_ID = #{USER_ID}
 	</update>
 	
 	<!-- 修改 状态-->

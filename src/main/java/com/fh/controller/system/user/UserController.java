@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -26,6 +27,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fh.controller.base.BaseController;
 import com.fh.entity.Page;
 import com.fh.entity.system.Role;
+import com.fh.entity.system.User;
 import com.fh.service.fhoa.department.DepartmentManager;
 import com.fh.service.system.fhlog.FHlogManager;
 import com.fh.service.system.menu.MenuManager;
@@ -93,6 +95,16 @@ public class UserController extends BaseController {
 			pd.put("lastLoginEnd", lastLoginEnd+" 00:00:00");
 		} 
 		
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		String userName = user.getUSERNAME();
+		String unitCode=user.getUNIT_CODE();	
+		
+		if(userName.equals("admin")){
+			pd.put("UNIT_CODE", pd.getString("DEPARTMENT_ID"));
+		}else{
+			pd.put("UNIT_CODE", unitCode);
+		}
+		
 		page.setPd(pd);
 		List<PageData>	userList = userService.listUsers(page);	//列出用户列表
 		pd.put("ROLE_ID", "1");
@@ -112,7 +124,8 @@ public class UserController extends BaseController {
 		mv.addObject("userList", userList);
 		mv.addObject("roleList", roleList);
 		mv.addObject("pd", pd);
-		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
+		//mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
+		mv.addObject("userName", Jurisdiction.getUsername());
 		
 		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
 		JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0",zdepartmentPdList));
@@ -126,7 +139,7 @@ public class UserController extends BaseController {
 	 */
 	@RequestMapping(value="/deleteU")
 	public void deleteU(PrintWriter out) throws Exception{
-		if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return;} //校验权限
+		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return;} //校验权限
 		logBefore(logger, Jurisdiction.getUsername()+"删除user");
 		PageData pd = new PageData();
 		pd = this.getPageData();
@@ -142,7 +155,7 @@ public class UserController extends BaseController {
 	 */
 	@RequestMapping(value="/goAddU")
 	public ModelAndView goAddU()throws Exception{
-		if(!Jurisdiction.buttonJurisdiction(menuUrl, "add")){return null;} //校验权限
+		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "add")){return null;} //校验权限
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
@@ -165,7 +178,7 @@ public class UserController extends BaseController {
 	 */
 	@RequestMapping(value="/saveU")
 	public ModelAndView saveU() throws Exception{
-		if(!Jurisdiction.buttonJurisdiction(menuUrl, "add")){return null;} //校验权限
+		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "add")){return null;} //校验权限
 		logBefore(logger, Jurisdiction.getUsername()+"新增user");
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
@@ -258,7 +271,7 @@ public class UserController extends BaseController {
 	 */
 	@RequestMapping(value="/goEditU")
 	public ModelAndView goEditU() throws Exception{
-		if(!Jurisdiction.buttonJurisdiction(menuUrl, "edit")){return null;} //校验权限
+		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "edit")){return null;} //校验权限
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
@@ -329,10 +342,24 @@ public class UserController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd.put("USERNAME", Jurisdiction.getUsername());
-		pd = userService.findByUsername(pd);						//根据用户名读取
-		mv.setViewName("system/user/user_edit_my");
-		mv.addObject("msg", "editUMy");
-		mv.addObject("pd", pd);
+		
+		HttpSession session = Jurisdiction.getSession();
+		User user = (User) session.getAttribute(Const.SESSION_USER); // 读取session中的用户信息(单独用户信息)
+		if (user != null) {
+			if(user.getUSER_TYPE().equals("1")){
+				pd = userService.findByUsername(pd);	
+				mv.setViewName("system/user/user_edit_my");//根据用户名读取
+				mv.addObject("msg", "editUMy");
+				mv.addObject("pd", pd);
+			}else{
+				pd = userService.findByStudentCode(pd);	
+				mv.setViewName("system/user/student_edit_my");
+				mv.addObject("msg", "editStudentMy");
+				mv.addObject("pd", pd);
+			}
+		}
+							
+		
 		return mv;
 	}
 	
@@ -342,7 +369,7 @@ public class UserController extends BaseController {
 	 */
 	@RequestMapping(value="/view")
 	public ModelAndView view() throws Exception{
-		if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限
+		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
@@ -387,8 +414,8 @@ public class UserController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		if(!Jurisdiction.getUsername().equals(pd.getString("USERNAME"))){		//如果当前登录用户修改用户资料提交的用户名非本人
-			if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;}  //校验权限 判断当前操作者有无用户管理查看权限
-			if(!Jurisdiction.buttonJurisdiction(menuUrl, "edit")){return null;} //校验权限判断当前操作者有无用户管理修改权限
+			//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;}  //校验权限 判断当前操作者有无用户管理查看权限
+			//if(!Jurisdiction.buttonJurisdiction(menuUrl, "edit")){return null;} //校验权限判断当前操作者有无用户管理修改权限
 			if("admin".equals(pd.getString("USERNAME")) && !"admin".equals(Jurisdiction.getUsername())){return null;}	//非admin用户不能修改admin
 		}
 		if(pd.getString("PASSWORD") != null && !"".equals(pd.getString("PASSWORD"))){
@@ -421,13 +448,32 @@ public class UserController extends BaseController {
 	}
 	
 	/**
+	 * 修改学员用户
+	 */
+	@RequestMapping(value="/editStudentMy")
+	public ModelAndView editStudentMy() throws Exception{
+		logBefore(logger, Jurisdiction.getUsername()+"修改学员个人信息");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		if(pd.getString("PASSWORD") != null && !"".equals(pd.getString("PASSWORD"))){
+			pd.put("PASSWORD", new SimpleHash("SHA-1", pd.getString("USERNAME"), pd.getString("PASSWORD")).toString());
+		}
+		userService.editStudentMy(pd);//执行修改
+		FHLOG.save(Jurisdiction.getUsername(), "修改学员个人用户："+pd.getString("USERNAME"));
+		mv.addObject("msg","success");
+		mv.setViewName("save_result");
+		return mv;
+	}
+	
+	/**
 	 * 批量删除
 	 * @throws Exception 
 	 */
 	@RequestMapping(value="/deleteAllU")
 	@ResponseBody
 	public Object deleteAllU() throws Exception {
-		if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return null;} //校验权限
+		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return null;} //校验权限
 		logBefore(logger, Jurisdiction.getUsername()+"批量删除user");
 		FHLOG.save(Jurisdiction.getUsername(), "批量删除user");
 		PageData pd = new PageData();
@@ -458,7 +504,7 @@ public class UserController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		try{
-			if(Jurisdiction.buttonJurisdiction(menuUrl, "cha")){
+			//if(Jurisdiction.buttonJurisdiction(menuUrl, "cha")){
 				String keywords = pd.getString("keywords");				//关键词检索条件
 				if(null != keywords && !"".equals(keywords)){
 					pd.put("keywords", keywords.trim());
@@ -499,7 +545,7 @@ public class UserController extends BaseController {
 				dataMap.put("varList", varList);
 				ObjectExcelView erv = new ObjectExcelView();					//执行excel操作
 				mv = new ModelAndView(erv,dataMap);
-			}
+			//}
 		} catch(Exception e){
 			logger.error(e.toString(), e);
 		}
@@ -538,7 +584,7 @@ public class UserController extends BaseController {
 		FHLOG.save(Jurisdiction.getUsername(), "从EXCEL导入到数据库");
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
-		if(!Jurisdiction.buttonJurisdiction(menuUrl, "add")){return null;}
+		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "add")){return null;}
 		if (null != file && !file.isEmpty()) {
 			String filePath = PathUtil.getClasspath() + Const.FILEPATHFILE;								//文件上传路径
 			String fileName =  FileUpload.fileUp(file, filePath, "userexcel");							//执行上传

@@ -73,14 +73,13 @@
 									<option value="0" <c:if test="${pd.STATUS == '0' }">selected</c:if> >停用</option>
 									</select>
 								</td>
-								<td  style="padding-left:5px">
-									<div class="selectTree" id="selectTree"></div>
-								</td>
-								<c:if test="${QX.cha == 1 }">
-								<td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
-								<%-- <c:if test="${QX.toExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="toExcel();" title="导出到EXCEL"><i id="nav-search-icon" class="ace-icon fa fa-download bigger-110 nav-search-icon blue"></i></a></td></c:if>
-								<c:if test="${QX.FromExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="fromExcel();" title="从EXCEL导入"><i id="nav-search-icon" class="ace-icon fa fa-cloud-upload bigger-110 nav-search-icon blue"></i></a></td></c:if> --%>
+								<c:if test="${userName == 'admin'}">
+									<td  style="padding-left:5px">
+										<div class="selectTree" id="selectTree"></div>
+									</td>
 								</c:if>
+								<td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
+	
 							</tr>
 						</table>
 						<!-- 检索  -->
@@ -113,7 +112,6 @@
 							<!-- 开始循环 -->	
 							<c:choose>
 								<c:when test="${not empty userList}">
-									<c:if test="${QX.cha == 1 }">
 									<c:forEach items="${userList}" var="user" varStatus="vs">
 												
 										<tr>
@@ -138,30 +136,13 @@
 												<c:if test="${user.STATUS == '1' }"><span class="label label-success arrowed">正常</span></c:if>
 											</td>
 											<td class="center">
-												<c:if test="${QX.edit != 1 && QX.del != 1 }">
-												<span class="label label-large label-grey arrowed-in-right arrowed-in"><i class="ace-icon fa fa-lock" title="无权限"></i></span>
-												</c:if>
 												<div class="hidden-sm hidden-xs btn-group">
-													<%-- <c:if test="${QX.FHSMS == 1 }">
-													<a class="btn btn-xs btn-info" title='发送站内信' onclick="sendFhsms('${user.USERNAME }');">
-														<i class="ace-icon fa fa-envelope-o bigger-120" title="发送站内信"></i>
-													</a>
-													</c:if>
-													<c:if test="${QX.sms == 1 }">
-													<a class="btn btn-xs btn-warning" title='发送短信' onclick="sendSms('${user.PHONE }');">
-														<i class="ace-icon fa fa-envelope-o bigger-120" title="发送短信"></i>
-													</a>
-													</c:if> --%>
-													<c:if test="${QX.edit == 1 }">
 													<a class="btn btn-xs btn-success" title="编辑" onclick="editUser('${user.USER_ID}');">
 														<i class="ace-icon fa fa-pencil-square-o bigger-120" title="编辑"></i>
 													</a>
-													</c:if>
-													<%-- <c:if test="${QX.del == 1 }">
 													<a class="btn btn-xs btn-danger" onclick="delUser('${user.USER_ID }','${user.USERNAME }');">
 														<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
 													</a>
-													</c:if> --%>
 												</div>
 												<div class="hidden-md hidden-lg">
 													<div class="inline pos-rel">
@@ -169,25 +150,6 @@
 															<i class="ace-icon fa fa-cog icon-only bigger-110"></i>
 														</button>
 														<ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
-															<%-- <c:if test="${QX.FHSMS == 1 }">
-															<li>
-																<a style="cursor:pointer;" onclick="sendFhsms('${user.USERNAME }');" class="tooltip-info" data-rel="tooltip" title="发送站内信">
-																	<span class="blue">
-																		<i class="ace-icon fa fa-envelope bigger-120"></i>
-																	</span>
-																</a>
-															</li>
-															</c:if>
-															<c:if test="${QX.sms == 1 }">
-															<li>
-																<a style="cursor:pointer;" onclick="sendSms('${user.PHONE }');" class="tooltip-success" data-rel="tooltip" title="发送短信">
-																	<span class="blue">
-																		<i class="ace-icon fa fa-envelope-o bigger-120"></i>
-																	</span>
-																</a>
-															</li>
-															</c:if> --%>
-															<c:if test="${QX.edit == 1 }">
 															<li>
 																<a style="cursor:pointer;" onclick="editUser('${user.USER_ID}');" class="tooltip-success" data-rel="tooltip" title="修改">
 																	<span class="green">
@@ -195,8 +157,6 @@
 																	</span>
 																</a>
 															</li>
-															</c:if>
-															<%-- <c:if test="${QX.del == 1 }">
 															<li>
 																<a style="cursor:pointer;" onclick="delUser('${user.USER_ID }','${user.USERNAME }');" class="tooltip-error" data-rel="tooltip" title="删除">
 																	<span class="red">
@@ -204,7 +164,6 @@
 																	</span>
 																</a>
 															</li>
-															</c:if> --%>
 														</ul>
 													</div>
 												</div>
@@ -212,12 +171,6 @@
 										</tr>
 									
 									</c:forEach>
-									</c:if>
-									<c:if test="${QX.cha == 0 }">
-										<tr>
-											<td colspan="10" class="center">您无权查看</td>
-										</tr>
-									</c:if>
 								</c:when>
 								<c:otherwise>
 									<tr class="main_info">
@@ -232,15 +185,13 @@
 					<table style="width:100%;">
 						<tr>
 							<td style="vertical-align:top;">
-								<c:if test="${QX.add == 1 }">
+								
 								<a class="btn btn-mini btn-success" onclick="add();">新增</a>
-								</c:if>
+								<%-- </c:if> --%>
 								<%-- <c:if test="${QX.FHSMS == 1 }"><a title="批量发送站内信" class="btn btn-mini btn-info" onclick="makeAll('确定要给选中的用户发送站内信吗?');"><i class="ace-icon fa fa-envelope-o bigger-120"></i></a></c:if>
 								<c:if test="${QX.email == 1 }"><a title="批量发送电子邮件" class="btn btn-mini btn-primary" onclick="makeAll('确定要给选中的用户发送邮件吗?');"><i class="ace-icon fa fa-envelope bigger-120"></i></a></c:if> 
 								<c:if test="${QX.sms == 1 }"><a title="批量发送短信" class="btn btn-mini btn-warning" onclick="makeAll('确定要给选中的用户发送短信吗?');"><i class="ace-icon fa fa-envelope-o bigger-120"></i></a></c:if>--%>
-								<%-- <c:if test="${QX.del == 1 }">
 								<a title="批量删除" class="btn btn-mini btn-danger" onclick="makeAll('确定要删除选中的数据吗?');" ><i class='ace-icon fa fa-trash-o bigger-120'></i></a>
-								</c:if> --%>
 							</td>
 							<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
 						</tr>

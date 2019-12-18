@@ -101,7 +101,7 @@
 													<div class="item-box inline"><!-- 整体 -->
 											      		<div style="width:185px;height:200px;">
 											        		<a onclick="beginExam('${var.TEST_PLAN_ID}','${var.TEST_PAPER_ID}')" data-rel="colorbox" class="cboxElement" title="">
-											          		<img width="230" height="200" alt="请上传图片" src="uploadFiles/uploadImgs/377359cc0c624d5bb7e429aab571404d.jpg"></a>
+											          		<img width="230" height="200" alt="请上传图片" src="uploadFiles/uploadImgs/37bca5983bf049608bb1b87294655a99.jpg"></a>
 											      		</div>
 													    <div>
 													        <div class="box-title"><span class="list-item-value-title">${var.TEST_PLAN_NAME}</span></div>
@@ -143,7 +143,7 @@
 													<div class="item-box inline"><!-- 整体 -->
 											      		<div style="width:185px;height:200px;">
 											        		<a onclick="checkPaper('${var.TEST_PLAN_ID}','${var.TEST_PAPER_ID}')" data-rel="colorbox" class="cboxElement" title="">
-											          		<img width="230" height="200" alt="请上传图片" src="static/html_UI/assets/images/gallery/image-2.jpg"></a>
+											          		<img width="230" height="200" alt="请上传图片" src="uploadFiles/uploadImgs/37bca5983bf049608bb1b87294655a99.jpg"></a>
 											      		</div>
 													    <div>
 													        <div class="box-title"><span class="list-item-value-title">${var.TEST_PLAN_NAME}</span></div>

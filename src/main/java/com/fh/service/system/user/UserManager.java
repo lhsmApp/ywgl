@@ -139,6 +139,12 @@ public interface UserManager {
 	 */
 	public void editUMy(PageData pd)throws Exception;
 	
+	/**修改学员用户
+	 * @param pd
+	 * @throws Exception
+	 */
+	public void editStudentMy(PageData pd)throws Exception;
+	
 	/**修改个人状态
 	 * @param pd
 	 * @throws Exception
