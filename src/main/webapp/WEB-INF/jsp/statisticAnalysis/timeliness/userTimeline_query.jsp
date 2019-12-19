@@ -78,17 +78,11 @@
 					
 						<table id="simple-table" class="mtable" style="margin-top:20px; width: 100%;">	
 							<thead>
-								<tr>
-									<th style="background-color: #BEBEC5; text-align: center;">问题编号</th>
-									<th style="background-color: #BEBEC5; text-align: center;">问题发起时间</th>
-<!-- 									<th style="background-color: #BEBEC5; text-align: center;">发起-分配处理时间</th> -->
-<!-- 									<th  style="background-color: #BEBEC5; text-align: center;">问题分配时间</th> -->
-									<th style="background-color: #BEBEC5; text-align: center;">发起-领取处理时间</th>
-									<th style="background-color: #BEBEC5; text-align: center;">问题领取时间</th>
-									<th style="background-color: #BEBEC5; text-align: center;">领取-关闭处理时间</th>
-									<th style="background-color: #BEBEC5; text-align: center;">问题关闭时间</th>
-									<th style="background-color: #BEBEC5; text-align: center;">解决总用时</th>
+							<c:forEach items="${proTypeList}" var="pro" varStatus="vs">	
+								<tr>					
+									<th style="background-color: #BEBEC5; text-align: center;">${pro.PRO_TYPE_NAME}</th>
 								</tr>
+								</c:forEach>
 							</thead>												
 							<tbody id="tobodyUser" >
 							<!-- 开始循环 -->	

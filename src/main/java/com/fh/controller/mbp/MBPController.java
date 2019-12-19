@@ -875,7 +875,7 @@ public class MBPController extends BaseController {
 		mv.addObject("pd", pd);
 		mv.addObject("varList", varList);	
 		mv.addObject("pd1", varList.get(0));
-		mv.setViewName("mbp/problemManage/problemLogTime_query");
+		mv.setViewName("statisticAnalysis/timeliness/problemLogTime_query");
 		return mv;
 	}
 	/**显示问题日志各节点时间信息
@@ -1143,6 +1143,26 @@ public class MBPController extends BaseController {
 			mv = new ModelAndView(erv,dataMap);
 			return mv;
 		}
-	
+		/**运维人员处理问题时效统计
+		 * @param page
+		 * @throws Exception
+		 */
+		@RequestMapping(value="/queryProblemUserTime")
+		public ModelAndView queryProblemUserTime(Page page) throws Exception{
+			ModelAndView mv = this.getModelAndView();
+			PageData pd = this.getPageData();
+			PageData pd1 = new PageData();
+			//获取所有问题类型
+			List<PageData> proTypeList=problemtypeService.listAll(pd);
+			
+			page.setPd(pd);
+			List<PageData> varList = mbpService.getProLogTime(page);
+			mv.addObject("pd", pd);
+			mv.addObject("varList", varList);	
+			mv.addObject("proTypeList", proTypeList);				
+			mv.addObject("pd1", varList.get(0));
+			mv.setViewName("statisticAnalysis/timeliness/userTimeline_query");
+			return mv;
+		}
 }
 

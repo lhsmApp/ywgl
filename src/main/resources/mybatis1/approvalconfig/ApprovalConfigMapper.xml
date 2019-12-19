@@ -1093,7 +1093,7 @@
 	<select id="listStatistic" parameterType="page" resultType="pd">
 	SELECT c.BUSINESS_CODE,CASE WHEN b.BUSINESS_NAME IS NOT NULL THEN b.BUSINESS_NAME ELSE '合计' END BUSINESS_NAME,c.total,c.solve,  CONCAT( ROUND( c.solve/c.total * 100, 2 ), '', '%' ) AS solverate FROM 
 		(SELECT 
-		  a.BUSINESS_CODE,a.APPLY_DATE,d.UNIT_CODE,
+		  a.BUSINESS_CODE,
 		  COUNT(a.BUSINESS_CODE) AS total,
 		  SUM(
 		    CASE
