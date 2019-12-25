@@ -129,19 +129,19 @@ public class ApprovalConfigController extends BaseController {
 		pd = this.getPageData();
 		switch(pd.getString("BUSINESS_CODE")){
 		case "1":   //系统变更;	 
-			pd = changeerpxtbgService.findById(pd);	//根据ID读取
+			pd = changeerpxtbgService.findByBillCode(pd);
 		    break;
 		case "2": //角色变更;		   
-			pd = changeerpjsbgService.findById(pd);	//根据ID读取
+			pd = changeerpjsbgService.findByBillCode(pd);
 		    break;	
 		case "3": //GRC帐号新增;		   
-			pd = changegrczhxzService.findById(pd);
+			pd = changegrczhxzService.findByBillCode(pd);
 		    break;
 		case "4": //GRC权限变更;		   
-			pd = changegrcqxbgService.findById(pd);
+			pd = changegrcqxbgService.findByBillCode(pd);
 		    break;
 		case "5": //GRC账号撤销;		   
-			pd = changegrczhzxService.findById(pd);
+			pd = changegrczhzxService.findByBillCode(pd);
 		    break;
 		default:
 			
@@ -183,8 +183,8 @@ public class ApprovalConfigController extends BaseController {
 		pd = this.getPageData();
 		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 	    String unitCode=user.getUNIT_CODE();
-//	    String roleCode=user.getROLE_ID();    
-//	    pd.put("ROLE_CODE", roleCode);//单位编码
+	    String roleCode=user.getRole().getROLE_ID();    
+	    pd.put("ROLE_CODE", roleCode);//单位编码
 		pd.put("UNIT_CODE", unitCode);//单位编码
 		pd.put("ACTIVE_FLAG", '1');//激活状态为1
 		pd.put("APPROVAL_STATE", "0");///审批状态为0	

@@ -177,8 +177,9 @@
 				t.EFFECTIVE_DATE,
 				t.APPROVAL_STATE APPROVAL_STATE,
 				u.NAME AS UNIT_NAME,
-				v.USERNAME
-				
+				v.USERNAME,
+				w.NAME  DEPT_NAME,
+				x.NAME  USER_DEPTNAME				
 			FROM 
 			(SELECT
 				a.BILL_CODE BILL_CODE,	
@@ -203,9 +204,17 @@
 				b.APPROVAL_STATE APPROVAL_STATE
 				FROM 
 				TB_CHANGE_ERP_JSBG a LEFT JOIN tb_approval_main b
-				ON a.BILL_CODE=b.BILL_CODE)  AS t,oa_department u, sys_user v 
-				WHERE u.DEPARTMENT_CODE = t.UNIT_CODE
-		AND t.USER_CODE=v.USER_ID) AS h
+				ON a.BILL_CODE=b.BILL_CODE)  AS t 
+				left join oa_department u
+				on  u.DEPARTMENT_CODE = t.UNIT_CODE
+		 		left join sys_user v 
+	 			on t.USER_CODE=v.USER_ID
+	 			left join oa_department w
+		  		ON
+				w.DEPARTMENT_CODE = t.DEPT_CODE
+				left join oa_department x
+				on
+				x.DEPARTMENT_CODE = t.USER_DEPT) AS h
 		<where>
 			(BILL_USER=#{pd.BILL_USER}
 			or
@@ -267,12 +276,23 @@
 		a.DEL_ROLE,	
 		a.EFFECTIVE_DATE,
 		b.NAME AS UNIT_NAME,
-		c.USERNAME
+		c.USERNAME,
+		d.NAME  DEPT_NAME,
+		e.NAME  USER_DEPTNAME
 		FROM
-		  TB_CHANGE_ERP_JSBG a,
-		  oa_department b, sys_user c 
-		WHERE b.DEPARTMENT_CODE = a.UNIT_CODE
-		AND a.USER_CODE=c.USER_ID
-	  	AND a.BILL_CODE =#{BILL_CODE} 
+		  TB_CHANGE_ERP_JSBG a
+			LEFT JOIN 
+		  oa_department b
+		  ON
+		b.DEPARTMENT_CODE = a.UNIT_CODE
+		LEFT JOIN sys_user c 
+		ON a.USER_CODE=c.USER_ID
+		LEFT JOIN oa_department d
+		  ON
+		d.DEPARTMENT_CODE = a.DEPT_CODE	
+		  left join oa_department e
+		  on
+		e.DEPARTMENT_CODE = a.USER_DEPT
+	  	where a.BILL_CODE =#{BILL_CODE} 
 	</select>
 </mapper>

@@ -78,11 +78,12 @@
 					
 						<table id="simple-table" class="mtable" style="margin-top:20px; width: 100%;">	
 							<thead>
-							<c:forEach items="${proTypeList}" var="pro" varStatus="vs">	
-								<tr>					
+							<tr>
+							<th style="background-color: #BEBEC5; text-align: center;">运维人员</th>
+								<c:forEach items="${proTypeList}" var="pro" varStatus="vs">						
 									<th style="background-color: #BEBEC5; text-align: center;">${pro.PRO_TYPE_NAME}</th>
-								</tr>
 								</c:forEach>
+							</tr>
 							</thead>												
 							<tbody id="tobodyUser" >
 							<!-- 开始循环 -->	
@@ -118,77 +119,17 @@
 						</table>
 					</div>					
 				</div>
-					<div class="row">
-				<div class="col-xs-12 col-sm-10 col-sm-offset-1">
-					<!-- #section:pages/timeline.style2 -->
-					<div class="timeline-container timeline-style2">
-						<span class="timeline-label">
-							<b>处理流程</b>
-						</span>
-						<div class="timeline-items">
-							<div class="timeline-item clearfix">
-								<div class="timeline-info">
-									<span class="timeline-date">发起时间</span>
-	
-									<i class="timeline-indicator btn btn-info no-hover"></i>
-								</div>
-	
-								<div class="widget-box transparent">
-									<div class="widget-body">
-										<div class="widget-main no-padding">
-											<span class="bigger-110">
-												${pd1.WTFQ}
-											</span>
-										</div>
-									</div>
-								</div>
-							</div>
-	
-							<div class="timeline-item clearfix">
-								<div class="timeline-info">
-									<span class="timeline-date">领取时间</span>
-	
-									<i class="timeline-indicator btn btn-info no-hover"></i>
-								</div>
-	
-								<div class="widget-box transparent">
-									<div class="widget-body">
-										<div class="widget-main no-padding">
-											<span class="bigger-110">${pd1.WTLQ}</span>
-										</div>
-									</div>
-								</div>
-							</div>
-	
-							<div class="timeline-item clearfix">
-								<div class="timeline-info">
-									<span class="timeline-date">关闭时间</span>
-	
-									<i class="timeline-indicator btn btn-info no-hover"></i>
-								</div>
-	
-								<div class="widget-box transparent">
-									<div class="widget-body">
-										<div class="widget-main no-padding">
-											${pd1.WTGB}
-									</div>
-								</div>
-							</div>
-						</div><!-- /.timeline-items -->
-					</div><!-- /.timeline-container -->
-				</div>
-			</div>
-			</div>
 		</div>
 	</div>
-</div>
+
 		
 		<!-- 返回顶部 -->
 		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
 			<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
 		</a>
-
+		</div>
 	</div>
+</div>
 		
 											
 	<!-- /.main-container -->

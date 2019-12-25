@@ -143,7 +143,11 @@
 	</select>
 <!-- 列表 -->
 	<select id="datalistPage" parameterType="page" resultType="pd">
-		SELECT * FROM 
+		SELECT t.*,				
+		e.NAME  UNIT_NAME,
+		c.USERNAME USERNAME,
+		d.NAME  DEPT_NAME FROM
+		( 
 			(SELECT
 				a.BILL_CODE,
 				a.UNIT_CODE,		
@@ -167,6 +171,15 @@
 				FROM 
 				tb_change_grc_zhxz a LEFT JOIN tb_approval_main b
 				ON a.BILL_CODE=b.BILL_CODE)  AS t
+				 LEFT JOIN 
+		  oa_department e
+		  ON
+		e.DEPARTMENT_CODE = t.UNIT_CODE
+		LEFT JOIN sys_user c 
+		ON t.USER_CODE=c.USER_ID
+		LEFT JOIN oa_department d
+		  ON
+		d.DEPARTMENT_CODE = t.DEPT_CODE	)
 		<where>
 			(BILL_USER=#{pd.BILL_USER}
 			or
@@ -177,18 +190,13 @@
 			and
 				(
 				ACCOUNT_REASON LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
-				<!--	根据需求自己加检索条件
-					字段1 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
-					 or 
-					字段2 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
-				-->
 				)
 		</if>
 		</where>
 	</select>
 	<!-- 根据BILL_CODE获取表单信息以及表单上申请人所在的单位及部门名称-->
 	<select id="findByBillCode" parameterType="pd" resultType="pd">
-		SELECT 
+			SELECT 
 				a.BILL_CODE,	
 				a.UNIT_CODE,		
 				a.DEPT_CODE,	
@@ -208,13 +216,23 @@
 				a.BILL_USER,	
 				a.BILL_DATE,	
 				b.NAME AS UNIT_NAME,
-				c.USERNAME
+				c.USERNAME,
+				d.NAME AS DEPT_NAME,
+				e.NAME AS USER_DEPTNAME
 			FROM
-		  tb_change_grc_zhxz a,
-		  oa_department b, sys_user c 
-		WHERE b.DEPARTMENT_CODE = a.UNIT_CODE
-		AND a.USER_CODE=c.USER_ID
-	  	AND a.BILL_CODE =#{BILL_CODE} 
+		  tb_change_grc_zhxz a LEFT JOIN 
+		  oa_department b
+		  ON
+		b.DEPARTMENT_CODE = a.UNIT_CODE
+		LEFT JOIN sys_user c 
+		ON a.USER_CODE=c.USER_ID
+		LEFT JOIN oa_department d
+		  ON
+		d.DEPARTMENT_CODE = a.DEPT_CODE	
+		LEFT JOIN oa_department e
+		  ON
+		e.DEPARTMENT_CODE = a.USER_DEPT	
+	  	WHERE a.BILL_CODE =#{BILL_CODE} 
 	</select>
 	<!-- 列表(全部) -->
 	<select id="listAll" parameterType="pd" resultType="pd">

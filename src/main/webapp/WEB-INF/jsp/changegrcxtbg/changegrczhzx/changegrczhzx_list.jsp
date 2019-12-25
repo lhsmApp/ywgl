@@ -485,11 +485,11 @@
 		        + '</span></label></div><div><label class="inline"><span class="list-item-info">单号:&nbsp;</span><span class="list-item-value">'
 		        + item.BILL_CODE
 		        +'</span></label><label class="inline pull-right"><span class="list-item-info">科室：</span><span class="list-item-value">'
-		        + item.DEPT_CODE
+		        + item.DEPT_NAME
 		        +'</span></label></div><div><label class="inline"><span class="list-item-info">状态:&nbsp;</span><span class="list-item-value">'
 		        + item.APPROVAL_STATE
 		        +'</span></label><label class="inline pull-right"><span class="list-item-info">单位:&nbsp;</span><span class="list-item-value">'
-		        + item.UNIT_CODE
+		        + item.UNIT_NAME
 		        +'</span></label></div><div><label class="inline"><span class="list-item-info">账号撤销原因:&nbsp;</span><span class="list-item-value">'
 		        + item.CANCLE_REASON
 		        +'</span></label><label class="inline pull-right"><span class="list-item-info">申请日期:&nbsp;'
@@ -562,13 +562,13 @@
 		        + '</span></div></div><div class="profile-info-row"><div class="profile-info-name">申请单号：</div><div class="profile-info-value"><i class="fa fa-map-marker light-orange bigger-110"></i><span>'
 		        + item.BILL_CODE		       
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请单位： </div><div class="profile-info-value"><span>'
-		        + item.UNIT_CODE
+		        + item.UNIT_NAME
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请部门： </div><div class="profile-info-value"><span>'
-		        +item.DEPT_CODE
+		        +item.DEPT_NAME
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 账号撤销原因 ：</div><div class="profile-info-value"><span>'
 		        +item.CANCLE_REASON
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人部门： </div><div class="profile-info-value"><span>'
-		        +item.USER_DEPT
+		        +item.USER_DEPTNAME
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人： </div><div class="profile-info-value"><span>'
 		        +item.USER_CODE
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人岗位： </div><div class="profile-info-value"><span>'

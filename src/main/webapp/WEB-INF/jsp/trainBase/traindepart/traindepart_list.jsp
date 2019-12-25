@@ -58,8 +58,8 @@
 								<tr>
 									<th class="center" style="width:50px;">序号</th>
 									<!-- <th class="center">部门ID</th> -->
-									<th class="center">部门名称</th>
-									<th class="center">部门编码</th>
+									<th class="center">单位名称</th>
+									<th class="center">单位编码</th>
 									<th class="center">负责人</th>
 									<th class="center">激活状态</th>
 									<th class="center">操作</th>

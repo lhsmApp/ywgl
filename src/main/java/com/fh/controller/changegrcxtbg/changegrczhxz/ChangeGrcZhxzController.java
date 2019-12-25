@@ -331,7 +331,7 @@ public class ChangeGrcZhxzController extends BaseController {
 	public PageData showDetail() throws Exception{
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		pd = changegrczhxzService.findById(pd);	//根据ID读取
+		pd = changegrczhxzService.findByBillCode(pd);	//根据ID读取
 		pd.put("DEPARTMENT_CODE", pd.getString("UNIT_CODE"));
 		PageData pdDepartResultUnit=departmentService.findByBianma(pd);
 		if(pdDepartResultUnit!=null)

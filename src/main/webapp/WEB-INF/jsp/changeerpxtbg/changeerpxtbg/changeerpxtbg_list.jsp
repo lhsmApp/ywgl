@@ -136,6 +136,14 @@
 										<div class="row">
 											<div class="col-xs-5">
 												<input type="hidden" name="BILL_CODE" id="BILL_CODE"/>
+												<input type="hidden" name="BILL_USER" id="BILL_USER"/>	
+												<input type="hidden" name="ENTRY_DATE" id="ENTRY_DATE"/>
+												<input type="hidden" name="SERIAL_NUM" id="SERIAL_NUM"/>	
+												<input type="hidden" name="USER_DEPT" id="USER_DEPT"/>
+												<input type="hidden" name="SYSTEM" id="SYSTEM"/>	
+												<input type="hidden" name="BG_TYPE" id="BG_TYPE"/>
+												<input type="hidden" name="BILL_STATE" id="BILL_STATE"/>	
+												<input type="hidden" name="BILL_DATE" id="BILL_DATE"/>										
 												<div id="zhongxin" style="padding-top: 13px;">
 													<div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-bgname">系统变更名称</label>
@@ -169,8 +177,14 @@
 													</div>
 												    <div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-depart">申请人部门</label>
-														<input type="hidden" name="USER_DEPT" id="USER_DEPT" />
-														<input type="text" name="USER_DEPTNAME" id="USER_DEPTNAME" class="form-control" placeholder="请输入申请人部门"/>
+														<select class="form-control" name="USER_DEPT" id="USER_DEPT">
+																	<option value=""></option>
+																	<c:forEach items="${userDeptList}" var="user">
+																	<option value="${user.USER_DEPT}">${user.USER_DEPTNAME}</option>
+																	</c:forEach>
+																</select>
+<!-- 														<input type="hidden" name="USER_DEPT" id="USER_DEPT" /> -->
+<!-- 														<input type="text" name="USER_DEPTNAME" id="USER_DEPTNAME" class="form-control" placeholder="请输入申请人部门"/> -->
 													</div>
 										   			<div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-job">申请人岗位</label>
@@ -363,6 +377,7 @@
 			var uesrContact=$("#USER_CONTACT").val();//联系方式
 			var bgyqDate=$("#EFFECTIVE_DATE").val();//变更预期时间
 			var billCode=$("#BILL_CODE").val();//申请单号
+			var billUser=$("#BILL_USER").val();//
 			if(bgName==""||bgName==null){    
 			        alert('系统变更名称不能为空！');
 			        $("#BG_NAME").focus();
@@ -378,7 +393,7 @@
 			$.ajax({
 				type: "POST",
 				url: '<%=basePath%>changeerpxtbg/save.do',
-				data:{BG_NAME:bgName,BG_REASON:bgReason,UNIT_CODE:unitCode,DEPT_CODE:deptCode,USER_CODE:uesrCode,USER_DEPT:uesrDept,USER_JOB:uesrJob,USER_CONTACT:uesrContact,EFFECTIVE_DATE:bgyqDate,BILL_CODE:billCode},
+				data:{BILL_USER:billUser,BG_NAME:bgName,BG_REASON:bgReason,UNIT_CODE:unitCode,DEPT_CODE:deptCode,USER_CODE:uesrCode,USER_DEPT:uesrDept,USER_JOB:uesrJob,USER_CONTACT:uesrContact,EFFECTIVE_DATE:bgyqDate,BILL_CODE:billCode},
 		    	dataType:'json',
 				cache: false,
 				success: function(response){
@@ -387,13 +402,14 @@
 						bootbox.dialog({
 							message: "<span class='bigger-110'>保存成功</span>",
 						});		
-						initList();
 					}else{
 						$(top.hangge());//关闭加载状态
 						bootbox.dialog({
 							message: "<span class='bigger-110'>保存失败</span>",
 						});		
 					}
+					initList();
+					showDetail(billCode);
 				},
 		    	error: function(response) {
 		    		var msgObj=JSON.parse(response.responseText);
@@ -417,12 +433,13 @@
 		}		
 		//动态加载变更数据
 		function setDiv(item){
+			console.log(item);
 		    var div = '<li  class="item-grey clearfix" onclick="showDetail(\''+item.BILL_CODE+'\');"><div><label class="inline" style="margin-bottom:5px;"><span class="list-item-value-title">'
 		        + item.BG_NAME
 		        + '</span></label></div><div><label class="inline"><span class="list-item-info">单号:&nbsp;</span><span class="list-item-value">'
 		        + item.BILL_CODE
 		        +'</span></label><label class="inline pull-right"><span class="list-item-info">科室：</span><span class="list-item-value">'
-		        + item.DEPT_CODE
+		        + item.DEPT_NAME
 		        +'</span></label></div><div><label class="inline"><span class="list-item-info">状态:&nbsp;</span><span class="list-item-value">'
 		        + item.APPROVAL_STATE
 		        +'</span></label><label class="inline pull-right"><span class="list-item-info">单位:&nbsp;</span><span class="list-item-value">'
@@ -454,7 +471,6 @@
 		            success:function(datas){
 		            	//全局变量存放当前点击的变更申请单号
 		            	bill_code=datas.BILL_CODE;
-		            	console.log(datas);
 		            	var html = '';
 		      		     html += setDetail(datas);
 		      			$('#detail-tab').html(html);
@@ -462,12 +478,22 @@
 		      			$("#BG_NAME").val(datas.BG_NAME);//变更名称
 		    			$("#BG_REASON").val(datas.BG_REASON);//变更原因
 		    			$("#USER_CODE").val(datas.USER_CODE);//申请人
+		    			$("#BILL_USER").val(datas.BILL_USER);//创建人
 		    			$("#UNIT_CODE").val(datas.UNIT_CODE);//申请人单位
 		    			$("#selectTree2_input").val(datas.depnameUnit);
-		    			$("#DEPT_CODE").val(datas.DEPT_CODE);//申请人部门
+		    			$("#DEPT_CODE").val(datas.DEPT_CODE);//申请部门
+		    			$("#DEPT_CODE").val(datas.depnameDept);//申请部门名称
 		    			$("#USER_JOB").val(datas.USER_JOB);//申请人岗位
 		    			$("#USER_CONTACT").val(datas.USER_CONTACT);//联系方式
 		    			$("#EFFECTIVE_DATE").val(datas.EFFECTIVE_DATE);//变更预期时间
+		    			$("#ENTRY_DATE").val(datas.ENTRY_DATE);
+		    			$("#SERIAL_NUM").val(datas.SERIAL_NUM);
+		    			$("#USER_DEPT").val(datas.USER_DEPT);//申请人部门
+		    			$("#USER_DEPT").val(datas.depnameUserDept);//申请人部门名称
+		    			$("#SYSTEM").val(datas.SYSTEM);
+		    			$("#BG_TYPE").val(datas.BG_TYPE);
+		    			$("#BILL_STATE").val(datas.BILL_STATE);
+		    			$("#BILL_DATE").val(datas.BILL_DATE);
                       //2为退回状态
 		      		  if(datas.APPROVAL_STATE==2)
 		    			{
@@ -501,11 +527,11 @@
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请单位： </div><div class="profile-info-value"><span>'
 		        + item.UNIT_NAME
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请部门： </div><div class="profile-info-value"><span>'
-		        +item.DEPT_CODE
+		        +item.DEPT_NAME
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 变更原因 ：</div><div class="profile-info-value"><span>'
 		        +item.BG_REASON
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人部门： </div><div class="profile-info-value"><span>'
-		        +item.DEPT_CODE
+		        +item.USER_DEPTNAME
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人： </div><div class="profile-info-value"><span>'
 		        +item.USER_CODE
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人岗位： </div><div class="profile-info-value"><span>'
@@ -629,8 +655,8 @@
 					           $('#USER_CODE').append("<option value='0'>--请选择申请人--</option>");
 					            //遍历成功返回的数据
 					            $.each(data, function (index,item) {
-					                var userName = data[index].NAME;
-					                var userId = data[index].USER_ID;
+					                var userName = data.departList[index].NAME;
+					                var userId = data.departList[index].USER_ID;
 					                //构造动态option
 					                $('#USER_CODE').append("<option value='"+userId+"'>"+userName+"</option>")
 					             });

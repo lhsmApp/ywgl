@@ -330,7 +330,7 @@ public class ChangeGrcQxbgController extends BaseController {
 		public PageData showDetail() throws Exception{
 			PageData pd = new PageData();
 			pd = this.getPageData();
-			pd = changegrcqxbgService.findById(pd);	//根据ID读取
+			pd = changegrcqxbgService.findByBillCode(pd);	//根据ID读取
 			pd.put("DEPARTMENT_CODE", pd.getString("UNIT_CODE"));
 			PageData pdDepartResultUnit=departmentService.findByBianma(pd);
 			if(pdDepartResultUnit!=null)

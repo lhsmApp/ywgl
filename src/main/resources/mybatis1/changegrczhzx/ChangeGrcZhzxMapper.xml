@@ -154,10 +154,24 @@
 				a.BILL_STATE BILL_STATE,	
 				a.BILL_USER BILL_USER,	
 				a.BILL_DATE BILL_DATE,
-				b.APPROVAL_STATE APPROVAL_STATE
+				b.APPROVAL_STATE APPROVAL_STATE,
+				c.NAME AS UNIT_NAME,
+				d.USERNAME,
+				e.NAME  DEPT_NAME,
+				f.NAME  USER_DEPTNAME	
 				FROM 
 				tb_change_grc_zhzx a LEFT JOIN tb_approval_main b
-				ON a.BILL_CODE=b.BILL_CODE)  AS t
+				ON a.BILL_CODE=b.BILL_CODE
+				left join oa_department c
+				on  c.DEPARTMENT_CODE = a.UNIT_CODE
+		 		left join sys_user d 
+	 			on a.USER_CODE=d.USER_ID
+	 			left join oa_department e
+		  		ON
+				e.DEPARTMENT_CODE = a.DEPT_CODE
+				left join oa_department f
+				on
+				f.DEPARTMENT_CODE = a.USER_DEPT)  AS t
 		<where>
 			(BILL_USER=#{pd.BILL_USER}
 			or
@@ -180,7 +194,7 @@
 	<!-- 根据BILL_CODE获取表单信息以及表单上申请人所在的单位及部门名称-->
 	<select id="findByBillCode" parameterType="pd" resultType="pd">
 		SELECT 
-		a.BILL_CODE,	
+				a.BILL_CODE,	
 				a.UNIT_CODE,		
 				a.DEPT_CODE,	
 				a.ENTRY_DATE,	
@@ -197,13 +211,24 @@
 				a.BILL_USER BILL_USER,	
 				a.BILL_DATE BILL_DATE,	
 				b.NAME AS UNIT_NAME,
-				c.USERNAME
+				c.USERNAME,
+				d.NAME  DEPT_NAME,
+				e.NAME  USER_DEPTNAME
 			FROM
-		  tb_change_grc_zhzx a,
-		  oa_department b, sys_user c 
-		WHERE b.DEPARTMENT_CODE = a.UNIT_CODE
-		AND a.USER_CODE=c.USER_ID
-	  	AND a.BILL_CODE =#{BILL_CODE} 
+		  tb_change_grc_zhzx a 
+		  LEFT JOIN 
+		  oa_department b
+		  ON
+			b.DEPARTMENT_CODE = a.UNIT_CODE
+			LEFT JOIN sys_user c 
+			ON a.USER_CODE=c.USER_ID
+			LEFT JOIN oa_department d
+			  ON
+			d.DEPARTMENT_CODE = a.DEPT_CODE	
+			  left join oa_department e
+			  on
+			e.DEPARTMENT_CODE = a.USER_DEPT
+		  	where a.BILL_CODE =#{BILL_CODE} 
 	</select>
 	<!-- 列表(全部) -->
 	<select id="listAll" parameterType="pd" resultType="pd">

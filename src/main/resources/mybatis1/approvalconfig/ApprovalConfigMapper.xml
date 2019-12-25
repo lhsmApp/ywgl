@@ -504,7 +504,12 @@
 	
 	<!-- 列表 -->
 	<select id="datalistPageScheme" parameterType="page" resultType="pd">
-		SELECT * FROM	(SELECT 
+	SELECT t.*,
+			c.NAME AS UNIT_NAME,
+			d.USERNAME,
+			e.NAME  DEPT_NAME
+		 FROM	
+		(SELECT 
 			a.BUSINESS_CODE,	
 			a.BILL_CODE,	
 			a.CURRENT_LEVEL,	
@@ -534,23 +539,31 @@
 			b.BILL_DATE
 		FROM
 			  tb_approval_detail a, tb_change_erp_xtbg b 
-		WHERE a.ACTIVE_FLAG =#{pd.ACTIVE_FLAG}
+		WHERE  a.ACTIVE_FLAG =#{pd.ACTIVE_FLAG}
 			  AND a.UNIT_CODE = #{pd.UNIT_CODE}
-<!-- 			  AND a.ROLE_CODE = #{ROLE_CODE} -->
+			  AND a.ROLE_CODE = #{pd.ROLE_CODE}
 			  AND a.APPROVAL_STATE = #{pd.APPROVAL_STATE}
 			AND a.BILL_CODE = b.BILL_CODE ) AS T
+			  LEFT JOIN oa_department c
+		 	 ON
+			c.DEPARTMENT_CODE = t.UNIT_CODE
+			LEFT JOIN sys_user d 
+			ON d.USER_ID=t.USER_CODE
+			LEFT JOIN oa_department e
+			  ON e.DEPARTMENT_CODE = t.DEPT_CODE			  			
 		WHERE 1=1
 		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
-			and
-				(
-				BG_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
-
-				)
+			and  t.BG_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 		</if>
 	</select>
 	<!-- 角色变更-->
 	<select id="datalistPageJsbg" parameterType="page" resultType="pd">
-		SELECT * FROM	(SELECT 
+			SELECT t.*,
+			c.NAME AS UNIT_NAME,
+			d.USERNAME,
+			e.NAME  DEPT_NAME
+		 FROM	
+		(SELECT 
 			a.BUSINESS_CODE,	
 			a.BILL_CODE,	
 			a.CURRENT_LEVEL,	
@@ -584,21 +597,28 @@
 			  tb_approval_detail a, tb_change_erp_jsbg b 
 		WHERE a.ACTIVE_FLAG =#{pd.ACTIVE_FLAG}
 			  AND a.UNIT_CODE = #{pd.UNIT_CODE}
-<!-- 			  AND a.ROLE_CODE = #{ROLE_CODE} -->
+			  AND a.ROLE_CODE = #{pd.ROLE_CODE}
 			  AND a.APPROVAL_STATE = #{pd.APPROVAL_STATE}
 			AND a.BILL_CODE = b.BILL_CODE ) AS T
+			  LEFT JOIN oa_department c
+		 	 ON
+			c.DEPARTMENT_CODE = t.UNIT_CODE
+			LEFT JOIN sys_user d 
+			ON d.USER_ID=t.USER_CODE
+			LEFT JOIN oa_department e
+			  ON e.DEPARTMENT_CODE = t.DEPT_CODE	
 		WHERE 1=1
 		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
-			and
-				(
-				BG_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
-
-				)
+			and  t.BG_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 		</if>
 	</select>
 	<!-- GRC帐号新增 -->
 	<select id="datalistPageGrcZhxz" parameterType="page" resultType="pd">
-		SELECT * FROM	(SELECT 
+		SELECT t.*,
+			c.NAME AS UNIT_NAME,
+			d.USERNAME,
+			e.NAME  DEPT_NAME
+		FROM	(SELECT 
 			a.BUSINESS_CODE,	
 			a.BILL_CODE,	
 			a.CURRENT_LEVEL,	
@@ -632,21 +652,29 @@
 			  tb_approval_detail a, tb_change_grc_zhxz b 
 		WHERE a.ACTIVE_FLAG =#{pd.ACTIVE_FLAG}
 			  AND a.UNIT_CODE = #{pd.UNIT_CODE}
-<!-- 			  AND a.ROLE_CODE = #{ROLE_CODE} -->
+			  AND a.ROLE_CODE = #{pd.ROLE_CODE}
 			  AND a.APPROVAL_STATE = #{pd.APPROVAL_STATE}
-			AND a.BILL_CODE = b.BILL_CODE ) AS T
+			AND a.BILL_CODE = b.BILL_CODE ) AS t
+			  LEFT JOIN oa_department c
+		 	 ON
+			c.DEPARTMENT_CODE = t.UNIT_CODE
+			LEFT JOIN sys_user d 
+			ON d.USER_ID=t.USER_CODE
+			LEFT JOIN oa_department e
+			  ON e.DEPARTMENT_CODE = t.DEPT_CODE
 		WHERE 1=1
 		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
-			and
-				(
-				ACCOUNT_REASON LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
-
-				)
+			and  t.ACCOUNT_REASON LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 		</if>
 	</select>
 		<!-- GRC帐号注销 -->
 	<select id="datalistPageGrcZhzx" parameterType="page" resultType="pd">
-		SELECT * FROM	(SELECT 
+		SELECT t.*,
+			c.NAME AS UNIT_NAME,
+			d.USERNAME,
+			e.NAME  DEPT_NAME 
+		FROM	
+			(SELECT 
 			a.BUSINESS_CODE,	
 			a.BILL_CODE,	
 			a.CURRENT_LEVEL,	
@@ -678,21 +706,28 @@
 			  tb_approval_detail a, tb_change_grc_zhzx b 
 		WHERE a.ACTIVE_FLAG =#{pd.ACTIVE_FLAG}
 			  AND a.UNIT_CODE = #{pd.UNIT_CODE}
-<!-- 			  AND a.ROLE_CODE = #{ROLE_CODE} -->
+			  AND a.ROLE_CODE = #{pd.ROLE_CODE}
 			  AND a.APPROVAL_STATE = #{pd.APPROVAL_STATE}
-			AND a.BILL_CODE = b.BILL_CODE ) AS T
+			AND a.BILL_CODE = b.BILL_CODE ) AS t
+			 LEFT JOIN oa_department c
+		 	 ON
+			c.DEPARTMENT_CODE = t.UNIT_CODE
+			LEFT JOIN sys_user d 
+			ON d.USER_ID=t.USER_CODE
+			LEFT JOIN oa_department e
+			  ON e.DEPARTMENT_CODE = t.DEPT_CODE	
 		WHERE 1=1
 		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
-			and
-				(
-				CANCLE_REASON LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
-
-				)
+			and t.CANCLE_REASON LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 		</if>
 	</select>
 		<!-- GRC帐号注销 -->
 	<select id="datalistPageGrcQxbg" parameterType="page" resultType="pd">
-		SELECT * FROM	(SELECT 
+		SELECT t.*,
+			c.NAME AS UNIT_NAME,
+			d.USERNAME,
+			e.NAME  DEPT_NAME
+		FROM (SELECT 
 			a.BUSINESS_CODE,	
 			a.BILL_CODE,	
 			a.CURRENT_LEVEL,	
@@ -725,16 +760,19 @@
 			  tb_approval_detail a, tb_change_grc_qxbg b 
 		WHERE a.ACTIVE_FLAG =#{pd.ACTIVE_FLAG}
 			  AND a.UNIT_CODE = #{pd.UNIT_CODE}
-<!-- 			  AND a.ROLE_CODE = #{ROLE_CODE} -->
+			  AND a.ROLE_CODE = #{pd.ROLE_CODE}
 			  AND a.APPROVAL_STATE = #{pd.APPROVAL_STATE}
-			AND a.BILL_CODE = b.BILL_CODE ) AS T
+			AND a.BILL_CODE = b.BILL_CODE ) AS t
+			 LEFT JOIN oa_department c
+		 	 ON
+			c.DEPARTMENT_CODE = t.UNIT_CODE
+			LEFT JOIN sys_user d 
+			ON d.USER_ID=t.USER_CODE
+			LEFT JOIN oa_department e
+			  ON e.DEPARTMENT_CODE = t.DEPT_CODE	
 		WHERE 1=1
 		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
-			and
-				(
-				BG_REASON LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
-
-				)
+			and  t.BG_REASON LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 		</if>
 	</select>
 	<!-- 列表(全部) -->
@@ -757,13 +795,19 @@
 	</delete>
 	<!-- 显示当前需要审批的订单 -->
 	<select id="listApproval" parameterType="pd" resultType="pd">
-		SELECT 
+		SELECT t.*,	
+				c.NAME AS UNIT_NAME,
+				d.USERNAME,
+				e.NAME  DEPT_NAME,
+				f.NAME  USER_DEPTNAME 
+				from 
+		(SELECT 
 			a.BUSINESS_CODE,a.BILL_CODE,a.CURRENT_LEVEL,a.NEXT_LEVEL,a.ACTIVE_FLAG,a.UNIT_CODE AS SPUNIT_CODE,a.DEPART_CODE,a.APPROVAL_STATE,	
 			a.ROLE_CODE,a.APPROVAL_USER,a.APPROVAL_DATE,a.APPROVAL_ADVICE,b.UNIT_CODE AS UNIT_CODE,b.DEPT_CODE,b.ENTRY_DATE,	
 			b.SERIAL_NUM,b.USER_CODE,b.USER_DEPT,b.USER_JOB,b.USER_CONTACT,b.BG_NAME,b.SYSTEM,b.BG_TYPE,b.BG_REASON as REASON,b.BILL_STATE,b.BILL_USER,b.BILL_DATE
 		FROM
-			  tb_approval_detail a, tb_change_erp_xtbg b 
-			  <where>
+			  tb_approval_detail a, tb_change_erp_xtbg b
+			    <where>
 			  a.BILL_CODE = b.BILL_CODE 
 			 <if test="ACTIVE_FLAG!=null and ACTIVE_FLAG!=''"> 
 			 and a.ACTIVE_FLAG =#{ACTIVE_FLAG}
@@ -777,14 +821,32 @@
 			<if test="APPROVAL_STATE!=null and APPROVAL_STATE!=''"> 
 			 and a.APPROVAL_STATE = #{APPROVAL_STATE}
 			 </if>
-			</where>
+			</where>) as t
+			   LEFT JOIN oa_department c
+		 	 ON
+			c.DEPARTMENT_CODE = t.UNIT_CODE
+			LEFT JOIN sys_user d 
+			ON d.USER_ID=t.USER_CODE
+			LEFT JOIN oa_department e
+			  ON
+			e.DEPARTMENT_CODE = t.DEPT_CODE	
+			  left join oa_department f
+			  on
+			f.DEPARTMENT_CODE = t.USER_DEPT
+			
 			UNION
-				SELECT 
-			a.BUSINESS_CODE,a.BILL_CODE,a.CURRENT_LEVEL,a.NEXT_LEVEL,a.ACTIVE_FLAG,a.UNIT_CODE AS SPUNIT_CODE,a.DEPART_CODE,a.APPROVAL_STATE,	
-			a.ROLE_CODE,a.APPROVAL_USER,a.APPROVAL_DATE,a.APPROVAL_ADVICE,b.UNIT_CODE AS UNIT_CODE,b.DEPT_CODE,b.ENTRY_DATE,	
-			b.SERIAL_NUM,b.USER_CODE,b.USER_DEPT,b.USER_JOB,b.USER_CONTACT,b.BG_NAME,b.SYSTEM,b.BG_TYPE,b.BG_REASON as REASON,b.BILL_STATE,b.BILL_USER,b.BILL_DATE
-		FROM
-			  tb_approval_detail a, tb_change_erp_jsbg b 
+			SELECT t.*,	
+			c.NAME AS UNIT_NAME,
+			d.USERNAME,
+			e.NAME  DEPT_NAME,
+			f.NAME  USER_DEPTNAME 
+			from 
+			(SELECT 
+				a.BUSINESS_CODE,a.BILL_CODE,a.CURRENT_LEVEL,a.NEXT_LEVEL,a.ACTIVE_FLAG,a.UNIT_CODE AS SPUNIT_CODE,a.DEPART_CODE,a.APPROVAL_STATE,	
+				a.ROLE_CODE,a.APPROVAL_USER,a.APPROVAL_DATE,a.APPROVAL_ADVICE,b.UNIT_CODE AS UNIT_CODE,b.DEPT_CODE,b.ENTRY_DATE,	
+				b.SERIAL_NUM,b.USER_CODE,b.USER_DEPT,b.USER_JOB,b.USER_CONTACT,b.BG_NAME,b.SYSTEM,b.BG_TYPE,b.BG_REASON as REASON,b.BILL_STATE,b.BILL_USER,b.BILL_DATE
+			FROM
+			  tb_approval_detail a, tb_change_erp_jsbg b
 			  <where>
 			  a.BILL_CODE = b.BILL_CODE 
 			 <if test="ACTIVE_FLAG!=null and ACTIVE_FLAG!=''"> 
@@ -799,15 +861,33 @@
 			<if test="APPROVAL_STATE!=null and APPROVAL_STATE!=''"> 
 			 and a.APPROVAL_STATE = #{APPROVAL_STATE}
 			 </if>
-			</where>
+			</where>) as t
+			   LEFT JOIN oa_department c
+		 	 ON
+			c.DEPARTMENT_CODE = t.UNIT_CODE
+			LEFT JOIN sys_user d 
+			ON d.USER_ID=t.USER_CODE
+			LEFT JOIN oa_department e
+			  ON
+			e.DEPARTMENT_CODE = t.DEPT_CODE	
+			  left join oa_department f
+			  on
+			f.DEPARTMENT_CODE = t.USER_DEPT 
+			  
 				UNION
-				SELECT 
+				SELECT t.*,	
+				c.NAME AS UNIT_NAME,
+				d.USERNAME,
+				e.NAME  DEPT_NAME,
+				f.NAME  USER_DEPTNAME 
+				from 
+		(SELECT 
 			a.BUSINESS_CODE,a.BILL_CODE,a.CURRENT_LEVEL,a.NEXT_LEVEL,a.ACTIVE_FLAG,a.UNIT_CODE AS SPUNIT_CODE,a.DEPART_CODE,a.APPROVAL_STATE,	
 			a.ROLE_CODE,a.APPROVAL_USER,a.APPROVAL_DATE,a.APPROVAL_ADVICE,b.UNIT_CODE AS UNIT_CODE,b.DEPT_CODE,b.ENTRY_DATE,	
 			b.SERIAL_NUM,b.USER_CODE,b.USER_DEPT,b.USER_JOB,b.USER_CONTACT,'' as BG_NAME,b.SYSTEM,b.BG_TYPE,b.BG_REASON as REASON,b.BILL_STATE,b.BILL_USER,b.BILL_DATE
 		FROM
 			  tb_approval_detail a, tb_change_grc_qxbg b 
-			  <where>
+			   <where>
 			  a.BILL_CODE = b.BILL_CODE 
 			 <if test="ACTIVE_FLAG!=null and ACTIVE_FLAG!=''"> 
 			 and a.ACTIVE_FLAG =#{ACTIVE_FLAG}
@@ -821,9 +901,27 @@
 			<if test="APPROVAL_STATE!=null and APPROVAL_STATE!=''"> 
 			 and a.APPROVAL_STATE = #{APPROVAL_STATE}
 			 </if>
-			</where>
+			</where>) as t
+			   LEFT JOIN oa_department c
+		 	 ON
+			c.DEPARTMENT_CODE = t.UNIT_CODE
+			LEFT JOIN sys_user d 
+			ON d.USER_ID=t.USER_CODE
+			LEFT JOIN oa_department e
+			  ON
+			e.DEPARTMENT_CODE = t.DEPT_CODE	
+			  left join oa_department f
+			  on
+			f.DEPARTMENT_CODE = t.USER_DEPT
+			 
 				UNION
-				SELECT 
+				SELECT t.*,	
+				c.NAME AS UNIT_NAME,
+				d.USERNAME,
+				e.NAME  DEPT_NAME,
+				f.NAME  USER_DEPTNAME 
+				from 
+		(SELECT 
 			a.BUSINESS_CODE,a.BILL_CODE,a.CURRENT_LEVEL,a.NEXT_LEVEL,a.ACTIVE_FLAG,a.UNIT_CODE AS SPUNIT_CODE,a.DEPART_CODE,a.APPROVAL_STATE,	
 			a.ROLE_CODE,a.APPROVAL_USER,a.APPROVAL_DATE,a.APPROVAL_ADVICE,b.UNIT_CODE AS UNIT_CODE,b.DEPT_CODE,b.ENTRY_DATE,	
 			b.SERIAL_NUM,b.USER_CODE,b.USER_DEPT,b.USER_JOB,b.USER_CONTACT,'' as BG_NAME,b.SYSTEM,'' as BG_TYPE,b.ACCOUNT_REASON as REASON,b.BILL_STATE,b.BILL_USER,b.BILL_DATE
@@ -843,15 +941,33 @@
 			<if test="APPROVAL_STATE!=null and APPROVAL_STATE!=''"> 
 			 and a.APPROVAL_STATE = #{APPROVAL_STATE}
 			 </if>
-			</where>
+			</where>) as t
+			   LEFT JOIN oa_department c
+		 	 ON
+			c.DEPARTMENT_CODE = t.UNIT_CODE
+			LEFT JOIN sys_user d 
+			ON d.USER_ID=t.USER_CODE
+			LEFT JOIN oa_department e
+			  ON
+			e.DEPARTMENT_CODE = t.DEPT_CODE	
+			  left join oa_department f
+			  on
+			f.DEPARTMENT_CODE = t.USER_DEPT
+			  
 					UNION
-				SELECT 
+				SELECT t.*,	
+				c.NAME AS UNIT_NAME,
+				d.USERNAME,
+				e.NAME  DEPT_NAME,
+				f.NAME  USER_DEPTNAME 
+				from 
+		(SELECT 
 			a.BUSINESS_CODE,a.BILL_CODE,a.CURRENT_LEVEL,a.NEXT_LEVEL,a.ACTIVE_FLAG,a.UNIT_CODE AS SPUNIT_CODE,a.DEPART_CODE,a.APPROVAL_STATE,	
 			a.ROLE_CODE,a.APPROVAL_USER,a.APPROVAL_DATE,a.APPROVAL_ADVICE,b.UNIT_CODE AS UNIT_CODE,b.DEPT_CODE,b.ENTRY_DATE,	
 			b.SERIAL_NUM,b.USER_CODE,b.USER_DEPT,b.USER_JOB,b.USER_CONTACT,'' as BG_NAME,b.SYSTEM,'' as BG_TYPE,b.CANCLE_REASON as REASON,b.BILL_STATE,b.BILL_USER,b.BILL_DATE
 		FROM
-			  tb_approval_detail a, tb_change_grc_zhzx b 
-			  <where>
+			  tb_approval_detail a, tb_change_grc_zhzx b
+			    <where>
 			  a.BILL_CODE = b.BILL_CODE 
 			 <if test="ACTIVE_FLAG!=null and ACTIVE_FLAG!=''"> 
 			 and a.ACTIVE_FLAG =#{ACTIVE_FLAG}
@@ -865,7 +981,19 @@
 			<if test="APPROVAL_STATE!=null and APPROVAL_STATE!=''"> 
 			 and a.APPROVAL_STATE = #{APPROVAL_STATE}
 			 </if>
-			</where>
+			</where> ) as t
+			   LEFT JOIN oa_department c
+		 	 ON
+			c.DEPARTMENT_CODE = t.UNIT_CODE
+			LEFT JOIN sys_user d 
+			ON d.USER_ID=t.USER_CODE
+			LEFT JOIN oa_department e
+			  ON
+			e.DEPARTMENT_CODE = t.DEPT_CODE	
+			  left join oa_department f
+			  on
+			f.DEPARTMENT_CODE = t.USER_DEPT
+			
 	</select>
 	
 	<!-- 查询变更信息 -->
