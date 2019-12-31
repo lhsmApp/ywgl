@@ -163,8 +163,14 @@
 													</div>	
 													 <div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-dept">部门</label>
-														<input type="hidden" name="DEPT_CODE" id="DEPT_CODE"/>
-														<input type="text" name="DEPT_NAME" id="DEPT_NAME" class="form-control" placeholder="请输入部门"/>
+<!-- 														<input type="hidden" name="DEPT_CODE" id="DEPT_CODE"/> -->
+<!-- 														<input type="text" name="DEPT_NAME" id="DEPT_NAME" class="form-control" placeholder="请输入部门"/> -->
+												<select class="form-control" name="DEPT_CODE" id="DEPT_CODE">
+																	<option value=""></option>
+																	<c:forEach items="${userDeptList}" var="dept">
+																	<option value="${dept.DEPARTMENT_ID}">${dept.NAME}</option>
+																	</c:forEach>
+																</select>
 													</div>
 													<div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-user">申请人</label>
@@ -179,8 +185,8 @@
 														<label for="form-field-xtbg-report-depart">申请人部门</label>
 														<select class="form-control" name="USER_DEPT" id="USER_DEPT">
 																	<option value=""></option>
-																	<c:forEach items="${userDeptList}" var="user">
-																	<option value="${user.USER_DEPT}">${user.USER_DEPTNAME}</option>
+																	<c:forEach items="${userDeptList}" var="dept">
+																	<option value="${dept.DEPARTMENT_ID}">${dept.NAME}</option>
 																	</c:forEach>
 																</select>
 <!-- 														<input type="hidden" name="USER_DEPT" id="USER_DEPT" /> -->
