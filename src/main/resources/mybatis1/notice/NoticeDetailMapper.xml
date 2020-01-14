@@ -1,43 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="NoticeMapper">
+<mapper namespace="NoticeDetailMapper">
 	
 	<!--表名 -->
 	<sql id="tableName">
-		tb_notice
+		tb_notice_detail
 	</sql>
 	
 	<!-- 字段 -->
 	<sql id="Field">
-		NOTICE_CONTENT,	
-		NOTICE_USER,	
-		NOTICE_TYPE,	
-		START_TIME,	
-		END_TIME,	
-		ATTACHMENT_PATH,	
-		STATE,	
-		USER_DEPART,	
-		CREATE_DATE
+		NOTICE_ID,	
+        USER_ID,
+		STATE,
+        START_TIME,
+        END_TIME
 	</sql>
 	
 	<!-- 字段值 -->
 	<sql id="FieldValue">
-		#{NOTICE_CONTENT},	
-		#{NOTICE_USER},	
-		#{NOTICE_TYPE},	
-		#{START_TIME},	
-		#{END_TIME},	
-		#{ATTACHMENT_PATH},	
-		#{STATE},	
-		#{USER_DEPART},	
-		#{CREATE_DATE}
+		#{NOTICE_ID},	
+		#{USER_ID},	
+		#{STATE},
+        #{START_TIME}, 
+        #{END_TIME}
 	</sql>
 	
+    <!-- 批量新增-->
+    <insert id="saveAll" parameterType="pd">
+        insert into 
+    <include refid="tableName"></include>
+        (
+    <include refid="Field"></include>
+        ) values 
+       <foreach item="detail" index="index" collection="varList" open="" close="" separator="," >
+           (#{detail.NOTICE_ID},#{detail.USER_ID},#{detail.STATE},#{START_TIME},#{END_TIME})
+       </foreach>
+    </insert>
+    
 	<!-- 新增-->
 	<insert id="save" parameterType="pd">
-        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
-            SELECT LAST_INSERT_ID()
-        </selectKey>
 		insert into 
 	<include refid="tableName"></include>
 		(
@@ -118,33 +119,11 @@
                  #{item}
 		</foreach>
 	</delete>
-    
-    <!-- 查看自己有没有消息 -->
-    <select id="getMyNotice" parameterType="pd" resultType="pd">
-        select NOTICE_ID,NOTICE_CONTENT 
-        from tb_notice 
-        <where>
-            NOTICE_ID in (
-            select NOTICE_ID from tb_notice_detail 
-            <where>
-                USER_ID = #{USER_ID} AND STATE=0 AND START_TIME&lt;NOW() AND END_TIME&gt;NOW()
-            </where>
-            )
-        </where>
-    </select>
-     
-    <!-- 选择发布范围，展示角色列表 -->
+    <!-- 去选择发布范围 -->
     <select id="showSysRoleList"  parameterType="page" resultType="pd">
         select ROLE_ID,ROLE_NAME FROM sys_role
         <where>
         PARENT_ID=1
-        </where>
-    </select>
-    <!-- 选择发布范围，展示人员列表 -->
-    <select id="showSysUserList"  parameterType="page" resultType="pd">
-        select USER_ID,USERNAME,NAME,DEPARTMENT_ID,UNIT_CODE  FROM  sys_user
-        <where>
-        STATUS=1
         </where>
     </select>
 </mapper>
