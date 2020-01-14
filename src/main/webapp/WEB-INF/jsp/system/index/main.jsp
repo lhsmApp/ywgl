@@ -361,6 +361,7 @@
 			if( compact.length > 0 ) {
 				compact.removeAttr('checked').trigger('click');
 			} */
+		    getNewNotice()//获取公告提示信息
 		})
 		
 		function applyChanges(skin_class) {
@@ -414,6 +415,71 @@
 			//$('.sidebar[data-sidebar-hover=true]').ace_sidebar_hover('reset')
 			
 			if(ace.vars['old_ie']) ace.helper.redraw(document.body, true);
+		}
+		//向后台获取公告信息
+		function getNewNotice(){
+		    $.ajax({
+                type: "POST",
+                url: '<%=basePath%>notice/getMyNotice.do?tm='+new Date().getTime(),
+                data: {},
+                cache: false,
+                success: function(json){
+                    var data =JSON.parse(decodeURIComponent(json))
+                    console.log(data)
+                    var notices = data['retData']
+                    for (var i=0;i< notices.length;i++){
+                        console.log(notices[i])
+                        ejectNotice("新消息提示【点击表示已读】",notices[i]['NOTICE_CONTENT'],notices[i]['NOTICE_ID']);
+                    } 
+                }
+            });
+		}
+		//右下角气泡弹窗 函数
+		//弹出
+		function ejectNotice(title,msg,id){
+            var Notification = window.Notification || window.mozNotification || window.webkitNotification;
+            if(Notification){
+                Notification.requestPermission(function(status){
+                    //status默认值'default'等同于拒绝 'denied' 意味着用户不想要通知 'granted' 意味着用户同意启用通知
+                    if("granted" != status){
+                        return;
+                    }else{
+                        var tag = id;
+                        var notify = new Notification(
+                            title,
+                            {
+                                dir:'auto',
+                                lang:'zh-CN',
+                                tag:tag,//实例化的notification的id
+                                body:msg, //通知的具体内容
+                                requireInteraction:true,
+                                renotify:false
+                            }
+                        );
+                        notify.onclick=function(event){
+                            readNotice(event);//点击标记已读
+                            notify.close();
+                        },
+                        notify.onerror = function () {
+                            console.log("HTML5桌面消息出错！！！");
+                        };
+                        notify.onshow = function () {
+                            /*setTimeout(function(){
+                                notify.close();
+                            },2000)*/
+                        };
+                        notify.onclose = function () {
+                            console.log("HTML5桌面消息关闭！！！");
+                        };
+                    }
+                });
+            }else{
+                console.log("您的浏览器不支持桌面消息");
+            }
+        };
+		//标记为已读
+		function readNotice(event){
+		    console.log(event.target.tag)//id
 		}
 	</script>
 </body>
