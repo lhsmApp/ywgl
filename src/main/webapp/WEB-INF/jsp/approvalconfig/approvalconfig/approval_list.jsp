@@ -142,6 +142,7 @@
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 	<script type="text/javascript">
+    var globalFocus_BUSINESS_CODE = null
 	    var bill_code=undefined;//系统变更单号码
 	    var current_level=undefined;//当前审批级别
 	    varnext_level=undefined;//下一审批级别	    
@@ -326,9 +327,10 @@
 		    //document.getElementById("tasks").innerHTML = html;
 			$('#tasks').html(html);
 		}		
+		
 		//动态加载变更数据
 		function setDiv(item){
-		    var div = '<li  class="item-grey clearfix" onclick="showDetail(\''+item.BILL_CODE+'\',\''+item.CURRENT_LEVEL+'\',\''+item.NEXT_LEVEL+'\');"><div><label class="inline" style="margin-bottom:5px;"><span class="list-item-value-title">'
+		    var div = '<li  class="item-grey clearfix" onclick="showDetail(\''+item.BILL_CODE+'\',\''+item.CURRENT_LEVEL+'\',\''+item.NEXT_LEVEL+'\','+ item.BUSINESS_CODE+');"><div><label class="inline" style="margin-bottom:5px;"><span class="list-item-value-title">'
 		        + item.BG_NAME
 		        + '</span></label></div><div><label class="inline"><span class="list-item-info">单号:&nbsp;</span><span class="list-item-value">'
 		        + item.BILL_CODE
@@ -400,12 +402,16 @@
 		        +'</span></label></div></li>';
 		    return div;
 		}
-		function showDetail(code,current,next){
+		function showDetail(code,current,next,businessType=0){
 			bill_code=code;
 		 	current_level=current;//当前审批级别
 		    next_level=next;//下一审批级别	 
 // 			var businessType= $("#BUSINESS_TYPE").val();//业务类型
-            var businessType= $(".level_select:checked").val();
+            //var businessType= $(".level_select:checked").val();
+            if(businessType==0){
+                businessType= $(".level_select:checked").val();
+            }
+            globalFocus_BUSINESS_CODE = businessType
             if(null==businessType||businessType==''){
             	businessType='1';
             }
@@ -418,7 +424,7 @@
 		            success:function(datas){
 		            	//console.log(datas);
 		            	var html = '';
-		      		     html += setDetail(datas);
+		      		     html += setDetail(datas, businessType);
 		      			$('#detail-tab').html(html);
 		      		    if(datas.APPROVAL_STATE==2)
 		    			{
@@ -444,10 +450,10 @@
 		         });
 		}
 		//动态加载变更单详情
-		function setDetail(item){
+		function setDetail(item, businessType){
 			var title=undefined;
 			var reason=undefined;
-			var value=  $(".level_select:checked").val();
+			var value=  businessType//$(".level_select:checked").val();
 		      if(null==value||value==''){
 	            	value='1';
 	            }
@@ -510,7 +516,7 @@
 	
 		//审批通过
 		function passApproval(){
-		      var businessType= $(".level_select:checked").val();
+		      var businessType= globalFocus_BUSINESS_CODE//$(".level_select:checked").val();
 			  $.ajax({
 				  	type: "POST",
 		            //提交的网址
@@ -534,7 +540,7 @@
 		}
 		//审批退回
 		function returnApproval(){
-		      var businessType= $(".level_select:checked").val();
+		      var businessType= globalFocus_BUSINESS_CODE//$(".level_select:checked").val();
 			  $.ajax({
 				  	type: "POST",
 		            //提交的网址
