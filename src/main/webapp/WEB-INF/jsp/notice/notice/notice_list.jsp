@@ -91,8 +91,8 @@
 											<td class='center' style="width: 30px;">${vs.index+1}</td>
 											<td class='center'>${var.NOTICE_CONTENT}</td>
 											<td class='center'>${var.NOTICE_USER}</td>
-											<td class='center'>${var.START_TIME}</td>
-											<td class='center'>${var.END_TIME}</td>
+											<td class='center'><fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${var.START_TIME}" /></td>
+											<td class='center'><fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${var.END_TIME}" /></td>
 											<td class='center'>
 											<a href="<%=basePath%>notice/download.do?address=${var.ATTACHMENT_PATH}">
 												<i class="ace-icon fa fa-cloud-download bigger-120" title="下载"></i>
