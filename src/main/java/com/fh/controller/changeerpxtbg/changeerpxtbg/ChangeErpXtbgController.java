@@ -353,22 +353,7 @@ public class ChangeErpXtbgController extends BaseController {
 			pd.put("depnameUnit", pdDepartResultUnit.getString("NAME"));
 		else
 			pd.put("depnameUnit", null);
-		//获取申请部门
-		PageData pd1 = new PageData();
-		pd1.put("DEPARTMENT_CODE", pd.getString("DEPT_CODE"));
-		PageData pdDepartResultDept=departmentService.findByBianma(pd1);
-		if(pdDepartResultDept!=null)
-			pd.put("depnameDept", pdDepartResultDept.getString("NAME"));
-		else
-			pd.put("depnameDept", null);
-		//获取申请人部门
-		PageData pd2 = new PageData();
-		pd2.put("DEPARTMENT_CODE", pd.getString("USER_DEPT"));
-		PageData pdDepartResultUserDept=departmentService.findByBianma(pd2);
-		if(pdDepartResultUserDept!=null)
-			pd.put("depnameUserDept", pdDepartResultUserDept.getString("NAME"));
-		else
-			pd.put("depnameUserDept", null);
+		
 		return pd;
 	}
 	/**根据单位获取用户信息

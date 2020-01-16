@@ -139,7 +139,7 @@
 												<input type="hidden" name="BILL_USER" id="BILL_USER"/>	
 												<input type="hidden" name="ENTRY_DATE" id="ENTRY_DATE"/>
 												<input type="hidden" name="SERIAL_NUM" id="SERIAL_NUM"/>	
-												<input type="hidden" name="USER_DEPT" id="USER_DEPT"/>
+<!-- 												<input type="hidden" name="USER_DEPT" id="USER_DEPT"/> -->
 												<input type="hidden" name="SYSTEM" id="SYSTEM"/>	
 												<input type="hidden" name="BG_TYPE" id="BG_TYPE"/>
 												<input type="hidden" name="BILL_STATE" id="BILL_STATE"/>	
@@ -165,12 +165,12 @@
 														<label for="form-field-xtbg-report-dept">部门</label>
 <!-- 														<input type="hidden" name="DEPT_CODE" id="DEPT_CODE"/> -->
 <!-- 														<input type="text" name="DEPT_NAME" id="DEPT_NAME" class="form-control" placeholder="请输入部门"/> -->
-												<select class="form-control" name="DEPT_CODE" id="DEPT_CODE">
-																	<option value=""></option>
-																	<c:forEach items="${userDeptList}" var="dept">
-																	<option value="${dept.DEPARTMENT_ID}">${dept.NAME}</option>
-																	</c:forEach>
-																</select>
+														<select class="form-control" name="DEPT_CODE" id="DEPT_CODE">
+															<option value=""></option>
+															<c:forEach items="${userDeptList}" var="dept">
+															<option value="${dept.DEPARTMENT_CODE}">${dept.NAME}</option>
+															</c:forEach>
+														</select>
 													</div>
 													<div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-user">申请人</label>
@@ -186,7 +186,7 @@
 														<select class="form-control" name="USER_DEPT" id="USER_DEPT">
 																	<option value=""></option>
 																	<c:forEach items="${userDeptList}" var="dept">
-																	<option value="${dept.DEPARTMENT_ID}">${dept.NAME}</option>
+																	<option value="${dept.DEPARTMENT_CODE}">${dept.NAME}</option>
 																	</c:forEach>
 																</select>
 <!-- 														<input type="hidden" name="USER_DEPT" id="USER_DEPT" /> -->
@@ -310,6 +310,8 @@
 		function add(){
 			//点击新增按钮，弹到提报tab页
 			$("#xtbg-tab li[tag='report-tab'] a").click();
+			$("#DEPT_CODE").val('');//部门编码
+			$("#USER_DEPT").val('');//申请人部门编码
 			//新增清空文本框
 			$("#BG_NAME").val("");//变更名称
 			$("#BG_REASON").val("");//变更原因
@@ -324,30 +326,6 @@
 			$("#USER_CONTACT").val("");//联系方式
 			$("#EFFECTIVE_DATE").val("");//变更预期时间
 			$("#BILL_CODE").val("");//申请单号		
-		}
-		function add1(){
-			 top.jzts();
-			 var diag = new top.Dialog();
-			 diag.Drag=true;
-			 diag.Title ="新增";
-			 diag.URL = '<%=basePath%>changeerpxtbg/goAdd.do';
-			 diag.Width = 750;
-			 diag.Height = 455;
-			 diag.Modal = true;				//有无遮罩窗口
-			 diag. ShowMaxButton = true;	//最大化按钮
-		     diag.ShowMinButton = true;		//最小化按钮
-			 diag.CancelEvent = function(){ //关闭事件
-				 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
-					 if('${page.currentPage}' == '0'){
-						 top.jzts();
-						 setTimeout("self.location=self.location",100);
-					 }else{
-						 //nextPage(${page.currentPage});
-					 }
-				}
-				diag.close();
-			 };
-			 diag.show();
 		}
 		//删除
 		function del(Id){
@@ -384,6 +362,8 @@
 			var bgyqDate=$("#EFFECTIVE_DATE").val();//变更预期时间
 			var billCode=$("#BILL_CODE").val();//申请单号
 			var billUser=$("#BILL_USER").val();//
+			var entryDate=$("#ENTRY_DATE").val();//申请日期
+			
 			if(bgName==""||bgName==null){    
 			        alert('系统变更名称不能为空！');
 			        $("#BG_NAME").focus();
@@ -399,7 +379,7 @@
 			$.ajax({
 				type: "POST",
 				url: '<%=basePath%>changeerpxtbg/save.do',
-				data:{BILL_USER:billUser,BG_NAME:bgName,BG_REASON:bgReason,UNIT_CODE:unitCode,DEPT_CODE:deptCode,USER_CODE:uesrCode,USER_DEPT:uesrDept,USER_JOB:uesrJob,USER_CONTACT:uesrContact,EFFECTIVE_DATE:bgyqDate,BILL_CODE:billCode},
+				data:{ENTRY_DATE:entryDate,BILL_USER:billUser,BG_NAME:bgName,BG_REASON:bgReason,UNIT_CODE:unitCode,DEPT_CODE:deptCode,USER_CODE:uesrCode,USER_DEPT:uesrDept,USER_JOB:uesrJob,USER_CONTACT:uesrContact,EFFECTIVE_DATE:bgyqDate,BILL_CODE:billCode},
 		    	dataType:'json',
 				cache: false,
 				success: function(response){
@@ -439,7 +419,6 @@
 		}		
 		//动态加载变更数据
 		function setDiv(item){
-			console.log(item);
 		    var div = '<li  class="item-grey clearfix" onclick="showDetail(\''+item.BILL_CODE+'\');"><div><label class="inline" style="margin-bottom:5px;"><span class="list-item-value-title">'
 		        + item.BG_NAME
 		        + '</span></label></div><div><label class="inline"><span class="list-item-info">单号:&nbsp;</span><span class="list-item-value">'
@@ -488,14 +467,12 @@
 		    			$("#UNIT_CODE").val(datas.UNIT_CODE);//申请人单位
 		    			$("#selectTree2_input").val(datas.depnameUnit);
 		    			$("#DEPT_CODE").val(datas.DEPT_CODE);//申请部门
-		    			$("#DEPT_CODE").val(datas.depnameDept);//申请部门名称
 		    			$("#USER_JOB").val(datas.USER_JOB);//申请人岗位
 		    			$("#USER_CONTACT").val(datas.USER_CONTACT);//联系方式
 		    			$("#EFFECTIVE_DATE").val(datas.EFFECTIVE_DATE);//变更预期时间
 		    			$("#ENTRY_DATE").val(datas.ENTRY_DATE);
 		    			$("#SERIAL_NUM").val(datas.SERIAL_NUM);
 		    			$("#USER_DEPT").val(datas.USER_DEPT);//申请人部门
-		    			$("#USER_DEPT").val(datas.depnameUserDept);//申请人部门名称
 		    			$("#SYSTEM").val(datas.SYSTEM);
 		    			$("#BG_TYPE").val(datas.BG_TYPE);
 		    			$("#BILL_STATE").val(datas.BILL_STATE);
@@ -651,6 +628,8 @@
 			    }
 				 //清空select框中数据
 				   $('#USER_CODE').empty();
+				   $('#USER_DEPT').empty();
+				   $('#DEPT_CODE').empty();
 				$.ajax({
 					   type: "POST",
 					   url: '<%=basePath%>changeerpxtbg/getUsers.do',
@@ -661,8 +640,8 @@
 					           $('#USER_CODE').append("<option value='0'>--请选择申请人--</option>");
 					            //遍历成功返回的数据
 					            $.each(data, function (index,item) {
-					                var userName = data.departList[index].NAME;
-					                var userId = data.departList[index].USER_ID;
+					                var userName = data[index].NAME;
+					                var userId = data[index].USER_ID;
 					                //构造动态option
 					                $('#USER_CODE').append("<option value='"+userId+"'>"+userName+"</option>")
 					             });
