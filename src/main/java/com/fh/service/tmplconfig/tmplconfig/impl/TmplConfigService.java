@@ -135,6 +135,14 @@ public class TmplConfigService implements TmplConfigManager{
 		return (PageData)dao.findForObject("TmplConfigMapper.findTableCodeByTableNo", pd);
 	}
 	
+	/**根据KpiCode获取TABLE_CODE
+	 * @param pd
+	 * @throws Exception
+	 */
+	public PageData findTableCodeByKpiCode(PageData pd) throws Exception {
+		return (PageData)dao.findForObject("TmplConfigMapper.findTableCodeByKpiCode", pd);
+	}
+	
 	/**获取某表的所有列
 	 * @param 
 	 * @throws Exception

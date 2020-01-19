@@ -250,7 +250,7 @@
 		a.NUM_DGT,
 		a.DEC_PRECISION,
 		b.NAME DNAME,
-		c.TABLE_NAME,
+		c.KPI_NAME TABLE_NAME,
 		d.DICT_NAME
 		FROM
 		tb_tmpl_config_detail a LEFT
@@ -258,7 +258,7 @@
 		oa_department b
 		on a.DEPT_CODE = b.DEPARTMENT_CODE
 		LEFT JOIN
-		tb_tmpl_config_base c
+		tb_assess_kpi c
 		on a.TABLE_CODE = c.TABLE_CODE
 		LEFT JOIN
 		tb_tmpl_config_dict d
@@ -336,6 +336,15 @@
 		where
 		TB_TMPL_CONFIG_BASE.TABLE_NO = #{TABLE_NO}
 	</select>
+	
+	<!-- 根据KPI_CODE获取TABLE_CODE -->
+	<select id="findTableCodeByKpiCode" parameterType="String"
+		resultType="pd">
+		select TABLE_CODE
+		from tb_assess_kpi
+		where
+		KPI_CODE = #{KPI_CODE}
+	</select>
 
 	<!-- 临时生成的数据表明细 -->
 	<select id="temporaryList" parameterType="page" resultType="pd">
@@ -350,7 +359,7 @@
 		FROM
 		information_schema.columns
 		WHERE
-		table_schema ='dbgdhs'
+		table_schema ='ywgl'
 		AND
 		table_name = #{pd.TABLE_CODE}
 	</select>
@@ -439,7 +448,7 @@
 		column_default
 		FROM
 		information_schema.columns
-		WHERE table_schema ='dbgdhs'
+		WHERE table_schema ='ywgl'
 		AND
 		table_name =
 		#{value}
@@ -638,7 +647,7 @@
 		select t.RPT_DUR,
 		    '${pd.SelectedDepartCode}' DEPT_CODE, b.NAME DEPT_NAME,
 		             <!-- t.BILL_OFF, -->
-		             t.TABLE_CODE, c.TABLE_NAME TABLE_NAME,
+		             t.TABLE_CODE, c.KPI_NAME TABLE_NAME,
 		             t.COL_CODE, t.COL_NAME,
 		             
 		             t.DICT_TRANS DICT_TRANS_DETAIL,
@@ -690,7 +699,7 @@
 		on t.TABLE_CODE = tip.TABLE_CODE and t.COL_CODE = tip.COL_CODE
 		
 		LEFT JOIN oa_department b on '${pd.SelectedDepartCode}' = b.DEPARTMENT_CODE
-		LEFT JOIN tb_tmpl_config_base c on t.TABLE_CODE = c.TABLE_CODE
+		LEFT JOIN tb_assess_kpi c on t.TABLE_CODE = c.TABLE_CODE
 		
         ORDER BY t.DISP_ORDER ASC
 	</select>

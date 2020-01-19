@@ -43,10 +43,10 @@
 					<div class="row">
 						<div class="col-xs-4">
 						<!-- 检索  -->
-						<form style="margin:5px;" method="post" name="problemForm" id="problemForm">
+						<!-- <form style="margin:5px;" method="post" name="problemForm" id="problemForm"> -->
 							<div class="nav-search" style="margin:10px 0px;">
 								<span class="input-icon" style="width:86%">
-									<input style="width:100%" class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词" />
+									<input style="width:100%" class="nav-search-input" autocomplete="off" id="keywords" type="text" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词" />
 									<i class="ace-icon fa fa-search nav-search-icon"></i>
 								</span>
 								<button style="margin-bottom:3px;" class="btn btn-light btn-minier" onclick="searchs();"  title="检索">
@@ -59,7 +59,7 @@
 								
 							</ul>						
 							<div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div>
-						</form>
+						<!-- </form> -->
 					</div>
 					<!-- /.col4 -->
 					
@@ -741,16 +741,16 @@ function save(){
 		$("#form-field-pro-title").focus();
 		return false;
 	}
-	/* if ($("#form-field-pro-type-id").val()==null||$("#form-field-pro-type-id").val()=="") {
-		$("#form-field-pro-type-id").tips({
+	if ($("#form-field-pro-type-id").val()==null||$("#form-field-pro-type-id").val()=="") {
+		$("#selectTree").tips({
 			side : 3,
 			msg : '请选择问题类型',
 			bg : '#AE81FF',
 			time : 2
 		});
-		$("#form-field-pro-type-id").focus();
+		$("#selectTree").focus();
 		return false;
-	} */
+	}
 	
 	var content;
 	var arr = [];

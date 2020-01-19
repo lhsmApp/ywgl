@@ -58,8 +58,8 @@
 							<thead>
 								<tr>
 									<th class="center" style="width:50px;">序号</th>
-									<th class="center">问题类型ID</th>
-									<th class="center">问题类型名称</th>
+									<!-- <th class="center">问题类型ID</th> -->
+									<th class="center">问题类别名称</th>
 									<th class="center">所属部门</th>
 									<th class="center">激活状态</th>
 									<th class="center">问题描述</th>
@@ -76,7 +76,7 @@
 											<td class='center' style="width: 30px;">${vs.index+1}</td>
 											<td class='center'><a href="javascript:goSondict('${var.PRO_TYPE_ID}')"><i class="ace-icon fa fa-share bigger-100"></i>&nbsp;${var.PRO_TYPE_NAME}</a></td>
 											<%-- <td class='center'>${var.PRO_TYPE_ID}</td> --%>
-											<td class='center'>${var.PRO_TYPE_NAME}</td>
+											<%-- <td class='center'>${var.PRO_TYPE_NAME}</td> --%>
 											
 											<%-- <td class='center'>${var.DEPART_CODE}</td> --%>
 											<td class="center">${var.DEPARTMENT_NAME }</td>
