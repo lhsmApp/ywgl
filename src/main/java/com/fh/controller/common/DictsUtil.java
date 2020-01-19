@@ -355,7 +355,7 @@ public class DictsUtil {
 	 * @throws Exception
 	 */
 	public static String getActualTable(String tableCodeTmpl) throws Exception {
-		String tableCodeOri = "";// 数据库真实业务数据表
+		String tableCodeOri = tableCodeTmpl;// 数据库真实业务数据表
 		if (tableCodeTmpl.startsWith("TB_STAFF_DETAIL")) {
 			tableCodeOri = "TB_STAFF_DETAIL";
 		} else if (tableCodeTmpl.startsWith("TB_STAFF_SUMMY")) {

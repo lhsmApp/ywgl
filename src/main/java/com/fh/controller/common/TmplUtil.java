@@ -123,7 +123,7 @@ public class TmplUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public String generateStructure(String tableNo, String departCode, String billOff, int columnCount, List<String> MustNotEditFeildList) throws Exception {
+	public String generateStructure(String kpiCode, String departCode, String billOff, int columnCount, List<String> MustNotEditFeildList) throws Exception {
 		//分组字段是否显示在表中
 		InitJqGridGroupColumnShow();
 		// 字典
@@ -136,8 +136,8 @@ public class TmplUtil {
 		m_sqlUserdata = new StringBuilder();
 		
 		PageData pd=new PageData();
-		pd.put("TABLE_NO", tableNo);
-		PageData pdResult=tmplconfigService.findTableCodeByTableNo(pd);
+		pd.put("KPI_CODE", kpiCode);
+		PageData pdResult=tmplconfigService.findTableCodeByKpiCode(pd);
 		String tableCodeTmpl=pdResult.getString("TABLE_CODE");
 		String tableCodeOri=DictsUtil.getActualTable(tableCodeTmpl);//数据库真实业务数据表
 		// 用语句查询出数据库表的所有字段及其属性；拼接成jqgrid全部列
@@ -334,7 +334,7 @@ public class TmplUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public String generateStructureNoEdit(String tableNo, String departCode, String billOff) throws Exception {
+	public String generateStructureNoEdit(String kpiCode, String departCode, String billOff) throws Exception {
 		//分组字段是否显示在表中
 		InitJqGridGroupColumnShow();
 		// 底行显示的求和与平均值字段
@@ -365,8 +365,8 @@ public class TmplUtil {
 		}
 		
 		PageData pd=new PageData();
-		pd.put("TABLE_NO", tableNo);
-		PageData pdResult=tmplconfigService.findTableCodeByTableNo(pd);
+		pd.put("KPI_CODE", kpiCode);
+		PageData pdResult=tmplconfigService.findTableCodeByKpiCode(pd);
 		String tableCodeTmpl=pdResult.getString("TABLE_CODE");
 		String tableCodeOri=DictsUtil.getActualTable(tableCodeTmpl);
 		// 用语句查询出数据库表的所有字段及其属性；拼接成jqgrid全部列
@@ -677,7 +677,7 @@ public class TmplUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public String generateStructureAccount(String tableNo, String departCode, String billOff) throws Exception {
+	public String generateStructureAccount(String kpiCode, String departCode, String billOff) throws Exception {
 		//分组字段是否显示在表中
 		InitJqGridGroupColumnShow();
 		// 底行显示的求和与平均值字段
@@ -690,8 +690,8 @@ public class TmplUtil {
 		//map_SetColumnsList = new LinkedHashMap<String, TmplConfigDetail>();
 		
 		PageData pd=new PageData();
-		pd.put("TABLE_NO", tableNo);
-		PageData pdResult=tmplconfigService.findTableCodeByTableNo(pd);
+		pd.put("KPI_CODE", kpiCode);
+		PageData pdResult=tmplconfigService.findTableCodeByKpiCode(pd);
 		String tableCodeTmpl=pdResult.getString("TABLE_CODE");
 		String tableCodeOri=DictsUtil.getActualTable(tableCodeTmpl);//数据库真实业务数据表
 		

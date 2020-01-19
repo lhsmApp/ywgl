@@ -34,10 +34,10 @@
 					<div class="row">
 						<div class="col-xs-4">
 						<!-- 检索  -->
-						<form style="margin:5px;" method="post" name="problemForm" id="problemForm">
+						
 							<div class="nav-search" style="margin:10px 0px;">
 								<span class="input-icon" style="width:86%">
-									<input style="width:100%" class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词" />
+									<input style="width:100%" class="nav-search-input" autocomplete="off" id="keywords" type="text" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词" />
 									<i class="ace-icon fa fa-search nav-search-icon"></i>
 								</span>
 								<button style="margin-bottom:3px;" class="btn btn-light btn-minier" onclick="searchs();"  title="检索">
@@ -51,7 +51,7 @@
 							</ul>						
 
 							<div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div>
-						</form>
+						
 					</div>
 					<!-- /.col4 -->
 					

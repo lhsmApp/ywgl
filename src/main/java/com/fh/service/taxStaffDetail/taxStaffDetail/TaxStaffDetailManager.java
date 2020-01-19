@@ -49,18 +49,18 @@ public interface TaxStaffDetailManager{
 	 * @param 
 	 * @throws Exception
 	 */
-	public void deleteAll(List<PageData> listData)throws Exception;
+	public void deleteAll(List<PageData> listData,String kpiCode)throws Exception;
 
 	/**更新数据库
 	 * @param pd
 	 * @throws Exception
 	 */
-	public void batchUpdateDatabase(List<PageData> listData)throws Exception;
+	public void batchUpdateDatabase(List<PageData> listData,String kpiCode)throws Exception;
 
 	/**更新数据库
 	 * @param pd
 	 * @throws Exception
 	 */
-	public void batchCoverAdd(List<PageData> listData)throws Exception;
+	public void batchCoverAdd(List<PageData> listData,String kpiCode)throws Exception;
 }
 

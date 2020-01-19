@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="TaxStaffDetailMapper">
+<mapper namespace="FmisCfttditMapper">
 	
 <!-- 
 /** 
- * 说明：月度工资及个税导入
+ * 说明：FMIS凭证未及时传输明细
  * 创建人：jiachao
- * 创建时间：2019-08-07
+ * 创建时间：2019-12-30
  */
  -->
 	<!--表名 -->
 	<sql id="tableName">
-		tb_tax_staff_detail
+		tb_kh_fmis_cfttdit
 	</sql>
 
 	<!-- 列表 -->
@@ -69,7 +69,7 @@
 		<include refid="tableName"></include>
 		<where>
 		    <foreach item="item" index="index" collection="list" open=" " separator=" or " close=" ">
-                (BUSI_DATE = #{item.BUSI_DATE} and STAFF_IDENT = #{item.STAFF_IDENT} and STAFF_IDENT != #{item.STAFF_IDENT__})
+                (BUSI_DATE = #{item.BUSI_DATE} and COMPANY_CODE = #{item.COMPANY_CODE} and COMPANY_CODE != #{item.COMPANY_CODE__})
 		    </foreach>
 		</where> 
 	</select>
@@ -107,9 +107,8 @@
 		where
 		<foreach item="item" index="index" collection="list" open=" (" separator=" or " close=") ">
 		    BUSI_DATE = #{item.BUSI_DATE__} 
-		    <!-- and CUST_COL7 = #{item.CUST_COL7__} -->
-		    and STAFF_IDENT = #{item.STAFF_IDENT__} 
-		    
+		    and COMPANY_CODE = #{item.COMPANY_CODE__} 
+		    and VOUCHER_NO = #{item.VOUCHER_NO__} 
 		</foreach>
 	</delete>
 	
@@ -118,9 +117,8 @@
 		    delete from
 		    <include refid="tableName"></include>
 		    where BUSI_DATE = #{item.BUSI_DATE__} 
-		    and STAFF_IDENT = #{item.STAFF_IDENT__};
-		    <!-- ${item.CanDel}; -->
-	        
+		    and COMPANY_CODE = #{item.COMPANY_CODE__}
+	        and VOUCHER_NO = #{item.VOUCHER_NO__};
 		    insert into
 		    <include refid="tableName"></include>
 		    (${item.InsertField}) values (${item.InsertVale});
@@ -132,9 +130,8 @@
 		    delete from
 		    <include refid="tableName"></include>
 		    where BUSI_DATE = #{item.BUSI_DATE} 
-		    and STAFF_IDENT = #{item.STAFF_IDENT};
-		    <!-- ${item.CanDel}; -->
-	        
+		    and COMPANY_CODE = #{item.COMPANY_CODE}
+	        and VOUCHER_NO = #{item.VOUCHER_NO__};
 		    insert into
 		    <include refid="tableName"></include>
 		    (${item.InsertField}) values (${item.InsertVale});

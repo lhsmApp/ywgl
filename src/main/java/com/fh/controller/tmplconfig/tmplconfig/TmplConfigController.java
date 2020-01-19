@@ -16,6 +16,7 @@ import com.fh.controller.common.TmplUtil;
 import com.fh.entity.CommonBase;
 import com.fh.entity.Page;
 import com.fh.entity.PageResult;
+import com.fh.service.assess.KPIManager;
 import com.fh.service.fhoa.department.DepartmentManager;
 import com.fh.service.sysConfig.sysconfig.SysConfigManager;
 import com.fh.service.system.dictionaries.DictionariesManager;
@@ -54,6 +55,9 @@ public class TmplConfigController extends BaseController {
 	
 	@Resource(name = "dictionariesService")
 	private DictionariesManager dictionariesService;
+	
+	@Resource(name = "kpiService")
+	private KPIManager kpiService;
 
 	/**
 	 * 列表
@@ -67,7 +71,11 @@ public class TmplConfigController extends BaseController {
 		PageData pd = this.getPageData();
 		page.setPd(pd);
 
-		List<PageData> listBase = tmplconfigService.listBase(page); // 列出TmplConfigBase列表
+		//List<PageData> listBase = tmplconfigService.listBase(page); // 列出TmplConfigBase列表
+		//mv.addObject("listBase", listBase);
+		List<PageData> listKpi = kpiService.listAll(null);
+		mv.addObject("listBase", listKpi);
+				
 		List<PageData> treeSource = DictsUtil.getDepartmentSelectTreeSourceList(departmentService);
 		if (treeSource != null && treeSource.size() > 0) {
 			JSONArray arr = JSONArray.fromObject(treeSource);
@@ -78,10 +86,11 @@ public class TmplConfigController extends BaseController {
 		}
 
 		String dicTypeValus = DictsUtil.getDicTypeValue(tmplconfigdictService);
+		
 		String dictString = " : ;" + dicTypeValus;
 		mv.addObject("dictString", dictString);
 		mv.setViewName("tmplconfig/tmplconfig/tmplconfig_list");
-		mv.addObject("listBase", listBase);
+		
 		// CUST_COL7 BILL_OFF 帐套字典
 		mv.addObject("fmisacc", DictsUtil.getDictsByParentBianma(dictionariesService, "FMISACC"));
 		mv.addObject("pd", pd);
@@ -106,7 +115,7 @@ public class TmplConfigController extends BaseController {
 	@RequestMapping(value = "/getPageList")
 	public @ResponseBody PageResult<PageData> getPageList(Page page) throws Exception {
 		PageData pd = this.getPageData();
-		PageData tpd = tmplconfigService.findTableCodeByTableNo(pd);
+		PageData tpd = tmplconfigService.findTableCodeByKpiCode(pd);
 		String tmplTableCode=tpd.getString("TABLE_CODE");
 		pd.put("TABLE_CODE",tmplTableCode );
 		String filters = pd.getString("filters"); // 多条件过滤条件
@@ -121,8 +130,8 @@ public class TmplConfigController extends BaseController {
 		 * List<PageData> temporaryList = tmplconfigService.temporaryList(page);
 		 * result.setRows(temporaryList); }
 		 */
-		String tableCodeOri = DictsUtil.getActualTable(tmplTableCode);// 数据库真实业务数据表
-		pd.put("TABLE_CODE", tableCodeOri);
+		/*String tableCodeOri = DictsUtil.getActualTable(tmplTableCode);// 数据库真实业务数据表
+		pd.put("TABLE_CODE", tableCodeOri);*/
 		List<PageData> temporaryList = tmplconfigService.temporaryList(page);
 		if (varList!=null&&varList.size() != 0) {
 			List<PageData> plusList = new ArrayList<PageData>();
@@ -236,7 +245,7 @@ public class TmplConfigController extends BaseController {
 		CommonBase commonBase = new CommonBase();
 		commonBase.setCode(-1);
 		PageData pd = this.getPageData();
-		PageData tpd = tmplconfigService.findTableCodeByTableNo(pd);
+		PageData tpd = tmplconfigService.findTableCodeByKpiCode(pd);
 		pd.put("TABLE_CODE", tpd.getString("TABLE_CODE"));
 		pd.put("DEPT_CODE", pd.getString("DEPARTMENT_CODE"));
 		pd.put("RPT_DUR", pd.getString("RPT_DUR"));

@@ -22,7 +22,8 @@
 	<!-- /section:basics/navbar.layout -->
 	<div class="main-container" id="main-container">
 		<!-- /section:basics/sidebar -->
-		<div class="main-content">
+		<div class="main-content" >
+			<img alt="" style="width:100%;height:auto;" src="static/images/mainbg.jpg">
 		
 			<!-- <div class="main-content-inner">
 				<div class="page-content">
