@@ -134,14 +134,17 @@ public class ERPUserListController extends BaseController {
 		pd = this.getPageData();
 		String busiDate = pd.getString("busiDate");
 		pd.put("USER_DEPART",user.getUNIT_CODE());
-		pd.put("KEY_CODE","SystemDataTime");
+		pd.put("KEY_CODE","erpuserlistMustKey");
 		data.put("BUSI_TYPE",SysDeptTime.ERP_USER_LIST.getNameKey());
 		data.put("DEPT_CODE",user.getUNIT_CODE());
-		String date = sysconfigService.getSysConfigByKey(pd);
+		String date = sysconfigService.currentSection(pd);
+		// 需要获取必填的内容，然后输出到页面上
+        String mandatory = sysconfigService.getSysConfigByKey(pd);
 		if(null == busiDate || StringUtil.isEmpty(busiDate)) {
 			pd.put("busiDate",date);
 		}
 		pd.put("month",date);
+		pd.put("mandatory", mandatory);
 		page.setPd(pd);
 		PageData pageData = grcpersonService.findSysDeptTime(data);
 		if(null != pageData && pageData.size()>0) {

@@ -210,6 +210,8 @@
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 	<!-- 自由拉动 -->
 	<script type="text/javascript" src="static/ace/js/jquery-ui.js"></script>
+    <!-- js正则库 -->
+    <script type="text/javascript" src="static/js/common/validation.js"></script>
 <script type="text/javascript" >
 	$(top.hangge());//关闭加载状态
 	
@@ -244,6 +246,44 @@
 	var date = new Date();
     var year = '${pd.busiDate}';
     var strDate = date.getDate();
+    var mandatory = '${pd.mandatory}';
+    //console.log(mandatory) 
+    
+    // 列名称与name的对应关系
+    var colMapping = {
+        "员工编号":"STAFF_CODE",
+        "员工姓名":"STAFF_NAME",
+        "二级单位":"DEPART_CODE",
+        "三级单位":"UNITS_DEPART",
+        "职务":"STAFF_POSITION",
+        "岗位":"STAFF_JOB",
+        "模块":"STAFF_MODULE",
+        "联络电话":"PHONE",
+        "电子邮箱":"MAIL",
+        "权限变更":"PERMISSION_CHANGE",
+        "申请日期":"APPLY_DATE",
+        "账号删除原因":"ACCOUNT_DELETE_REASON",
+        "备注":"NOTE",
+    },
+    fieldMandatory = {
+        "ids":{isMust:false,valiType:''},
+        'STAFF_CODE':{isMust:false,valiType:''},
+        'STAFF_NAME':{isMust:false,valiType:''},
+        "DEPART_CODE":{isMust:false,valiType:''},
+        "UNITS_DEPART":{isMust:false,valiType:''},
+        "STAFF_POSITION":{isMust:false,valiType:''},
+        "STAFF_JOB":{isMust:false,valiType:''},
+        "STAFF_MODULE":{isMust:false,valiType:''},
+        "PHONE":{isMust:false,valiType:'isTelOrMobile'},
+        "MAIL":{isMust:false,valiType:'getElementsByName'},
+        "PERMISSION_CHANGE":{isMust:false,valiType:''},
+        "APPLY_DATE":{isMust:false,valiType:''},
+        "ACCOUNT_DELETE_REASON":{isMust:false,valiType:''},
+        "NOTE":{isMust:false,valiType:''},
+    }
+    
+    valida.initWhoIsMandatory(mandatory)//必填字段初始化
+    //console.log(fieldMandatory)
 	
     /*权限控制*/
     function checkPermission(){
@@ -317,25 +357,62 @@
 		var listData = new Array();
 		for(var i=0;i < document.getElementsByName('STAFF_CODE').length-1;i++){
 				//length-1 : 页面中有用于复制的隐藏文本
-				//如果有员工编号那么就判定该行数据有效
-				codeVal = document.getElementsByName('STAFF_CODE')[i].value;
-				if(codeVal!=''){
-					codeVal = '';
-					listData.push(document.getElementsByName('ids')[i].value);
-					listData.push(document.getElementsByName('STAFF_CODE')[i].value);
-					listData.push(document.getElementsByName('STAFF_NAME')[i].value);
-					listData.push(document.getElementsByName('DEPART_CODE')[i].value);
-					listData.push(document.getElementsByName('UNITS_DEPART')[i].value);
-					listData.push(document.getElementsByName('STAFF_POSITION')[i].value);
-					listData.push(document.getElementsByName('STAFF_JOB')[i].value);
-					listData.push(document.getElementsByName('STAFF_MODULE')[i].value);
-					listData.push(document.getElementsByName('PHONE')[i].value);
-					listData.push(document.getElementsByName('MAIL')[i].value);
-					listData.push(document.getElementsByName('PERMISSION_CHANGE')[i].value);
-					listData.push(document.getElementsByName('APPLY_DATE')[i].value);
-					listData.push(document.getElementsByName('ACCOUNT_DELETE_REASON')[i].value);
-					listData.push(document.getElementsByName('NOTE')[i].value);
+				//判断：如果每个必填项都为空，则判定本行无效
+				var not_null = true
+	            for(var fm in fieldMandatory){
+	                if(fieldMandatory[fm]['isMust']){
+	                    not_null = false
+	                    var e = $("input[name="+fm+"]:eq("+i+")")
+	                    if(e.val()){
+	                        not_null = true
+	                        break;
+	                    }
+	                }
+	            }
+				if(not_null){
+					/* 参数校验 begin */
+                    for(fm in fieldMandatory){
+                        if(fieldMandatory[fm]['isMust']){
+                            var e = $("input[name="+fm+"]:eq("+i+")")
+                            if(!e.val()){
+                                e.tips({
+                                    side:3,
+                                    msg:'这里是必填内容',
+                                    bg:'#cc0033',
+                                    time:3
+                                });
+                                return;
+                            }else if(fieldMandatory[fm]['valiType'] != ''){
+                                if(fieldMandatory[fm]['valiType'] == 'isTelOrMobile'&&!valida.isTelOrMobile(e.val())){
+                                    e.tips({
+                                        side:3,
+                                        msg:'请输入正确的手机号或座机号',
+                                        bg:'#cc0033',
+                                        time:3
+                                    });
+                                    return;
+                                }else if(fieldMandatory[fm]['valiType'] == 'isEmail'&&!valida.isEmail(e.val())){
+                                    e.tips({
+                                        side:3,
+                                        msg:'请输入正确的邮箱格式',
+                                        bg:'#cc0033',
+                                        time:3
+                                    });
+                                    return;
+                                }
+                            }
+                        }
+                    }
+					
+                    
+                    /* 参数校验 end */
+                    for(fm in fieldMandatory){
+                        var e = $("input[name="+fm+"]:eq("+i+")")
+                        listData.push(e.val())
+                    }
 			}
+				
+				
 		}
 		top.jzts();
 		$.ajax({
