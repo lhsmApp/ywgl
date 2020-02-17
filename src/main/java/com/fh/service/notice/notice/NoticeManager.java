@@ -53,6 +53,23 @@ public interface NoticeManager{
 	 * @throws Exception
 	 */
 	public void deleteAll(String[] ArrayDATA_IDS)throws Exception;
-	
+
+	/**选择发布范围，展示角色列表
+     * @param page
+     * @throws Exception
+     */
+    public List<PageData> showSysRoleList(Page page)throws Exception;
+    
+    /**选择发布范围，展示人员列表
+     * @param page
+     * @throws Exception
+     */
+    public List<PageData> showSysUserList(Page page)throws Exception;
+
+    /**新增
+     * @param pd
+     * @throws Exception
+     */
+    public List<PageData> getMyNotice(PageData pd)throws Exception;
 }
 

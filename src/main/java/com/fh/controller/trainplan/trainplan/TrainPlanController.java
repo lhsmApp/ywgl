@@ -28,6 +28,7 @@ import com.fh.util.AppUtil;
 import com.fh.util.Const;
 import com.fh.util.ObjectExcelView;
 import com.fh.util.PageData;
+import com.fh.util.date.DateFormatUtils;
 import com.fh.util.date.DateUtils;
 import com.fh.util.enums.BillNumType;
 import com.fh.util.enums.ExamBillNum;
@@ -174,10 +175,23 @@ public class TrainPlanController extends BaseController {
 		if(null != keywords && !"".equals(keywords)){
 			pd.put("keywords", keywords.trim());
 		}
+		String startDate = pd.getString("START_DATE");               //关键词检索条件
+        if(null != startDate && !"".equals(startDate)){
+            pd.put("START_DATE", startDate.replace("-",""));
+        }
+        String endDate = pd.getString("END_DATE");             //关键词检索条件
+        if(null != endDate && !"".equals(endDate)){
+            pd.put("END_DATE", endDate.replace("-",""));
+        }
 		page.setPd(pd);
 		List<PageData>	varList = trainplanService.list(page);	//列出TrainPlan列表		
 		mv.setViewName("trainplan/trainplan/trainplan_list");
-		mv.addObject("varList", JSON.toJSONString(varList));
+		for (PageData i : varList) {
+		    i.put("CREATE_DATE", DateFormatUtils.formatString((String) i.get("CREATE_DATE")));//格式化时间格式
+		    i.put("START_DATE", DateFormatUtils.formatString((String) i.get("START_DATE")));//格式化时间格式
+            i.put("END_DATE", DateFormatUtils.formatString((String) i.get("END_DATE")));//格式化时间格式
+        }
+		//mv.addObject("varList", JSON.toJSONString(varList));
 		mv.addObject("varList", varList);
 		mv.addObject("pd", pd);
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限

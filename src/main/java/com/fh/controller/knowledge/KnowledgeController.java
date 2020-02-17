@@ -72,7 +72,10 @@ public class KnowledgeController extends BaseController {
 			commonBase.setCode(0);
 		}
 		else{
-			
+			User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+			String userId = user.getUSER_ID();
+			pd.put("CREATE_USER", userId);
+			pd.put("CREATE_DATE", DateUtils.getCurrentTime());
 			knowledgeService.edit(pd);
 			commonBase.setCode(0);
 		}

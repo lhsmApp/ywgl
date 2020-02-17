@@ -141,10 +141,13 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 		pd = this.getPageData();
 		String confirmState = pd.getString("confirmState");
 		String busiDate = pd.getString("busiDate");
-		pd.put("KEY_CODE","SystemDataTime");
+		pd.put("KEY_CODE","erpaddMustKey");
 		data.put("BUSI_TYPE",SysDeptTime.ERP_OAA.getNameKey());
 		data.put("DEPT_CODE",user.getUNIT_CODE());
-		String date = sysconfigService.getSysConfigByKey(pd);
+		String date = sysconfigService.currentSection(pd);
+		// 需要获取必填的内容，然后输出到页面上
+        String mandatory = sysconfigService.getSysConfigByKey(pd);
+		
 		if(null == confirmState || StringUtil.isEmpty(confirmState)) {
 			pd.put("confirmState", "1");  //1未上报 2已上报 3撤销上报 4已驳回
 		}
@@ -154,6 +157,7 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 		pd.put("month",date);
 		pd.put("DEPART_CODE",user.getUNIT_NAME());
 		pd.put("USER_DEPART",user.getUNIT_CODE());
+		pd.put("mandatory", mandatory);
 		page.setPd(pd);
 		PageData pageData = grcpersonService.findSysDeptTime(data);
 		if(null != pageData && pageData.size()>0) {

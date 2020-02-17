@@ -121,6 +121,7 @@
 	    var ShowDataBusiDate = '${ShowDataBusiDate}';
 	    var SalaryOrBonus = '${SalaryOrBonus}';
 	    var SystemDateTime = '${SystemDateTime}';
+	    var KpiCode = '${KPI_CODE}';
 	    var tipfiles = "请选择xls格式的文件";
 	    
 		var StringDataRows = '${StringDataRows}';
@@ -133,7 +134,8 @@
                 +'&DepartTreeSource='+DepartTreeSource
                 +'&ShowDataDepartCode='+ShowDataDepartCode+'&ShowDataCustCol7='+ShowDataCustCol7+'&ShowDataBillCode='+ShowDataBillCode+'&ShowDataTypeCode='+ShowDataTypeCode+'&ShowDataBusiDate='+ShowDataBusiDate
                 +'&SalaryOrBonus='+SalaryOrBonus
-                +'&SystemDateTime='+SystemDateTime;
+                +'&SystemDateTime='+SystemDateTime
+                +'&KPI_CODE='+KpiCode;
 			
 		    var commonBaseCode = '${commonBaseCode}';
 		    var commonMessage = "${commonMessage}";
@@ -174,7 +176,8 @@
 		    		                +'&DepartTreeSource='+DepartTreeSource
 		    		                +'&ShowDataDepartCode='+ShowDataDepartCode+'&ShowDataCustCol7='+ShowDataCustCol7+'&ShowDataBillCode='+ShowDataBillCode+'&ShowDataTypeCode='+ShowDataTypeCode+'&ShowDataBusiDate='+ShowDataBusiDate
 		    		                +'&SalaryOrBonus='+SalaryOrBonus
-		    		                +'&SystemDateTime='+SystemDateTime,
+		    		                +'&SystemDateTime='+SystemDateTime
+		    		                +'&KPI_CODE='+KpiCode,
 		    				    	data: {StringDataRows:StringDataRows},
 		    						dataType:'json',
 		    						cache: false,
@@ -240,7 +243,8 @@
                 +'&DepartTreeSource='+DepartTreeSource
                 +'&ShowDataDepartCode='+ShowDataDepartCode+'&ShowDataCustCol7='+ShowDataCustCol7+'&ShowDataBillCode='+ShowDataBillCode+'&ShowDataTypeCode='+ShowDataTypeCode+'&ShowDataBusiDate='+ShowDataBusiDate
                 +'&SalaryOrBonus='+SalaryOrBonus
-                +'&SystemDateTime='+SystemDateTime;
+                +'&SystemDateTime='+SystemDateTime
+                +'&KPI_CODE='+KpiCode;
 			window.location.href = url;
 		}
 		//保存

@@ -58,9 +58,9 @@
 										<i class="ace-icon fa fa-chevron-up bigger-120 blue"></i> <span>隐藏查询</span>
 									</button>
 
-									<button id="btnCopy" class="btn btn-white btn-info btn-sm" onclick="copyData()">
+									<!-- <button id="btnCopy" class="btn btn-white btn-info btn-sm" onclick="copyData()">
 										<i class="ace-icon fa  fa-exchange  bigger-120 blue"></i><span>复制</span>
-									</button></td>
+									</button> --></td>
 							</tr>
 						</table>
 					</div>
@@ -77,12 +77,12 @@
 												name="DNAME" id="DNAME" type="hidden" value="${pd.DNAME }" />
 											<span class="pull-left" style="margin-right: 5px;"> 
 												<select class="chosen-select form-control"
-													name="TABLE_NO" id=TABLE_NO data-placeholder="请选择配置表"
+													name="KPI_CODE" id="KPI_CODE" data-placeholder="请选择配置表"
 													style="vertical-align: top; height: 32px; width: 150px;">
-														<option value="">请选择配置表</option>
-														<c:forEach items="${listBase}" var="tableName">
-															<option value="${tableName.TABLE_NO}"
-																<c:if test="${pd.TABLE_NO==tableName.TABLE_NO}">selected</c:if>>${tableName.TABLE_NAME  }</option>
+														<option value="">请选择指标</option>
+														<c:forEach items="${listBase}" var="kpi">
+															<option value="${kpi.KPI_CODE}"
+																<c:if test="${pd.KPI_CODE==kpi.KPI_CODE}">selected</c:if>>${kpi.KPI_NAME  }</option>
 														</c:forEach>
 												</select>
 											</span>
@@ -431,14 +431,14 @@
 	
 	//检索
 	function tosearch() {
-		if($("#TABLE_NO").val()==""){
-			$("#TABLE_NO").tips({
+		if($("#KPI_CODE").val()==""){
+			$("#KPI_CODE").tips({
 				side:3,
 	            msg:'请选择配置表',
 	            bg:'#AE81FF',
 	            time:2
 	        });
-			$("#TABLE_NO").focus();
+			$("#KPI_CODE").focus();
 			return false;
 		}
 		if($("#BILL_OFF").val()==""){
@@ -455,14 +455,14 @@
 			document.getElementById("DEPARTMENT_CODE").value="001"; 
 			document.getElementById("DNAME").value="总部"; 
 		} */
-		var TABLE_NO = $("#TABLE_NO").val(); 
+		var KPI_CODE = $("#KPI_CODE").val(); 
 		var fmi = $("#BILL_OFF").val(); 
 		var DEPARTMENT_CODE = $("#DEPARTMENT_CODE").val(); 
-		var TABLE_NAME = $("#TABLE_NO").find("option:selected").text();
+		var TABLE_NAME = $("#KPI_CODE").find("option:selected").text();
 		var DNAME = $("#DNAME").val(); 
 		var busiDate = $("#busiDate").val(); 
 		$("#jqGrid").jqGrid('setGridParam',{  // 重新加载数据
-			url:'<%=basePath%>tmplconfig/getPageList.do?TABLE_NO='+TABLE_NO
+			url:'<%=basePath%>tmplconfig/getPageList.do?KPI_CODE='+KPI_CODE
 			+'&BILL_OFF='+fmi
 			+'&DEPARTMENT_CODE='+DEPARTMENT_CODE
 			+'&RPT_DUR='+busiDate+'&TABLE_NAME='+TABLE_NAME+'&DNAME='+DNAME,  
@@ -474,24 +474,24 @@
 	
 	//复制
     function copyData() {
-    	if($("#TABLE_NO").val()==""){
-			$("#TABLE_NO").tips({
+    	if($("#KPI_CODE").val()==""){
+			$("#KPI_CODE").tips({
 				side:3,
 	            msg:'请选择配置表',
 	            bg:'#AE81FF',
 	            time:2
 	        });
-			$("#TABLE_NO").focus();
+			$("#KPI_CODE").focus();
 			return false;
 		}
-       	var TABLE_NO = $("#TABLE_NO").val(); 
+       	var KPI_CODE = $("#KPI_CODE").val(); 
 		var DEPARTMENT_CODE = $("#DEPARTMENT_CODE").val(); 
 		var busiDate = $("#busiDate").val(); 
        	 top.jzts();
 		 var diag = new top.Dialog();
 		 diag.Drag = true;
 		 diag.Title = "复制";
-		 diag.URL = '<%=basePath%>department/listAllDepartmentCopy.do?TABLE_NO='+TABLE_NO
+		 diag.URL = '<%=basePath%>department/listAllDepartmentCopy.do?KPI_CODE='+KPI_CODE
 				 +'&DEPARTMENT_CODE='+DEPARTMENT_CODE
 				 +'&RPT_DUR='+busiDate
 				 +'&local=tmplconfig';

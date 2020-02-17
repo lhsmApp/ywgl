@@ -103,6 +103,14 @@ public interface TmplConfigManager{
 	 */
 	public PageData findTableCodeByTableNo(PageData pd) throws Exception;
 	
+	/**
+	 * 根据KpiCode获取TABLE_CODE
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public PageData findTableCodeByKpiCode(PageData pd) throws Exception;
+	
 	/**获取某表的所有列
 	 * @param 
 	 * @throws Exception

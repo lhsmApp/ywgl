@@ -97,13 +97,13 @@ public class Common {
 		return m_sqlUserdata;
 	}
 
-	public static Map<String, Object> GetDicList(String tableNo, String departCode, String billOff, 
+	public static Map<String, Object> GetDicList(String kpiCode, String departCode, String billOff, 
 			TmplConfigManager tmplconfigService,
 			TmplConfigDictManager tmplConfigDictService, DictionariesManager dictionariesService, 
 			DepartmentManager departmentService,UserManager userService,
 			String AdditionalReportColumns) throws Exception{
 		Map<String, Object> m_DicList = new LinkedHashMap<String, Object>();
-		String tableCodeTmpl = getTableCodeTmpl(tableNo, tmplconfigService);
+		String tableCodeTmpl = getTableCodeTmpl(kpiCode, tmplconfigService);
 		
 		// 前端数据表格界面字段,动态取自tb_tmpl_config_detail，根据当前单位编码及表名获取字段配置信息
 		List<TmplConfigDetail> m_columnsList = Common.getShowColumnList(tableCodeTmpl, departCode, billOff,tmplconfigService);
@@ -122,8 +122,8 @@ public class Common {
 
 	
 
-	public static Map<String, TableColumns> GetHaveColumnsList(String tableNo, TmplConfigManager tmplconfigService) throws Exception{
-		String tableCodeTmpl = getTableCodeTmpl(tableNo, tmplconfigService);
+	public static Map<String, TableColumns> GetHaveColumnsList(String kpiCode, TmplConfigManager tmplconfigService) throws Exception{
+		String tableCodeTmpl = getTableCodeTmpl(kpiCode, tmplconfigService);
 		String tableCodeOri=DictsUtil.getActualTable(tableCodeTmpl);//数据库真实业务数据表
 		return GetHaveColumnsMapByTableName(tableCodeOri, tmplconfigService);
 	}
@@ -147,18 +147,18 @@ public class Common {
 	}
 	
 	
-	private static String getTableCodeTmpl(String tableNo,
+	private static String getTableCodeTmpl(String kpiCode,
 			TmplConfigManager tmplconfigService) throws Exception{
 		PageData pd=new PageData();
-		pd.put("TABLE_NO", tableNo);
-		PageData pdResult=tmplconfigService.findTableCodeByTableNo(pd);
+		pd.put("KPI_CODE", kpiCode);
+		PageData pdResult=tmplconfigService.findTableCodeByKpiCode(pd);
 		String tableCodeTmpl=pdResult.getString("TABLE_CODE");
 		return tableCodeTmpl;
 	}
-	public static Map<String, TmplConfigDetail> GetSetColumnsList(String tableNo, String departCode, String billOff,
+	public static Map<String, TmplConfigDetail> GetSetColumnsList(String kpiCode, String departCode, String billOff,
 			TmplConfigManager tmplconfigService) throws Exception{
 		Map<String, TmplConfigDetail> m_SetColumnsList = new LinkedHashMap<String, TmplConfigDetail>();
-		String tableCodeTmpl = getTableCodeTmpl(tableNo, tmplconfigService);
+		String tableCodeTmpl = getTableCodeTmpl(kpiCode, tmplconfigService);
 		
 		// 前端数据表格界面字段,动态取自tb_tmpl_config_detail，根据当前单位编码及表名获取字段配置信息
 		List<TmplConfigDetail> m_columnsList = Common.getShowColumnList(tableCodeTmpl, departCode, billOff,tmplconfigService);

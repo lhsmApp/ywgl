@@ -59,7 +59,7 @@
 									<tr>
 										<td>
 											<select class="form-control" id="busiDate" name="busiDate" style="vertical-align:top; width:150px;margin-left: 5px;" data-placeholder="请选择业务期间">
-												<option value=""></option>
+												<!-- <option value=""></option> -->
 												<c:forEach items="${listBusiDate}" var="var">
 													<option value="${var.BUSI_DATE}" <c:if test="${pd.busiDate == var.BUSI_DATE}">selected="selected"</c:if>>${var.BUSI_DATE}</option>
 												</c:forEach>
@@ -154,6 +154,8 @@
 		</tbody>
 	</table>
 </div>
+
+   
 	<!-- 页面底部js¨ -->
 	<%@ include file="../../system/index/foot.jsp"%>
 	<!-- 删除时确认窗口 -->
@@ -166,6 +168,8 @@
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 	<!-- 自由拉动 -->
 	<script type="text/javascript" src="static/ace/js/jquery-ui.js"></script>
+    <!-- js正则库 -->
+    <script type="text/javascript" src="static/js/common/validation.js"></script>
 	<script type="text/javascript">
 		/* 关闭加载状态 */
 		$(top.hangge());
@@ -176,6 +180,33 @@
 		var date = new Date();
 	    var year = '${pd.busiDate}';
 	    var strDate = date.getDate();
+	    var mandatory = '${pd.mandatory}';
+		
+	    // 列名称与name的对应关系
+	    var colMapping = {
+	        "员工编号":"STAFF_CODE",
+	        "员工姓名":"STAFF_NAME",
+	        "单位":"STAFF_UNIT",
+	        "部门":"STAFF_DEPART",
+	        "职务":"STAFF_POSITION",
+	        "岗位":"STAFF_JOB",
+	        "办公室电话":"PHONE",
+	        "手机号":"MOBILE_PHONE",
+	        "中国石油邮箱":"ZSY_MAIL"
+	    },
+	    fieldMandatory = {
+	        "ids":{isMust:false,valiType:''},
+	        'STAFF_CODE':{isMust:false,valiType:''},
+	        'STAFF_NAME':{isMust:false,valiType:''},
+	        "STAFF_UNIT":{isMust:false,valiType:''},
+	        "STAFF_DEPART":{isMust:false,valiType:''},
+	        "STAFF_POSITION":{isMust:false,valiType:''},
+	        "STAFF_JOB":{isMust:false,valiType:''},
+	        "PHONE":{isMust:false,valiType:'isTel'},
+	        "MOBILE_PHONE":{isMust:false,valiType:'isMobile'},
+	        "ZSY_MAIL":{isMust:false,valiType:'isEmail'}
+	    }
+	    valida.initWhoIsMandatory(mandatory)//必填字段初始化
 		
 	    /*权限控制*/
 	    function checkPermission(){
@@ -274,32 +305,69 @@
 			var listData = new Array();
 			for(var i=0;i < document.getElementsByName('STAFF_CODE').length-1;i++){
 				//length-1 : 页面中有用于复制的隐藏文本
-					//如果有员工编号那么就判定该行数据有效
-					codeVal = document.getElementsByName('STAFF_CODE')[i].value;
-					if(codeVal!=''){
-						codeVal = '';
-						ID = document.getElementsByName('ids')[i].value;
-						STAFF_CODE = document.getElementsByName('STAFF_CODE')[i].value;
-						STAFF_NAME = document.getElementsByName('STAFF_NAME')[i].value;
-						STAFF_UNIT = document.getElementsByName('STAFF_UNIT')[i].value;
-						STAFF_DEPART = document.getElementsByName('STAFF_DEPART')[i].value;
-						STAFF_POSITION = document.getElementsByName('STAFF_POSITION')[i].value;
-						STAFF_JOB = document.getElementsByName('STAFF_JOB')[i].value;
-						PHONE = document.getElementsByName('PHONE')[i].value;
-						MOBILE_PHONE = document.getElementsByName('MOBILE_PHONE')[i].value;
-						ZSY_MAIL = document.getElementsByName('ZSY_MAIL')[i].value;
-						
-						listData.push(ID);
-						listData.push(STAFF_CODE);
-						listData.push(STAFF_NAME);
-						listData.push(STAFF_UNIT);
-						listData.push(STAFF_DEPART);
-						listData.push(STAFF_POSITION);
-						listData.push(STAFF_JOB);
-						listData.push(PHONE);
-						listData.push(MOBILE_PHONE);
-						listData.push(ZSY_MAIL);
-				}
+				//判断：如果每个必填项都为空，则判定本行无效
+				var not_null = true
+                for(var fm in fieldMandatory){
+                    if(fieldMandatory[fm]['isMust']){
+                        not_null = false
+                        var e = $("input[name="+fm+"]:eq("+i+")")
+                        if(e.val()){
+                            not_null = true
+                            break;
+                        }
+                    }
+                }
+				if(not_null){
+                    /* 参数校验 begin */
+                    for(fm in fieldMandatory){
+                        if(fieldMandatory[fm]['isMust']){
+                            var e = $("input[name="+fm+"]:eq("+i+")")
+                            if(!e.val()){
+                                e.tips({
+                                    side:3,
+                                    msg:'这里是必填内容',
+                                    bg:'#cc0033',
+                                    time:3
+                                });
+                                return;
+                            }else if(fieldMandatory[fm]['valiType'] != ''){
+                                if(fieldMandatory[fm]['valiType'] == 'isTel'&&!valida.isTel(e.val())){
+                                    e.tips({
+                                        side:3,
+                                        msg:'请输入正确的座机号',
+                                        bg:'#cc0033',
+                                        time:3
+                                    });
+                                    return;
+                                }else if(fieldMandatory[fm]['valiType'] == 'isMobile'&&!valida.isMobile(e.val())){
+                                    e.tips({
+                                        side:3,
+                                        msg:'请输入正确的手机号',
+                                        bg:'#cc0033',
+                                        time:3
+                                    });
+                                    return;
+                                }else if(fieldMandatory[fm]['valiType'] == 'isEmail'&&!valida.isEmail(e.val())){
+                                    e.tips({
+                                        side:3,
+                                        msg:'请输入正确的邮箱格式',
+                                        bg:'#cc0033',
+                                        time:3
+                                    });
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                    
+                    
+                    /* 参数校验 end */
+                    for(fm in fieldMandatory){
+                        var e = $("input[name="+fm+"]:eq("+i+")")
+                        listData.push(e.val())
+                    } 
+                }
+					
 			}
 			top.jzts();
 			$.ajax({

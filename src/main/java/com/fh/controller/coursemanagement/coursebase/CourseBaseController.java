@@ -145,6 +145,7 @@ public class CourseBaseController extends BaseController {
 		if(null != keywords && !"".equals(keywords)){
 			pd.put("keywords", keywords.trim());
 		}
+		page.setShowCount(8);
 		page.setPd(pd);
 		List<PageData>	varList = coursebaseService.list(page);	//列出CourseBase列表
 		JSONArray arr = JSONArray.fromObject(coursetypeService.listTree("0"));

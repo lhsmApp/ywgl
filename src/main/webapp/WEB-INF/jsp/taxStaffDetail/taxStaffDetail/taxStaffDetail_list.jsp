@@ -92,7 +92,6 @@
 														</c:forEach>
 													</select>
 											</span>
-											<input id="SelectedCustCol7" value="9870" class="hidden" type="text">
 											<button type="button" class="btn btn-info btn-sm" onclick="tosearch();">
 												<i class="ace-icon fa fa-search bigger-110"></i>
 											</button>
@@ -124,14 +123,14 @@
 											<div class="profile-info-name">分类</div>
 	
 											<div class="profile-info-value">
-												<span id="valPRO_TITLE">${KPI.KPI_TYPE}</span>
+												<span id="valKPI_TYPE">${KPI.KPI_TYPE}</span>
 											</div>
 										</div>
 										<div class="profile-info-row">
 											<div class="profile-info-name">指标代码</div>
 	
 											<div class="profile-info-value">
-												<span id="valPRO_TITLE">${KPI.KPI_CODE}</span>
+												<span id="valKPI_CODE">${KPI.KPI_CODE}</span>
 											</div>
 										</div>
 										
@@ -139,7 +138,7 @@
 											<div class="profile-info-name"> 指标作用 </div>
 	
 											<div class="profile-info-value">
-												<span id="valPRO_REPORT_USER">${KPI.KPI_EFFECT}</span>
+												<span id="valKPI_EFFECT">${KPI.KPI_EFFECT}</span>
 											</div>
 										</div>
 										
@@ -147,7 +146,7 @@
 											<div class="profile-info-name">考核对象</div>
 	
 											<div class="profile-info-value">
-												<span id="valPRO_ACCEPT_USER">${KPI.ASSESS_OBJECT}</span>
+												<span id="valASSESS_OBJECT">${KPI.ASSESS_OBJECT}</span>
 											</div>
 										</div>
 									</div>
@@ -158,7 +157,7 @@
 											<div class="profile-info-name">指标名称</div>
 	
 											<div class="profile-info-value">
-												<span id="valPRO_DEPART">${KPI.KPI_NAME}</span>
+												<span id="valKPI_NAME">${KPI.KPI_NAME}</span>
 											</div>
 										</div>
 										
@@ -166,8 +165,7 @@
 											<div class="profile-info-name">判断标准</div>
 	
 											<div class="profile-info-value">
-												<!-- <span>中国石油</span> -->
-												<span id="valPRO_SYS_TYPE">${KPI.JUDGEMENT_STANDARD}</span>
+												<span id="valJUDGEMENT_STANDARD">${KPI.JUDGEMENT_STANDARD}</span>
 											</div>
 										</div>
 										
@@ -175,7 +173,7 @@
 											<div class="profile-info-name">计算公式</div>
 	
 											<div class="profile-info-value">
-												<span id="valPRO_TYPE_ID">${KPI.FORMULA}</span>
+												<span id="valFORMULA">${KPI.FORMULA}</span>
 											</div>
 										</div>
 										
@@ -236,9 +234,8 @@
         var gridBase_selector = "#jqGridBase";  
         var pagerBase_selector = "#jqGridBasePager";  
 
-	    //页面显示的数据的责任中心和账套信息，在tosearch()里赋值
+	    //页面显示的数据的责任中心，在tosearch()里赋值
 	    var ShowDataBusiDate = "";
-	    var ShowDataCustCol7 = "";
 		
         //前端数据表格界面字段,动态取自tb_tmpl_config_detail，根据当前单位编码及表名获取字段配置信息
         var jqGridColModel = "[]";
@@ -254,8 +251,8 @@
 			ShowDataBusiDate = SystemDateTime;
 			//当前登录人所在二级单位
 		    var DepartName = '${DepartName}';
-		    $("#showDur").text('当前期间：' + SystemDateTime + ' 登录人单位：' + DepartName);
-			
+		    //$("#showDur").text('当前期间：' + SystemDateTime + ' 登录人单位：' + DepartName);
+		    $("#showDur").text('当前期间：' + SystemDateTime);
 	        //前端数据表格界面字段,动态取自tb_tmpl_config_detail，根据当前单位编码及表名获取字段配置信息
 	        jqGridColModel = "[]";
             var mes = "${jqGridColModel}";
@@ -390,8 +387,7 @@
     						url: '<%=basePath%>taxStaffDetail/deleteAll.do?'
     							+ 'SelectedBusiDate='+$("#SelectedBusiDate").val()
     		                    +'&ShowDataBusiDate='+ShowDataBusiDate
-    		                    +'&SelectedCustCol7='+$("#SelectedCustCol7").val()
-    		                    +'&ShowDataCustCol7='+ShowDataCustCol7,
+    		                    +'&KPI_CODE='+$("#KPI_CODE").val(),
     				    	data: {DataRows:JSON.stringify(listData)},
     						dataType:'json',
     						cache: false,
@@ -463,8 +459,7 @@
         					url: '<%=basePath%>taxStaffDetail/updateAll.do?'
         						+ 'SelectedBusiDate='+$("#SelectedBusiDate").val()
         	                    +'&ShowDataBusiDate='+ShowDataBusiDate
-        	                    +'&SelectedCustCol7='+$("#SelectedCustCol7").val()
-        	                    +'&ShowDataCustCol7='+ShowDataCustCol7,
+        	                    +'&KPI_CODE='+$("#KPI_CODE").val(),
         			    	data: {DataRows:JSON.stringify(listData)},
         					dataType:'json',
         					cache: false,
@@ -514,10 +509,9 @@
     	   diag.Drag=true;
     	   diag.Title ="EXCEL 导入到数据库";
     	   diag.URL = '<%=basePath%>taxStaffDetail/goUploadExcel.do?'
-    		   +'SelectedCustCol7='+$("#SelectedCustCol7").val()
-    		   +'&ShowDataCustCol7='+ShowDataCustCol7
-    			+ '&SelectedBusiDate='+$("#SelectedBusiDate").val()
-                + '&ShowDataBusiDate='+ShowDataBusiDate;
+    			+ 'SelectedBusiDate='+$("#SelectedBusiDate").val()
+                + '&ShowDataBusiDate='+ShowDataBusiDate
+                + '&KPI_CODE='+$("#KPI_CODE").val();
     	   diag.Width = 300;
     	   diag.Height = 150;
     	   diag.CancelEvent = function(){ //关闭事件
@@ -534,10 +528,9 @@
          */
         function exportItems(){
         	window.location.href='<%=basePath%>taxStaffDetail/excel.do?'
-        		+'SelectedCustCol7='+$("#SelectedCustCol7").val()
-        		+'&ShowDataCustCol7='+ShowDataCustCol7
-        		+ '&SelectedBusiDate='+$("#SelectedBusiDate").val()
-                +'&ShowDataBusiDate='+ShowDataBusiDate;
+        		+ 'SelectedBusiDate='+$("#SelectedBusiDate").val()
+                +'&ShowDataBusiDate='+ShowDataBusiDate
+                +'&KPI_CODE='+$("#KPI_CODE").val();
         }
 
         /**
@@ -572,20 +565,77 @@
 	
 	    //检索
 	    function tosearch() {
-			ShowDataBusiDate = $("#SelectedBusiDate").val();
-			ShowDataCustCol7 = $("#SelectedCustCol7").val();
+	    	var kpiCode=$("#KPI_CODE").val();
+			var selectDate=$("#SelectedBusiDate").val();
+	    	
+	    	$.ajax({
+				type: "POST",
+				url: '<%=basePath%>taxStaffDetail/getKpi.do?KPI_CODE='+kpiCode,
+				dataType:'json',
+				cache: false,
+				success: function(response){
+						$("#valKPI_TYPE").text(response.KPI_TYPE);
+						$("#valKPI_CODE").text(response.KPI_CODE);
+						$("#valKPI_NAME").text(response.KPI_NAME);
+						$("#valKPI_EFFECT").text(response.KPI_EFFECT);
+						$("#valASSESS_OBJECT").text(response.ASSESS_OBJECT);
+						$("#valJUDGEMENT_STANDARD").text(response.JUDGEMENT_STANDARD);
+						$("#valFORMULA").text(response.FORMULA);
+				},
+		    	error: function() {
+					$("#subTitle").tips({
+						side:3,
+			            msg:'获取指标信息出错',
+			            bg:'#cc0033',
+			            time:3
+			        });
+		    	}
+			});
+	    	
 			
-			$(gridBase_selector).jqGrid('setGridParam',{  // 重新加载数据
-    			url: '<%=basePath%>taxStaffDetail/getPageList.do?'
-    				+'SelectedCustCol7='+$("#SelectedCustCol7").val()
-            		+ '&SelectedBusiDate='+$("#SelectedBusiDate").val()
-                    + '&ShowDataBusiDate='+ShowDataBusiDate,
-    			editurl: '<%=basePath%>taxStaffDetail/edit.do?'
-    				+'SelectedCustCol7='+$("#SelectedCustCol7").val()
-    				+'&ShowDataCustCol7='+ShowDataCustCol7
-            		+ '&SelectedBusiDate='+$("#SelectedBusiDate").val()
-                    + '&ShowDataBusiDate='+ShowDataBusiDate
-							}).trigger("reloadGrid");
+
+			$(gridBase_selector).jqGrid('GridUnload'); 
+			//前端数据表格界面字段,动态取自tb_tmpl_config_detail，根据当前单位编码及表名获取字段配置信息
+		    jqGridColModel = "[]";
+			
+			top.jzts();
+			$.ajax({
+				type: "POST",
+				url: '<%=basePath%>taxStaffDetail/getShowColModel.do?KPI_CODE='+kpiCode
+    	            + '&SystemDateTime='+selectDate,
+				dataType:'json',
+				cache: false,
+				success: function(response){
+					if(response.code==0){
+						$(top.hangge());//关闭加载状态
+						var mes = response.message;
+						mes = mes.replace("[", "").replace("]", "");
+						if($.trim(mes)!=""){
+						    //前端数据表格界面字段,动态取自tb_tmpl_config_detail，根据当前单位编码及表名获取字段配置信息
+					        jqGridColModel = eval("(" + response.message + ")");//此处记得用eval()行数将string转为array
+						    SetStructure();
+						}
+					}else{
+						$(top.hangge());//关闭加载状态
+						$("#subTitle").tips({
+							side:3,
+				            msg:'获取显示结构失败：'+response.message,
+				            bg:'#cc0033',
+				            time:3
+				        });
+					}
+				},
+		    	error: function(response) {
+					$(top.hangge());//关闭加载状态
+					$("#subTitle").tips({
+						side:3,
+			            msg:'获取显示结构出错：'+response.responseJSON.message,
+			            bg:'#cc0033',
+			            time:3
+			        });
+		    	}
+			});
+			
 		}  
     
         function SetStructure(){
@@ -598,9 +648,9 @@
     		
     		$(gridBase_selector).jqGrid({
     			url: '<%=basePath%>taxStaffDetail/getPageList.do?'
-    				+'SelectedCustCol7='+$("#SelectedCustCol7").val()
-            		+ '&SelectedBusiDate='+$("#SelectedBusiDate").val()
-                    + '&ShowDataBusiDate='+ShowDataBusiDate,
+            		+ 'SelectedBusiDate='+$("#SelectedBusiDate").val()
+                    + '&ShowDataBusiDate='+ShowDataBusiDate
+                    + '&KPI_CODE='+$("#KPI_CODE").val(),
     			datatype: "json",
     			colModel: jqGridColModel,
     			reloadAfterSubmit: true, 
@@ -613,15 +663,14 @@
                 sortable: true,
     			altRows: true, //斑马条纹
     			editurl: '<%=basePath%>taxStaffDetail/edit.do?'
-    				+'SelectedCustCol7='+$("#SelectedCustCol7").val()
-            		+ '&SelectedBusiDate='+$("#SelectedBusiDate").val()
-            		+ '&ShowDataCustCol7='+ShowDataCustCol7
-                    + '&ShowDataBusiDate='+ShowDataBusiDate,
+            		+ 'SelectedBusiDate='+$("#SelectedBusiDate").val()
+                    + '&ShowDataBusiDate='+ShowDataBusiDate
+                    + '&KPI_CODE='+$("#KPI_CODE").val(),
     			
     			pager: pagerBase_selector,
     			footerrow: true,
     			userDataOnFooter: true,
-    			//ondblClickRow: doubleClickRow,
+    			ondblClickRow: doubleClickRow,
     			
     			loadComplete : function() {
     				var table = this;
@@ -639,9 +688,9 @@
     			$(gridBase_selector).navGrid(pagerBase_selector, 
     					{
     			            //navbar options
-    				        edit: false,
+    				        edit: true,
     			            editicon : 'ace-icon fa fa-pencil blue',
-    			            add: false,
+    			            add: true,
     			            addicon : 'ace-icon fa fa-plus-circle purple',
     			            del: false,
     			            delicon : 'ace-icon fa fa-trash-o red',
@@ -694,7 +743,7 @@
     				sepclass : "ui-separator",
     				sepcontent: ""
     			});
-    	        /* $(gridBase_selector).navButtonAdd(pagerBase_selector,
+    	        $(gridBase_selector).navButtonAdd(pagerBase_selector,
     	                {
     				id : "batchEdit",
     	                    buttonicon: "ace-icon fa fa-pencil-square-o purple",
@@ -722,7 +771,7 @@
     	                     position : "last",
     	                     title : "批量保存",
     	                     cursor : "pointer"
-    	                 }); */
+    	                 });
 
     	        		$(gridBase_selector).navButtonAdd(pagerBase_selector, {
     	        			id : "batchDelete",
