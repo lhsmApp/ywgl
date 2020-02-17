@@ -105,7 +105,8 @@
                         <table style="width:100%;">
                             <tr>
                                 <td style="vertical-align:top;">
-                                    <a class="btn btn-mini btn-success" onclick="top.Dialog.close();">确定</a>
+                                	<input id="clickConfirm" name="clickConfirm" value="0" type="hidden">
+                                    <a class="btn btn-mini btn-success" onclick="$('#clickConfirm').val('1');top.Dialog.close();">确定</a>
                                 </td>
                                 <td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
                             </tr>
