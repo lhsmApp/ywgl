@@ -126,5 +126,14 @@ public interface DepartmentManager{
 	 */
 	public List<Department> getDepartDic(PageData pd)throws Exception;
 	
+	/**
+	 * 获得全部 名称和id对应关系
+	 * 车易家
+	 * @param page
+	 * @return
+	 * @throws Exception
+	 */
+	public List<PageData> getAllNameAndId(Page page)throws Exception;
+	
 }
 

@@ -277,5 +277,15 @@ public class DepartmentService implements DepartmentManager{
 	public List<Department> getDepartDic(PageData pd)throws Exception{
 		return (List<Department>)dao.findForList("DepartmentMapper.getDepartDic", pd);
 	}
+	/**
+	 * 获得全部 名称和id对应关系
+	 * 车易家
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PageData> getAllNameAndId(Page page) throws Exception {
+		// TODO 自动生成的方法存根
+		return (List<PageData>)dao.findForList("DepartmentMapper.getAllNameAndId", page);
+	}
 }
 

@@ -71,5 +71,7 @@ public interface NoticeManager{
      * @throws Exception
      */
     public List<PageData> getMyNotice(PageData pd)throws Exception;
+
+	public List<PageData> getAllSysUserList(PageData pd)throws Exception;
 }
 

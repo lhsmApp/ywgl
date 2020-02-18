@@ -60,16 +60,26 @@
 	<update id="edit" parameterType="pd">
 		update
 		<include refid="tableName"></include>
-		set 
-			NOTICE_CONTENT = #{NOTICE_CONTENT},
-			NOTICE_USER = #{NOTICE_USER},
-			NOTICE_TYPE = #{NOTICE_TYPE},
+		<set>
+		<if test="STATE!= null and STATE != ''">
+			STATE = #{STATE},
+		</if>
+		<if test="CHECK_TIME!= null and CHECK_TIME != ''">
+			CHECK_TIME = #{CHECK_TIME},
+		</if>
+		<if test="START_TIME!= null and START_TIME != ''">
 			START_TIME = #{START_TIME},
+		</if>
+		<if test="END_TIME!= null and END_TIME != ''">
 			END_TIME = #{END_TIME},
-			ATTACHMENT_PATH = #{ATTACHMENT_PATH},
-			NOTICE_ID = NOTICE_ID
-			where 
+		</if>
+		</set>
+		<where>
 			NOTICE_ID = #{NOTICE_ID}
+			<if test="USER_ID!= null and USER_ID != ''">
+				AND USER_ID = #{USER_ID}
+			</if>
+		</where>
 	</update>
 	
 	<!-- 通过ID获取数据 -->

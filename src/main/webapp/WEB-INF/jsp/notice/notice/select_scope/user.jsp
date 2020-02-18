@@ -39,7 +39,7 @@
                     <div id="zhongxin1" class="row">
                         <div class="col-xs-12">
                         <!-- 检索  -->
-                        <form action="trainplan/listStudent.do" method="post" name="Form" id="Form">    
+                        <form action="notice/goSelectScope.do" method="post" name="Form" id="Form">    
                         <input type="hidden" name="TRAIN_PLAN_PERSONS" id="TRAIN_PLAN_PERSONS" value="${pd.TRAIN_PLAN_PERSONS}"/>   
                         <table style="margin-top:5px;">
                             <tr>
@@ -49,7 +49,7 @@
                                         <div class="selectTree" id="selectTree" style="float:none;display:block;">
                                         <div style="border: 1px solid #6fb3e0;border-radius: 4px !important;">
                                         <span class="input-icon">
-                                            <input style="border: 1px solid #6fb3e0;border-radius: 4px !important;" type="text" placeholder="搜索人员名称" class="nav-search-input" id="nav-search-input" autocomplete="off" name="keywords" value="">
+                                            <input style="border: 1px solid #6fb3e0;border-radius: 4px !important;" type="text" placeholder="搜索人员名称" class="nav-search-input" id="nav-search-input" autocomplete="off" name="keywords" value="${pd.keywords}">
                                             <i class="ace-icon fa fa-search nav-search-icon"></i>
                                         </span>
                                     </div>
