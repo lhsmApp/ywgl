@@ -133,14 +133,17 @@ public class OperationStatisticsController extends BaseController {
 		User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 		pd = this.getPageData();
 		String busiDate = pd.getString("busiDate");
-		pd.put("KEY_CODE","SystemDataTime");
+		pd.put("KEY_CODE","operationstatMustKey");
 		pd.put("USER_DEPART",user.getUNIT_CODE());
 		data.put("BUSI_TYPE",SysDeptTime.OPERATION_STATISTICS.getNameKey());
 		data.put("DEPT_CODE",user.getUNIT_CODE());
-		String date = sysconfigService.getSysConfigByKey(pd);
+		String date = sysconfigService.currentSection(pd);
+		// 需要获取必填的内容，然后输出到页面上
+        String mandatory = sysconfigService.getSysConfigByKey(pd);
 		if(null == busiDate || StringUtil.isEmpty(busiDate)) {
 			pd.put("busiDate",date);
 		}
+		pd.put("mandatory", mandatory);
 		pd.put("month",date);
 		page.setPd(pd);
 		PageData pageData = grcpersonService.findSysDeptTime(data);

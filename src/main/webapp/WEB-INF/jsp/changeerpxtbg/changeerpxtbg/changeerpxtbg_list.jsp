@@ -90,7 +90,9 @@
 						<div class="col-xs-4">							
 							<ul id="tasks" class="item-list">
 							
-							</ul>										
+							</ul>	
+							<div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div>
+															
 					</div>					
 					<div class="col-xs-8">
 						<div class="widget-box transparent" id="recent-box">
@@ -291,6 +293,7 @@
 					if(which == 2) $('#form-field-select-4').addClass('tag-input-style');
 					 else $('#form-field-select-4').removeClass('tag-input-style');
 				});
+				initList();
 			}
 			
 			
@@ -532,13 +535,14 @@
 			 var diag = new top.Dialog();
 			 diag.Drag=true;
 			 diag.Title ="系统变更申请单打印";
-			 diag.URL = '<%=basePath%>changeerpxtbg/goPrint.do?BILL_CODE='+encodeURI(Id);
+			 diag.URL = '<%=basePath%>changeerpxtbg/printf.do?BILL_CODE='+encodeURI(Id);
 			 diag.Width = 800;
 			 diag.Height = 550;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮 
 			 diag.show();
+<%-- 			 window.location.href='<%=basePath%>changeerpxtbg/printf.do?BILL_CODE='+encodeURI(Id); --%>
 		}
 		
 		//导出excel
@@ -670,6 +674,7 @@
 					dataType:'json',
 					cache: false,
 					success: function(data){
+						$("#page").html(data.pageHtml);
 						if(data.length>0){
 							$.each(data, function(i, item){
 							    var html = '';

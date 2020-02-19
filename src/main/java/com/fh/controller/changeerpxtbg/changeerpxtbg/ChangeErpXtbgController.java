@@ -337,6 +337,23 @@ public class ChangeErpXtbgController extends BaseController {
 		pd1 = changeerpxtbgService.findById(pd1);	//根据ID读取
 		return pd1;
 	}
+	 /**打印
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/printf")
+	public ModelAndView printf()throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		pd = changeerpxtbgService.findById(pd);	//根据ID读取
+		JSONArray json = JSONArray.fromObject(pd); 
+		mv.setViewName("changeerpxtbg/changeerpxtbg/printPage");
+		mv.addObject("pd", pd);
+		mv.addObject("billCode", pd.get("BILL_CODE"));
+		
+		return mv;
+	}
 	/**列表
 	 * @param page
 	 * @throws Exception

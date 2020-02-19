@@ -119,7 +119,7 @@
 				)
 		</if>
 	 	<if test="pd.START_DATE!=null and pd.START_DATE!='' and pd.END_DATE!=null and pd.END_DATE!=''"> 
-			  and (SUBSTRING(CREATE_DATE,1,10) between #{pd.START_DATE} and  #{pd.END_DATE} )
+			  and (SUBSTRING(CREATE_DATE,1,8) between #{pd.START_DATE} and  #{pd.END_DATE} )
 			 </if>
 	</select>
 	

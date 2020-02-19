@@ -9,6 +9,12 @@
 	
 	<!-- 字段 -->
 	<sql id="Field">
+	NOTICE_ID,
+		<include refid="Field2"></include>
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field2">
 		NOTICE_CONTENT,	
 		NOTICE_USER,	
 		NOTICE_TYPE,	
@@ -16,14 +22,18 @@
 		END_TIME,	
 		ATTACHMENT_PATH,	
 		STATE,	
-		CREATE_USER,	
 		USER_DEPART,	
-		CREATE_DATE,	
-		NOTICE_ID
+		CREATE_DATE
 	</sql>
 	
 	<!-- 字段值 -->
 	<sql id="FieldValue">
+	#{NOTICE_ID},
+		<include refid="FieldValue2"></include>
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue2">
 		#{NOTICE_CONTENT},	
 		#{NOTICE_USER},	
 		#{NOTICE_TYPE},	
@@ -31,20 +41,21 @@
 		#{END_TIME},	
 		#{ATTACHMENT_PATH},	
 		#{STATE},	
-		#{CREATE_USER},	
 		#{USER_DEPART},	
-		#{CREATE_DATE},	
-		#{NOTICE_ID}
+		#{CREATE_DATE}
 	</sql>
 	
 	<!-- 新增-->
 	<insert id="save" parameterType="pd">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
 		insert into 
 	<include refid="tableName"></include>
 		(
-	<include refid="Field"></include>
+	<include refid="Field2"></include>
 		) values (
-	<include refid="FieldValue"></include>
+	<include refid="FieldValue2"></include>
 		)
 	</insert>
 	
@@ -60,21 +71,24 @@
 	<update id="edit" parameterType="pd">
 		update
 		<include refid="tableName"></include>
-		set 
+		<set>
+			<if test="ATTACHMENT_PATH!= null and ATTACHMENT_PATH != ''">
+			ATTACHMENT_PATH = #{ATTACHMENT_PATH},
+			</if>
 			NOTICE_CONTENT = #{NOTICE_CONTENT},
 			NOTICE_USER = #{NOTICE_USER},
 			NOTICE_TYPE = #{NOTICE_TYPE},
 			START_TIME = #{START_TIME},
 			END_TIME = #{END_TIME},
-			ATTACHMENT_PATH = #{ATTACHMENT_PATH},
-			NOTICE_ID = NOTICE_ID
-			where 
+		</set>
+		<where>
 			NOTICE_ID = #{NOTICE_ID}
+		</where>
 	</update>
 	
 	<!-- 通过ID获取数据 -->
 	<select id="findById" parameterType="pd" resultType="pd">
-		select 
+		select
 		<include refid="Field"></include>
 		from 
 		<include refid="tableName"></include>
@@ -86,19 +100,25 @@
 	<select id="datalistPage" parameterType="page" resultType="pd">
 		select
 		<include refid="Field"></include>
+		,sys_user.`NAME`
 		from 
 		<include refid="tableName"></include>
-		where 1=1
-		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
-			and
-				(
-				<!--	根据需求自己加检索条件
-					字段1 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
-					 or 
-					字段2 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
-				-->
-				)
-		</if>
+		LEFT join `sys_user`
+		on tb_notice.`NOTICE_USER` = sys_user.`USER_ID`
+		<where>
+			<if test="pd.NOTICE_CONTENT!= null and pd.NOTICE_CONTENT != ''">
+				AND NOTICE_CONTENT LIKE CONCAT(CONCAT('%', #{pd.NOTICE_CONTENT}),'%')
+			</if>
+			<if test="pd.NOTICE_USER!= null and pd.NOTICE_USER != ''">
+				AND NAME LIKE CONCAT(CONCAT('%', #{pd.NAME}),'%') 
+			</if>
+			<if test="pd.lastStart!= null and pd.lastStart != ''">
+				AND START_TIME &gt;= #{pd.lastStart}
+			</if>
+			<if test="pd.lastEnd!= null and pd.lastEnd != ''">
+				AND START_TIME &lt;= #{pd.lastEnd}
+			</if> 
+		</where>
 	</select>
 	
 	<!-- 列表(全部) -->
@@ -107,6 +127,7 @@
 		<include refid="Field"></include>
 		from 
 		<include refid="tableName"></include>
+		where 1=1
 	</select>
 	
 	<!-- 批量删除 -->
@@ -119,4 +140,43 @@
                  #{item}
 		</foreach>
 	</delete>
+    
+    <!-- 查看自己有没有消息 -->
+    <select id="getMyNotice" parameterType="pd" resultType="pd">
+        select NOTICE_ID,NOTICE_CONTENT 
+        from tb_notice 
+        <where>
+            NOTICE_ID in (
+            select NOTICE_ID from tb_notice_detail 
+            <where>
+                USER_ID = #{USER_ID} AND STATE=0 AND START_TIME&lt;NOW() AND END_TIME&gt;NOW()
+            </where>
+            )
+        </where>
+    </select>
+     
+    <!-- 选择发布范围，展示角色列表 -->
+    <select id="showSysRoleList"  parameterType="page" resultType="pd">
+        select ROLE_ID,ROLE_NAME FROM sys_role
+        <where>
+        PARENT_ID=1
+        </where>
+    </select>
+    <!-- 选择发布范围，展示人员列表 -->
+    <select id="showSysUserlistPage"  parameterType="page" resultType="pd">
+        select USER_ID,USERNAME,NAME,DEPARTMENT_ID,UNIT_CODE  FROM  sys_user
+        <where>
+        STATUS=1
+        <if test="pd.keywords!= null and pd.keywords != ''">
+        AND NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+        </if>
+        </where>
+    </select>
+    <!-- 获取全部人员 -->
+    <select id="getAllSysUserList"  parameterType="page" resultType="pd">
+        select USER_ID,USERNAME,NAME,DEPARTMENT_ID,UNIT_CODE  FROM  sys_user
+        <where>
+        STATUS=1
+        </where>
+    </select>
 </mapper>

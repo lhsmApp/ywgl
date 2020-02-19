@@ -78,5 +78,46 @@ public class NoticeService implements NoticeManager{
 		dao.delete("NoticeMapper.deleteAll", ArrayDATA_IDS);
 	}
 	
+	/**选择发布范围，展示角色列表
+     * @param page
+     * @throws Exception
+     */
+    @SuppressWarnings("unchecked")
+    public List<PageData> showSysRoleList(Page page)throws Exception{
+        return (List<PageData>)dao.findForList("NoticeMapper.showSysRoleList", page);
+    }
+    
+    /**选择发布范围，展示人员列表
+     * @param page
+     * @throws Exception
+     */
+    @SuppressWarnings("unchecked")
+    public List<PageData> showSysUserList(Page page)throws Exception{
+        return (List<PageData>)dao.findForList("NoticeMapper.showSysUserlistPage", page);
+    }
+
+    /**
+     * 选择发布范围，展示人员列表
+     * @param page
+     * @throws Exception
+     */
+    @SuppressWarnings("unchecked")
+	@Override
+	public List<PageData> getAllSysUserList(PageData pd) throws Exception {
+		// TODO 自动生成的方法存根
+    	return (List<PageData>)dao.findForList("NoticeMapper.getAllSysUserList", pd);
+	}
+    
+    /**列表(全部)
+     * @param page
+     * @throws Exception
+     */
+    @SuppressWarnings("unchecked")
+    public List<PageData> getMyNotice(PageData pd)throws Exception{
+        return (List<PageData>)dao.findForList("NoticeMapper.getMyNotice", pd);
+    }
+
+	
+	
 }
 

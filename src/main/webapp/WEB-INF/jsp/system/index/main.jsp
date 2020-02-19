@@ -33,7 +33,13 @@
 	top: 0px;
 	z-index: 99999;
 }
+
+/* 由于这些css的图片不存在，所以禁止加载这些图片 这是ace.css中的样式*/
+/* .gritter-bottom, .gritter-close, .gritter-item, .gritter-top{
+	background-image: none !important;
+} */
 </style>
+
 
 <!-- 即时通讯 -->
 <link rel="stylesheet" type="text/css"
@@ -45,7 +51,9 @@
 <script type="text/javascript"
 	src="plugins/websocketInstantMsg/websocket.js"></script>
 <!-- 即时通讯 -->
-
+<!-- 消息提醒 css -->
+<link rel="stylesheet" href="static/ace/css/jquery.gritter.css" />
+<link rel="stylesheet" href="static/ace/css/ace.css" />
 </head>
 <body class="no-skin">
 	<!-- #section:basics/navbar.layout -->
@@ -341,7 +349,8 @@
 
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
-	
+	<!-- 消息提醒 js -->
+	<script src="static/ace/js/jquery.gritter.js"></script>
 	<script>
 		/* window.onload=function(){
 			console.log($("#mainFrame").css("height"));
@@ -361,6 +370,7 @@
 			if( compact.length > 0 ) {
 				compact.removeAttr('checked').trigger('click');
 			} */
+		    getNewNotice()//获取公告提示信息
 		})
 		
 		function applyChanges(skin_class) {
@@ -414,6 +424,95 @@
 			//$('.sidebar[data-sidebar-hover=true]').ace_sidebar_hover('reset')
 			
 			if(ace.vars['old_ie']) ace.helper.redraw(document.body, true);
+		}
+		//向后台获取公告信息
+		function getNewNotice(){
+		    $.ajax({
+                type: "POST",
+                url: '<%=basePath%>notice/getMyNotice.do?tm='+new Date().getTime(),
+                data: {},
+                cache: false,
+                success: function(json){
+                    var data =JSON.parse(decodeURIComponent(json))
+                    //console.log(data)
+                    var notices = data['retData']
+                    for (var i=0;i< notices.length;i++){
+                        console.log(notices[i])
+                        ejectNotice("新消息提示",notices[i]['NOTICE_CONTENT'],notices[i]['NOTICE_ID']);
+                    } 
+                }
+            });
+		}
+		//右下角气泡弹窗 函数
+		//弹出
+		function ejectNotice(title,msg,id){
+            /* var Notification = window.Notification || window.mozNotification || window.webkitNotification;
+            if(Notification){
+                Notification.requestPermission(function(status){
+                    //status默认值'default'等同于拒绝 'denied' 意味着用户不想要通知 'granted' 意味着用户同意启用通知
+                    if("granted" != status){
+                        return;
+                    }else{
+                        var notify = new Notification(
+                            title,
+                            {
+                                dir:'auto',
+                                lang:'zh-CN',
+                                //tag:'1',//实例化的notification的id
+                                tag:id+"|"+Date.parse(new  Date()),//实例化的notification的id
+                                body:msg, //通知的具体内容
+                                requireInteraction:true,
+                                renotify:false
+                            }
+                        );
+                        notify.onclick=function(event){
+                            readNotice(event);//点击标记已读
+                            notify.close();
+                        },
+                        notify.onerror = function () {
+                            console.log("HTML5桌面消息出错！！！");
+                        };
+                        notify.onshow = function () {
+                            /*setTimeout(function(){
+                                notify.close();
+                            },2000)*/
+                        /*};
+                        notify.onclose = function () {
+                            console.log("HTML5桌面消息关闭！！！");
+                        };
+                    }
+                });
+            }else{
+                console.log("您的浏览器不支持桌面消息");
+            }*/
+        
+	        var unique_id = $.gritter.add({
+				title: title+'【<a href="javascript:void(0)" onclick="readNotice(this,'+id+')" class="red">点击表示已读</a>】',
+				text: msg,
+				//image: 'static/ace/avatars/user.jpg',
+				sticky: true,
+				time: '',
+				class_name:'gritter-info'+((new Date()).getHours()<18?' gritter-light':'')
+			});
+		}; 
+		//标记为已读
+		function readNotice(event,id){
+		    //console.log(event.target.tag)//id
+		    $(event).html("提交中..").attr("disabled",true).css("pointer-events","none");
+		    
+			$.ajax({
+                type: "POST",
+                url: '<%=basePath%>notice/tagRead.do?tm='+new Date().getTime(),
+                data: {NOTICE_ID:id},
+                cache: false,
+                success: function(json){
+                    console.log(json)
+                    $(event).parent().parent().prev(".gritter-close").trigger("click");
+                },error:function(){
+                	//$(event).html("点击表示已读").attr("disabled",null).css("pointer-events",'');
+                	$(event).html("标记失败")
+                }
+            });
 		}
 	</script>
 </body>

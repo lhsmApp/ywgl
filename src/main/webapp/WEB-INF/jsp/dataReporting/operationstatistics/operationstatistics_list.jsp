@@ -122,12 +122,12 @@
 					<label class="pos-rel"><input type='checkbox' name='ids' value="${var.ID}" class="ace" /><span class="lbl"></span></label>
 				</td>
 				<th><input type="text" name="COMPANY_NAME" id="COMPANY_NAME" value="" maxlength="50" title="单位" style="width:100%;"/></th>
-				<th><input type="text" onkeyup="this.value=this.value.replace(/\D/g,'')" name="AGENCY_OPER_NUM" id="AGENCY_OPER_NUM" value="" maxlength="100" title="机关计算机运维数量" style="width:100%;"/></th>
-				<th><input type="text" name="NETWORK_OPER_NUM" id="NETWORK_OPER_NUM" value="" maxlength="11" title="网络运维数量" style="width:100%;"/></th>
-				<th><input type="text" name="SECURITY_OPER_NUM" id="SECURITY_OPER_NUM" value="" maxlength="11" title="信息安全运维数量" style="width:100%;"/></th>
-				<th><input type="text" name="ERP_OPER_NUM" id="ERP_OPER_NUM" value="" maxlength="11" title="ERP运维数量" style="width:100%;"/></th>
-				<th><input type="text" name="CLOUD_OPER_NUM" id="CLOUD_OPER_NUM" value="" maxlength="11" title="云桌面运维数量" style="width:100%;"/></th>
-				<th><input type="text" name="TOTAL_OPER_NUM" id="TOTAL_OPER_NUM"  value="" maxlength="11" title="合计" style="width:100%;"/></th>
+				<th><input type="text" onkeyup="this.value=this.value.replace(/\D/g,'')" name="AGENCY_OPER_NUM" id="AGENCY_OPER_NUM" value="0" maxlength="100" title="机关计算机运维数量" style="width:100%;"/></th>
+				<th><input type="text" name="NETWORK_OPER_NUM" id="NETWORK_OPER_NUM" value="0" maxlength="11" title="网络运维数量" style="width:100%;"/></th>
+				<th><input type="text" name="SECURITY_OPER_NUM" id="SECURITY_OPER_NUM" value="0" maxlength="11" title="信息安全运维数量" style="width:100%;"/></th>
+				<th><input type="text" name="ERP_OPER_NUM" id="ERP_OPER_NUM" value="0" maxlength="11" title="ERP运维数量" style="width:100%;"/></th>
+				<th><input type="text" name="CLOUD_OPER_NUM" id="CLOUD_OPER_NUM" value="0" maxlength="11" title="云桌面运维数量" style="width:100%;"/></th>
+				<th><input type="text" name="TOTAL_OPER_NUM" id="TOTAL_OPER_NUM"  value="0" maxlength="11" title="合计" style="width:100%;"/></th>
 			</tr>
 			</tbody>
 		</table>
@@ -153,6 +153,8 @@
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 	<!-- 自由拉动 -->
 	<script type="text/javascript" src="static/ace/js/jquery-ui.js"></script>
+	<!-- js正则库 -->
+    <script type="text/javascript" src="static/js/common/validation.js"></script>
 	<script type="text/javascript">
 		$(top.hangge());//关闭加载状态
 		/* 复选框全选控制 */
@@ -185,7 +187,30 @@
 		var date = new Date();
 	    var year = '${pd.busiDate}';
 	    var strDate = date.getDate();
-		
+	    var mandatory = '${pd.mandatory}';
+        
+        // 列名称与name的对应关系
+        var colMapping = {
+            "单位":"COMPANY_NAME",
+            "机关计算机运维数量":"AGENCY_OPER_NUM",
+            "网络运维数量":"NETWORK_OPER_NUM",
+            "信息安全运维数量":"SECURITY_OPER_NUM",
+            "ERP运维数量":"ERP_OPER_NUM",
+            "云桌面运维数量":"CLOUD_OPER_NUM",
+            "合计":"TOTAL_OPER_NUM"
+        },
+        fieldMandatory = {
+            "ids":{isMust:false,valiType:''},
+            'COMPANY_NAME':{isMust:false,valiType:''},
+            'AGENCY_OPER_NUM':{isMust:false,valiType:''},
+            "NETWORK_OPER_NUM":{isMust:false,valiType:''},
+            "SECURITY_OPER_NUM":{isMust:false,valiType:''},
+            "ERP_OPER_NUM":{isMust:false,valiType:''},
+            "CLOUD_OPER_NUM":{isMust:false,valiType:''},
+            "TOTAL_OPER_NUM":{isMust:false,valiType:''},
+        }
+        valida.initWhoIsMandatory(mandatory)//必填字段初始化
+	    
 	    /*权限控制*/
 	    function checkPermission(){
 			var state = false;
@@ -236,18 +261,67 @@
 			var listData = new Array();
 			for(var i=0;i < document.getElementsByName('COMPANY_NAME').length-1;i++){
 					//length-1 : 页面中有用于复制的隐藏文本
-					//如果有员工编号那么就判定该行数据有效
-					codeVal = document.getElementsByName('COMPANY_NAME')[i].value;
-					if(codeVal!=''){
-						codeVal = '';
-						listData.push(document.getElementsByName('ids')[i].value);
-						listData.push(document.getElementsByName('COMPANY_NAME')[i].value);
-						listData.push(document.getElementsByName('AGENCY_OPER_NUM')[i].value);
-						listData.push(document.getElementsByName('NETWORK_OPER_NUM')[i].value);
-						listData.push(document.getElementsByName('SECURITY_OPER_NUM')[i].value);
-						listData.push(document.getElementsByName('ERP_OPER_NUM')[i].value);
-						listData.push(document.getElementsByName('CLOUD_OPER_NUM')[i].value);
-						listData.push(document.getElementsByName('TOTAL_OPER_NUM')[i].value);
+					//判断：如果每个必填项都为空，则判定本行无效
+	                var not_null = true
+	                for(var fm in fieldMandatory){
+	                    if(fieldMandatory[fm]['isMust']){
+	                        not_null = false
+	                        var e = $("input[name="+fm+"]:eq("+i+")")
+	                        if(e.val()){
+	                            not_null = true
+	                            break;
+	                        }
+	                    }
+	                }
+					if(not_null){
+						/* 参数校验 begin */
+	                    for(fm in fieldMandatory){
+	                        if(fieldMandatory[fm]['isMust']){
+	                            var e = $("input[name="+fm+"]:eq("+i+")")
+	                            if(!e.val()){
+	                                e.tips({
+	                                    side:3,
+	                                    msg:'这里是必填内容',
+	                                    bg:'#cc0033',
+	                                    time:3
+	                                });
+	                                return;
+	                            }else if(fieldMandatory[fm]['valiType'] != ''){
+	                                if(fieldMandatory[fm]['valiType'] == 'isTel'&&!valida.isTel(e.val())){
+	                                    e.tips({
+	                                        side:3,
+	                                        msg:'请输入正确的座机号',
+	                                        bg:'#cc0033',
+	                                        time:3
+	                                    });
+	                                    return;
+	                                }else if(fieldMandatory[fm]['valiType'] == 'isMobile'&&!valida.isMobile(e.val())){
+	                                    e.tips({
+	                                        side:3,
+	                                        msg:'请输入正确的手机号',
+	                                        bg:'#cc0033',
+	                                        time:3
+	                                    });
+	                                    return;
+	                                }else if(fieldMandatory[fm]['valiType'] == 'isEmail'&&!valida.isEmail(e.val())){
+	                                    e.tips({
+	                                        side:3,
+	                                        msg:'请输入正确的邮箱格式',
+	                                        bg:'#cc0033',
+	                                        time:3
+	                                    });
+	                                    return;
+	                                }
+	                            }
+	                        }
+	                    }
+	                    
+	                    
+	                    /* 参数校验 end */
+	                    for(fm in fieldMandatory){
+	                        var e = $("input[name="+fm+"]:eq("+i+")")
+	                        listData.push(e.val())
+	                    } 
 				}
 			}
 			top.jzts();
@@ -281,7 +355,7 @@
 		    		$(top.hangge());//关闭加载状态
 					$("#subTitle").tips({
 						side:3,
-			            msg:'添加修改失败,'+response.responseJSON.message,
+			            msg:'添加修改失败',
 			            bg:'#cc0033',
 			            time:3
 			        });

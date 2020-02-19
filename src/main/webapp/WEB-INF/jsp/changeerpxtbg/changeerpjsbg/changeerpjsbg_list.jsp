@@ -168,14 +168,19 @@
 														<input type="hidden" name="DEPT_CODE" id="DEPT_CODE"/>
 														<input type="text" name="DEPT_NAME" id="DEPT_NAME" class="form-control" placeholder="请输入部门"/>
 													</div>
+<!-- 													<div style="margin:10px 0px;"> -->
+<!-- 														<label for="form-field-jsbg-report-user">申请人</label> -->
+<!-- 															<select class="form-control" name="USER_CODE" id="USER_CODE"> -->
+<!-- 																	<option value=""></option> -->
+<%-- 																	<c:forEach items="${userList}" var="user"> --%>
+<%-- 																	<option value="${user.USER_ID}">${user.USERNAME}</option> --%>
+<%-- 																	</c:forEach> --%>
+<!-- 																</select> -->
+<!-- 													</div> -->
 													<div style="margin:10px 0px;">
-														<label for="form-field-jsbg-report-user">申请人</label>
-															<select class="form-control" name="USER_CODE" id="USER_CODE">
-																	<option value=""></option>
-																	<c:forEach items="${userList}" var="user">
-																	<option value="${user.USER_ID}">${user.USERNAME}</option>
-																	</c:forEach>
-																</select>
+														<label for="form-field-xtbg-report-dept">申请人</label>
+														<input type="hidden" name="USER_CODE" id="USER_CODE"/>
+														<input type="text" name="USER_NAME" id="USER_NAME" class="form-control" placeholder="请输入申请人"/>
 													</div>
 												    <div style="margin:10px 0px;">
 														<label for="form-field-jsbg-report-depart">申请人部门</label>
@@ -318,7 +323,9 @@
 			$("#selectTree2_input").val('<%=unitName%>');//单位名称
 			$("#DEPT_CODE").val('<%=departId%>');//部门编码
 			$("#DEPT_NAME").val('<%=departName%>');//部门名称			
-			$("#"+'<%=userId%>').val('<%=userName%>');//申请人
+<%-- 			$("#"+'<%=userId%>').val('<%=userName%>');//申请人 --%>
+			$("#USER_CODE").val('<%=userId%>');//申请人编码
+			$("#USER_NAME").val('<%=userName%>');//申请人名称			
 			$("#USER_DEPT").val('<%=departId%>');//申请人部门编码
 			$("#USER_DEPTNAME").val('<%=departName%>');//申请人部门名称
 			$("#USER_JOB").val("");//申请人岗位
@@ -357,7 +364,7 @@
 			var bgReason=$("#BG_REASON").val();//变更原因
 			var unitCode=$("#UNIT_CODE").val();//单位
 			var deptCode=$("#DEPT_CODE").val();//部门
-			var uesrCode=$("#USER_CODE").val();//申请人
+			var uesrCode=$("#USER_CODE").val();//申请人编码
 			var uesrDept=$("#USER_DEPT").val();//申请人部门
 			var uesrJob=$("#USER_JOB").val();//申请人岗位
 			var uesrContact=$("#USER_CONTACT").val();//联系方式
