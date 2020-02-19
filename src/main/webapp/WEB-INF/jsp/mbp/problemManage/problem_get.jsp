@@ -42,6 +42,7 @@
 				<div class="page-content">
 					<div class="row">
 						<div class="col-xs-4">
+						<form action='mbp/getPageList.do?ProOperType=PROBLEM_GET'></form>
 						<!-- 检索  -->
 							<div class="nav-search" style="margin:10px 0px;">
 								<span class="input-icon" style="width:86%">
@@ -58,7 +59,7 @@
 								
 							</ul>						
 
-							<div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div>
+							<div id="page" class="pagination" style="float: right;padding-top: 5px;margin-top: 0px;font-size:12px;"></div>
 					</div>
 					<!-- /.col4 -->
 					
@@ -475,7 +476,7 @@ $(function() {
 	setTimeout("ueditor()",500);
 	
 	//初始化问题列表数据
-	initList();
+	initList('<%=basePath%>mbp/getPageList.do?ProOperType=PROBLEM_GET');
 	
 	$("#problem-tab a").click(function(e){
 		$('#currentTabTitle').text($(this).text());
@@ -508,21 +509,22 @@ function jumpStep(step){
 /**
  * 初始化列表信息
  */
-function initList(){
+function initList(url){
 	$("#problemList li").remove(); 
 	top.jzts();
 	var keywords = $("#keywords").val();
 	$.ajax({
 			type: "POST",
-			url: '<%=basePath%>mbp/getPageList.do?ProOperType=PROBLEM_GET',
+			url: url,
 	    	data: {keywords:keywords},
 			dataType:'json',
 			cache: false,
 			success: function(data){
+				$("#page").html(data.pageHtml);
 				var first;
 				
-				if(data&&data.length>0){
-					$.each(data, function(i, item){
+				if(data&&data.rows&&data.rows.length>0){
+					$.each(data.rows, function(i, item){
 						if(i==0){
 							first=item;
 						}
@@ -718,7 +720,7 @@ function proGet(){
 		            bg:'#009933',
 		            time:3
 		        });
-				initList();
+				initList('<%=basePath%>mbp/getPageList.do?ProOperType=PROBLEM_GET');
 				jumpStep(3);
 			}else{
 				$(top.hangge());//关闭加载状态
@@ -766,7 +768,7 @@ function proGetCancel(){
 		            bg:'#009933',
 		            time:3
 		        });
-				initList();
+				initList('<%=basePath%>mbp/getPageList.do?ProOperType=PROBLEM_GET');
 				jumpStep(2);
 			}else{
 				$(top.hangge());//关闭加载状态
@@ -793,7 +795,7 @@ function proGetCancel(){
 
 //检索
 function searchs(){
-	initList();
+	initList('<%=basePath%>mbp/getPageList.do?ProOperType=PROBLEM_GET');
 	//$("#problemForm").submit();
 }
 
@@ -836,7 +838,7 @@ function addAssign(){
 		            bg:'#009933',
 		            time:3
 		        });
-				initList();
+				initList('<%=basePath%>mbp/getPageList.do?ProOperType=PROBLEM_GET');
 			}else{
 				$(top.hangge());//关闭加载状态
 				$("#btnAddAssign").tips({
@@ -945,7 +947,7 @@ function addClose(){
 		            bg:'#009933',
 		            time:3
 		        });
-				initList();
+				initList('<%=basePath%>mbp/getPageList.do?ProOperType=PROBLEM_GET');
 				jumpStep(4);
 			}else{
 				$(top.hangge());//关闭加载状态
@@ -998,7 +1000,7 @@ function deleteClose(){
 					
 				} */
 				jumpStep(3);
-				initList();
+				initList('<%=basePath%>mbp/getPageList.do?ProOperType=PROBLEM_GET');
 			}else{
 				$(top.hangge());//关闭加载状态
 				$("#btnDeleteClose").tips({

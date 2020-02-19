@@ -34,7 +34,7 @@
 					<div class="row">
 						<div class="col-xs-4">
 						<!-- 检索  -->
-						
+							<form action='mbp/getPageList.do?ProOperType=PROBLEM_ANSWER'></form>
 							<div class="nav-search" style="margin:10px 0px;">
 								<span class="input-icon" style="width:86%">
 									<input style="width:100%" class="nav-search-input" autocomplete="off" id="keywords" type="text" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词" />
@@ -50,8 +50,8 @@
 								
 							</ul>						
 
-							<div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div>
-						
+							<div id="page" class="pagination" style="float: right;padding-top: 5px;margin-top: 0px;font-size:12px;"></div>
+							
 					</div>
 					<!-- /.col4 -->
 					
@@ -435,7 +435,7 @@ $(function() {
 	setTimeout("ueditor()",500);
 	
 	//初始化问题列表数据
-	initList();
+	initList('<%=basePath%>mbp/getPageList.do?ProOperType=PROBLEM_ANSWER');
 	
 	$("#problem-tab a").click(function(e){
 		$('#currentTabTitle').text($(this).text());
@@ -475,20 +475,21 @@ function jumpStep(step){
 /**
  * 初始化列表信息
  */
-function initList(){
+function initList(url){
 	$("#problemList li").remove(); 
 	top.jzts();
 	var keywords = $("#keywords").val();
 	$.ajax({
 			type: "POST",
-			url: '<%=basePath%>mbp/getPageList.do?ProOperType=PROBLEM_ANSWER',
+			url: url,
 	    	data: {keywords:keywords},
 			dataType:'json',
 			cache: false,
 			success: function(data){
+				$("#page").html(data.pageHtml);
 				var first;
-				if(data&&data.length>0){
-					$.each(data, function(i, item){
+				if(data&&data.rows&&data.rows.length>0){
+					$.each(data.rows, function(i, item){
 						if(i==0){
 							first=item;
 						}
@@ -653,7 +654,7 @@ function getDetail(problemCode){
 
 //检索
 function searchs(){
-	initList();
+	initList('<%=basePath%>mbp/getPageList.do?ProOperType=PROBLEM_ANSWER');
 	//$("#problemForm").submit();
 }
 
