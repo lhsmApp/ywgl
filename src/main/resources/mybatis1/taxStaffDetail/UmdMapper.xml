@@ -11,7 +11,7 @@
  -->
 	<!--表名 -->
 	<sql id="tableName">
-		tb_kh_new_assets_card
+		tb_kh_umd
 	</sql>
 
 	<!-- 列表 -->
