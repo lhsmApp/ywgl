@@ -42,7 +42,8 @@
 					<div class="row">
 						<div class="col-xs-4">
 							<!-- 检索  -->
-							
+							<form action='knowledge/getPageList.do'>
+							</form>
 							<div class="nav-search" style="margin:10px 0px;">
 								<span class="input-icon" style="width:86%">
 									<input style="width:100%" class="nav-search-input" autocomplete="off" id="keywords" type="text" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词" />

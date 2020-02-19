@@ -2,6 +2,7 @@ package com.fh.service.mbp;
 
 import java.util.List;
 
+import com.fh.entity.JqPage;
 import com.fh.entity.Page;
 import com.fh.util.PageData;
 
@@ -91,6 +92,12 @@ public interface MBPManager{
 	 */
 	public void proGet(PageData pd)throws Exception;
 	
+	/**获取问题分配列表
+	 * @param pd
+	 * @throws Exception
+	 */
+	public List<PageData> getProAssigns(PageData pd)throws Exception;
+	
 	/**问题分配
 	 * @param pd
 	 * @throws Exception
@@ -114,6 +121,18 @@ public interface MBPManager{
 	 * @throws Exception
 	 */
 	public void deleteAnswer(PageData pd)throws Exception;
+	
+	/**获取问题关闭列表
+	 * @param pd
+	 * @throws Exception
+	 */
+	public List<PageData> getProCloses(PageData pd)throws Exception;
+	
+	/**获取关闭详情
+	 * @param pd
+	 * @throws Exception
+	 */
+	public PageData getCloseContent(PageData pd)throws Exception;
 	
 	/**问题关闭
 	 * @param pd
@@ -160,5 +179,17 @@ public interface MBPManager{
 	 * @throws Exception
 	 */
 	public void addLog(PageData pd)throws Exception;
+	
+	/**列表
+	 * @param page
+	 * @throws Exception
+	 */
+	public List<PageData> JqPage(JqPage page)throws Exception;
+	
+	/**获取记录数量
+	 * @param pd
+	 * @throws Exception
+	 */
+	public int countJqGrid(JqPage page)throws Exception;
 }
 

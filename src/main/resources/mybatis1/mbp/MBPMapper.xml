@@ -215,42 +215,65 @@
 	
 	<!-- Jq分页列表 -->
 	<select id="datalistJqPage" parameterType="jqPage" resultType="pd">
-		select
-		<include refid="Field"></include>
-		from 
-		<include refid="tableName"></include>
-		<where>
+		SELECT A.*,A.PRO_CODE as PRO_CODE1,
+		depart.NAME PRO_DEPART_NAME,
+		problemType.PRO_TYPE_NAME,
+		dic.NAME PRO_SYS_TYPE_NAME
+		FROM tb_problem_info A
 		
-			<if test="pd.keywords != null and pd.keywords!= ''"><!-- 关键词检索 -->
-				and (
-					CATEGORYNAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
-					or
-					COUNTRY LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+		<!-- LEFT JOIN tb_problem_assign problemAssign
+		ON A.PRO_CODE=problemAssign.PRO_CODE -->
+		
+		LEFT JOIN oa_department depart
+		ON A.PRO_DEPART=depart.DEPARTMENT_CODE
+		
+		LEFT JOIN tb_problem_type problemType
+		ON A.PRO_TYPE_ID=problemType.PRO_TYPE_ID
+		
+		LEFT JOIN (SELECT DICT_CODE,NAME FROM sys_dictionaries WHERE PARENT_CODE = 'SYSTEM' ) dic 
+    	ON A.PRO_SYS_TYPE = dic.DICT_CODE 
+		
+		<where>
+			A.PRO_STATE !='1'
+			<!-- A.PRO_ACCEPT_USER=#{pd.BILL_USER} 
+			OR A.BILL_USER=#{pd.BILL_USER} -->
+			<!-- <if test="pd.PRO_ACCESS!= null and pd.ACCESS='REPORT'">
+				${pd.PRO_ACCESS}
+			</if>  -->
+		
+			<if test="pd.PRO_DEPARTS!= null and pd.PRO_DEPARTS != ''"><!-- 根据本门单位检索 -->
+				and PRO_DEPART in
+				<foreach item="item" index="index" collection="pd.PRO_DEPARTS"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="pd.BILL_USER != null and '' != pd.BILL_USER" >           
+	          AND A.BILL_USER = #{pd.BILL_USER}
+	        </if>
+			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+				and
+					(
+					
+						PRO_TITLE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					<!--	根据需求自己加检索条件
+						 or 
+						字段2 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+					-->
 					)
 			</if>
-		
-			<if test="pd._search != 'false'"><!-- 关键词检索 -->
-				<if test="pd.searchOper == 'cn'">
-				and
-					(
-					${pd.searchField} LIKE CONCAT(CONCAT('%', #{pd.searchString}),'%')
-					)
-					</if>
-				<if test="pd.searchOper == 'eq'">
-				and
-					(
-					${pd.searchField} = #{pd.searchString}
-					)
-				</if>	
-				<if test="pd.searchOper == 'ne'">
-				and
-					(
-					${pd.searchField} != #{pd.searchString}
-					)
-				</if>	
+			<if test="pd.PRO_STATE != null and '' != pd.PRO_STATE" >           
+	          AND A.PRO_STATE = #{pd.PRO_STATE}
+	        </if>
+	        
+	        <if test="pd.filterWhereResult != null">
+				${pd.filterWhereResult}
 			</if>
 		</where>
-		order by CATEGORYNAME ${pd.sord} 
+		<!-- ORDER BY pro_code DESC -->
+		<if test="sidx != null">
+			order by ${sidx} ${sord}
+		</if>
 		<if test="currentResult != null and rowNum != null" >           
               limit #{currentResult}, #{rowNum} 
         </if>
@@ -258,11 +281,49 @@
 	
 	<select id="countJqGrid" parameterType="pd" resultType="int">
 		select count(*) from <include refid="tableName"></include> 
-		<!-- <where>
-			<if test="menuId != null and '' != menuId" >           
-	          AND   menuId = #{menuId}
+		<where>
+			PRO_STATE !='1'
+			<!-- A.PRO_ACCEPT_USER=#{pd.BILL_USER} 
+			OR A.BILL_USER=#{pd.BILL_USER} -->
+			<!-- <if test="pd.PRO_ACCESS!= null and pd.ACCESS='REPORT'">
+				${pd.PRO_ACCESS}
+			</if>  -->
+			<if test="pd.PRO_DEPARTS!= null and pd.PRO_DEPARTS != ''"><!-- 根据本门单位检索 -->
+				and PRO_DEPART in
+				<foreach item="item" index="index" collection="pd.PRO_DEPARTS"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			
+	        <if test="pd.BILL_USER != null and '' != pd.BILL_USER" >           
+	          AND BILL_USER = #{pd.BILL_USER}
 	        </if>
-        </where> -->
+	        <!-- <if test="pd.PRO_ACCEPT_USER != null and '' != pd.PRO_ACCEPT_USER" >           
+	          AND PRO_ACCEPT_USER = #{pd.BILL_USER}
+	        </if>
+	        <if test="pd.PRO_ACCEPT_USER != null and '' != pd.PRO_ACCEPT_USER and pd.BILL_USER != null and '' != pd.BILL_USER" >           
+	          AND (BILL_USER = #{pd.BILL_USER} or PRO_ACCEPT_USER = #{pd.BILL_USER})
+	        </if> -->
+			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+				and
+					(
+					
+						PRO_TITLE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					<!--	根据需求自己加检索条件
+						 or 
+						字段2 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+					-->
+					)
+			</if>
+			<if test="pd.PRO_STATE != null and '' != pd.PRO_STATE" >           
+	          AND PRO_STATE = #{pd.PRO_STATE}
+	        </if>
+	        
+	        <if test="pd.filterWhereResult != null">
+				${pd.filterWhereResult}
+			</if>
+		</where>
 	</select>
 	
 	<!-- 列表(全部) -->
@@ -316,6 +377,31 @@
 		where 
 		PRO_CODE = #{PRO_CODE}
 	</update>
+	
+	<!-- 获取问题分配列表-->
+	<select id="getProAssigns" parameterType="pd" resultType="pd">
+		select A.*,
+		<!-- acceptUser.NAME PRO_ACCEPT_USER_NAME,
+		assignUser.NAME BILL_USER_NAME, -->
+		problemType.PRO_TYPE_NAME,
+		dic.NAME PRO_SYS_TYPE_NAME
+		FROM tb_problem_assign A
+		
+		<!-- left join sys_user acceptUser
+		on A.PRO_ACCEPT_USER=acceptUser.USER_ID
+		
+		LEFT JOIN sys_user assignUser
+		ON A.BILL_USER=assignUser.USER_ID -->
+		
+		LEFT JOIN tb_problem_type problemType
+		ON A.PRO_TYPE_ID=problemType.PRO_TYPE_ID
+		
+		LEFT JOIN (SELECT DICT_CODE,NAME FROM sys_dictionaries WHERE PARENT_CODE = 'SYSTEM' ) dic 
+    	ON A.PRO_SYS_TYPE = dic.DICT_CODE 
+		
+		
+		where A.PRO_CODE=#{PRO_CODE}
+	</select>
 	
 	<!-- 问题分配-->
 	<insert id="addAssign" parameterType="pd">
@@ -372,6 +458,20 @@
 		where 
 			ANSWER_ID = #{ANSWER_ID}
 	</delete>
+	
+	<!-- 获取问题关闭信息列表 -->
+	<select id="getProCloses" parameterType="pd" resultType="pd">
+		select A.* from tb_problem_close A 
+		where PRO_CODE=#{PRO_CODE}
+	</select>
+	
+	<!-- 获取关闭详情 -->
+	<select id="getCloseContent" parameterType="pd" resultType="pd">
+		SELECT *
+		FROM tb_problem_close
+		where 
+			CLOSE_ID = #{CLOSE_ID}
+	</select>
 	
 	<!-- 问题关闭-->
 	<insert id="addClose" parameterType="pd">
