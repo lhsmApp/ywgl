@@ -300,8 +300,8 @@ public class MBPController extends BaseController {
 		// ***********************************************************
 		
 		String userValus = DictsUtil.getSysUserValue(userService);
-		String userString = ":[All];" + userValus;
-		mv.addObject("userStr", userString);
+		//String userString = ":[All];" + userValus;
+		mv.addObject("userStr", userValus);
 				
 		String priorityValus = "";
 		ProPriority[] enumsProPriority = ProPriority.values();  
@@ -313,8 +313,8 @@ public class MBPController extends BaseController {
     			priorityValus += enumsProPriority[i].getNameKey() + ":" + enumsProPriority[i].getNameValue();
             }  
     	}
-		String priorityStringAll = ":[All];" + priorityValus;
-		mv.addObject("priorityStr", priorityStringAll);
+		//String priorityStringAll = ":[All];" + priorityValus;
+		mv.addObject("priorityStr", priorityValus);
 		
 		String stateValus = "";
 		ProState[] enumsState = ProState.values();  
@@ -326,9 +326,9 @@ public class MBPController extends BaseController {
     			stateValus += enumsState[i].getNameKey() + ":" + enumsState[i].getNameValue();
             }  
     	}
-		String stateStringAll = ":[All];" + stateValus;
+		//String stateStringAll = ":[All];" + stateValus;
 		String stateStringSelect = ":;" + stateValus;
-		mv.addObject("stateStrAll", stateStringAll);
+		//mv.addObject("stateStrAll", stateStringAll);
 		mv.addObject("stateStrSelect", stateStringSelect);
 		
 		mv.addObject("pd", pd);

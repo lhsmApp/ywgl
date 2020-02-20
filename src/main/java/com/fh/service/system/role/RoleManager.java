@@ -22,6 +22,13 @@ public interface RoleManager {
 	 */
 	public List<Role> listAllRolesByPId(PageData pd) throws Exception;
 	
+	/**列出当前角色中比当前角色低或相等的所有角色
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Role> listAllRolesByCurrentID(PageData pd) throws Exception;
+	
 	/**通过id查找
 	 * @param pd
 	 * @return

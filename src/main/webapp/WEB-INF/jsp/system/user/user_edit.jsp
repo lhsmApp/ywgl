@@ -57,7 +57,7 @@
 												<td>
 													<input type="hidden" name="UNIT_CODE" width="400px"
 														id="UNIT_CODE" value="${pd.UNIT_CODE}" />
-													<div class="selectTree" id="selectTreeUnit"></div>
+													<div <c:if test="${pd.ADD_QX <= '2' }">disabled</c:if>  class="selectTree" id="selectTreeUnit"></div>
 												</td>
 											</tr>
 											<tr>

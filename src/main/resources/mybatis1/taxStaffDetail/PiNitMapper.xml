@@ -131,7 +131,7 @@
 		    <include refid="tableName"></include>
 		    where BUSI_DATE = #{item.BUSI_DATE} 
 		    and COMPANY_CODE = #{item.COMPANY_CODE}
-	        and VOUCHER_NO = #{item.VOUCHER_NO__};
+	        and VOUCHER_NO = #{item.VOUCHER_NO};
 		    insert into
 		    <include refid="tableName"></include>
 		    (${item.InsertField}) values (${item.InsertVale});

@@ -49,6 +49,18 @@
 		ORDER BY ROLE_ID
 	</select>
 	
+	<!-- 列出此组下的角色 -->
+	<select id="listAllRolesByCurrentID" resultMap="roleResultMap">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		where
+			PARENT_ID = #{ROLE_ID}
+			and ADD_QX &lt;= #{ADD_QX}
+		ORDER BY ROLE_ID
+	</select>
+	
 	<!-- 通过id查找 -->
 	<select id="findObjectById" parameterType="pd" resultType="pd">
 		select  
