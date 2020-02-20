@@ -61,6 +61,7 @@ public class MBPService implements MBPManager{
 		List<PageData> list=(List<PageData>)dao.findForList("MBPMapper.datalistPage", page);
 		for(PageData pd:list){
 			pd.put("PRO_STATE_NAME", ProState.getValueByKey(pd.getString("PRO_STATE")));
+			pd.put("PRO_PRIORITY_NAME", ProPriority.getValueByKey(pd.getString("PRO_PRIORITY")));
 		}
 		return list;
 	}
@@ -132,6 +133,20 @@ public class MBPService implements MBPManager{
 	public void proGet(PageData pd) throws Exception {
 		dao.update("MBPMapper.proGet", pd);
 	}
+	
+	/**获取问题分配列表
+	 * @param pd
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PageData> getProAssigns(PageData pd)throws Exception{
+		List<PageData> list=(List<PageData>)dao.findForList("MBPMapper.getProAssigns", pd);
+		for(PageData item:list){
+			//item.put("PRO_STATE_NAME", ProState.getValueByKey(item.getString("PRO_STATE")));
+			item.put("PRO_PRIORITY_NAME", ProPriority.getValueByKey(item.getString("PRO_PRIORITY")));
+		}
+		return list;
+	}
 
 	@Override
 	public void addAssign(PageData pd) throws Exception {
@@ -151,6 +166,25 @@ public class MBPService implements MBPManager{
 	@Override
 	public void deleteAnswer(PageData pd) throws Exception {
 		dao.delete("MBPMapper.deleteAnswer", pd);
+	}
+	
+	/**获取问题关闭信息列表
+	 * @param pd
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PageData> getProCloses(PageData pd)throws Exception{
+		return (List<PageData>)dao.findForList("MBPMapper.getProCloses", pd);
+	}
+	
+	/**获取关闭详情
+	 * @param pd
+	 * @throws Exception
+	 */
+	public PageData getCloseContent(PageData pd)throws Exception{
+		PageData pdResult=(PageData)dao.findForObject("MBPMapper.getCloseContent", pd);
+		
+		return pdResult;
 	}
 
 	@Override
@@ -212,6 +246,23 @@ public class MBPService implements MBPManager{
 	@Override
 	public void addLog(PageData pd) throws Exception {
 		dao.save("MBPMapper.addLog", pd);
+	}
+	
+	/**列表
+	 * @param page
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PageData> JqPage(JqPage page)throws Exception{
+		return (List<PageData>)dao.findForList("MBPMapper.datalistJqPage", page);
+	}
+	
+	/**获取记录数量
+	 * @param pd
+	 * @throws Exception
+	 */
+	public int countJqGrid(JqPage page)throws Exception{
+		return (int)dao.findForObject("MBPMapper.countJqGrid", page);
 	}
 }
 

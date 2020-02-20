@@ -25,9 +25,13 @@ import com.fh.controller.base.BaseController;
 import com.fh.controller.common.BillnumUtil;
 import com.fh.controller.common.DictsUtil;
 import com.fh.entity.CommonBase;
+import com.fh.entity.JqPage;
 import com.fh.entity.Page;
+import com.fh.entity.PageResult;
+import com.fh.entity.PageResult2;
 import com.fh.entity.system.User;
 import com.fh.service.billnum.BillNumManager;
+import com.fh.service.fhoa.department.impl.DepartmentService;
 import com.fh.service.mbp.MBPManager;
 import com.fh.service.mbp.ProblemTypeManager;
 import com.fh.service.sysConfig.sysconfig.SysConfigManager;
@@ -39,9 +43,11 @@ import com.fh.util.DateWeek;
 import com.fh.util.Jurisdiction;
 import com.fh.util.ObjectExcelView;
 import com.fh.util.PageData;
+import com.fh.util.SqlTools;
 import com.fh.util.StringUtil;
 import com.fh.util.date.DateUtils;
 import com.fh.util.enums.BillNumType;
+import com.fh.util.enums.FundsConfirmInfoState;
 import com.fh.util.enums.ProPriority;
 import com.fh.util.enums.ProState;
 
@@ -76,6 +82,12 @@ public class MBPController extends BaseController {
 	
 	@Resource(name = "sysconfigService")
 	private SysConfigManager sysConfigManager;
+	
+	@Resource(name="departmentService")
+	private DepartmentService departmentService;
+	
+	// 判断当前人员的所在组织机构是否只有自己单位
+	private int departSelf = 0;
 	
 	/**列表
 	 * @param page
@@ -271,31 +283,118 @@ public class MBPController extends BaseController {
 		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = this.getPageData();
+
+		// *********************加载单位树  DEPT_CODE*******************************
+		String DepartmentSelectTreeSource=DictsUtil.getDepartmentSelectTreeSource(departmentService,"01");
+		Map<String, String> mapRole=Jurisdiction.getHC();//角色权限
+		if(mapRole.get("adds").equals("1")||mapRole.get("adds").equals("2"))
+		{
+			this.departSelf = 1;
+			pd.put("departTreeSource", "0");
+		} else {
+			pd.put("departTreeSource", "1");
+		}
+		mv.addObject("zTreeNodes", DepartmentSelectTreeSource);
+		// ***********************************************************
+		
+		String userValus = DictsUtil.getSysUserValue(userService);
+		String userString = ":[All];" + userValus;
+		mv.addObject("userStr", userString);
+				
+		String priorityValus = "";
+		ProPriority[] enumsProPriority = ProPriority.values();  
+    	if(enumsProPriority!=null){
+            for (int i = 0; i < enumsProPriority.length; i++) {  
+    			if (priorityValus != null && !priorityValus.toString().trim().equals("")) {
+    				priorityValus += ";";
+    			}
+    			priorityValus += enumsProPriority[i].getNameKey() + ":" + enumsProPriority[i].getNameValue();
+            }  
+    	}
+		String priorityStringAll = ":[All];" + priorityValus;
+		mv.addObject("priorityStr", priorityStringAll);
+		
+		String stateValus = "";
+		ProState[] enumsState = ProState.values();  
+    	if(enumsState!=null){
+            for (int i = 0; i < enumsState.length; i++) {  
+    			if (stateValus != null && !stateValus.toString().trim().equals("")) {
+    				stateValus += ";";
+    			}
+    			stateValus += enumsState[i].getNameKey() + ":" + enumsState[i].getNameValue();
+            }  
+    	}
+		String stateStringAll = ":[All];" + stateValus;
+		String stateStringSelect = ":;" + stateValus;
+		mv.addObject("stateStrAll", stateStringAll);
+		mv.addObject("stateStrSelect", stateStringSelect);
+		
+		mv.addObject("pd", pd);
+		ProState[] prostates=new ProState[3];  
+    	if(enumsState!=null){
+            for (int i = 1; i < enumsState.length; i++) {  
+            	prostates[i-1]=enumsState[i];
+    			
+            }  
+    	}
+		mv.addObject("proStateList", prostates);//问题状态
+		
+		mv.setViewName("mbp/problemManage/problemInfo_query");
+		return mv;
+	}
+	
+	/**列表
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/queryPageList")
+	public @ResponseBody PageResult<PageData> queryPageList(JqPage page) throws Exception{
+		PageData pd = this.getPageData();
+		
+		
+		String strDeptCode = "";
+		Map<String, String> mapRole=Jurisdiction.getHC();//角色权限
 		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 		String userId = user.getUSER_ID();
-		pd.put("BILL_USER", userId);
+		if (departSelf == 1){
+			if(mapRole.get("adds").equals("2")){//2为基层单位管理员，可以看到本单位所有人员问题，所以按部门搜索
+				strDeptCode = Jurisdiction.getCurrentDepartmentID();
+			}else{//1为基层普通用户，只能查询自己申请的数据
+				strDeptCode="";
+				pd.put("BILL_USER", userId);
+			}
+		}
+		else
+			strDeptCode = pd.getString("PRO_DEPART");// 单位检索条件
+		/*if(mapRole.get("adds").equals("3")){//3为ERP运维组，可以看到自己申请，同时可以看到受理人为自己的问题数据
+			pd.put("PRO_ACCEPT_USER", userId);;
+		}*/
+		
+		if (StringUtil.isNotEmpty(strDeptCode)) {
+			String[] strDeptCodes = strDeptCode.split(",");
+			pd.put("PRO_DEPARTS", strDeptCodes);
+		}
 		
 		String keywords = pd.getString("keywords");				//关键词检索条件
 		if(null != keywords && !"".equals(keywords)){
 			pd.put("keywords", keywords.trim());
 		}
+		
+		String filters = pd.getString("filters"); // 多条件过滤条件
+		if (null != filters && !"".equals(filters)) {
+			pd.put("filterWhereResult", SqlTools.constructWhere(filters, null));
+		}
+		
 		page.setPd(pd);
-		List<PageData> varList = mbpService.list(page);
+		List<PageData> varList = mbpService.JqPage(page);
+		int records = mbpService.countJqGrid(page);
+		PageResult<PageData> result = new PageResult<PageData>();
+		result.setRows(varList);
+		result.setRowNum(page.getRowNum());
+		result.setRecords(records);
+		result.setPage(page.getPage());
 		
-		
-		
-		/**此处放当前页面初始化时用到的一些数据，例如搜索的下拉列表数据，所需的字典数据、权限数据等等。
-		mv.addObject("pd", pd);
-		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
-		 * 
-		 * 
-		 */
-		mv.addObject("pd", pd);
-		mv.addObject("proStateList", ProState.values());//问题状态
-		mv.addObject("varList", varList);//问题状态
-		
-		mv.setViewName("mbp/problemManage/problemInfo_query");
-		return mv;
+		return result;
 	}
 	
 	/**查看明细页面
@@ -309,6 +408,36 @@ public class MBPController extends BaseController {
 		pd = this.getPageData();
 		PageData pdResult = mbpService.findById(pd);	//根据ID读取
 		mv.setViewName("mbp/problemManage/problemInfo_view");
+		mv.addObject("pd", pdResult);
+		return mv;
+	}
+	
+	/**查看关闭明细页面
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/goViewAnswer")
+	public ModelAndView goViewAnswer()throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		PageData pdResult = mbpService.getAnswerContent(pd);	//根据ID读取
+		mv.setViewName("mbp/problemManage/problemAnswer_view");
+		mv.addObject("pd", pdResult);
+		return mv;
+	}
+	
+	/**查看关闭明细页面
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/goViewClose")
+	public ModelAndView goViewClose()throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		PageData pdResult = mbpService.getCloseContent(pd);	//根据ID读取
+		mv.setViewName("mbp/problemManage/problemClose_view");
 		mv.addObject("pd", pdResult);
 		return mv;
 	}
@@ -358,7 +487,7 @@ public class MBPController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/getPageList")
-	public @ResponseBody List<PageData> getPageList(Page page) throws Exception{
+	public @ResponseBody PageResult2<PageData> getPageList(Page page) throws Exception{
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
@@ -397,7 +526,11 @@ public class MBPController extends BaseController {
 		
 		page.setPd(pd);
 		List<PageData> varList = mbpService.list(page);
-		return varList;
+		PageResult2<PageData> result = new PageResult2<PageData>();
+		result.setRows(varList);
+		result.setPage(page);
+		result.setPageHtml(page.getPageStr2());
+		return result;
 		
 		
 		//int records = mbpService.count(pd);
@@ -600,6 +733,19 @@ public class MBPController extends BaseController {
 		return commonBase;
 	}
 	
+	/**列表
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/getProAssigns")
+	public @ResponseBody List<PageData> getProAssigns() throws Exception{
+		
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		List<PageData> listPageData = mbpService.getProAssigns(pd);
+		return listPageData;
+	}
+	
 	/**问题分配
 	 * @param out
 	 * @throws Exception
@@ -733,6 +879,19 @@ public class MBPController extends BaseController {
 		// commonBase.setCode(-1);
 		// commonBase.setMessage("当前删除的信息含有业务关联字段，不能删除");
 		return commonBase;
+	}
+	
+	/**列表
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/getProCloses")
+	public @ResponseBody List<PageData> getProCloses() throws Exception{
+		
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		List<PageData> listPageData = mbpService.getProCloses(pd);
+		return listPageData;
 	}
 	
 	/**问题关闭

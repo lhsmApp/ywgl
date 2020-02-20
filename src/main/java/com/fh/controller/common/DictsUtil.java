@@ -228,7 +228,7 @@ public class DictsUtil {
 		}
 		else{
 			parentDepartCode=curUserDepartCode;
-			parentDepartName=departName;
+			parentDepartName=orgInfo[1];
 		}
 		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
 		PageData pd = new PageData();

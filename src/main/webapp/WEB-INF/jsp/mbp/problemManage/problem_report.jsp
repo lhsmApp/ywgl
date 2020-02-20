@@ -42,6 +42,7 @@
 				<div class="page-content">
 					<div class="row">
 						<div class="col-xs-4">
+						<form action='mbp/getPageList.do?ProOperType=PROBLEM_INFO'></form>
 						<!-- 检索  -->
 						<!-- <form style="margin:5px;" method="post" name="problemForm" id="problemForm"> -->
 							<div class="nav-search" style="margin:10px 0px;">
@@ -58,7 +59,8 @@
 							<ul id="problemList" class="item-list">
 								
 							</ul>						
-							<div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div>
+							<%-- <div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div> --%>
+							<div id="page" class="pagination" style="float: right;padding-top: 5px;margin-top: 0px;font-size:12px;"></div>
 						<!-- </form> -->
 					</div>
 					<!-- /.col4 -->
@@ -509,7 +511,7 @@ $(function() {
 	initFieldDisabled(true);
 	
 	//初始化问题列表数据
-	initList();
+	initList('<%=basePath%>mbp/getPageList.do?ProOperType=PROBLEM_INFO');
 	
 	$("#problem-tab a").click(function(e){
 		$('#currentTabTitle').text($(this).text());
@@ -558,20 +560,21 @@ function initFieldDisabled(disabled){
 /**
  * 初始化列表信息
  */
-function initList(){
+function initList(url){
 	$("#problemList li").remove(); 
 	top.jzts();
 	var keywords = $("#keywords").val();
 	$.ajax({
 			type: "POST",
-			url: '<%=basePath%>mbp/getPageList.do?ProOperType=PROBLEM_INFO',
+			url: url,
 	    	data: {keywords:keywords},
 			dataType:'json',
 			cache: false,
 			success: function(data){
+				$("#page").html(data.pageHtml);
 				var first;
-				if(data){
-					$.each(data, function(i, item){
+				if(data.rows){
+					$.each(data.rows, function(i, item){
 						if(i==0){
 							first=item;
 						}
@@ -712,7 +715,7 @@ function getDetail(problemCode){
 
 //检索
 function searchs(){
-	initList();
+	initList('<%=basePath%>mbp/getPageList.do?ProOperType=PROBLEM_INFO');
 	//$("#problemForm").submit();
 }
 
@@ -785,7 +788,7 @@ function save(){
 		            bg:'#009933',
 		            time:3
 		        });
-				initList();
+				initList('<%=basePath%>mbp/getPageList.do?ProOperType=PROBLEM_INFO');
 			}else{
 				$(top.hangge());//关闭加载状态
 				$("#btnSave").tips({
@@ -937,7 +940,7 @@ function del(){
 			top.jzts();
 			var url = "<%=basePath%>mbp/delete.do?PRO_CODE="+currentItem.PRO_CODE;
 			$.get(url,function(data){
-				initList();
+				initList('<%=basePath%>mbp/getPageList.do?ProOperType=PROBLEM_INFO');
 			});
 		};
 	});
@@ -994,7 +997,7 @@ function commit(){
 		            bg:'#009933',
 		            time:3
 		        });
-				initList();
+				initList('<%=basePath%>mbp/getPageList.do?ProOperType=PROBLEM_INFO');
 			}else{
 				$(top.hangge());//关闭加载状态
 				$("#btnCommit").tips({
@@ -1070,7 +1073,7 @@ function cancel(){
 		            bg:'#009933',
 		            time:3
 		        });
-				initList();
+				initList('<%=basePath%>mbp/getPageList.do?ProOperType=PROBLEM_INFO');
 			}else{
 				$(top.hangge());//关闭加载状态
 				$("#btnCancel").tips({

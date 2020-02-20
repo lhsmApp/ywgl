@@ -139,6 +139,7 @@
 				and KNOWLEDGE_TYPE=#{pd.KNOWLEDGE_TYPE}
 			</if>
 		</where>
+		order by KNOWLEDGE_ID desc
 	</select>
 	
 	<!-- 列表(全部) -->
