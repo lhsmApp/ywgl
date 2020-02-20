@@ -69,9 +69,11 @@
 									</select>
 								</td>
 							</tr> --%>
-							<tr>
+							<%-- <tr>
 								<td style="width:100px;text-align: right;padding-top: 13px;">角色:</td>
-								<td>
+								<td style="padding-top:13px;">
+								<span>学员</span>
+								<input name="ROLE_ID" type="hidden" value=“a8bcf49238da4d13a445d162a361be7a”>
 									<select class="chosen-select form-control" name="ROLE_ID"
 										id="ROLE_ID" data-placeholder="请选择角色"
 										style="vertical-align: top; height: 32px; width: 150px;">
@@ -82,7 +84,7 @@
 											</c:forEach>
 									</select>
 								</td>
-							</tr>
+							</tr> --%>
 							
 							<tr>
 								<td style="width:100px;text-align: right;padding-top: 13px;">所属单位:</td>

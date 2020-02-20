@@ -69,6 +69,7 @@ public class TrainStudentController extends BaseController {
 		if(pd.getString("PASSWORD") != null && !"".equals(pd.getString("PASSWORD"))){
 			pd.put("PASSWORD", new SimpleHash("SHA-1", pd.getString("STUDENT_CODE"), pd.getString("PASSWORD")).toString());
 		}
+		pd.put("ACCOUNT", pd.get("STUDENT_CODE"));
 		trainstudentService.save(pd);
 		mv.addObject("msg","success");
 		mv.setViewName("save_result");
