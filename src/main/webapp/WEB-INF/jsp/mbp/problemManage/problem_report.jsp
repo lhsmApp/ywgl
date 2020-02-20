@@ -136,7 +136,7 @@
 															
 															<div style="margin:10px 0px;">
 																<label for="form-field-pro-report-user">上报人</label>
-																<select class="form-control" name="PRO_REPORT_USER" id="form-field-pro-report-user">
+																<select class="form-control" name="PRO_REPORT_USER" id="form-field-pro-report-user" disabled='true'>
 																	<option value=""></option>
 																	<c:forEach items="${userList}" var="user">
 																		<!-- <option value="AL">Alabama</option>
@@ -535,7 +535,7 @@ function ueditor(){
 function initFieldDisabled(disabled){
 	//$("#form-field-pro-code").attr("readonly",true);
 	$("#form-field-pro-title").attr("disabled",disabled);
-	$("#form-field-pro-report-user").attr("disabled",disabled);
+	//$("#form-field-pro-report-user").attr("disabled",disabled);
 	$("#form-field-pro-accept-user").attr("disabled",disabled);
 	$("#form-field-pro-sys-type").attr("disabled",disabled);
 	$("#form-field-pro-type-id").attr("disabled",disabled);
@@ -816,11 +816,17 @@ function save(){
  * 增加
  */
 function add(){
+	$("#problemList li").each(function(){
+		var item = this;
+		$(item).removeClass("bc-light-orange");
+	}); 
+	currentItem=null;
+	
 	initFieldDisabled(false);
 	
 	$("#form-field-pro-code").val("");
 	$("#form-field-pro-title").val("");
-	$("#form-field-pro-report-user").val("");
+	$("#form-field-pro-report-user").val(${currentUser});
 	$("#form-field-pro-accept-user").val("");
 	$("#form-field-pro-sys-type").val("");
 	$("#form-field-pro-type-id").val("");
@@ -830,6 +836,8 @@ function add(){
 	$("#form-field-pro-resolve-time").val("");
 	$("#form-field-pro-content").val("");
 	UE.getEditor('editor').setContent("");
+	
+	$("#tbodyProInfoAttachment").html('');
 }
 
 /**
@@ -1171,6 +1179,16 @@ function addItemAttachment(item,index,type){
  * 上传附件
  */
 function addProAttachmentByType(type){
+	if(currentItem==null){
+		$("#btnAddProInfoAttachment").tips({
+			side:3,
+            msg:'请先保存问题信息后，再上传附件',
+            bg:'#cc0033',
+            time:3
+        });
+		return;
+	}
+	
 	 var proCode=currentItem.PRO_CODE;
 	 top.jzts();
 	 var diag = new top.Dialog();

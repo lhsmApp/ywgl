@@ -157,6 +157,8 @@ public class MBPController extends BaseController {
 		PageData pdCondition=new PageData();
 		pdCondition.put("UNIT_CODE", unitCode);
 		mv.addObject("userList", DictsUtil.getSysUserDicByCondition(userService,pdCondition));//用户
+		mv.addObject("currentUser",user.getUSER_ID());
+		
 		mv.addObject("proPriorityList", ProPriority.values());//优先级
 		
 		//受理人

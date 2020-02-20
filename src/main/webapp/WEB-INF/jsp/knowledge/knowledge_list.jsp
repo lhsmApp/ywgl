@@ -543,6 +543,12 @@
 		 * 增加
 		 */
 		function add(){
+			$("#knowledgeList li").each(function(){
+				var item = this;
+				$(item).removeClass("bc-light-orange");
+			}); 
+			currentItem=null;
+			
 			initFieldDisabled(false);
 			
 			$("#form-field-knowledge-id").val("");
@@ -553,6 +559,8 @@
 			$("#form-field-author").val("");
 			$("#form-field-detail").val("");
 			UE.getEditor('editor').setContent("");
+			
+			$("#tbodyAttachment").html('');
 		}
 
 		/**
@@ -663,6 +671,15 @@
 		 * 上传附件
 		 */
 		function addAttachmentByType(type){
+			if(currentItem==null){
+				$("#btnAddAttachment").tips({
+					side:3,
+		            msg:'请先保存知识信息后，再上传附件',
+		            bg:'#cc0033',
+		            time:3
+		        });
+				return;
+			}
 			 var knowledgeID=currentItem.KNOWLEDGE_ID;
 			 top.jzts();
 			 var diag = new top.Dialog();
