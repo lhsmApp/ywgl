@@ -137,11 +137,14 @@ public class GRCPersonController extends BaseController {
 		pd.put("KEY_CODE","grcpersonMustKey");
 		data.put("BUSI_TYPE",SysDeptTime.GRC_PERSON.getNameKey());
 		data.put("DEPT_CODE",user.getUNIT_CODE());
-		String date = sysconfigService.currentSection(pd);
+//		String date = sysconfigService.currentSection(pd);
+		Date dNow = new Date( );
+	    SimpleDateFormat ft = new SimpleDateFormat ("yyyyMM");
+		String date = ft.format(dNow);
 		// 需要获取必填的内容，然后输出到页面上
         String mandatory = sysconfigService.getSysConfigByKey(pd);
 		if(null == busiDate || StringUtil.isEmpty(busiDate)) {
-			pd.put("busiDate",date);
+//			pd.put("busiDate",date);
 		}
 		pd.put("month",date);
 		pd.put("mandatory", mandatory);

@@ -22,9 +22,8 @@
 <script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
 <link rel="stylesheet" href="static/ace/css/jquery-ui.css" />
 <style>
-    .mtable{width:auto;border-collapse:collapse;border:1px solid black;}
-    .mtable th, .mtable td{height:30px;text-align:center;border:1px solid black;}
-    .mtable th, .mtable td{position:relative;background-clip:padding-box;}
+    .mtable{width:auto;border-collapse:collapse;}
+    .mtable input{background: #FFF !important;border: none;}
 </style>
 </head>
 <body class="no-skin">
@@ -42,7 +41,7 @@
 								<tr>
 									<td>
 										<select class="form-control" id="busiDate" name="busiDate" style="vertical-align:top; width:150px;margin-left: 5px;" data-placeholder="请选择业务期间">
-											<option value=""></option>
+											<!-- <option value=""></option> -->
 											<c:forEach items="${listBusiDate}" var="var">
 												<option value="${var.BUSI_DATE}" <c:if test="${pd.busiDate == var.BUSI_DATE}">selected="selected"</c:if>>${var.BUSI_DATE}</option>
 											</c:forEach>
@@ -50,32 +49,34 @@
 									</td>
 									<td style="vertical-align:top;padding-left:2px;">
 										<a class="btn btn-info btn-sm" onclick="tosearch()"><i class="ace-icon fa fa-search bigger-110"></i></a>
+										<c:if test="${isTheSameMonth == 1}">
 										<a class="btn btn-white btn-info btn-bold" onclick="addRows()"><span class="ace-icon fa fa-plus-circle purple"></span>添加</a>						
 										<a class="btn btn-white btn-info btn-bold" onclick="edit()"><span class="ace-icon fa fa-pencil-square-o purple"></span>编辑</a>
 										<a class="btn btn-white btn-info btn-bold" onclick="save()"><i class="ace-icon fa fa-floppy-o bigger-120 blue"></i>保存</a>
 										<a class="btn btn-white btn-info btn-bold" onclick="makeAll('确定要删除选中的数据吗?');" title="批量删除" ><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>删除</a>
 										<a class="btn btn-white btn-info btn-bold" onclick="importExcel()"><span class="ace-icon fa fa-cloud-upload"></span>导入</a>
 										<a class="btn btn-white btn-info btn-bold" onclick="toExcel()"><span class="ace-icon fa fa-cloud-download"></span>导出</a>
+										</c:if>
 									</td>
 								</tr>
 							</table>
-							<div  style="width:100%;overflow:auto;height: 430px;">
-								<table id="simple-table" class="mtable" style="margin-top:5px;width:99%">	
+							<div  style="width:100%;overflow:auto;min-height: 500px;">
+								<table id="simple-table" class="mtable table table-bordered" style="margin-top:5px;width:99%">	
 									<thead>
 										<tr>
-											<th class="center" style="width:35px; background-color: #BEBEC5;">
+											<th class="center" style="width:35px; ">
 												<label class="pos-rel"><input type="checkbox" class="ace" id="zcheckbox"/><span class="lbl"></span></label>
 											</th>
-											<th style="width:110px; height:30px; background-color: #BEBEC5; text-align: center;">用户名</th>
-											<th style="width:110px; background-color: #BEBEC5; text-align: center;">姓名</th>
-											<th style="width:110px; background-color: #BEBEC5; text-align: center;">用户组</th>
-											<th style="width:110px; background-color: #BEBEC5; text-align: center;">账号状态</th>
-											<th style="width:110px; background-color: #BEBEC5; text-align: center;">有效期自</th>
-											<th style="width:110px; background-color: #BEBEC5; text-align: center;">有效期至</th>
-											<th style="width:100px; background-color: #BEBEC5; text-align: center;">单位</th>
-											<th style="width:110px; background-color: #BEBEC5; text-align: center;">岗位</th>
-											<th style="width:120px; background-color: #BEBEC5; text-align: center;">变更序号</th>
-											<th style="width:120px; background-color: #BEBEC5; text-align: center;">电话</th>
+											<th style="width:110px; height:30px;  text-align: center;">用户名</th>
+											<th style="width:110px;  text-align: center;">姓名</th>
+											<th style="width:110px;  text-align: center;">用户组</th>
+											<th style="width:110px;  text-align: center;">账号状态</th>
+											<th style="width:110px;  text-align: center;">有效期自</th>
+											<th style="width:110px;  text-align: center;">有效期至</th>
+											<th style="width:100px;  text-align: center;">单位</th>
+											<th style="width:110px;  text-align: center;">岗位</th>
+											<th style="width:120px;  text-align: center;">变更序号</th>
+											<th style="width:120px;  text-align: center;">电话</th>
 											
 										</tr>
 									</thead>
@@ -84,7 +85,7 @@
 										<c:forEach items="${varList}" var="pd" varStatus="vs">
 											<tr>
 												<td class='center'>
-													<label class="pos-rel"><input style="background-color: #BEBEC5;" type='checkbox' name='ids' value="${pd.ID}" class="ace"/><span class="lbl"></span></label>
+													<label class="pos-rel"><input style="" type='checkbox' name='ids' value="${pd.ID}" class="ace"/><span class="lbl"></span></label>
 												</td>
 												<th><input type="text" name="USER_NAME" id="USER_NAME" readonly="readonly" value="${pd.USER_NAME}" maxlength="30" title="用户名" style="width:100%;"/></th>
 												<th><input type="text" name="NAME" id="NAME" readonly="readonly" value="${pd.NAME}" maxlength="30" title="姓名" style="width:100%;"/></th>
@@ -127,7 +128,7 @@
 		<tbody>
 			<tr>
 				<td class='center'>
-					<label class="pos-rel"><input style="background-color: #BEBEC5;" type='checkbox' name='ids' value="" class="ace"/><span class="lbl"></span></label>
+					<label class="pos-rel"><input style="" type='checkbox' name='ids' value="" class="ace"/><span class="lbl"></span></label>
 				</td>
 				<th><input type="text" name="USER_NAME" id="USER_NAME" value="" maxlength="30" title="用户名" style="width:100%;"/></th>
 				<th><input type="text" name="NAME" id="NAME" value="" maxlength="30" title="姓名" style="width:100%;"/></th>
