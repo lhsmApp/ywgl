@@ -33,7 +33,12 @@
                         <tbody>
                             <tr>
                                 <td style="vertical-align:top;">
-                                    <span class="green middle bolder">新建公告: &nbsp;</span>
+                                    <span class="green middle bolder">
+                                    <c:choose>
+									<c:when test="${pd.NOTICE_ID==null}">新建公告: &nbsp;</c:when>
+									<c:otherwise>编辑公告: &nbsp;</c:otherwise>
+									</c:choose>
+                                    </span>
                                 </td>
                             </tr>
                         </tbody>
@@ -49,8 +54,8 @@
 									<li class="item-orange clearfix ui-sortable-handle">
 										<label class="inline"><span style="padding-left:5px;" class="lbl"><i style="margin-right: 3px;" class="ace-icon fa fa-calendar orange"></i>起止时间:</span></label>
 										<div class="inline">
-										<div style="padding-left:2px;" class="inline"><input class="span10 date-picker inline" name="lastStart" id="lastStart"  value="" type="text" data-date-format="yyyy-mm-dd 00:00:00" readonly="readonly" style="width:143px;" placeholder="开始日期" title="开始日期"/></div>
-										<div style="padding-left:2px;" class="inline"><input class="span10 date-picker inline" name="lastEnd" id="lastEnd" name="lastEnd"  value="" type="text" data-date-format="yyyy-mm-dd 23:59:59" readonly="readonly" style="width:143px;" placeholder="结束日期" title="结束日期"/></div>
+										<div style="padding-left:2px;" class="inline"><input class="span10 date-picker inline" name="lastStart" id="lastStart"  value="${pd.START_TIME}" type="text" data-date-format="yyyy-mm-dd 00:00:00" readonly="readonly" style="width:143px;" placeholder="开始日期" title="开始日期"/></div>
+										<div style="padding-left:2px;" class="inline"><input class="span10 date-picker inline" name="lastEnd" id="lastEnd" name="lastEnd"  value="${pd.END_TIME}" type="text" data-date-format="yyyy-mm-dd 23:59:59" readonly="readonly" style="width:143px;" placeholder="结束日期" title="结束日期"/></div>
 										</div>
 									</li>
 									<li id="liBefore" class="item-green clearfix ui-sortable-handle">
@@ -58,17 +63,25 @@
 											<span style="padding-left:5px;" class="lbl"><i style="margin-right: 3px;" class="ace-icon fa fa-asterisk green"></i>发布范围:</span>
 										</label>
     									<select id="TEST_PAPER_DIFFICULTY" name="TEST_PAPER_DIFFICULTY" class="form-control inline" style="width:155px;">
-    										<option value="0">全部</option>
-    										<%-- <option value="1" <c:if test="${pd.TEST_PAPER_DIFFICULTY == 1}">selected</c:if>>按角色选择</option>
-    										<option value="2" <c:if test="${pd.TEST_PAPER_DIFFICULTY == 2}">selected</c:if>>按单位选择</option> --%>
-    										<option value="3" <c:if test="${pd.TEST_PAPER_DIFFICULTY == 3}">selected</c:if>>按人员选择</option>
+    										<option value="0" <c:if test="${pd.NOTICE_TYPE == '0'}">selected</c:if> >全部</option>
+    										<%-- <option value="1" <c:if test="${pd.NOTICE_TYPE == '1'}">selected</c:if> >按角色选择</option>
+    										<option value="2" <c:if test="${pd.NOTICE_TYPE == '2'}">selected</c:if> >按单位选择</option> --%>
+    										<option value="3" <c:if test="${pd.NOTICE_TYPE == '3'}">selected</c:if> >按人员选择</option>
     									</select>
-                                        <a id="addBtn" class="btn btn-mini btn-primary" onclick="addExtent()" style="display: none;"><i id="nav-add-icon" class="ace-icon glyphicon glyphicon-plus while"></i>添加</a>
+	                                    <a id="addBtn" class="btn btn-mini btn-primary" onclick="addExtent()" <c:if test="${pd.NOTICE_TYPE == 0 || null == pd.NOTICE_TYPE}">style="display: none;"</c:if>><i id="nav-add-icon" class="ace-icon glyphicon glyphicon-plus while"></i>添加</a>
 									</li>
-                                    <li id="select-scope" class="item-blue clearfix ui-sortable-handle" style="display:none;">
+                                    <li id="select-scope" class="item-blue clearfix ui-sortable-handle" <c:if test="${pd.NOTICE_TYPE == 0|| null == pd.NOTICE_TYPE}">style="display: none;"</c:if>>
                                         <label class="inline" style="width:100%;"><span style="padding-left:5px;" class="lbl"><i style="margin-right: 3px;" class="ace-icon fa fa-users orange"></i>当前发布范围包括：</span></label>
                                         <div class="inline" style="width:100%;">
-                                            <div class="tags" id="scope_deil" style="width:100%;min-height: 82px;max-height: 200px;overflow: auto;"></div>
+                                            <div class="tags" id="scope_deil" style="width:100%;min-height: 82px;max-height: 200px;overflow: auto;">
+                                            <!-- 开始循环 -->	
+											<c:choose>
+												<c:when test="${not empty reItem}">
+													<c:forEach items="${reItem}" var="var" varStatus="vs"><span class="tag"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">${var.BUSINESS_NAME}</font></font><button type="button" class="close" data-key="${var.BUSINESS_CODE}"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">×</font></font></button></span></c:forEach>
+												</c:when>
+											</c:choose>	
+											
+                                            </div>
                                         </div>
                                     </li>
 									<li id="attachmentLi" class="item-blue clearfix ui-sortable-handle">
@@ -83,15 +96,20 @@
 										</div>
 									</li>
                                     <li id="ContentLi" class="item-blue clearfix ui-sortable-handle">
-                                        <label class="inline" style="width:100%;"><span style="padding-left:5px;" class="lbl"><i style="margin-right: 3px;" class="ace-icon fa fa-pencil-square-o orange"></i>公告内容：</span></label>
+                                        <label class="inline" style="width:100%;"><span style="padding-left:5px;" class="lbl"><i style="margin-right: 3px;" class="ace-icon fa fa-pencil-square-o orange"></i>公告内容：<span style="color:#999;">(限制100个字以内)</span></span></label>
                                         <div class="inline" style="width:100%;">
-                                            <textarea id="notice_content" style="width:100%;"></textarea>
+                                            <textarea id="notice_content" style="width:100%;">${pd.NOTICE_CONTENT}</textarea>
                                         </div>
                                     </li>
 						<li id="liBefore" class="item-blue clearfix ui-sortable-handle">
 							<div class="inline">
-								<a class="btn btn-mini btn-primary" onclick="save();">发布公告</a>
-								<a class="btn btn-mini btn-danger" onclick="goPaper();">清除内容</a>
+								<a class="btn btn-mini btn-primary" onclick="save();">
+									<c:choose>
+									<c:when test="${pd.NOTICE_ID==null}">发布公告</c:when>
+									<c:otherwise>保存修改</c:otherwise>
+									</c:choose>
+								</a>
+								<a class="btn btn-mini btn-danger" onclick="goPaper();">返回列表</a>
 							</div>
 						</li>
 					</ul>
@@ -124,9 +142,16 @@
 	<script src="static/ace/js/ace/elements.fileinput.js"></script>
 	<script src="static/ace/js/ace/ace.js"></script>
 		<script type="text/javascript">
-		var scope_Arr = []//记录发布范围
+		var scope_Arr = {}//记录发布范围
 		$(top.hangge());
 		$(function(){
+			//删除范围
+			$("#scope_deil").on("click",".close",function(){
+				var key = $(this).attr("data-key")
+				delete scope_Arr[key];
+				$(this).parent().remove()
+				console.log("notice_edit.jsp:",scope_Arr)
+			})
 			//日期框
 			/* $('.date-picker').datepicker({
 				autoclose: true,
@@ -139,7 +164,7 @@
 			    if(currVal != 0){
 			        //首先清空之前选择的内容，不然不好处理
 			        $("#scope_deil").empty()
-			        scope_Arr = []
+			        scope_Arr = {}
 			        //再显示添加框和添加按钮
 			        $("#select-scope,#addBtn").show()
 			    }else{
@@ -147,9 +172,18 @@
 			    }
 			})
 			
-			//上传视频
+			//初始化 上传的文件
+			setTimeout(function(){
+				if("${pd.ATTACHMENT_PATH}"){
+					$(".ace-file-container").addClass("selected")
+					$(".ace-file-name").attr("data-title","${pd.ATTACHMENT_PATH}")
+					$(".fa-upload").attr("class","ace-icon fa fa-film file-video")
+					
+				}
+			},1000)
+			//上传文件
 			$('#file').ace_file_input({
-				no_file:'No File ...',
+				no_file:'未选择文件',
 				btn_choose:'选择',
 				btn_change:'选择',
 				droppable:false,
@@ -158,16 +192,6 @@
 				before_change:function(files,dropped){
 					var file = files[0];
 					var name = file.name;
-					//判断文件类型
-					/* if (!name.endsWith(".mp4")){
-						$("#file").tips({
-							side:3,
-				            msg:'仅可上传 .mp4 格式视频',
-				            bg:'#AE81FF',
-				            time:2
-				        });
-						return false;	 
-					} */
 					//判断文件大小
 					if(file.size > 2147483648){
 						$("#file").tips({
@@ -179,7 +203,7 @@
 						return false;
 					}
 					var options = {
-						url: '<%=basePath%>coursedetail/uploadVideo.do?tm='+new Date().getTime(),
+						url: '<%=basePath%>notice/uploadFile.do?tm='+new Date().getTime(),
 						type: 'POST',
 						dataType: 'json',
 						cache: false,
@@ -188,7 +212,7 @@
 							$("#file_path").val(data.path)
 							$("#file").tips({
 								side:3,
-					            msg:'视频上传成功',
+					            msg:'上传成功',
 					            bg:'#AE81FF',
 					            time:2
 					        });
@@ -196,7 +220,7 @@
 						error: function(data){
 							$("#file").tips({
 								side:3,
-					            msg:'视频上传失败',
+					            msg:'上传失败',
 					            bg:'#AE81FF',
 					            time:2
 					        });
@@ -211,6 +235,9 @@
 				$("#file_path").val('')
 			})
 		});
+		<c:forEach items="${reItem}" var="var">
+		  scope_Arr['${var.BUSINESS_CODE}']= '${var.BUSINESS_NAME}'
+		</c:forEach>
 		//添加发布范围
 		function addExtent(){
 		    top.jzts();
@@ -224,34 +251,65 @@
             diag. ShowMaxButton = true;    //最大化按钮
             diag.ShowMinButton = true;     //最小化按钮
             diag.CancelEvent = function(){ //关闭事件
-                $("#scope_deil").empty()//清空
+            	is_clickConfirm = diag.innerFrame.contentWindow.document.getElementById("clickConfirm").value
+           		if(is_clickConfirm == '0'){
+           			diag.close();
+           			return
+           		}
+                
                 var str = '';
                    for(var i=0;i < diag.innerFrame.contentWindow.document.getElementsByName('ids').length;i++){
                      if(diag.innerFrame.contentWindow.document.getElementsByName('ids')[i].checked){
                       var name = diag.innerFrame.contentWindow.document.getElementsByName('ids2')[i].innerHTML
                       var value = diag.innerFrame.contentWindow.document.getElementsByName('ids')[i].value
-                      $("#scope_deil").append('<span class="tag"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">'+name+'</font></font><button type="button" class="close" data-key="'+value+'"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">×</font></font></button></span>')
-                       scope_Arr.push({id:value,name:name})
+                       scope_Arr[value]=name//把发布范围添加到对象中
                      }
                    }
-                   //code
-                   //selected_Arr["scope_Arr"] = scope_Arr
-               diag.close();
+                   //生成标签
+                   $("#scope_deil").empty()//清空
+                   for(sa in scope_Arr){        	   
+                   		$("#scope_deil").append('<span class="tag"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">'+scope_Arr[sa]+'</font></font><button type="button" class="close" data-key="'+sa+'"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">×</font></font></button></span>')
+                   }
+        		diag.close();
             };
             diag.show();
 		}
-		
+		//返回
+		function goPaper(){
+			history.back(-1)
+		}
+		 //获取url中的参数  
+        function getUrlParam(name) {   
+             var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象  
+             var r = window.location.search.substr(1).match(reg);  //匹配目标参数   
+             if (r != null) return unescape(r[2]); return null; //返回参数值  
+        } 
 		//保存
 		function save(){
+			if($("#TEST_PAPER_DIFFICULTY").val()!="0" && Object.keys(scope_Arr).length==0){
+				$("#scope_deil").tips({
+					side:1,
+		            msg:'发布范围不能为空',
+		            bg:'#cc0033',
+		            time:3
+				})
+				return;
+			}else{
+				scope_Arr = {} //如果范围是面向全部，把这个值设置为空可以稍微节约服务器资源
+			}
+			var scopeFormat = [];
+			for(sa in scope_Arr){
+				scopeFormat.push({id:sa,name:scope_Arr[sa]})
+			}
 		    var postData = {
+		    		NOTICE_ID:getUrlParam("NOTICE_ID"),
 		            START_TIME:$("#lastStart").val(),
 		            END_TIME:$("#lastEnd").val(),
 		            NOTICE_TYPE:$("#TEST_PAPER_DIFFICULTY").val(),
-		            scope_Arr:JSON.stringify(scope_Arr),
+		            scope_Arr:JSON.stringify(scopeFormat),
 		            ATTACHMENT_PATH:$("#file_path").val(),
 		            NOTICE_CONTENT:$("#notice_content").val()
 		    }
-		    console.log(postData)
 		    $("#zhongxin").hide();
             $("#zhongxin2").show();
 		    $.ajax({
@@ -263,7 +321,25 @@
                 //async: false,
                 cache: false,
                 success: function(data){
-                    window.location.href = '<%=basePath%>notice/list.do'
+                	var json = JSON.parse(data)
+                	if(json.ret == '0'){
+	                    if(document.referrer){
+		                    window.location.href = document.referrer
+	                    }else{
+	                    	window.location.href = '<%=basePath%>notice/list.do'                    	
+	                    }
+                	}else{
+                		$("#zhongxin").show();
+                        $("#zhongxin2").hide();
+                		if(json.ret == '-1'){
+                			$("#notice_content").tips({
+								side:1,
+					            msg:'公告内容太长了',
+					            bg:'#cc0033',
+					            time:3
+					        });
+                		}
+                	}
                 },
                 complete:function(){
                     $("#zhongxin").show();

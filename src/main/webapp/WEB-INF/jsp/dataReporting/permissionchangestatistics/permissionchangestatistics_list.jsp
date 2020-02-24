@@ -21,9 +21,8 @@
 <link rel="stylesheet" href="static/ace/css/jquery-ui.css" />
  
  <style>
-    .mtable{width:auto;border-collapse:collapse;border:1px solid black;}
-    .mtable th, .mtable td{height:30px;text-align:center;border:1px solid black;}
-    .mtable th, .mtable td{position:relative;background-clip:padding-box;}
+    .mtable{width:auto;border-collapse:collapse;}
+    .mtable input{background: #FFF !important;border: none;}
 </style>
 </head>
 <body class="no-skin">
@@ -41,8 +40,8 @@
 						<table style="margin-top:15px;">
 							<tr>
 								<td>
-									<select class="form-control" id="busiDate" name="busiDate" style="vertical-align:top; width:150px;margin-left: 5px;" data-placeholder="请选择业务期间" onchange="tosearch()">
-										<option value=""></option>
+									<select class="form-control" id="busiDate" name="busiDate" style="vertical-align:top; width:150px;margin-left: 5px;" data-placeholder="请选择业务期间">
+										<!-- <option value=""></option> -->
 										<c:forEach items="${listBusiDate}" var="var">
 											<option value="${var.BUSI_DATE}" <c:if test="${pd.busiDate == var.BUSI_DATE}">selected="selected"</c:if>>${var.BUSI_DATE}</option>
 										</c:forEach>
@@ -50,34 +49,36 @@
 								</td>
 								<td style="vertical-align:top;padding-left:3px;">
 									<a class="btn btn-info btn-sm" onclick="tosearch()"><i class="ace-icon fa fa-search bigger-110"></i></a>
+									<c:if test="${isTheSameMonth==1}">
 									<a class="btn btn-white btn-info btn-bold" onclick="addRows()"><span class="ace-icon fa fa-plus-circle purple"></span>添加</a>						
 									<a class="btn btn-white btn-info btn-bold" onclick="edit()"><span class="ace-icon fa fa-pencil-square-o purple"></span>编辑</a>
 									<a class="btn btn-white btn-info btn-bold" onclick="save()"><i class="ace-icon fa fa-floppy-o bigger-120 blue"></i>保存</a>
 									<a class="btn btn-white btn-info btn-bold" onclick="makeAll('确定要删除选中的数据吗?');" title="批量删除" ><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>删除</a>
 									<a class="btn btn-white btn-info btn-bold" onclick="importExcel()"><span class="ace-icon fa fa-cloud-upload"></span>导入</a>
 									<a class="btn btn-white btn-info btn-bold" onclick="toExcel()"><span class="ace-icon fa fa-cloud-download"></span>导出</a>
+									</c:if>
 								</td>
 							</tr>
 						</table>
 						<!-- 检索  -->
-						<div style="width:100%;overflow: auto; height: 450px;">
-						<table id="simple-table" class="mtable" style="margin-top:10px; width: 99%;">		
+						<div style="width:100%;overflow: auto; min-height: 500px;">
+						<table id="simple-table" class="mtable table table-bordered" style="margin-top:10px; width: 99%;">		
 							<thead>
 								<tr>
 									<th class="center" style="width:35px;">
 									<label class="pos-rel"><input type="checkbox" class="ace" id="zcheckbox" /><span class="lbl"></span></label>
 									</th>
-									<th style="width:110px; height:30px; background-color: #BEBEC5; text-align: center;">公司名称</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">账号延期</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">账号解除锁定</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">新增角色</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">删除角色</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">账号新增</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">账号删除</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">增加FMIS角色</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">删除FMIS角色</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">变更用户组</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">变更人次</th>
+									<th style="width:110px; height:30px;  text-align: center;">公司名称</th>
+									<th style="width:110px;  text-align: center;">账号延期</th>
+									<th style="width:110px;  text-align: center;">账号解除锁定</th>
+									<th style="width:110px;  text-align: center;">新增角色</th>
+									<th style="width:110px;  text-align: center;">删除角色</th>
+									<th style="width:110px;  text-align: center;">账号新增</th>
+									<th style="width:110px;  text-align: center;">账号删除</th>
+									<th style="width:110px;  text-align: center;">增加FMIS角色</th>
+									<th style="width:110px;  text-align: center;">删除FMIS角色</th>
+									<th style="width:110px;  text-align: center;">变更用户组</th>
+									<th style="width:110px;  text-align: center;">变更人次</th>
 								</tr>
 							</thead>
 													

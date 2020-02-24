@@ -69,7 +69,7 @@
 		<include refid="tableName"></include>
 		<where>
 		    <foreach item="item" index="index" collection="list" open=" " separator=" or " close=" ">
-                (BUSI_DATE = #{item.BUSI_DATE} and COMPANY_CODE = #{item.COMPANY_CODE} and COMPANY_CODE != #{item.COMPANY_CODE__})
+                (BUSI_DATE = #{item.BUSI_DATE} and POSITION_NO = #{item.POSITION_NO} and POSITION_NO != #{item.POSITION_NO__})
 		    </foreach>
 		</where> 
 	</select>
@@ -107,7 +107,7 @@
 		where
 		<foreach item="item" index="index" collection="list" open=" (" separator=" or " close=") ">
 		    BUSI_DATE = #{item.BUSI_DATE__} 
-		    and COMPANY_CODE = #{item.COMPANY_CODE__} 
+		    and POSITION_NO = #{item.POSITION_NO__} 
 		    and TO_NO = #{item.TO_NO__} 
 		</foreach>
 	</delete>
@@ -117,7 +117,7 @@
 		    delete from
 		    <include refid="tableName"></include>
 		    where BUSI_DATE = #{item.BUSI_DATE__} 
-		    and COMPANY_CODE = #{item.COMPANY_CODE__}
+		    and POSITION_NO = #{item.POSITION_NO__}
 	        and TO_NO = #{item.TO_NO__};
 		    insert into
 		    <include refid="tableName"></include>
@@ -130,8 +130,8 @@
 		    delete from
 		    <include refid="tableName"></include>
 		    where BUSI_DATE = #{item.BUSI_DATE} 
-		    and COMPANY_CODE = #{item.COMPANY_CODE}
-	        and TO_NO = #{item.TO_NO__};
+		    and POSITION_NO = #{item.POSITION_NO}
+	        and TO_NO = #{item.TO_NO};
 		    insert into
 		    <include refid="tableName"></include>
 		    (${item.InsertField}) values (${item.InsertVale});

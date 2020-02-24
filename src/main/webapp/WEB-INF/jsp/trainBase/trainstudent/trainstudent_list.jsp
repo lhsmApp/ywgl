@@ -37,7 +37,7 @@
 								<td>
 									<div class="nav-search">
 										<span class="input-icon">
-											<input type="text" placeholder="这里输入关键词" class="nav-search-input" id="nav-search-input" autocomplete="off" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词"/>
+											<input type="text" placeholder="搜索学员名称" class="nav-search-input" id="nav-search-input" autocomplete="off" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词"/>
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 									</div>
@@ -65,7 +65,7 @@
 									
 									<th class="center">所属单位</th>
 									<th class="center">所属部门</th>
-									<th class="center">角色</th>
+									<!-- <th class="center">角色</th> -->
 									<th class="center">备注</th>
 									<th class="center">状态</th>
 									<th class="center">操作</th>
@@ -90,7 +90,7 @@
 											
 											<td class='center'>${var.UNIT_NAME}</td>
 											<td class='center'>${var.DEPART_NAME}</td>
-											<td class='center'>${var.ROLE_NAME}</td>
+											<%-- <td class='center'>${var.ROLE_NAME}</td> --%>
 											<td class='center'>${var.MEMO}</td>
 											<td style="width: 60px;" class="center">
 												<c:if test="${var.STATE == '0' }"><span class="label label-important arrowed-in">停用</span></c:if>

@@ -42,6 +42,7 @@
 				<div class="page-content">
 					<div class="row">
 						<div class="col-xs-4">
+						<form action='mbp/getPageList.do?ProOperType=PROBLEM_INFO'></form>
 						<!-- 检索  -->
 						<!-- <form style="margin:5px;" method="post" name="problemForm" id="problemForm"> -->
 							<div class="nav-search" style="margin:10px 0px;">
@@ -58,7 +59,8 @@
 							<ul id="problemList" class="item-list">
 								
 							</ul>						
-							<div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div>
+							<%-- <div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div> --%>
+							<div id="page" class="pagination" style="float: right;padding-top: 5px;margin-top: 0px;font-size:12px;"></div>
 						<!-- </form> -->
 					</div>
 					<!-- /.col4 -->
@@ -134,7 +136,7 @@
 															
 															<div style="margin:10px 0px;">
 																<label for="form-field-pro-report-user">上报人</label>
-																<select class="form-control" name="PRO_REPORT_USER" id="form-field-pro-report-user">
+																<select class="form-control" name="PRO_REPORT_USER" id="form-field-pro-report-user" disabled='true'>
 																	<option value=""></option>
 																	<c:forEach items="${userList}" var="user">
 																		<!-- <option value="AL">Alabama</option>
@@ -509,7 +511,7 @@ $(function() {
 	initFieldDisabled(true);
 	
 	//初始化问题列表数据
-	initList();
+	initList('<%=basePath%>mbp/getPageList.do?ProOperType=PROBLEM_INFO');
 	
 	$("#problem-tab a").click(function(e){
 		$('#currentTabTitle').text($(this).text());
@@ -533,7 +535,7 @@ function ueditor(){
 function initFieldDisabled(disabled){
 	//$("#form-field-pro-code").attr("readonly",true);
 	$("#form-field-pro-title").attr("disabled",disabled);
-	$("#form-field-pro-report-user").attr("disabled",disabled);
+	//$("#form-field-pro-report-user").attr("disabled",disabled);
 	$("#form-field-pro-accept-user").attr("disabled",disabled);
 	$("#form-field-pro-sys-type").attr("disabled",disabled);
 	$("#form-field-pro-type-id").attr("disabled",disabled);
@@ -558,20 +560,21 @@ function initFieldDisabled(disabled){
 /**
  * 初始化列表信息
  */
-function initList(){
+function initList(url){
 	$("#problemList li").remove(); 
 	top.jzts();
 	var keywords = $("#keywords").val();
 	$.ajax({
 			type: "POST",
-			url: '<%=basePath%>mbp/getPageList.do?ProOperType=PROBLEM_INFO',
+			url: url,
 	    	data: {keywords:keywords},
 			dataType:'json',
 			cache: false,
 			success: function(data){
+				$("#page").html(data.pageHtml);
 				var first;
-				if(data){
-					$.each(data, function(i, item){
+				if(data.rows){
+					$.each(data.rows, function(i, item){
 						if(i==0){
 							first=item;
 						}
@@ -712,7 +715,7 @@ function getDetail(problemCode){
 
 //检索
 function searchs(){
-	initList();
+	initList('<%=basePath%>mbp/getPageList.do?ProOperType=PROBLEM_INFO');
 	//$("#problemForm").submit();
 }
 
@@ -785,7 +788,7 @@ function save(){
 		            bg:'#009933',
 		            time:3
 		        });
-				initList();
+				initList('<%=basePath%>mbp/getPageList.do?ProOperType=PROBLEM_INFO');
 			}else{
 				$(top.hangge());//关闭加载状态
 				$("#btnSave").tips({
@@ -813,11 +816,17 @@ function save(){
  * 增加
  */
 function add(){
+	$("#problemList li").each(function(){
+		var item = this;
+		$(item).removeClass("bc-light-orange");
+	}); 
+	currentItem=null;
+	
 	initFieldDisabled(false);
 	
 	$("#form-field-pro-code").val("");
 	$("#form-field-pro-title").val("");
-	$("#form-field-pro-report-user").val("");
+	$("#form-field-pro-report-user").val(${currentUser});
 	$("#form-field-pro-accept-user").val("");
 	$("#form-field-pro-sys-type").val("");
 	$("#form-field-pro-type-id").val("");
@@ -827,6 +836,8 @@ function add(){
 	$("#form-field-pro-resolve-time").val("");
 	$("#form-field-pro-content").val("");
 	UE.getEditor('editor').setContent("");
+	
+	$("#tbodyProInfoAttachment").html('');
 }
 
 /**
@@ -937,7 +948,7 @@ function del(){
 			top.jzts();
 			var url = "<%=basePath%>mbp/delete.do?PRO_CODE="+currentItem.PRO_CODE;
 			$.get(url,function(data){
-				initList();
+				initList('<%=basePath%>mbp/getPageList.do?ProOperType=PROBLEM_INFO');
 			});
 		};
 	});
@@ -994,7 +1005,7 @@ function commit(){
 		            bg:'#009933',
 		            time:3
 		        });
-				initList();
+				initList('<%=basePath%>mbp/getPageList.do?ProOperType=PROBLEM_INFO');
 			}else{
 				$(top.hangge());//关闭加载状态
 				$("#btnCommit").tips({
@@ -1070,7 +1081,7 @@ function cancel(){
 		            bg:'#009933',
 		            time:3
 		        });
-				initList();
+				initList('<%=basePath%>mbp/getPageList.do?ProOperType=PROBLEM_INFO');
 			}else{
 				$(top.hangge());//关闭加载状态
 				$("#btnCancel").tips({
@@ -1168,6 +1179,16 @@ function addItemAttachment(item,index,type){
  * 上传附件
  */
 function addProAttachmentByType(type){
+	if(currentItem==null){
+		$("#btnAddProInfoAttachment").tips({
+			side:3,
+            msg:'请先保存问题信息后，再上传附件',
+            bg:'#cc0033',
+            time:3
+        });
+		return;
+	}
+	
 	 var proCode=currentItem.PRO_CODE;
 	 top.jzts();
 	 var diag = new top.Dialog();

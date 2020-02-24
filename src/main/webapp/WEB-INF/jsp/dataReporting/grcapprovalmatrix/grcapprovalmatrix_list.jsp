@@ -20,9 +20,8 @@
 <script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
 <link rel="stylesheet" href="static/ace/css/jquery-ui.css" />
 <style>
-    .mtable{width:auto;border-collapse:collapse;border:1px solid black;}
-    .mtable th, .mtable td{height:30px;text-align:center;border:1px solid black;}
-    .mtable th, .mtable td{position:relative;background-clip:padding-box;}
+    .mtable{width:auto;border-collapse:collapse;}
+    .mtable input{background: #FFF !important;border: none;}
 </style>
 </head>
 <body class="no-skin">
@@ -59,7 +58,7 @@
 								<tr>
 									<td>
 										<select class="form-control" id="busiDate" name="busiDate" style="vertical-align:top; width:150px;margin-left: 5px;" data-placeholder="请选择业务期间" onchange="tosearch()">
-											<option value=""></option>
+											<option value="">全部</option>
 											<c:forEach items="${listBusiDate}" var="var">
 												<option value="${var.BUSI_DATE}" <c:if test="${pd.busiDate == var.BUSI_DATE}">selected="selected"</c:if>>${var.BUSI_DATE}</option>
 											</c:forEach>
@@ -75,18 +74,18 @@
 								<a class="btn btn-white btn-info btn-bold" onclick="toExcel()"><span class="ace-icon fa fa-cloud-download"></span>导出</a>
 								</tr>
 							</table>
-							<div style="width: 100%;overflow: auto;height: 430px;">
-							<table id="simple-table" class="mtable" style="margin-top:5px; width: 99%;">	
+							<div style="width: 100%;overflow: auto;min-height: 500px;">
+							<table id="simple-table" class="mtable table table-bordered" style="margin-top:5px; width: 99%;">	
 								<thead style="height: 40px">
 									<tr>
-										<th class="center" style="width:35px; background-color: #BEBEC5;">
+										<th class="center" style="width:35px; ">
 										<label class="pos-rel"><input type="checkbox" class="ace" id="zcheckbox" /><span class="lbl"></span></label>
 										</th>
-										<th style="width:150px; background-color: #BEBEC5; text-align: center;">业务模块</th>
-										<th style="width:150px; background-color: #BEBEC5; text-align: center;">申请人员工编号</th>
-										<th style="width:150px; background-color: #BEBEC5; text-align: center;">申请人员工姓名</th>
-										<th style="width:150px; background-color: #BEBEC5; text-align: center;">一级审批人员工编号</th>
-										<th style="width:150px; background-color: #BEBEC5; text-align: center;">一级审批人员工姓名</th>
+										<th style="width:150px;  text-align: center;">业务模块</th>
+										<th style="width:150px;  text-align: center;">申请人员工编号</th>
+										<th style="width:150px;  text-align: center;">申请人员工姓名</th>
+										<th style="width:150px;  text-align: center;">一级审批人员工编号</th>
+										<th style="width:150px;  text-align: center;">一级审批人员工姓名</th>
 									</tr>
 								</thead>
 								<tbody id="copyTable">
@@ -131,7 +130,7 @@
 			<tbody>
 				<tr>
 					<td class='center'>
-					<label class="pos-rel"><input style="background-color: #BEBEC5;" type='checkbox' name='ids' value="" class="ace"/><span class="lbl"></span></label>
+					<label class="pos-rel"><input style="" type='checkbox' name='ids' value="" class="ace"/><span class="lbl"></span></label>
 					</td>
 					<th><input type="text" name="BUSINESS_MODULE" id="BUSINESS_MODULE" value="" maxlength="50" title="业务模块" style="width:100%;"/></th>
 					<th><input type="text" name="STAFF_CODE" id="STAFF_CODE" value="" maxlength="30" title="申请话其人员工编号" style="width:100%;"/></th>

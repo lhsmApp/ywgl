@@ -37,13 +37,13 @@
 								<td>
 									<div class="nav-search">
 										<span class="input-icon">
-											<input type="text" style="width:100%" placeholder="这里输入关键词" class="nav-search-input" id="nav-search-input" autocomplete="off" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词"/>
+											<input type="text" style="width:100%" placeholder="搜索课程分类名称" class="nav-search-input" id="nav-search-input" autocomplete="off" name="keywords" value="${keywords}"/>
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 									</div>
 								</td>
 								<td style="vertical-align:top;padding-left:2px;">&nbsp;
-								 	<select name="COURSETYPE_ID" id="COURSETYPE_ID">
+								 	<select name="COURSE_TYPE_ID" id="COURSE_TYPE_ID">
 										<option value="${COURSETYPE_ID}" <c:if test="${COURSETYPE_ID != ''}">selected</c:if>>本级</option>
 										<option value="" <c:if test="${COURSETYPE_ID == ''}">selected</c:if>>全部</option>
 									</select>
@@ -195,9 +195,9 @@
 		}
 		
 		//去此ID下子级列表
-		function goSondict(COURSETYPE_ID){
+		function goSondict(COURSE_TYPE_ID){
 			top.jzts();
-			window.location.href="<%=basePath%>coursetype/list.do?COURSETYPE_ID="+COURSETYPE_ID;
+			window.location.href="<%=basePath%>coursetype/list.do?COURSE_TYPE_ID="+COURSE_TYPE_ID;
 		};
 		
 		$(function() {
@@ -305,7 +305,7 @@
 			 var diag = new top.Dialog();
 			 diag.Drag=true;
 			 diag.Title ="编辑";
-			 diag.URL = '<%=basePath%>coursetype/goEdit.do?COURSETYPE_ID='+Id;
+			 diag.URL = '<%=basePath%>coursetype/goEdit.do?COURSE_TYPE_ID='+Id;
 			 diag.Width = 600;
 			 diag.Height = 400;
 			 diag.Modal = true;				//有无遮罩窗口

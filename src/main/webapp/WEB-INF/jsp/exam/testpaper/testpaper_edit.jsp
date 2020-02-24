@@ -74,7 +74,7 @@
 									<li id="singleAnswer" class="item-blue clearfix ui-sortable-handle">
 										<label class="inline">
 											<i class="ace-icon fa fa-list green"></i>
-											<span style="padding-left:5px;" class="lbl">试卷类型:</span>
+											<span id="sjlxid" style="padding-left:5px;" class="lbl">试卷类型:</span>
 										</label>
 										<div class="inline">
 											<div class="inline" id="TEST_PAPER_TYPE" style="margin-top: 5px;">
@@ -89,7 +89,7 @@
 									</li>
 								<li id="fixedPaper" class="item-default clearfix ui-sortable-handle" hidden="hidden">
 									<label class="inline">
-										<span><a onclick="addPaper();" class="btn btn-minier bigger btn-primary"><i class="ace-icon fa fa-plus-circle"></i>添加试题</a></span>
+										<span><a id="addPaperBtn" onclick="addPaper();" class="btn btn-minier bigger btn-primary"><i class="ace-icon fa fa-plus-circle"></i>添加试题</a></span>
 									</label>
 								</li>
 								<li id="paperRule" class="item-default clearfix ui-sortable-handle" hidden="hidden">
@@ -191,7 +191,7 @@
 								<li id="radomPaper" class="item-default clearfix ui-sortable-handle" hidden="hidden">
 									<label class="inline">
 										<span><a onclick="appendRule();" class="btn btn-minier bigger btn-primary"><i class="ace-icon fa fa-plus-circle"></i>添加规则</a></span>
-										<span><a onclick="autoPaper();" class="btn btn-minier bigger btn-purple"><i class="ace-icon fa fa-plus-circle"></i>生成试题</a></span>
+										<span><a id="autoPaperBtn" onclick="autoPaper();" class="btn btn-minier bigger btn-purple"><i class="ace-icon fa fa-plus-circle"></i>生成试题</a></span>
 										<span><a class="btn btn-minier bigger btn-primary btn-danger btn-danger" onclick="delRule();"><i class="ace-icon fa fa-trash-o bigger-130"></i>删除选项</a></span>
 									</label>
 								</li>
@@ -526,17 +526,52 @@
 				$("#TEST_PAPER_TITLE").focus();
 			return false;
 			}
-			if($("#ANSWER_TIME").val()==""){
-				$("#ANSWER_TIME").tips({
+			
+
+			if($("#selectTree2_input").val()==""){
+				$("#selectTree2_input").tips({
 					side:3,
-		            msg:'请输入答题时间',
+		            msg:'请选择试卷分类',
 		            bg:'#AE81FF',
 		            time:2
 		        });
-				$("#ANSWER_TIME").focus();
+				$("#QUALIFIED_SCORE").focus();
 			return false;
 			}
-
+			if($("input[name=ids]:checked").val()==undefined){
+				$("#sjlxid").tips({
+					side:3,
+		            msg:'请选择试卷类型',
+		            bg:'#AE81FF',
+		            time:2
+		        });
+				$("#sjlxid").focus();
+			return false;
+			}
+			
+			if($("input[name=ids]:checked").val() == 1){
+				if($("#questionIds").val()==""){
+					$("#addPaperBtn").tips({
+						side:3,
+			            msg:'请添加试题',
+			            bg:'#AE81FF',
+			            time:2
+			        });
+					$("#addPaperBtn").focus();
+				return false;
+				}
+			}else {
+				if($("#questionIds").val()==""){
+					$("#autoPaperBtn").tips({
+						side:3,
+			            msg:'请生成试题',
+			            bg:'#AE81FF',
+			            time:2
+			        });
+					$("#autoPaperBtn").focus();
+				return false;
+				}
+			}
 			if($("#QUALIFIED_SCORE").val()==""){
 				$("#QUALIFIED_SCORE").tips({
 					side:3,
@@ -545,6 +580,16 @@
 		            time:2
 		        });
 				$("#QUALIFIED_SCORE").focus();
+			return false;
+			}
+			if($("#ANSWER_TIME").val()==""){
+				$("#ANSWER_TIME").tips({
+					side:3,
+		            msg:'请输入答题时间',
+		            bg:'#AE81FF',
+		            time:2
+		        });
+				$("#ANSWER_TIME").focus();
 			return false;
 			}
 			//处理数据

@@ -42,7 +42,8 @@
 					<div class="row">
 						<div class="col-xs-4">
 							<!-- 检索  -->
-							
+							<form action='knowledge/getPageList.do'>
+							</form>
 							<div class="nav-search" style="margin:10px 0px;">
 								<span class="input-icon" style="width:86%">
 									<input style="width:100%" class="nav-search-input" autocomplete="off" id="keywords" type="text" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词" />
@@ -542,6 +543,12 @@
 		 * 增加
 		 */
 		function add(){
+			$("#knowledgeList li").each(function(){
+				var item = this;
+				$(item).removeClass("bc-light-orange");
+			}); 
+			currentItem=null;
+			
 			initFieldDisabled(false);
 			
 			$("#form-field-knowledge-id").val("");
@@ -552,6 +559,8 @@
 			$("#form-field-author").val("");
 			$("#form-field-detail").val("");
 			UE.getEditor('editor').setContent("");
+			
+			$("#tbodyAttachment").html('');
 		}
 
 		/**
@@ -662,6 +671,15 @@
 		 * 上传附件
 		 */
 		function addAttachmentByType(type){
+			if(currentItem==null){
+				$("#btnAddAttachment").tips({
+					side:3,
+		            msg:'请先保存知识信息后，再上传附件',
+		            bg:'#cc0033',
+		            time:3
+		        });
+				return;
+			}
 			 var knowledgeID=currentItem.KNOWLEDGE_ID;
 			 top.jzts();
 			 var diag = new top.Dialog();

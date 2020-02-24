@@ -163,9 +163,9 @@ public class TaxStaffDetailController extends BaseController {
 			break;
 		case "Z1MM2":
 			// 获取带__的列，后续删除之类的有用
-			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE","TO_NO");
+			keyListBase = Arrays.asList("BUSI_DATE", "POSITION_NO","TO_NO");
 			// 设置必定不为空的列
-			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE","TO_NO");
+			MustInputList = Arrays.asList("BUSI_DATE", "POSITION_NO","TO_NO");
 			break;
 		case "Z1PS1":
 			// 获取带__的列，后续删除之类的有用
@@ -287,9 +287,9 @@ public class TaxStaffDetailController extends BaseController {
 			break;
 		case "Z1MM2":
 			// 获取带__的列，后续删除之类的有用
-			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE","TO_NO");
+			keyListBase = Arrays.asList("BUSI_DATE", "POSITION_NO","TO_NO");
 			// 设置必定不为空的列
-			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE","TO_NO");
+			MustInputList = Arrays.asList("BUSI_DATE", "POSITION_NO","TO_NO");
 			break;
 		case "Z1PS1":
 			// 获取带__的列，后续删除之类的有用

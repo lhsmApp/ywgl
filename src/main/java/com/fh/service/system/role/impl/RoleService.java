@@ -35,6 +35,17 @@ public class RoleService implements RoleManager{
 		return (List<Role>) dao.findForList("RoleMapper.listAllRolesByPId", pd);
 	}
 	
+	/**列出当前角色中比当前角色低或相等的所有角色
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Role> listAllRolesByCurrentID(PageData pd) throws Exception {
+		return (List<Role>) dao.findForList("RoleMapper.listAllRolesByCurrentID", pd);
+	}
+	
+	
 	/**通过id查找
 	 * @param pd
 	 * @return

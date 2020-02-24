@@ -159,12 +159,29 @@ public class UserController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
+		
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		String userUnit=user.getUNIT_CODE();
+		pd.put("UNIT_CODE", userUnit);
+		
+		Map<String, String> mapRole=Jurisdiction.getHC();//角色权限
 		pd.put("ROLE_ID", "1");
-		List<Role> roleList = roleService.listAllRolesByPId(pd);//列出所有系统用户角色
+		pd.put("ADD_QX", mapRole.get("adds"));
+		
+		List<Role> roleList = roleService.listAllRolesByCurrentID(pd);//列出所有系统用户角色
 		mv.setViewName("system/user/user_edit");
+		
 		mv.addObject("msg", "saveU");
 		mv.addObject("pd", pd);
 		mv.addObject("roleList", roleList);
+		
+		pd.put("DEPARTMENT_CODE", pd.getString("UNIT_CODE"));
+		PageData pdDepartResultUnit=departmentService.findByBianma(pd);
+		//pd.put("DEPARTMENT_ID", pdDepartResult.getString("DEPARTMENT_ID")); //根据编码读取ID
+		if(pdDepartResultUnit!=null)
+			mv.addObject("depnameUnit", pdDepartResultUnit.getString("NAME"));
+		else
+			mv.addObject("depnameUnit", null);
 		
 		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
 		JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0",zdepartmentPdList));
@@ -276,10 +293,14 @@ public class UserController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		if("1".equals(pd.getString("USER_ID"))){return null;}		//不能修改admin用户
+		
+		Map<String, String> mapRole=Jurisdiction.getHC();//角色权限
 		pd.put("ROLE_ID", "1");
-		List<Role> roleList = roleService.listAllRolesByPId(pd);	//列出所有系统用户角色
+		pd.put("ADD_QX", mapRole.get("adds"));
+		List<Role> roleList = roleService.listAllRolesByCurrentID(pd);	//列出所有系统用户角色
 		mv.addObject("fx", "user");
-		pd = userService.findById(pd);	
+		pd = userService.findById(pd);
+		pd.put("ADD_QX", mapRole.get("adds"));
 		/*String departBianma=pd.getString("DEPARTMENT_ID");//对DEPARTMENT_ID还原本人DEPARTMENT_ID
 		PageData pdDepart=new PageData();
 		pdDepart.put("BIANMA", departBianma);*/

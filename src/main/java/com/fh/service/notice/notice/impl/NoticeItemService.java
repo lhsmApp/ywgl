@@ -74,8 +74,9 @@ public class NoticeItemService implements NoticeItemManager{
 	 * @param pd
 	 * @throws Exception
 	 */
-	public PageData findById(PageData pd)throws Exception{
-		return (PageData)dao.findForObject("NoticeItemMapper.findById", pd);
+	@SuppressWarnings("unchecked")
+	public List<PageData> findById(PageData pd)throws Exception{
+		return (List<PageData>)dao.findForList("NoticeItemMapper.findById", pd);
 	}
 	
 	/**批量删除

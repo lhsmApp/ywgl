@@ -21,9 +21,8 @@
 <!--自由拉动  -->
  <link rel="stylesheet" href="static/ace/css/jquery-ui.css" />
  <style>
-    .mtable{width:auto;border-collapse:collapse;border:1px solid black;}
-    .mtable th, .mtable td{text-align:center;border:1px solid black;}
-    .mtable th, .mtable td{position:relative;background-clip:padding-box;}
+    .mtable{width:auto;border-collapse:collapse;}
+    .mtable input{background: #FFF !important;border: none;}
 </style>
 </head>
 <body class="no-skin">
@@ -65,7 +64,7 @@
 									<td>
 										<c:if test="${not empty listBusiDate}"> 	
 											<select class="form-control" id="busiDate" name="busiDate" style="width:150px;margin-left: 5px;" onchange="tosearch()">
-												<option value=""></option>
+												<option value="">全部</option>
 												<c:forEach items="${listBusiDate}" var="var">
 													<option value="${var.BUSI_DATE}" <c:if test="${pd.busiDate == var.BUSI_DATE}">selected="selected"</c:if>>${var.BUSI_DATE}</option>
 												</c:forEach>
@@ -92,31 +91,31 @@
 									</td>
 								</tr>
 							</table>
-							<div style="width:100%; overflow-x:scroll;height: 500px;">
-							<table id="simple-table" class="mtable" style="margin-top:5px; width:2015px;">	
+							<div style="width:100%; overflow-x:scroll;min-height: 500px;">
+							<table id="simple-table" class="mtable table table-bordered" style="margin-top:5px; width:2015px;">	
 								<thead>
 									<tr>
-										<th class="center" style="width:35px; background-color: #BEBEC5; padding-left: 5px;padding-right:5px;">
+										<th class="center" style="width:35px; padding-left: 5px;padding-right:5px;">
 										<label class="pos-rel"><input type="checkbox" class="ace" id="zcheckbox" /><span class="lbl"></span></label>
 										</th>
-										<th style="width:110px; height:30px; background-color: #BEBEC5; text-align: center; padding-left: 12px;padding-right:12px;">员工编号</th>
-										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">员工姓名</th>
-										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">二级单位</th>
-										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">三级单位</th>
-										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">职务</th>
-										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">岗位</th>
-										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">模块</th>
-										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">联络电话</th>
-										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">电子邮箱</th>
-										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">是否培训</th>
-										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">培训方式</th>
-										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">培训时间</th>
-										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">培训成绩</th>
-										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">证书编号</th>
-										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">UKey编号</th>
-										<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">申请日期</th>
-										<th style="width:110px; background-color: #BEBEC5; text-align: center;">备注</th>
-										<th style="width:110px; background-color: #BEBEC5; text-align: center;">审批状态</th>
+										<th style="width:110px; height:30px; text-align: center; padding-left: 12px;padding-right:12px;">员工编号</th>
+										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">员工姓名</th>
+										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">二级单位</th>
+										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">三级单位</th>
+										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">职务</th>
+										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">岗位</th>
+										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">模块</th>
+										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">联络电话</th>
+										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">电子邮箱</th>
+										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">是否培训</th>
+										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">培训方式</th>
+										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">培训时间</th>
+										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">培训成绩</th>
+										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">证书编号</th>
+										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">UKey编号</th>
+										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">申请日期</th>
+										<th style="width:110px; text-align: center;">备注</th>
+										<th style="width:110px; text-align: center;">审批状态</th>
 									</tr>
 								</thead>
 														
@@ -466,7 +465,7 @@
 		    		$(top.hangge());//关闭加载状态
 					$("#subTitle").tips({
 						side:3,
-			            msg:'添加修改失败,'+response.responseJSON.message,
+			            msg:'添加修改失败',
 			            bg:'#cc0033',
 			            time:3
 			        });
@@ -540,7 +539,7 @@
 						    		$(top.hangge());//关闭加载状态
 									$("#subTitle").tips({
 										side:3,
-							            msg:'删除失败,'+response.responseJSON.message,
+							            msg:'删除失败',
 							            bg:'#cc0033',
 							            time:3
 							        });

@@ -29,7 +29,7 @@
 					
 					<form action="coursetype/${msg }.do" name="Form" id="Form" method="post">
 						<input type="hidden" name="COURSE_TYPE_ID" id="COURSE_TYPE_ID" value="${pd.COURSE_TYPE_ID}"/>
-						<input type="hidden" name="COURSE_TYPE_PARENT_ID" id="COURSE_TYPE_PARENT_ID" value="${null == pd.COURSE_TYPE_PARENT_ID ? COURSETYPE_ID:pd.COURSE_TYPE_PARENT_ID}"/>
+						<input type="hidden" name="COURSE_TYPE_PARENT_ID" id="COURSE_TYPE_PARENT_ID" value="${null == pd.COURSE_TYPE_PARENT_ID ? pd.COURSETYPE_ID:pd.COURSE_TYPE_PARENT_ID}"/>
 						<div id="zhongxin" style="padding-top: 13px;">
 						<table id="table_report" class="table table-striped table-bordered table-hover">
 							<tr>

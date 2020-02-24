@@ -47,43 +47,43 @@ import com.fh.util.excel.TransferSbcDbc;
 
 import net.sf.json.JSONArray;
 
-/** 
- * 说明：权限变更统计处理模块
- * 创建人：xinyuLo
- * 创建时间：2019-10-11
+/**
+ * 说明：权限变更统计处理模块 创建人：xinyuLo 创建时间：2019-10-11
  */
 @Controller
-@RequestMapping(value="/permissionchangestatistics")
+@RequestMapping(value = "/permissionchangestatistics")
 public class PermissionChangeStatisticsController extends BaseController {
-	
-	String menuUrl = "permissionchangestatistics/list.do"; //菜单地址(权限用)
-	@Resource(name="permissionchangestatisticsService")
+
+	String menuUrl = "permissionchangestatistics/list.do"; // 菜单地址(权限用)
+	@Resource(name = "permissionchangestatisticsService")
 	private PermissionChangeStatisticsManager permissionchangestatisticsService;
-	@Resource(name="tmplconfigService")
+	@Resource(name = "tmplconfigService")
 	private TmplConfigService tmplconfigService;
 	@Resource(name = "sysconfigService")
 	private SysConfigManager sysconfigService;
-	@Resource(name="grcpersonService")
+	@Resource(name = "grcpersonService")
 	private GRCPersonManager grcpersonService;
-	
+
 	Map<String, TableColumns> Map_HaveColumnsList = new LinkedHashMap<String, TableColumns>();
 	Map<String, TmplConfigDetail> Map_SetColumnsList = new LinkedHashMap<String, TmplConfigDetail>();
-	
-	/**保存与修改合并类
+
+	/**
+	 * 保存与修改合并类
+	 * 
 	 * @param
 	 * @throws Exception
 	 */
-	@RequestMapping(value="/saveAndEdit")
-	@ResponseBody 
-	public CommonBase saveAndEdit() throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"保存与修改PermissionChangeStatistics");
-		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "add")){return null;} //校验权限
-		//初始化变量
-		String listData = null;	
+	@RequestMapping(value = "/saveAndEdit")
+	@ResponseBody
+	public CommonBase saveAndEdit() throws Exception {
+		logBefore(logger, Jurisdiction.getUsername() + "保存与修改PermissionChangeStatistics");
+		// if(!Jurisdiction.buttonJurisdiction(menuUrl, "add")){return null;} //校验权限
+		// 初始化变量
+		String listData = null;
 		String staffId = null;
 		PageData pd = new PageData();
 		CommonBase commonBase = new CommonBase();
-		User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 		commonBase.setCode(-1);
 		pd = this.getPageData();
 		listData = pd.getString("listData");
@@ -93,106 +93,116 @@ public class PermissionChangeStatisticsController extends BaseController {
 		for (int i = 0; i < listTransferData.size(); i++) {
 			staffId = listTransferData.get(i).trim();
 			PageData pageData = new PageData();
-			pageData.put("USER_DEPART",user.getUNIT_CODE());
-			pageData.put("BUSI_DATE",DateUtils.getCurrentDateMonth()); //业务期间
-			pageData.put("STATE","1");
-			pageData.put("BILL_USER",user.getUSER_ID());
-			pageData.put("BILL_DATE",DateUtils.getCurrentTime(DateFormatUtils.TIME_NOFUll_FORMAT));
-			pageData.put("ID",listTransferData.get(i++));
-			pageData.put("COMPANY_NAME",listTransferData.get(i++).trim());
-			pageData.put("ACCOUNT_DELAY",listTransferData.get(i++).trim());
-			pageData.put("ACCOUNT_UNLOCK",listTransferData.get(i++).trim());
-			pageData.put("NEW_ROLES",listTransferData.get(i++).trim());
-			pageData.put("DELETE_ROLES",listTransferData.get(i++).trim());
-			pageData.put("NEW_ACCOUNTS",listTransferData.get(i++).trim());
-			pageData.put("DELETE_ACCOUNTS",listTransferData.get(i++).trim());
-			pageData.put("NEW_FMIS_ROLES",listTransferData.get(i++).trim());
-			pageData.put("DELETE_FMIS_ROLES",listTransferData.get(i++).trim());
-			pageData.put("CHANGE_USER_GROUP",listTransferData.get(i++).trim());
-			pageData.put("CHANGE_PERSON_COUNT",listTransferData.get(i).trim());
-			if(null != staffId && !"".equals(staffId)) {//如果有ID则进行修改
+			pageData.put("USER_DEPART", user.getUNIT_CODE());
+			pageData.put("BUSI_DATE", DateUtils.getCurrentDateMonth()); // 业务期间
+			pageData.put("STATE", "1");
+			pageData.put("BILL_USER", user.getUSER_ID());
+			pageData.put("BILL_DATE", DateUtils.getCurrentTime(DateFormatUtils.TIME_NOFUll_FORMAT));
+			pageData.put("ID", listTransferData.get(i++));
+			pageData.put("COMPANY_NAME", listTransferData.get(i++).trim());
+			pageData.put("ACCOUNT_DELAY", listTransferData.get(i++).trim());
+			pageData.put("ACCOUNT_UNLOCK", listTransferData.get(i++).trim());
+			pageData.put("NEW_ROLES", listTransferData.get(i++).trim());
+			pageData.put("DELETE_ROLES", listTransferData.get(i++).trim());
+			pageData.put("NEW_ACCOUNTS", listTransferData.get(i++).trim());
+			pageData.put("DELETE_ACCOUNTS", listTransferData.get(i++).trim());
+			pageData.put("NEW_FMIS_ROLES", listTransferData.get(i++).trim());
+			pageData.put("DELETE_FMIS_ROLES", listTransferData.get(i++).trim());
+			pageData.put("CHANGE_USER_GROUP", listTransferData.get(i++).trim());
+			pageData.put("CHANGE_PERSON_COUNT", listTransferData.get(i).trim());
+			if (null != staffId && !"".equals(staffId)) {// 如果有ID则进行修改
 				permissionchangestatisticsService.edit(pageData);
-			}else {//如果无ID则进行新增
+			} else {// 如果无ID则进行新增
 				permissionchangestatisticsService.save(pageData);
 			}
 		}
 		commonBase.setCode(0);
 		return commonBase;
 	}
-	
-	/**列表
+
+	/**
+	 * 列表
+	 * 
 	 * @param page
 	 * @throws Exception
 	 */
-	@RequestMapping(value="/list")
-	public ModelAndView list(Page page) throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"列表PermissionChangeStatistics");
-		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
+	@RequestMapping(value = "/list")
+	public ModelAndView list(Page page) throws Exception {
+		logBefore(logger, Jurisdiction.getUsername() + "列表PermissionChangeStatistics");
+		// if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;}
+		// //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		PageData data = new PageData();
-		User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 		pd = this.getPageData();
 		String busiDate = pd.getString("busiDate");
-		pd.put("KEY_CODE","permissionchaMustKey");
-		pd.put("USER_DEPART",user.getUNIT_CODE());
-		data.put("BUSI_TYPE",SysDeptTime.PERMISSION_CHANGE_STATISTICS.getNameKey());
-		data.put("DEPT_CODE",user.getUNIT_CODE());
+		pd.put("KEY_CODE", "permissionchaMustKey");
+		pd.put("USER_DEPART", user.getUNIT_CODE());
+		data.put("BUSI_TYPE", SysDeptTime.PERMISSION_CHANGE_STATISTICS.getNameKey());
+		data.put("DEPT_CODE", user.getUNIT_CODE());
 		String date = sysconfigService.currentSection(pd);
+
+		Date dNow = new Date();
+		SimpleDateFormat ft = new SimpleDateFormat("yyyyMM");
+		String theSameMonth = ft.format(dNow);
 		// 需要获取必填的内容，然后输出到页面上
-        String mandatory = sysconfigService.getSysConfigByKey(pd);
-		if(null == busiDate || StringUtil.isEmpty(busiDate)) {
-			pd.put("busiDate",date);
+		String mandatory = sysconfigService.getSysConfigByKey(pd);
+		if (null == busiDate || StringUtil.isEmpty(busiDate)) {
+			pd.put("busiDate", date);
 		}
-		pd.put("month",date);
+		pd.put("month", date);
 		pd.put("mandatory", mandatory);
 		page.setPd(pd);
 		PageData pageData = grcpersonService.findSysDeptTime(data);
-		if(null != pageData && pageData.size()>0) {
+		if (null != pageData && pageData.size() > 0) {
 			pd.putAll(pageData);
 		}
-		List<PageData>  listBusiDate = DateUtil.getMonthList("BUSI_DATE", date);
-		List<PageData>	varList = permissionchangestatisticsService.list(page);	//列出PermissionChangeStatistics列表
+		List<PageData> listBusiDate = DateUtil.getMonthList("BUSI_DATE", date);
+		List<PageData> varList = permissionchangestatisticsService.list(page); // 列出PermissionChangeStatistics列表
 		mv.setViewName("dataReporting/permissionchangestatistics/permissionchangestatistics_list");
 		mv.addObject("varList", varList);
-		mv.addObject("listBusiDate",listBusiDate);
+		mv.addObject("isTheSameMonth", theSameMonth.equals(pd.get("busiDate").toString()) ? 1 : 0);
+		mv.addObject("listBusiDate", listBusiDate);
 		mv.addObject("pd", pd);
-		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
-		
+		mv.addObject("QX", Jurisdiction.getHC()); // 按钮权限
+
 		Map_SetColumnsList.put("COMPANY_NAME", new TmplConfigDetail("COMPANY_NAME", "单位", "1", false));
 		Map_SetColumnsList.put("ACCOUNT_DELAY", new TmplConfigDetail("AGENCY_OPER_NUM", "机关计算机运维数量", "1", false));
 		Map_SetColumnsList.put("ACCOUNT_DELAY", new TmplConfigDetail("NETWORK_OPER_NUM", "网络运维数量", "1", false));
 		Map_SetColumnsList.put("SECURITY_OPER_NUM", new TmplConfigDetail("SECURITY_OPER_NUM", "信息安全运维数量", "1", false));
 		Map_SetColumnsList.put("ERP_OPER_NUM", new TmplConfigDetail("ERP_OPER_NUM", "ERP运维数量", "1", false));
 		Map_SetColumnsList.put("TOTAL_OPER_NUM", new TmplConfigDetail("TOTAL_OPER_NUM", "合计", "1", false));
-		
+
 		return mv;
 	}
-	
-	/**批量删除
+
+	/**
+	 * 批量删除
+	 * 
 	 * @param
 	 * @throws Exception
 	 */
-	@RequestMapping(value="/deleteAll")
+	@RequestMapping(value = "/deleteAll")
 	@ResponseBody
-	public CommonBase deleteAll() throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"批量删除PermissionChangeStatistics");
-		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return null;} //校验权限
+	public CommonBase deleteAll() throws Exception {
+		logBefore(logger, Jurisdiction.getUsername() + "批量删除PermissionChangeStatistics");
+		// if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return null;} //校验权限
 		PageData pd = new PageData();
 		CommonBase commonBase = new CommonBase();
 		commonBase.setCode(-1);
 		pd = this.getPageData();
 		String DATA_IDS = pd.getString("DATA_IDS");
-		if(null != DATA_IDS && !"".equals(DATA_IDS)){
+		if (null != DATA_IDS && !"".equals(DATA_IDS)) {
 			String ArrayDATA_IDS[] = DATA_IDS.split(",");
-				permissionchangestatisticsService.deleteAll(ArrayDATA_IDS);
+			permissionchangestatisticsService.deleteAll(ArrayDATA_IDS);
 			commonBase.setCode(0);
-		}else{
+		} else {
 			commonBase.setCode(-1);
 		}
 		return commonBase;
 	}
-	
+
 	/**
 	 * 打开上传EXCEL页面
 	 * 
@@ -210,7 +220,7 @@ public class PermissionChangeStatisticsController extends BaseController {
 		mv.addObject("commonMessage", commonBase.getMessage());
 		return mv;
 	}
-	
+
 	/**
 	 * 下载模版
 	 * 
@@ -222,9 +232,9 @@ public class PermissionChangeStatisticsController extends BaseController {
 
 		PageData getPd = this.getPageData();
 		List<PageData> varOList = permissionchangestatisticsService.exportModel(getPd);
-		return export(varOList, "PermissionChangeStatistics",Map_SetColumnsList);
+		return export(varOList, "PermissionChangeStatistics", Map_SetColumnsList);
 	}
-	
+
 	/**
 	 * 导出到excel
 	 * 
@@ -243,7 +253,7 @@ public class PermissionChangeStatisticsController extends BaseController {
 		List<PageData> varOList = permissionchangestatisticsService.exportList(page);
 		return export(varOList, "", Map_SetColumnsList);
 	}
-	
+
 	private ModelAndView export(List<PageData> varOList, String ExcelName,
 			Map<String, TmplConfigDetail> map_SetColumnsList) throws Exception {
 		ModelAndView mv = new ModelAndView();
@@ -264,7 +274,7 @@ public class PermissionChangeStatisticsController extends BaseController {
 					for (TmplConfigDetail col : map_SetColumnsList.values()) {
 						if (col.getCOL_HIDE().equals("1")) {
 							Object getCellValue = varOList.get(i).get(col.getCOL_CODE().toUpperCase());
-							if(null == getCellValue) {
+							if (null == getCellValue) {
 								getCellValue = "";
 							}
 							vpd.put("var" + j, getCellValue.toString());
@@ -281,7 +291,7 @@ public class PermissionChangeStatisticsController extends BaseController {
 		mv = new ModelAndView(erv, dataMap);
 		return mv;
 	}
-	
+
 	/**
 	 * 从EXCEL导入到数据库
 	 * 
@@ -296,8 +306,8 @@ public class PermissionChangeStatisticsController extends BaseController {
 		CommonBase commonBase = new CommonBase();
 		commonBase.setCode(-1);
 
-		//String strErrorMessage = "";
-		//PageData getPd = this.getPageData();
+		// String strErrorMessage = "";
+		// PageData getPd = this.getPageData();
 		Map<String, Object> DicList = new HashMap<String, Object>();
 
 		// 局部变量
@@ -312,7 +322,7 @@ public class PermissionChangeStatisticsController extends BaseController {
 			Map<String, String> titleAndAttribute = null;
 			// 定义对应的标题名与对应属性名
 			titleAndAttribute = new LinkedHashMap<String, String>();
-			
+
 			// 配置表设置列
 			if (Map_SetColumnsList != null && Map_SetColumnsList.size() > 0) {
 				for (TmplConfigDetail col : Map_SetColumnsList.values()) {
@@ -338,14 +348,14 @@ public class PermissionChangeStatisticsController extends BaseController {
 			judgement = true;
 		}
 		if (judgement) {
-			User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+			User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 			for (PageData pageData : listUploadAndRead) {
-				//将每条数据插入新内容
-				pageData.put("USER_DEPART",StringUtil.toString(user.getUNIT_CODE(), ""));
-				pageData.put("BUSI_DATE",DateUtils.getCurrentDateMonth()); //业务期间
-				pageData.put("STATE","1");
-				pageData.put("BILL_USER",user.getUSER_ID());
-				pageData.put("BILL_DATE",DateUtils.getCurrentTime(DateFormatUtils.TIME_NOFUll_FORMAT));
+				// 将每条数据插入新内容
+				pageData.put("USER_DEPART", StringUtil.toString(user.getUNIT_CODE(), ""));
+				pageData.put("BUSI_DATE", DateUtils.getCurrentDateMonth()); // 业务期间
+				pageData.put("STATE", "1");
+				pageData.put("BILL_USER", user.getUSER_ID());
+				pageData.put("BILL_DATE", DateUtils.getCurrentTime(DateFormatUtils.TIME_NOFUll_FORMAT));
 			}
 			permissionchangestatisticsService.grcUpdateDatabase(listUploadAndRead);
 			commonBase.setCode(0);
@@ -360,157 +370,170 @@ public class PermissionChangeStatisticsController extends BaseController {
 		mv.addObject("commonMessage", commonBase.getMessage());
 		return mv;
 	}
+
 	@InitBinder
-	public void initBinder(WebDataBinder binder){
+	public void initBinder(WebDataBinder binder) {
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		binder.registerCustomEditor(Date.class, new CustomDateEditor(format,true));
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(format, true));
 	}
-	/**显示问题统计列表
+
+	/**
+	 * 显示问题统计列表
+	 * 
 	 * @param page
 	 * @throws Exception
 	 */
-	@RequestMapping(value="/listPermissonChangeStatistic")
-	public ModelAndView listPermissonChangeStatistic(Page page) throws Exception{
-		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
+	@RequestMapping(value = "/listPermissonChangeStatistic")
+	public ModelAndView listPermissonChangeStatistic(Page page) throws Exception {
+		// if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;}
+		// //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = this.getPageData();
-		page.setPd(pd);	
-		if(null!=pd.getString("YEAR_MONTH")&&!"".equals(pd.getString("YEAR_MONTH"))){
+		page.setPd(pd);
+		if (null != pd.getString("YEAR_MONTH") && !"".equals(pd.getString("YEAR_MONTH"))) {
 			pd.put("YEAR_MONTH", pd.getString("YEAR_MONTH").replace("-", ""));
 		}
-		if(null!=pd.getString("WEEKSTEXT")&&!"".equals(pd.getString("WEEKSTEXT"))){
-			String startDate=pd.getString("WEEKSTEXT").substring(4, 14);
-			String endDate=pd.getString("WEEKSTEXT").substring(15, 25);
+		if (null != pd.getString("WEEKSTEXT") && !"".equals(pd.getString("WEEKSTEXT"))) {
+			String startDate = pd.getString("WEEKSTEXT").substring(4, 14);
+			String endDate = pd.getString("WEEKSTEXT").substring(15, 25);
 			pd.put("START_DATE", startDate.replace("-", ""));
 			pd.put("END_DATE", endDate.replace("-", ""));
-			//当选择"周"时，按周查询，不按期间查询
-			pd.put("YEAR_MONTH","");
+			// 当选择"周"时，按周查询，不按期间查询
+			pd.put("YEAR_MONTH", "");
 		}
-		List<PageData> varList=permissionchangestatisticsService.listByUnit(page);
+		List<PageData> varList = permissionchangestatisticsService.listByUnit(page);
 		mv.setViewName("statisticAnalysis/permissionchangestatistics/permissionChangeStatistics_list");
-		mv.addObject("varList",varList);
+		mv.addObject("varList", varList);
 		return mv;
 	}
-	/**显示问题统计列表
+
+	/**
+	 * 显示问题统计列表
+	 * 
 	 * @param page
 	 * @throws Exception
 	 */
-	@RequestMapping(value="/queryPermissonData")
-	public @ResponseBody List<PageData> queryPermissonData(Page page) throws Exception{
+	@RequestMapping(value = "/queryPermissonData")
+	public @ResponseBody List<PageData> queryPermissonData(Page page) throws Exception {
 		PageData pd = this.getPageData();
-		page.setPd(pd);	
-		if(null!=pd.getString("YEAR_MONTH")&&!"".equals(pd.getString("YEAR_MONTH"))){
+		page.setPd(pd);
+		if (null != pd.getString("YEAR_MONTH") && !"".equals(pd.getString("YEAR_MONTH"))) {
 			pd.put("YEAR_MONTH", pd.getString("YEAR_MONTH").replace("-", ""));
 		}
-		if(null!=pd.getString("WEEKSTEXT")&&!"".equals(pd.getString("WEEKSTEXT"))){
-			String startDate=pd.getString("WEEKSTEXT").substring(4, 14);
-			String endDate=pd.getString("WEEKSTEXT").substring(15, 25);
+		if (null != pd.getString("WEEKSTEXT") && !"".equals(pd.getString("WEEKSTEXT"))) {
+			String startDate = pd.getString("WEEKSTEXT").substring(4, 14);
+			String endDate = pd.getString("WEEKSTEXT").substring(15, 25);
 			pd.put("START_DATE", startDate.replace("-", ""));
 			pd.put("END_DATE", endDate.replace("-", ""));
-			//当选择"周"时，按周查询，不按期间查询
-			pd.put("YEAR_MONTH","");
+			// 当选择"周"时，按周查询，不按期间查询
+			pd.put("YEAR_MONTH", "");
 		}
-		List<PageData> varList=permissionchangestatisticsService.listByUnit(page);
+		List<PageData> varList = permissionchangestatisticsService.listByUnit(page);
 
 		return varList;
 	}
-	/**按月获取周及日期范围
+
+	/**
+	 * 按月获取周及日期范围
+	 * 
 	 * @param
 	 * @throws Exception
 	 */
-	@RequestMapping(value="/getWeeks")
-	public @ResponseBody List<PageData> getWeeks()throws Exception{
+	@RequestMapping(value = "/getWeeks")
+	public @ResponseBody List<PageData> getWeeks() throws Exception {
 		PageData pd = this.getPageData();
-		List<PageData> lists=new ArrayList<PageData>();
-		if(null!=pd.getString("YEAR_MONTH")&&!"".equals(pd.getString("YEAR_MONTH"))){
-			String year=pd.getString("YEAR_MONTH").split("-")[0];
-			String month=pd.getString("YEAR_MONTH").split("-")[1];
+		List<PageData> lists = new ArrayList<PageData>();
+		if (null != pd.getString("YEAR_MONTH") && !"".equals(pd.getString("YEAR_MONTH"))) {
+			String year = pd.getString("YEAR_MONTH").split("-")[0];
+			String month = pd.getString("YEAR_MONTH").split("-")[1];
 			int i = 1;
-			//当前月第一天
-			String weekStart=pd.getString("YEAR_MONTH")+"-01";
-			//当前月第一天是星期几
-			int dayOfWeek=DateWeek.getTheFirstDayWeekOfMonth(Integer.parseInt(year), Integer.parseInt(month),1);
-			//该月的最后一天
-			String monEnd=DateWeek.getLastDayOfMonth(Integer.parseInt(year),Integer.parseInt(month));
-			//该月第一周结束日期
-			 String weekEnd = dayOfWeek == 0 ? weekStart : DateWeek.addDays(weekStart,(7 - dayOfWeek));
-			 String str = "第" + i + "周(" + weekStart +"/" + weekEnd+ ")";
-			 PageData p = new PageData();
-			 p.put("ID",i);
-			 p.put("Name",str);
-			 lists.add(p);
-			 //当日期小于或等于该月的最后一天
-			 while (DateWeek.addDays(weekEnd,1).compareTo(monEnd)<=0)
-			 {
-			   i++;
-			  //该周的开始时间
-			  weekStart = DateWeek.addDays(weekEnd,1);
-			  //该周结束时间
-			  weekEnd = (DateWeek.addDays(weekEnd,1).compareTo(monEnd)>0) ? monEnd : DateWeek.addDays(weekEnd,7);
-			  str = "第" + i + "周(" + weekStart + "/" + weekEnd + ")";
-			  PageData p1 = new PageData();
-				 p1.put("ID",i);
-				 p1.put("Name",str);
-				 lists.add(p1);
-			 }		
+			// 当前月第一天
+			String weekStart = pd.getString("YEAR_MONTH") + "-01";
+			// 当前月第一天是星期几
+			int dayOfWeek = DateWeek.getTheFirstDayWeekOfMonth(Integer.parseInt(year), Integer.parseInt(month), 1);
+			// 该月的最后一天
+			String monEnd = DateWeek.getLastDayOfMonth(Integer.parseInt(year), Integer.parseInt(month));
+			// 该月第一周结束日期
+			String weekEnd = dayOfWeek == 0 ? weekStart : DateWeek.addDays(weekStart, (7 - dayOfWeek));
+			String str = "第" + i + "周(" + weekStart + "/" + weekEnd + ")";
+			PageData p = new PageData();
+			p.put("ID", i);
+			p.put("Name", str);
+			lists.add(p);
+			// 当日期小于或等于该月的最后一天
+			while (DateWeek.addDays(weekEnd, 1).compareTo(monEnd) <= 0) {
+				i++;
+				// 该周的开始时间
+				weekStart = DateWeek.addDays(weekEnd, 1);
+				// 该周结束时间
+				weekEnd = (DateWeek.addDays(weekEnd, 1).compareTo(monEnd) > 0) ? monEnd : DateWeek.addDays(weekEnd, 7);
+				str = "第" + i + "周(" + weekStart + "/" + weekEnd + ")";
+				PageData p1 = new PageData();
+				p1.put("ID", i);
+				p1.put("Name", str);
+				lists.add(p1);
+			}
 		}
 		return lists;
 	}
-	 /**导出权限变更统计表到excel
+
+	/**
+	 * 导出权限变更统计表到excel
+	 * 
 	 * @param
 	 * @throws Exception
 	 */
-	@RequestMapping(value="/qxStatisticExcel")
-	public ModelAndView listStatisticExcel(Page page) throws Exception{
+	@RequestMapping(value = "/qxStatisticExcel")
+	public ModelAndView listStatisticExcel(Page page) throws Exception {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = this.getPageData();
-		page.setPd(pd);	
-		if(null!=pd.getString("YEAR_MONTH")&&!"".equals(pd.getString("YEAR_MONTH"))){
+		page.setPd(pd);
+		if (null != pd.getString("YEAR_MONTH") && !"".equals(pd.getString("YEAR_MONTH"))) {
 			pd.put("YEAR_MONTH", pd.getString("YEAR_MONTH").replace("-", ""));
 		}
-		if(null!=pd.getString("WEEKSTEXT")&&!"".equals(pd.getString("WEEKSTEXT"))){
-			String startDate=pd.getString("WEEKSTEXT").substring(4, 14);
-			String endDate=pd.getString("WEEKSTEXT").substring(15, 25);
+		if (null != pd.getString("WEEKSTEXT") && !"".equals(pd.getString("WEEKSTEXT"))) {
+			String startDate = pd.getString("WEEKSTEXT").substring(4, 14);
+			String endDate = pd.getString("WEEKSTEXT").substring(15, 25);
 			pd.put("START_DATE", startDate.replace("-", ""));
 			pd.put("END_DATE", endDate.replace("-", ""));
-			//当选择"周"时，按周查询，不按期间查询
-			pd.put("YEAR_MONTH","");
+			// 当选择"周"时，按周查询，不按期间查询
+			pd.put("YEAR_MONTH", "");
 		}
-		Map<String,Object> dataMap = new HashMap<String,Object>();
+		Map<String, Object> dataMap = new HashMap<String, Object>();
 		List<String> titles = new ArrayList<String>();
-		titles.add("公司名称");	//1
-		titles.add("帐号延期");	//2
-		titles.add("帐号解除锁定");	//3
-		titles.add("新增角色");	//4
-		titles.add("删除角色");	//5
-		titles.add("帐号新增");	//6
-		titles.add("帐号删除");	//7
-		titles.add("增加FMIS角色");	//8
-		titles.add("删除FMIS角色");	//9
-		titles.add("变更用户组");	//10
-		titles.add("变更人次");	//11
+		titles.add("公司名称"); // 1
+		titles.add("帐号延期"); // 2
+		titles.add("帐号解除锁定"); // 3
+		titles.add("新增角色"); // 4
+		titles.add("删除角色"); // 5
+		titles.add("帐号新增"); // 6
+		titles.add("帐号删除"); // 7
+		titles.add("增加FMIS角色"); // 8
+		titles.add("删除FMIS角色"); // 9
+		titles.add("变更用户组"); // 10
+		titles.add("变更人次"); // 11
 		dataMap.put("titles", titles);
 		List<PageData> varOList = permissionchangestatisticsService.listByUnit(page);
 		List<PageData> varList = new ArrayList<PageData>();
-		for(int i=0;i<varOList.size();i++){
+		for (int i = 0; i < varOList.size(); i++) {
 			PageData vpd = new PageData();
-			vpd.put("var1", varOList.get(i).getString("COMPANY_NAME"));	    //1
-			vpd.put("var2", varOList.get(i).get("ACCOUNT_DELAY").toString());	    //2
-			vpd.put("var3", varOList.get(i).get("ACCOUNT_UNLOCK").toString());	    //3
-			vpd.put("var4", varOList.get(i).get("NEW_ROLES").toString());	    //4
-			vpd.put("var5", varOList.get(i).get("DELETE_ROLES").toString());	    //5
-			vpd.put("var6", varOList.get(i).get("NEW_ACCOUNTS").toString());	    //6
-			vpd.put("var7", varOList.get(i).get("DELETE_ACCOUNTS").toString());	    //7
-			vpd.put("var8", varOList.get(i).get("NEW_FMIS_ROLES").toString());	    //8
-			vpd.put("var9", varOList.get(i).get("DELETE_FMIS_ROLES").toString());	    //9
-			vpd.put("var10", varOList.get(i).get("CHANGE_USER_GROUP").toString());	    //10
-			vpd.put("var11", varOList.get(i).get("CHANGE_PERSON_COUNT").toString());	    //11
+			vpd.put("var1", varOList.get(i).getString("COMPANY_NAME")); // 1
+			vpd.put("var2", varOList.get(i).get("ACCOUNT_DELAY").toString()); // 2
+			vpd.put("var3", varOList.get(i).get("ACCOUNT_UNLOCK").toString()); // 3
+			vpd.put("var4", varOList.get(i).get("NEW_ROLES").toString()); // 4
+			vpd.put("var5", varOList.get(i).get("DELETE_ROLES").toString()); // 5
+			vpd.put("var6", varOList.get(i).get("NEW_ACCOUNTS").toString()); // 6
+			vpd.put("var7", varOList.get(i).get("DELETE_ACCOUNTS").toString()); // 7
+			vpd.put("var8", varOList.get(i).get("NEW_FMIS_ROLES").toString()); // 8
+			vpd.put("var9", varOList.get(i).get("DELETE_FMIS_ROLES").toString()); // 9
+			vpd.put("var10", varOList.get(i).get("CHANGE_USER_GROUP").toString()); // 10
+			vpd.put("var11", varOList.get(i).get("CHANGE_PERSON_COUNT").toString()); // 11
 			varList.add(vpd);
 		}
 		dataMap.put("varList", varList);
 		ObjectExcelView erv = new ObjectExcelView();
-		mv = new ModelAndView(erv,dataMap);
+		mv = new ModelAndView(erv, dataMap);
 		return mv;
-		
+
 	}
 }

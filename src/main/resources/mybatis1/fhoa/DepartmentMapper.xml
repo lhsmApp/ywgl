@@ -202,4 +202,10 @@
 	    FROM 
         <include refid="tableName"></include>
 	</select>
+	<!-- 获得全部 名称和id对应关系 -->
+	<select id="getAllNameAndId" parameterType="pd" resultType="pd">
+	    SELECT NAME,DEPARTMENT_CODE
+	    FROM 
+        <include refid="tableName"></include>
+	</select>
 </mapper>

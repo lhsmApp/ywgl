@@ -107,16 +107,18 @@ public class CourseTypeController extends BaseController {
 		if(null != keywords && !"".equals(keywords)){
 			pd.put("keywords", keywords.trim());
 		}
-		String COURSETYPE_ID = null == pd.get("COURSETYPE_ID")?"":pd.get("COURSETYPE_ID").toString();
+		String COURSE_TYPE_ID = null == pd.get("COURSE_TYPE_ID")?"":pd.get("COURSE_TYPE_ID").toString();
 		if(null != pd.get("id") && !"".equals(pd.get("id").toString())){
-			COURSETYPE_ID = pd.get("id").toString();
+			COURSE_TYPE_ID = pd.get("id").toString();
 		}
-		pd.put("COURSETYPE_ID", COURSETYPE_ID);					//上级ID
+		pd.put("COURSE_TYPE_ID", COURSE_TYPE_ID);					//上级ID
+		pd.put("COURSETYPE_ID", COURSE_TYPE_ID);					//上级ID(兼容)
 		page.setPd(pd);
+		mv.addObject("keywords",keywords);
 		List<PageData>	varList = coursetypeService.list(page);			//列出CourseType列表
 		mv.setViewName("trainBase/coursetype/coursetype_list");
 		mv.addObject("pd", coursetypeService.findById(pd));				//传入上级所有信息
-		mv.addObject("COURSETYPE_ID", COURSETYPE_ID);			//上级ID
+		mv.addObject("COURSETYPE_ID", COURSE_TYPE_ID);			//上级ID
 		mv.addObject("varList", varList);
 		return mv;
 	}
@@ -156,7 +158,10 @@ public class CourseTypeController extends BaseController {
 		pd = this.getPageData();
 		String COURSETYPE_ID = null == pd.get("COURSETYPE_ID")?"":pd.get("COURSETYPE_ID").toString();
 		pd.put("COURSETYPE_ID", COURSETYPE_ID);					//上级ID
+		pd.put("COURSE_TYPE_ID", COURSETYPE_ID);					//上级ID(兼容）
+		pd.put("COURSE_TYPE_PARENT_ID", COURSETYPE_ID);					//上级ID(兼容）
 		mv.addObject("pds",coursetypeService.findById(pd));				//传入上级所有信息
+		mv.addObject("pd", pd);			
 		mv.addObject("COURSETYPE_ID", COURSETYPE_ID);			//传入ID，作为子级ID用
 		mv.setViewName("trainBase/coursetype/coursetype_edit");
 		mv.addObject("msg", "save");
@@ -171,15 +176,15 @@ public class CourseTypeController extends BaseController {
 	public ModelAndView goEdit()throws Exception{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
+		PageData pdParent = new PageData();//查询父节点名称
+		
 		pd = this.getPageData();
-		String COURSETYPE_ID = pd.getString("COURSETYPE_ID");
-		pd = coursetypeService.findById(pd);							//根据ID读取		
-		mv.addObject("pd", pd);													//放入视图容器
-		pd.put("COURSETYPE_ID",pd.get("COURSE_TYPE_PARENT_ID").toString());			//用作上级信息
-		mv.addObject("pds",coursetypeService.findById(pd));				//传入上级所有信息
-		mv.addObject("COURSETYPE_ID", pd.get("COURSE_TYPE_PARENT_ID").toString());	//传入上级ID，作为子ID用
-		pd.put("COURSETYPE_ID",COURSETYPE_ID);					//复原本ID
-		pd = coursetypeService.findById(pd);							//根据ID读取
+		pd.put("COURSETYPE_ID",pd.getString("COURSE_TYPE_ID"));//兼容
+		pd = coursetypeService.findById(pd);//根据ID获取当前节点数据		
+		mv.addObject("pd", pd);	//放入视图容器
+		pdParent.put("COURSE_TYPE_ID",pd.get("COURSE_TYPE_PARENT_ID").toString());//将上级的id放入准备查询
+		mv.addObject("pds",coursetypeService.findById(pdParent));//传入上级所有信息
+		mv.addObject("COURSETYPE_ID", pd.get("COURSE_TYPE_PARENT_ID").toString());//传入上级ID，作为子ID用
 		mv.setViewName("trainBase/coursetype/coursetype_edit");
 		mv.addObject("msg", "edit");
 		return mv;

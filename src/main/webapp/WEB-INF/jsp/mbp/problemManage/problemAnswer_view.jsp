@@ -22,17 +22,17 @@
 			<div class="page-content">
 				<div class="row">
 					<div class="col-xs-12">
-						<h5 class="lighter block blue"><i class="ace-icon fa fa-rss blue"></i>&nbsp;问题详情</h5>
+						<h5 class="lighter block blue"><i class="ace-icon fa fa-rss blue"></i>&nbsp;回复内容</h5>
 						<hr />
 						<div style="padding-top: 0px;" class="clearfix">
-							<div>
+							<%-- <div>
 								<label class="inline" style="margin-bottom:5px;">
 									<span class="list-item-value-title">${pd.PRO_TITLE}</span>
 								</label>
-							<div>
+							<div> --%>
 
 							<div style="word-wrap:break-word">
-								${pd.PRO_CONTENT}
+								${pd.ANSWER_CONTENT}
 							</div>
 							
 							
@@ -65,7 +65,7 @@
 						</table>
 					</div>
 				</div>
-				
+					
 			</div>
 			<!-- /.page-content -->
 		</div>
@@ -132,7 +132,7 @@
 	}
 	
 	$(function() {
-		getAttachment('${pd.PRO_CODE}','PROBLEM_INFO');
+		getAttachment('${pd.ANSWER_ID}','PROBLEM_ANSWER');
 	});
 	</script>
 </body>

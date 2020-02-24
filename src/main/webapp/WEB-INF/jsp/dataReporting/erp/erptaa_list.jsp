@@ -27,9 +27,8 @@
 <!--自由拉动  -->
  <link rel="stylesheet" href="static/ace/css/jquery-ui.css" />
 <style>
-    .mtable{width:auto;border-collapse:collapse;border:1px solid black;}
-    .mtable th, .mtable td{height:30px;text-align:center;border:1px solid black;}
-    .mtable th, .mtable td{position:relative;background-clip:padding-box;}
+    .mtable{width:auto;border-collapse:collapse;}
+    .mtable input{background: #FFF !important;border: none;}
 </style>
 </head>
 <body class="no-skin">
@@ -70,7 +69,7 @@
 								<td>
 									<c:if test="${not empty listBusiDate}"> 	
 										<select class="form-control" id="busiDate" name="busiDate" style="width:150px;margin-left: 5px;">
-											<option value=""></option>
+											<!-- <option value=""></option> -->
 											<c:forEach items="${listBusiDate}" var="var">
 												<option value="${var.BUSI_DATE}" <c:if test="${pd.busiDate == var.BUSI_DATE}">selected="selected"</c:if>>${var.BUSI_DATE}</option>
 											</c:forEach>
@@ -98,26 +97,26 @@
 								</td>
 							</tr>
 						</table>
-						<div style="width: 100%; overflow: auto;height:500px;">
-						<table id="simple-table" class="mtable" style="margin-top:5px; width: 1585px;">	
+						<div style="width: 100%; overflow: auto;min-height: 500px;">
+						<table id="simple-table" class="mtable table table-bordered" style="margin-top:5px; width: 1585px;">	
 							<thead>
 								<tr>
-									<th class="center" style="width:45px; background-color: #BEBEC5; padding-left: 5px;padding-right:5px;">序号</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">员工编号</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">员工姓名</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">二级单位</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">三级单位</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">职务</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">岗位</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">模块</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">联络电话</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">电子邮件</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">申请日期</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">撤销日期</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">申请临时原因</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">UKey编号</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;">备注</th>
-									<th style="width:110px; background-color: #BEBEC5; text-align: center;padding-left: 12px;padding-right:12px;">审批状态</th>
+									<th class="center" style="width:45px;  padding-left: 5px;padding-right:5px;">序号</th>
+									<th style="width:110px;  text-align: center;">员工编号</th>
+									<th style="width:110px;  text-align: center;">员工姓名</th>
+									<th style="width:110px;  text-align: center;">二级单位</th>
+									<th style="width:110px;  text-align: center;">三级单位</th>
+									<th style="width:110px;  text-align: center;">职务</th>
+									<th style="width:110px;  text-align: center;">岗位</th>
+									<th style="width:110px;  text-align: center;">模块</th>
+									<th style="width:110px;  text-align: center;">联络电话</th>
+									<th style="width:110px;  text-align: center;">电子邮件</th>
+									<th style="width:110px;  text-align: center;">申请日期</th>
+									<th style="width:110px;  text-align: center;">撤销日期</th>
+									<th style="width:110px;  text-align: center;">申请临时原因</th>
+									<th style="width:110px;  text-align: center;">UKey编号</th>
+									<th style="width:110px;  text-align: center;">备注</th>
+									<th style="width:110px;  text-align: center;padding-left: 12px;padding-right:12px;">审批状态</th>
 								</tr>
 							</thead>
 													
