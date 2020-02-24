@@ -281,7 +281,12 @@
 			and
 				(
 				BG_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				 or 
+				BG_REASON LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				 or 
+				BILL_DATE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 				)
+
 		</if>
 		</where>
 	</select>

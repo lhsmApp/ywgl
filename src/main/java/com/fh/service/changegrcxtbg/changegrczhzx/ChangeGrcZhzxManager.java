@@ -30,6 +30,11 @@ public interface ChangeGrcZhzxManager{
 	 */
 	public void edit(PageData pd)throws Exception;
 	
+	/**变更内容更新
+	 * @param pd
+	 * @throws Exception
+	 */
+	public void updateEdit(PageData pd)throws Exception;
 	/**列表
 	 * @param page
 	 * @throws Exception

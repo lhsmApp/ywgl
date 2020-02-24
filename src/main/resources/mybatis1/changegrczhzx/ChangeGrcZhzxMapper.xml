@@ -106,6 +106,29 @@
 		BILL_CODE = #{BILL_CODE}
 	</update>
 	
+	<!-- 修改 -->
+	<update id="updateEdit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			UNIT_CODE = #{UNIT_CODE},
+			DEPT_CODE = #{DEPT_CODE},
+<!-- 			ENTRY_DATE = #{ENTRY_DATE}, -->
+<!-- 			SERIAL_NUM = #{SERIAL_NUM}, -->
+			USER_CODE = #{USER_CODE},
+			USER_DEPT = #{USER_DEPT},
+			USER_JOB = #{USER_JOB},
+			USER_CONTACT = #{USER_CONTACT},
+			EFFECTIVE_DATE = #{EFFECTIVE_DATE},
+<!-- 			SYSTEM = #{SYSTEM}, -->
+<!-- 			ACCOUNT_NAME = #{ACCOUNT_NAME}, -->
+			CANCLE_REASON = #{CANCLE_REASON}
+<!-- 			BILL_STATE = #{BILL_STATE}, -->
+<!-- 			BILL_USER = #{BILL_USER}, -->
+<!-- 			BILL_DATE = #{BILL_DATE} -->
+		where 
+		BILL_CODE = #{BILL_CODE}
+	</update>
 	<!-- 通过ID获取数据 -->
 	<select id="findById" parameterType="pd" resultType="pd">
 		SELECT 

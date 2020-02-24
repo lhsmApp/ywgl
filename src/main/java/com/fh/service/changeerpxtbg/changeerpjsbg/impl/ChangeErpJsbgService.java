@@ -44,6 +44,13 @@ public class ChangeErpJsbgService implements ChangeErpJsbgManager{
 		dao.update("ChangeErpJsbfMapper.edit", pd);
 	}
 	
+	/**修改
+	 * @param pd
+	 * @throws Exception
+	 */
+	public void updateEdit(PageData pd)throws Exception{
+		dao.update("ChangeErpJsbfMapper.updateEdit", pd);
+	}
 	/**列表
 	 * @param page
 	 * @throws Exception

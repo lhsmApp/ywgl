@@ -117,7 +117,25 @@
 		where 
 		BILL_CODE = #{BILL_CODE}
 	</update>
-	
+		<!-- 对角色变更内容进行修改 -->
+	<update id="updateEdit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 		
+			UNIT_CODE = #{UNIT_CODE},
+			DEPT_CODE = #{DEPT_CODE},
+			USER_CODE = #{USER_CODE},
+			USER_DEPT = #{USER_DEPT},
+			USER_JOB = #{USER_JOB},
+			USER_CONTACT = #{USER_CONTACT},
+			BG_NAME = #{BG_NAME},
+			BG_REASON = #{BG_REASON},		
+			ADD_ROLE = #{ADD_ROLE},
+			DEL_ROLE = #{DEL_ROLE},
+			EFFECTIVE_DATE = #{EFFECTIVE_DATE}
+		where 
+		BILL_CODE = #{BILL_CODE}
+	</update>
 	<!-- 通过ID获取数据 -->
 	<select id="findById" parameterType="pd" resultType="pd">
 		SELECT 

@@ -29,6 +29,11 @@ public interface ChangeErpJsbgManager{
 	 * @throws Exception
 	 */
 	public void edit(PageData pd)throws Exception;
+	/**变更内容修改
+	 * @param pd
+	 * @throws Exception
+	 */
+	public void updateEdit(PageData pd)throws Exception;
 	
 	/**列表
 	 * @param page
