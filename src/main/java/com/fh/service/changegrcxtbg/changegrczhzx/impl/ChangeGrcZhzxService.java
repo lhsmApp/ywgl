@@ -44,6 +44,13 @@ public class ChangeGrcZhzxService implements ChangeGrcZhzxManager{
 		dao.update("ChangeGrcZhzxMapper.edit", pd);
 	}
 	
+	/**变更内容更新
+	 * @param pd
+	 * @throws Exception
+	 */
+	public void updateEdit(PageData pd)throws Exception{
+		dao.update("ChangeGrcZhzxMapper.updateEdit", pd);
+	}
 	/**列表
 	 * @param page
 	 * @throws Exception

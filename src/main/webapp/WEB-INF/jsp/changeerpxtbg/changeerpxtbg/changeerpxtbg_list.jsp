@@ -53,7 +53,8 @@
 							    <div class="widget-box" >
 								    <div class="widget-body">
 									    <div class="widget-main">
-										    <form class="form-inline">
+										 <form action="changeerpxtbg/getPageList.do" >
+								 		</form>
 												<span class="input-icon pull-left" style="margin-right: 5px;">
 													<input id="SelectedBillCode" class="nav-search-input" autocomplete="off" type="text" name="SelectedBillCode" value="${pd.keywords }" placeholder="请输入变更申请名称"> 
 													<i class="ace-icon fa fa-search nav-search-icon"></i>
@@ -79,7 +80,7 @@
 												 <label class="btn btn-sm btn-pink" onclick="printf(bill_code)">
 												     <i class="ace-icon fa fa-print bigger-110"></i>打印
 												 </label>										
-										    </form>
+									
 									    </div>
 								    </div>
 							    </div>
@@ -91,7 +92,8 @@
 							<ul id="tasks" class="item-list">
 							
 							</ul>	
-							<div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div>
+							<%-- <div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div> --%>
+							<div id="page" class="pagination" style="float: right;padding-top: 5px;margin-top: 0px;font-size:12px;"></div>
 															
 					</div>					
 					<div class="col-xs-8">
@@ -255,12 +257,12 @@
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 	<script type="text/javascript">
 	    var bill_code=undefined;
+	    var initUrl='<%=basePath%>changeerpxtbg/getPageList.do';
 	    //var unit_Code=undefined;
 		$(top.hangge());//关闭加载状态
 		$(function() {
 			
-			var data=${varList};
-			showDetail(data[0].BILL_CODE);
+			//showDetail(data[0].BILL_CODE);
 			//日期框
 				$("#EFFECTIVE_DATE" ).datepicker({
 				showOtherMonths: true,
@@ -293,7 +295,7 @@
 					if(which == 2) $('#form-field-select-4').addClass('tag-input-style');
 					 else $('#form-field-select-4').removeClass('tag-input-style');
 				});
-				initList();
+				initList(initUrl);
 			}
 			
 			
@@ -338,7 +340,7 @@
 					var url = "<%=basePath%>changeerpxtbg/delete.do?BILL_CODE="+encodeURI(Id);
 					$.get(url,function(data){
 						//nextPage(${page.currentPage});
-						initList();
+						initList(initUrl);
 					});
 				}
 			});
@@ -397,7 +399,7 @@
 							message: "<span class='bigger-110'>保存失败</span>",
 						});		
 					}
-					initList();
+					initList(initUrl);
 					showDetail(billCode);
 				},
 		    	error: function(response) {
@@ -416,6 +418,7 @@
 		    var html = '';
 		    for(var i = 0;i<data.length;i++){
 		        html += setDiv(data[i]);
+		    	
 		    }
 		    //document.getElementById("tasks").innerHTML = html;
 			$('#tasks').html(html);
@@ -457,6 +460,7 @@
 		            //返回数据的格式
 		        	dataType:'json',		          
 		            success:function(datas){
+		            	console.log(datas);
 		            	//全局变量存放当前点击的变更申请单号
 		            	bill_code=datas.BILL_CODE;
 		            	var html = '';
@@ -552,29 +556,30 @@
 
 		//搜索
 		function tosearch(){
-			$("#tasks li").remove(); 
-			top.jzts();
-			var keywords = $("#SelectedBillCode").val();
-			$.ajax({
-					type: "POST",
-					url: '<%=basePath%>changeerpxtbg/getPageList.do',
-			    	data: {keywords:keywords},
-					dataType:'json',
-					cache: false,
-					success: function(data){
-						if(data.length>0){
-							$.each(data, function(i, item){
-							    var html = '';
-							        html += setDiv(item);
-								$("#tasks").append(html);
-						 	});
-						}
-						else{
-							addEmpty();
-						}
-						top.hangge();
-					}
-			});
+			initList('<%=basePath%>changeerpxtbg/getPageList.do');
+// 			$("#tasks li").remove(); 
+// 			top.jzts();
+// 			var keywords = $("#SelectedBillCode").val();
+// 			$.ajax({
+// 					type: "POST",
+<%-- 					url: '<%=basePath%>changeerpxtbg/getPageList.do', --%>
+// 			    	data: {keywords:keywords},
+// 					dataType:'json',
+// 					cache: false,
+// 					success: function(data){
+// 						if(data.length>0){
+// 							$.each(data, function(i, item){
+// 							    var html = '';
+// 							        html += setDiv(item);
+// 								$("#tasks").append(html);
+// 						 	});
+// 						}
+// 						else{
+// 							addEmpty();
+// 						}
+// 						top.hangge();
+// 					}
+// 			});
 		}
 		//上报
 		function report(billCode){
@@ -590,7 +595,7 @@
 			            		bootbox.dialog({
 									message: "<span class='bigger-110'>"+datas.msg+"</span>",
 								});			            					            	
-			            	initList();
+			            	initList(initUrl);
 			            }
 			         });
 				}
@@ -612,7 +617,7 @@
 				            	bootbox.dialog({
 									message: "<span class='bigger-110'>"+datas.msg+"</span>",
 								});					            					            	
-				            	initList();
+				            	initList(initUrl);
 				            }
 				
 				         });
@@ -663,20 +668,20 @@
 		/**
 		 * 初始化列表信息
 		 */
-		function initList(){
+		function initList(initUrl){
 			$("#tasks li").remove(); 
 			top.jzts();
-			var keywords = $("#keywords").val();
+			var keywords = $("#SelectedBillCode").val();
 			$.ajax({
 					type: "POST",
-					url: '<%=basePath%>changeerpxtbg/getPageList.do',
+					url: initUrl,
 			    	data: {keywords:keywords},
 					dataType:'json',
 					cache: false,
 					success: function(data){
 						$("#page").html(data.pageHtml);
-						if(data.length>0){
-							$.each(data, function(i, item){
+						if(data.rows){
+							$.each(data.rows, function(i, item){
 							    var html = '';
 							        html += setDiv(item);
 								$("#tasks").append(html);

@@ -28,6 +28,7 @@ import com.fh.entity.CommonBase;
 import com.fh.entity.JqPage;
 import com.fh.entity.Page;
 import com.fh.entity.PageResult;
+import com.fh.entity.PageResult2;
 import com.fh.entity.system.User;
 import com.fh.util.AppUtil;
 import com.fh.util.Const;
@@ -211,7 +212,7 @@ public class ChangeErpXtbgController extends BaseController {
 	 * @throws Exceptionz
 	 */
 	@RequestMapping(value="/getPageList")
-	public @ResponseBody List<PageData> getPageList(Page page) throws Exception{
+	public @ResponseBody PageResult2<PageData> getPageList(Page page) throws Exception{
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
@@ -236,7 +237,11 @@ public class ChangeErpXtbgController extends BaseController {
 				p.put("APPROVAL_STATE", "未上报");
 			}		
 		} 	
-		return varList;
+		PageResult2<PageData> result = new PageResult2<PageData>();
+		result.setRows(varList);
+		result.setPage(page);
+		result.setPageHtml(page.getPageStr2());
+		return result;
 	}
 	/**去新增页面
 	 * @param

@@ -78,6 +78,8 @@
 							    <div class="widget-box" >
 								    <div class="widget-body">
 									    <div class="widget-main">
+									     <form action="changegrczhxz/getPageList.do" >
+								 		</form>
 										    <form class="form-inline">
 												<span class="input-icon pull-left" style="margin-right: 5px;">
 													<input id="SelectedBillCode" class="nav-search-input" autocomplete="off" type="text" name="keywords" value="${pd.keywords }" placeholder="在已有申请中搜索"> 
@@ -131,7 +133,8 @@
 							
 							<ul id="tasks" class="item-list">
 							
-							</ul>						
+							</ul>	
+								<div id="page" class="pagination" style="float: right;padding-top: 5px;margin-top: 0px;font-size:12px;"></div>					
 	
 				
 <!-- 						</form> -->
@@ -327,6 +330,7 @@
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 	<script type="text/javascript">
 	    var bill_code=undefined;
+	    var initUrl='<%=basePath%>changegrczhxz/getPageList.do';
 		$(top.hangge());//关闭加载状态
 		//检索
 		function tosearch(){
@@ -368,6 +372,7 @@
 					if(which == 2) $('#form-field-select-4').addClass('tag-input-style');
 					 else $('#form-field-select-4').removeClass('tag-input-style');
 				});
+				initList(initUrl);
 			}
 			
 			
@@ -422,7 +427,7 @@
 						bootbox.dialog({
 							message: "<span class='bigger-110'>保存成功</span>",
 						});		
-						initList();
+						initList(initUrl);
 					}else{
 						$(top.hangge());//关闭加载状态
 						bootbox.dialog({
@@ -546,7 +551,7 @@
 						bootbox.dialog({
 							message: "<span class='bigger-110'>删除成功</span>",
 						});		
-						initList();
+						initList(initUrl);
 					});
 				}
 			});
@@ -786,7 +791,7 @@
 			            		bootbox.dialog({
 									message: "<span class='bigger-110'>"+datas.msg+"</span>",
 								});			            					            	
-			            	initList();
+			            	initList(initUrl);
 			            }
 			         });
 				}
@@ -808,7 +813,7 @@
 				            	bootbox.dialog({
 									message: "<span class='bigger-110'>"+datas.msg+"</span>",
 								});					            					            	
-				            	initList();
+				            	initList(initUrl);
 				            }
 				
 				         });
@@ -820,19 +825,20 @@
 		/**
 		 * 初始化列表信息
 		 */
-		function initList(){
+		function initList(initUrl){
 			$("#tasks li").remove(); 
 			top.jzts();
-			var keywords = $("#keywords").val();
+			var keywords = $("#SelectedBillCode").val();
 			$.ajax({
 					type: "POST",
-					url: '<%=basePath%>changegrczhxz/getPageList.do',
+					url: initUrl,
 			    	data: {keywords:keywords},
 					dataType:'json',
 					cache: false,
 					success: function(data){
-						if(data.length>0){
-							$.each(data, function(i, item){
+						$("#page").html(data.pageHtml);
+						if(data.rows){
+							$.each(data.rows, function(i, item){
 							    var html = '';
 							        html += setDiv(item);
 								$("#tasks").append(html);

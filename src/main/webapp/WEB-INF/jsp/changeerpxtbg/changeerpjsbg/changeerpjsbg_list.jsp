@@ -55,7 +55,9 @@
 							    <div class="widget-box" >
 								    <div class="widget-body">
 									    <div class="widget-main">
-										    <form class="form-inline">
+									     <form action="changeerpjsbg/getPageList.do" >
+								 		</form>
+										   <!--  <form class="form-inline"> -->
 												<span class="input-icon pull-left" style="margin-right: 5px;">
 													<input id="SelectedBillCode" class="nav-search-input" autocomplete="off" type="text" name="SelectedBillCode" value="${pd.keywords }" placeholder="请输入变更申请名称"> 
 													<i class="ace-icon fa fa-search nav-search-icon"></i>
@@ -83,7 +85,7 @@
 									             <i class="ace-icon fa fa-print bigger-110"></i>
 												打印
 									            </label>										
-										    </form>
+										    <!-- </form> -->
 									    </div>
 								    </div>
 							    </div>
@@ -92,13 +94,10 @@
 					    </div>	
 					<div class="row">
 						<div class="col-xs-4">
-						<!-- 检索  -->
-						<form style="margin:5px;" action="user/listUsers.do" method="post" name="userForm" id="userForm">
-							
 							<ul id="tasks" class="item-list">
 							
-							</ul>									
-						</form>
+							</ul>	
+							<div id="page" class="pagination" style="float: right;padding-top: 5px;margin-top: 0px;font-size:12px;"></div>
 					</div>
 				
 					<div class="col-xs-8">
@@ -255,6 +254,7 @@
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 	<script type="text/javascript">
 	    var bill_code=undefined;
+	    var initUrl='<%=basePath%>changeerpjsbg/getPageList.do';
 	    //var unit_Code=undefined;
 		$(top.hangge());//关闭加载状态
 // 		//检索
@@ -297,6 +297,7 @@
 					if(which == 2) $('#form-field-select-4').addClass('tag-input-style');
 					 else $('#form-field-select-4').removeClass('tag-input-style');
 				});
+				initList(initUrl);
 			}
 			
 			
@@ -345,7 +346,7 @@
 					var url = "<%=basePath%>changeerpjsbg/delete.do?BILL_CODE="+encodeURI(Id);
 					$.get(url,function(data){
 						//nextPage(${page.currentPage});
-						initList();
+						initList(initUrl);
 					});
 				}
 			});
@@ -396,7 +397,7 @@
 						bootbox.dialog({
 							message: "<span class='bigger-110'>保存成功</span>",
 						});		
-						initList();
+						initList(initUrl);
 					}else{
 						$(top.hangge());//关闭加载状态
 						bootbox.dialog({
@@ -598,29 +599,7 @@
 
 		//搜索
 		function tosearch(){
-			$("#tasks li").remove(); 
-			top.jzts();
-			var keywords = $("#SelectedBillCode").val();
-			$.ajax({
-					type: "POST",
-					url: '<%=basePath%>changeerpjsbg/getPageList.do',
-			    	data: {keywords:keywords},
-					dataType:'json',
-					cache: false,
-					success: function(data){
-						if(data.length>0){
-							$.each(data, function(i, item){
-							    var html = '';
-							        html += setDiv(item);
-								$("#tasks").append(html);
-						 	});
-						}
-						else{
-							addEmpty();
-						}
-						top.hangge();
-					}
-			});
+			initList('<%=basePath%>changeerpjsbg/getPageList.do');
 		}
 		//上报
 		function report(billCode){
@@ -636,7 +615,7 @@
 			            		bootbox.dialog({
 									message: "<span class='bigger-110'>"+datas.msg+"</span>",
 								});			            					            	
-			            	initList();
+			            	initList(initUrl);
 			            }
 			         });
 				}
@@ -658,7 +637,7 @@
 				            	bootbox.dialog({
 									message: "<span class='bigger-110'>"+datas.msg+"</span>",
 								});					            					            	
-				            	initList();
+				            	initList(initUrl);
 				            }
 				
 				         });
@@ -670,19 +649,20 @@
 		/**
 		 * 初始化列表信息
 		 */
-		function initList(){
+		function initList(initUrl){
 			$("#tasks li").remove(); 
 			top.jzts();
-			var keywords = $("#keywords").val();
+			var keywords = $("#SelectedBillCode").val();
 			$.ajax({
 					type: "POST",
-					url: '<%=basePath%>changeerpjsbg/getPageList.do',
+					url: initUrl,
 			    	data: {keywords:keywords},
 					dataType:'json',
 					cache: false,
 					success: function(data){
-						if(data.length>0){
-							$.each(data, function(i, item){
+						$("#page").html(data.pageHtml);
+						if(data.rows){
+							$.each(data.rows, function(i, item){
 							    var html = '';
 							        html += setDiv(item);
 								$("#tasks").append(html);
