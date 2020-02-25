@@ -241,6 +241,7 @@
 				a.BILL_DATE,	
 				b.NAME AS UNIT_NAME,
 				c.USERNAME,
+				c.NAME,
 				d.NAME AS DEPT_NAME,
 				e.NAME AS USER_DEPTNAME
 			FROM
