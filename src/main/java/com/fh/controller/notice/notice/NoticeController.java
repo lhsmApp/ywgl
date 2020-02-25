@@ -70,6 +70,7 @@ public class NoticeController extends BaseController {
 
 	@Resource(name = "departmentService")
 	private DepartmentManager departmentService;
+
 	/**
 	 * 保存
 	 * 
@@ -157,7 +158,9 @@ public class NoticeController extends BaseController {
 			}
 		} else {
 			noticeDetailService.saveAll(pd);
-			noticeItemService.saveAll(pd);
+			if (!pd.get("NOTICE_TYPE").equals("0")) {
+				noticeItemService.saveAll(pd);
+			}
 		}
 
 		out.write("{\"ret\":\"0\",\"sMsg\":\"success\"}");
@@ -223,7 +226,7 @@ public class NoticeController extends BaseController {
 	 * @param page
 	 * @throws Exception
 	 */
-	public ModelAndView listComm(Page page,int accessSourceType) throws Exception {
+	public ModelAndView listComm(Page page, int accessSourceType) throws Exception {
 		// if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;}
 		// //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
 		ModelAndView mv = this.getModelAndView();
@@ -265,9 +268,9 @@ public class NoticeController extends BaseController {
 	@RequestMapping(value = "/list")
 	public ModelAndView list(Page page) throws Exception {
 		logBefore(logger, Jurisdiction.getUsername() + "列表Notice1");
-		return this.listComm(page,2);
+		return this.listComm(page, 2);
 	}
-	
+
 	/**
 	 * 用户 列表
 	 * 
@@ -277,9 +280,9 @@ public class NoticeController extends BaseController {
 	@RequestMapping(value = "/list2")
 	public ModelAndView list2(Page page) throws Exception {
 		logBefore(logger, Jurisdiction.getUsername() + "列表Notice2");
-		return this.listComm(page,1);
+		return this.listComm(page, 1);
 	}
-	
+
 	/**
 	 * 去新增页面
 	 * 
@@ -337,23 +340,25 @@ public class NoticeController extends BaseController {
 		}
 		page.setPd(pd);
 		List<PageData> varList = noticeService.showSysUserList(page); // 列出角色列表
-		
-		List<PageData> listPara =  departmentService.getAllNameAndId(page);
-		HashMap<String, String> hashMap = new HashMap<String,String>();
-		
-		for(int i=0;i<listPara.size();i++) {
-			hashMap.put((String)listPara.get(i).get("DEPARTMENT_CODE"),(String)listPara.get(i).get("NAME"));
+
+		List<PageData> listPara = departmentService.getAllNameAndId(page);
+		HashMap<String, String> hashMap = new HashMap<String, String>();
+
+		for (int i = 0; i < listPara.size(); i++) {
+			hashMap.put((String) listPara.get(i).get("DEPARTMENT_CODE"), (String) listPara.get(i).get("NAME"));
 		}
-		for(int j=0;j<varList.size();j++) {
+		for (int j = 0; j < varList.size(); j++) {
 			varList.get(j).put("DEPARTMENT_ID", hashMap.get(varList.get(j).get("DEPARTMENT_ID")));
 			varList.get(j).put("UNIT_CODE", hashMap.get(varList.get(j).get("UNIT_CODE")));
 		}
 		// List<PageData> varList = noticeService.showSysRoleList(page); // 列出角色列表
 		mv.setViewName("notice/notice/select_scope/user");
 		// mv.setViewName("notice/notice/select_scope/role");
-		//List<PageData> courseTypePdList = new ArrayList<PageData>();
-		//JSONArray arr = JSONArray.fromObject(coursetypeService.listAllCourseTypeToSelect("0", courseTypePdList));
-		//mv.addObject("zTreeNodes", (null == arr ? "" : arr.toString()));
+		// List<PageData> courseTypePdList = new ArrayList<PageData>();
+		// JSONArray arr =
+		// JSONArray.fromObject(coursetypeService.listAllCourseTypeToSelect("0",
+		// courseTypePdList));
+		// mv.addObject("zTreeNodes", (null == arr ? "" : arr.toString()));
 		mv.addObject("varList", varList);
 		mv.addObject("pd", pd);
 		mv.addObject("QX", Jurisdiction.getHC()); // 按钮权限

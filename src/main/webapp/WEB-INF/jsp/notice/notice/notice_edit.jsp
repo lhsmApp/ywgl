@@ -286,14 +286,16 @@
         } 
 		//保存
 		function save(){
-			if($("#TEST_PAPER_DIFFICULTY").val()!="0" && Object.keys(scope_Arr).length==0){
-				$("#scope_deil").tips({
-					side:1,
-		            msg:'发布范围不能为空',
-		            bg:'#cc0033',
-		            time:3
-				})
-				return;
+			if($("#TEST_PAPER_DIFFICULTY").val()!="0"){
+				if(Object.keys(scope_Arr).length==0){
+					$("#scope_deil").tips({
+						side:1,
+			            msg:'发布范围不能为空',
+			            bg:'#cc0033',
+			            time:3
+					})
+					return;
+				}
 			}else{
 				scope_Arr = {} //如果范围是面向全部，把这个值设置为空可以稍微节约服务器资源
 			}
