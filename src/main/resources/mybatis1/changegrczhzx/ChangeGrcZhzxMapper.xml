@@ -158,7 +158,7 @@
 	</select>
 	
 <!-- 列表 -->
-	<select id="datalistPage" parameterType="page" resultType="pd">
+	<select id="datalistPage1" parameterType="page" resultType="pd">
 		SELECT * FROM 
 			(SELECT
 				a.BILL_CODE,	
@@ -179,7 +179,7 @@
 				a.BILL_DATE BILL_DATE,
 				b.APPROVAL_STATE APPROVAL_STATE,
 				c.NAME AS UNIT_NAME,
-				d.USERNAME,
+				d.NAME USERNAME,
 				e.NAME  DEPT_NAME,
 				f.NAME  USER_DEPTNAME	
 				FROM 
@@ -211,6 +211,62 @@
 					字段2 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
 				-->
 				)
+		</if>
+		</where>
+	</select>
+		<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+	SELECT * FROM (SELECT 
+				t.*,
+				u.NAME AS UNIT_NAME,
+				v.NAME USERNAME,
+				w.NAME  DEPT_NAME,
+				x.NAME  USER_DEPTNAME
+			FROM 
+			(SELECT
+				a.BILL_CODE,	
+				a.UNIT_CODE,		
+				a.DEPT_CODE,	
+				a.ENTRY_DATE,	
+				a.SERIAL_NUM,	
+				a.USER_CODE,	
+				a.USER_DEPT,	
+				a.USER_JOB,	
+				a.USER_CONTACT,	
+				a.EFFECTIVE_DATE,		
+				a.SYSTEM SYSTEM,	
+				a.ACCOUNT_NAME,
+				a.CANCLE_REASON,
+				a.BILL_STATE BILL_STATE,	
+				a.BILL_USER BILL_USER,	
+				a.BILL_DATE BILL_DATE,
+				b.APPROVAL_STATE APPROVAL_STATE
+				FROM 
+				tb_change_grc_zhzx a LEFT JOIN tb_approval_main b
+				ON a.BILL_CODE=b.BILL_CODE)  AS t
+				left join oa_department u
+				on  u.DEPARTMENT_CODE = t.UNIT_CODE
+		 		left join sys_user v 
+	 			on t.USER_CODE=v.USER_ID
+	 			left join oa_department w
+		  		ON
+				w.DEPARTMENT_CODE = t.DEPT_CODE
+				left join oa_department x
+				on
+				x.DEPARTMENT_CODE = t.USER_DEPT
+				) AS h
+		<where>
+			(BILL_USER=#{pd.BILL_USER}
+			or
+			USER_CODE=#{pd.BILL_USER})
+<!-- 		 AND -->
+<!-- 		(APPROVAL_STATE='2' OR  APPROVAL_STATE='' OR APPROVAL_STATE IS NULL) -->
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+			CANCLE_REASON LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				)
+
 		</if>
 		</where>
 	</select>
