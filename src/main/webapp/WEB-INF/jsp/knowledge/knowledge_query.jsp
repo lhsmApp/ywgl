@@ -30,20 +30,12 @@
 		<div class="main-content">
 			<div class="main-content-inner">
 				<div class="page-content">
-					<div class="page-header">
-						<form class="form-inline" action="knowledge/queryKnowledgeInfo.do" id="knowledgeForm" name="knowledgeForm">
+					<!--  -->
+					<div class="row">
+						<div class="col-xs-12">
+						<div class="page-header">
+						<form class="form-inline" method="post" action="knowledge/queryKnowledgeInfo.do" id="knowledgeForm" name="knowledgeForm">
 							<label class="pull-left" style="padding: 5px;">筛选条件：</label>
-							<%-- <span class="pull-left" style="margin-right: 5px;"> 
-								<select
-									class="chosen-select form-control" name="FMISACC"
-									id="FMISACC" data-placeholder="请选择帐套"
-									style="vertical-align: top; height: 32px; width: 150px;">
-										<option value="">请选择帐套</option>
-										<c:forEach items="${fmisacc}" var="fmi">
-											<option value="${fmi.DICT_CODE}">${fmi.NAME}</option>
-										</c:forEach>
-								</select>
-							</span> --%>
 							<%-- <span  class="pull-left" style="margin-right: 5px;" <c:if test="${pd.departTreeSource=='0'}">hidden</c:if>>
 								<div class="selectTree" id="selectTree" multiMode="true"
 									allSelectable="false" noGroup="false"></div>
@@ -73,18 +65,10 @@
 								onclick="searchs();">
 								<i class="ace-icon fa fa-search bigger-110"></i>
 							</button>
-							
-							<!-- <div class="pull-right">
-								<button id="btnAdd" class="btn btn-success btn-xs"
-									onclick="showQueryCondi()">
-									<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>新增</span>
-								</button>
-							</div> -->
-						</form>
-					</div>
+						</div>
 				
-					<div class="row">
-						<div class="col-xs-12">
+					<!-- <div class="row">
+						<div class="col-xs-12"> -->
 							<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
 								<thead>
 									<tr>
@@ -151,13 +135,12 @@
 								</c:choose>
 								</tbody>
 							</table>
-							<div class="page-header position-relative">
-								<div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div>	
-							</div>
+							
+							<div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div>	
+							
+						</form>	
 						</div>
 					</div>
-					
-					
 				</div>
 				<!-- /.page-content -->
 			</div>
