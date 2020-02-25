@@ -119,7 +119,14 @@ public class ProblemTypeController extends BaseController {
 		page.setPd(pd);
 		List<PageData>	varList = problemtypeService.list(page);			//列出ProblemType列表
 		mv.setViewName("mbp/problemtype/problemtype_list");
-		mv.addObject("pd", problemtypeService.findById(pd));				//传入上级所有信息
+		PageData pageData=problemtypeService.findById(pd);
+		if(pageData==null){
+			pageData=new PageData();
+		}
+		if(null != keywords && !"".equals(keywords)){
+			pageData.put("keywords", keywords.trim());
+		}
+		mv.addObject("pd", pageData);				//传入上级所有信息
 		mv.addObject("PROBLEMTYPE_ID", PROBLEMTYPE_ID);			//上级ID
 		mv.addObject("varList", varList);
 		return mv;

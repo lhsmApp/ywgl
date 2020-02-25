@@ -576,7 +576,7 @@ public class MBPController extends BaseController {
 			pd.put("PRO_CODE", billCode);
 			String userId = user.getUSER_ID();
 			pd.put("BILL_USER", userId);
-			pd.put("PRO_DEPART", user.getDEPARTMENT_ID());
+			pd.put("PRO_DEPART", user.getUNIT_CODE());
 			pd.put("BILL_DATE", DateUtils.getCurrentTime());
 			pd.put("UPDATE_DATE", DateUtils.getCurrentTime());
 			
