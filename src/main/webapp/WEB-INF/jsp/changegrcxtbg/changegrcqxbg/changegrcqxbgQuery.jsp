@@ -71,11 +71,11 @@
 											<td class='center'>${var.BILL_CODE}</td>
 											<td class='center'>${var.ADD_ROLES}</td>
 											<td class='center'>${var.DELETE_ROLES}</td>
-											<td class='center'>${var.UNIT_CODE}</td>
-											<td class='center'>${var.DEPT_CODE}</td>
+											<td class='center'>${var.UNIT_NAME}</td>
+											<td class='center'>${var.DEPT_NAME}</td>
 											<td class='center'>${var.BG_REASON}</td>					
-											<td class='center'>${var.USER_CODE}</td>
-											<td class='center'>${var.USER_DEPT}</td>
+											<td class='center'>${var.USERNAME}</td>
+											<td class='center'>${var.USER_DEPTNAME}</td>
 											<td class='center'>${var.USER_JOB}</td>
 											<td class='center'>${var.USER_CONTACT}</td>
 											<td class='center'>${var.ENTRY_DATE}</td>

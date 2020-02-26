@@ -86,7 +86,7 @@ public class ChangeGrcQxbgController extends BaseController {
 			commonBase.setCode(0);
 		}else{
 			pd.put("UPDATE_DATE", DateUtils.getCurrentTime());
-			changegrcqxbgService.edit(pd);
+			changegrcqxbgService.updateEdit(pd);
 			commonBase.setCode(0);
 		}	
 		if(commonBase.getCode()==0){

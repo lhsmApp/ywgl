@@ -307,7 +307,7 @@
 		function getChangeData(){
 		    var html = '';
 		    for(var i = 0;i<data.length;i++){
-		    	if(data[i].BG_NAME==""){
+/* 		    	if(data[i].BG_NAME==""){
 		    		if(data[i].BUSINESS_CODE==3){
 		    			data[i].BG_NAME='GRC帐号新增';
 		    			data[i].BG_REASON=data[i].ACCOUNT_REASON;
@@ -320,8 +320,9 @@
 						data[i].BG_NAME='GRC帐号撤销';
 						data[i].BG_REASON=data[i].CANCLE_REASON;
 					}
-		    	}
-		
+		    	} */
+				data[i].BG_REASON=data[i].REASON;
+				console.log(data);
 		        html += setDiv(data[i]);
 		    }
 		    //document.getElementById("tasks").innerHTML = html;

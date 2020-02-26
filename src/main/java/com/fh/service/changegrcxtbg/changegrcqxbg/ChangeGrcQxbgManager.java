@@ -29,7 +29,11 @@ public interface ChangeGrcQxbgManager{
 	 * @throws Exception
 	 */
 	public void edit(PageData pd)throws Exception;
-	
+	/**更新修改内容
+	 * @param pd
+	 * @throws Exception
+	 */
+	public void updateEdit(PageData pd)throws Exception;
 	/**列表
 	 * @param page
 	 * @throws Exception

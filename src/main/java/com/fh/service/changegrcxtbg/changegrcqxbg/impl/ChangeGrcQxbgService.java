@@ -43,7 +43,13 @@ public class ChangeGrcQxbgService implements ChangeGrcQxbgManager{
 	public void edit(PageData pd)throws Exception{
 		dao.update("ChangeGrcQxbgMapper.edit", pd);
 	}
-	
+	/**更新修改内容
+	 * @param pd
+	 * @throws Exception
+	 */
+	public void updateEdit(PageData pd)throws Exception{
+		dao.update("ChangeGrcQxbgMapper.updateEdit", pd);
+	}
 	/**列表
 	 * @param page
 	 * @throws Exception
