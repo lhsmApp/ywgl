@@ -134,6 +134,7 @@
 		<include refid="Field"></include>
 		from 
 		<include refid="tableName"></include>
+		
 	</select>
 	
 	<!-- 通过ID获取其子级列表 -->

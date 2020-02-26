@@ -86,7 +86,7 @@
 	};
 </script>
 </head>
-<body style="background-image:url(static/login/images/erpdenglu.jpg);background-repeat:no-repeat;background-size: cover;">
+<body style="background-image:url(static/login/images/erpdenglu1.jpg);background-repeat:no-repeat;background-size: cover;">
 
 	<c:if test="${pd.isMusic == 'yes' }">
 		<div style="display: none">
@@ -105,8 +105,10 @@
 					
 					<div class="control-group normal_text">
 						
-							<span style="font-size:20px;font-weight:bold;">ERP运维管理平台</span>
-						
+							<!-- <span style="font-size:20px;font-weight:bold;">ERP运维管理平台</span> -->
+						<h3>
+							ERP运维管理平台
+						</h3>
 					</div>
 					
 					<div class="control-group">

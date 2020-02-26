@@ -115,7 +115,7 @@
 															<option value=""></option>
 															<c:forEach items="${userList}" var="user">
 																<%-- <option value="${system.DICT_CODE }" <c:if test="${system.DICT_CODE == pd.DICT_CODE }">selected</c:if>>${system.NAME }</option> --%>
-																<option value="${user.USER_ID}">${user.USERNAME}</option>
+																<option value="${user.USER_ID}">${user.NAME}</option>
 															</c:forEach>
 														</select>
 													</div>
