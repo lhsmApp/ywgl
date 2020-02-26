@@ -88,7 +88,7 @@ public class MBPController extends BaseController {
 	private DepartmentService departmentService;
 	
 	// 判断当前人员的所在组织机构是否只有自己单位
-	private int departSelf = 0;
+	//private int departSelf = 0;
 	
 	/**列表
 	 * @param page
@@ -302,7 +302,7 @@ public class MBPController extends BaseController {
 		Map<String, String> mapRole=Jurisdiction.getHC();//角色权限
 		if(mapRole.get("adds").equals("1")||mapRole.get("adds").equals("2"))
 		{
-			this.departSelf = 1;
+			//this.departSelf = 1;
 			pd.put("departTreeSource", "0");
 		} else {
 			pd.put("departTreeSource", "1");
@@ -369,7 +369,7 @@ public class MBPController extends BaseController {
 		Map<String, String> mapRole=Jurisdiction.getHC();//角色权限
 		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 		String userId = user.getUSER_ID();
-		if (departSelf == 1){
+		if(mapRole.get("adds").equals("1")||mapRole.get("adds").equals("2")){
 			if(mapRole.get("adds").equals("2")){//2为基层单位管理员，可以看到本单位所有人员问题，所以按部门搜索
 				strDeptCode = Jurisdiction.getCurrentDepartmentID();
 			}else{//1为基层普通用户，只能查询自己申请的数据
