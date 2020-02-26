@@ -99,7 +99,7 @@
 		<!-- 管理员登录 -->
 		<div id="windows1">
 			
-			<div id="loginbox" style="margin-top:15%">
+			<div id="loginbox">
 				
 				<form action="" method="post" name="loginForm" id="loginForm">
 					
