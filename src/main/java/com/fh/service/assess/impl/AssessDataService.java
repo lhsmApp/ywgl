@@ -1,22 +1,20 @@
-package com.fh.service.taxStaffDetail.taxStaffDetail.impl;
-
-import java.util.Arrays;
+package com.fh.service.assess.impl;
 import java.util.List;
 
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import com.fh.dao.DaoSupport;
 import com.fh.entity.JqPage;
+import com.fh.service.assess.AssessDataManager;
 import com.fh.util.PageData;
-import com.fh.service.taxStaffDetail.taxStaffDetail.TaxStaffDetailManager;
 
 /** 
  * 说明：考核数据导入
  * 创建人：jiachao
  * 创建时间：2019-12-07
  */
-@Service("taxStaffDetailService")
-public class TaxStaffDetailService implements TaxStaffDetailManager{
+@Service("assessDataService")
+public class AssessDataService implements AssessDataManager{
 
 	@Resource(name = "daoSupport")
 	private DaoSupport dao;

@@ -57,7 +57,7 @@
                                     <span style="border-left: 1px solid #e2e2e2; margin: 0px 10px;">&nbsp;</span>
 								
 									<button id="btnQuery" class="btn btn-white btn-info btn-sm"
-										onclick="showQueryCondi($('#jqGridBase'),null,true)">
+										onclick="showQueryCondi($('#jqGridBase'),gridHeight)">
 										<i class="ace-icon fa fa-chevron-down bigger-120 blue"></i> <span>隐藏查询</span>
 									</button>
 								
@@ -239,6 +239,7 @@
 		
         //前端数据表格界面字段,动态取自tb_tmpl_config_detail，根据当前单位编码及表名获取字段配置信息
         var jqGridColModel = "[]";
+        var gridHeight;
     
 	    $(document).ready(function () {
 			$(top.hangge());//关闭加载状态
@@ -384,7 +385,7 @@
     					top.jzts();
     					$.ajax({
     						type: "POST",
-    						url: '<%=basePath%>taxStaffDetail/deleteAll.do?'
+    						url: '<%=basePath%>assessData/deleteAll.do?'
     							+ 'SelectedBusiDate='+$("#SelectedBusiDate").val()
     		                    +'&ShowDataBusiDate='+ShowDataBusiDate
     		                    +'&KPI_CODE='+$("#KPI_CODE").val(),
@@ -456,7 +457,7 @@
         				top.jzts();
         				$.ajax({
         					type: "POST",
-        					url: '<%=basePath%>taxStaffDetail/updateAll.do?'
+        					url: '<%=basePath%>assessData/updateAll.do?'
         						+ 'SelectedBusiDate='+$("#SelectedBusiDate").val()
         	                    +'&ShowDataBusiDate='+ShowDataBusiDate
         	                    +'&KPI_CODE='+$("#KPI_CODE").val(),
@@ -508,7 +509,7 @@
     	   var diag = new top.Dialog();
     	   diag.Drag=true;
     	   diag.Title ="EXCEL 导入到数据库";
-    	   diag.URL = '<%=basePath%>taxStaffDetail/goUploadExcel.do?'
+    	   diag.URL = '<%=basePath%>assessData/goUploadExcel.do?'
     			+ 'SelectedBusiDate='+$("#SelectedBusiDate").val()
                 + '&ShowDataBusiDate='+ShowDataBusiDate
                 + '&KPI_CODE='+$("#KPI_CODE").val();
@@ -527,7 +528,7 @@
          * 导出
          */
         function exportItems(){
-        	window.location.href='<%=basePath%>taxStaffDetail/excel.do?'
+        	window.location.href='<%=basePath%>assessData/excel.do?'
         		+ 'SelectedBusiDate='+$("#SelectedBusiDate").val()
                 +'&ShowDataBusiDate='+ShowDataBusiDate
                 +'&KPI_CODE='+$("#KPI_CODE").val();
@@ -570,7 +571,7 @@
 	    	
 	    	$.ajax({
 				type: "POST",
-				url: '<%=basePath%>taxStaffDetail/getKpi.do?KPI_CODE='+kpiCode,
+				url: '<%=basePath%>assessData/getKpi.do?KPI_CODE='+kpiCode,
 				dataType:'json',
 				cache: false,
 				success: function(response){
@@ -601,7 +602,7 @@
 			top.jzts();
 			$.ajax({
 				type: "POST",
-				url: '<%=basePath%>taxStaffDetail/getShowColModel.do?KPI_CODE='+kpiCode
+				url: '<%=basePath%>assessData/getShowColModel.do?KPI_CODE='+kpiCode
     	            + '&SystemDateTime='+selectDate,
 				dataType:'json',
 				cache: false,
@@ -643,11 +644,12 @@
     		$(window).on('resize.jqGrid', function () {
     			$(gridBase_selector).jqGrid( 'setGridWidth', $(".page-content").width());
     			//$(gridBase_selector).jqGrid( 'setGridHeight', $(window).height() - 240);
-    			resizeGridHeight($(gridBase_selector),null,true);
+    			gridHeight=240;
+    			resizeGridHeight($(gridBase_selector),gridHeight);
     	    });
     		
     		$(gridBase_selector).jqGrid({
-    			url: '<%=basePath%>taxStaffDetail/getPageList.do?'
+    			url: '<%=basePath%>assessData/getPageList.do?'
             		+ 'SelectedBusiDate='+$("#SelectedBusiDate").val()
                     + '&ShowDataBusiDate='+ShowDataBusiDate
                     + '&KPI_CODE='+$("#KPI_CODE").val(),
@@ -662,7 +664,7 @@
                 multiboxonly: true,
                 sortable: true,
     			altRows: true, //斑马条纹
-    			editurl: '<%=basePath%>taxStaffDetail/edit.do?'
+    			editurl: '<%=basePath%>assessData/edit.do?'
             		+ 'SelectedBusiDate='+$("#SelectedBusiDate").val()
                     + '&ShowDataBusiDate='+ShowDataBusiDate
                     + '&KPI_CODE='+$("#KPI_CODE").val(),

@@ -1,4 +1,4 @@
-package com.fh.controller.taxStaffDetail.taxStaffDetail;
+package com.fh.controller.assess;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -47,25 +47,25 @@ import com.fh.util.excel.TransferSbcDbc;
 
 import net.sf.json.JSONArray;
 
+import com.fh.service.assess.AssessDataManager;
 import com.fh.service.assess.KPIManager;
 import com.fh.service.fhoa.department.impl.DepartmentService;
 import com.fh.service.sysConfig.sysconfig.SysConfigManager;
 import com.fh.service.system.dictionaries.impl.DictionariesService;
 import com.fh.service.system.user.impl.UserService;
-import com.fh.service.taxStaffDetail.taxStaffDetail.TaxStaffDetailManager;
 import com.fh.service.tmplConfigDict.tmplconfigdict.impl.TmplConfigDictService;
 import com.fh.service.tmplconfig.tmplconfig.impl.TmplConfigService;
 
 /**
- * 说明：月度工资及个税导入 创建人：jiachao 创建时间：2019-08-07
+ * 说明：考核数据导入 创建人：jiachao 创建时间：2019-08-07
  */
 @Controller
-@RequestMapping(value = "/taxStaffDetail")
-public class TaxStaffDetailController extends BaseController {
+@RequestMapping(value = "/assessData")
+public class AssessDataController extends BaseController {
 
-	String menuUrl = "taxStaffDetail/list.do"; // 菜单地址(权限用)
-	@Resource(name = "taxStaffDetailService")
-	private TaxStaffDetailManager taxStaffDetailService;
+	String menuUrl = "assessData/list.do"; // 菜单地址(权限用)
+	@Resource(name = "assessDataService")
+	private AssessDataManager assessDataService;
 
 	@Resource(name = "tmplconfigService")
 	private TmplConfigService tmplconfigService;
@@ -114,7 +114,7 @@ public class TaxStaffDetailController extends BaseController {
 	public ModelAndView list(Page page) throws Exception {
 		PageData getPd = this.getPageData();
 		ModelAndView mv = this.getModelAndView();
-		mv.setViewName("taxStaffDetail/taxStaffDetail/taxStaffDetail_list");
+		mv.setViewName("assess/assessData/assessData_list");
 		mv.addObject("jqGridColModel", "[]");
 		mv.addObject("jqGridColModelMessage", "");
 
@@ -377,13 +377,13 @@ public class TaxStaffDetailController extends BaseController {
 		}
 
 		page.setPd(getPd);
-		List<PageData> varList = taxStaffDetailService.JqPage(page);
-		int records = taxStaffDetailService.countJqGridExtend(page);
+		List<PageData> varList = assessDataService.JqPage(page);
+		int records = assessDataService.countJqGridExtend(page);
 		PageData userdata = null;
 		if (SqlUserdata != null && !SqlUserdata.toString().trim().equals("")) {
 			// 底行显示的求和与平均值字段
 			getPd.put("Userdata", SqlUserdata.toString());
-			userdata = taxStaffDetailService.getFooterSummary(page);
+			userdata = assessDataService.getFooterSummary(page);
 		}
 
 		PageResult<PageData> result = new PageResult<PageData>();
@@ -441,7 +441,7 @@ public class TaxStaffDetailController extends BaseController {
 		 * !checkState.trim().equals("")){ commonBase.setCode(2);
 		 * commonBase.setMessage(checkState); return commonBase; }
 		 */
-		taxStaffDetailService.batchUpdateDatabase(listData,kpiCode);
+		assessDataService.batchUpdateDatabase(listData,kpiCode);
 		commonBase.setCode(0);
 		return commonBase;
 	}
@@ -477,7 +477,7 @@ public class TaxStaffDetailController extends BaseController {
 			 * !checkState.trim().equals("")){ commonBase.setCode(2);
 			 * commonBase.setMessage(checkState); return commonBase; }
 			 */
-			taxStaffDetailService.batchUpdateDatabase(listData,kpiCode);
+			assessDataService.batchUpdateDatabase(listData,kpiCode);
 			commonBase.setCode(0);
 		}
 		return commonBase;
@@ -504,7 +504,7 @@ public class TaxStaffDetailController extends BaseController {
 		JSONArray array = JSONArray.fromObject(json);
 		List<PageData> listData = (List<PageData>) JSONArray.toCollection(array, PageData.class);
 		if (null != listData && listData.size() > 0) {
-			taxStaffDetailService.deleteAll(listData,kpiCode);
+			assessDataService.deleteAll(listData,kpiCode);
 			commonBase.setCode(0);
 		}
 		return commonBase;
@@ -681,7 +681,7 @@ public class TaxStaffDetailController extends BaseController {
 									 * else {
 									 */
 									// 此处执行集合添加
-									taxStaffDetailService.batchUpdateDatabase(listAdd,kpiCode);
+									assessDataService.batchUpdateDatabase(listAdd,kpiCode);
 									commonBase.setCode(0);
 									commonBase.setMessage(strErrorMessage);
 									// }
@@ -723,7 +723,7 @@ public class TaxStaffDetailController extends BaseController {
 
 		TransferPd(getPd, SelectedBusiDate);
 
-		List<PageData> varOList = taxStaffDetailService.exportModel(getPd);
+		List<PageData> varOList = assessDataService.exportModel(getPd);
 		return export(varOList, getPd.getString("KPI_CODE"), map_SetColumnsList, map_DicList);
 	}
 
@@ -746,7 +746,7 @@ public class TaxStaffDetailController extends BaseController {
 		}
 		TransferPd(getPd, SelectedBusiDate);
 		page.setPd(getPd);
-		List<PageData> varOList = taxStaffDetailService.exportList(page);
+		List<PageData> varOList = assessDataService.exportList(page);
 		return export(varOList, "", map_SetColumnsList, map_DicList);
 	}
 

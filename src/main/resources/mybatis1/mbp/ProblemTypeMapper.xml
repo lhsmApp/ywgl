@@ -143,6 +143,7 @@
 		from 
 		<include refid="tableName"></include>
 		where 
-			PRO_TYPE_PARENT_ID = #{parentId} order by PRO_TYPE_ID 
+			state='1'
+			AND PRO_TYPE_PARENT_ID = #{parentId} order by PRO_TYPE_ID 
 	</select>
 </mapper>

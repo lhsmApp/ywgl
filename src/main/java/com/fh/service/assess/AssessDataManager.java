@@ -1,4 +1,4 @@
-package com.fh.service.taxStaffDetail.taxStaffDetail;
+package com.fh.service.assess;
 
 import java.util.List;
 
@@ -6,11 +6,11 @@ import com.fh.entity.JqPage;
 import com.fh.util.PageData;
 
 /** 
- * 说明：月度工资及个税导入
+ * 说明：考核数据导入
  * 创建人：jiachao
- * 创建时间：2019-08-07
+ * 创建时间：2019-12-07
  */
-public interface TaxStaffDetailManager{
+public interface AssessDataManager{
 	
 	/**列表
 	 * @param page
