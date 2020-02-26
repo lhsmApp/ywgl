@@ -12,12 +12,14 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONObject;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import com.fh.controller.base.BaseController;
 import com.fh.entity.Page;
@@ -26,6 +28,7 @@ import com.fh.util.AppUtil;
 import com.fh.util.Const;
 import com.fh.util.DelAllFile;
 import com.fh.util.FileDownload;
+import com.fh.util.FileUpload;
 import com.fh.util.FileUtil;
 import com.fh.util.ObjectExcelView;
 import com.fh.util.PageData;
@@ -60,6 +63,27 @@ public class AttachmentController extends BaseController {
 		List<PageData> varList = attachmentService.getAttachmentByType(pd);
 		return varList;
 		//BufferedReader reader = new BufferedReader(new InputStreamReader(trequest.getInputStream()));
+	}
+	
+	/**
+	 *  文件上传
+	 * @param pic
+	 * @param response
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/uploadAttachment")
+	public void uploadAttachment(MultipartFile attachment,HttpServletResponse response) throws Exception {
+		String attachmentPath = PathUtil.getClasspath()+Const.FILEPATHFILEOA;
+		String fileName = new java.text.SimpleDateFormat("yyyyMMddhhmmss").format(new Date());	//获取当前日期
+		fileName = fileName + (int)(Math.random()*90000+10000);
+		
+		String attachmentName = FileUpload.fileUp(attachment,attachmentPath,fileName);
+		System.out.println(attachmentPath+attachmentName);
+		JSONObject json = new JSONObject();
+		//回调文件路径
+		json.put("path",attachmentName); 
+		response.setContentType("application/json;charset=UTF-8");
+		response.getWriter().write(json.toString());
 	}
 	
 	/**保存

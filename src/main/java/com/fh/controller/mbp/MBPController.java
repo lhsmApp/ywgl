@@ -371,7 +371,7 @@ public class MBPController extends BaseController {
 		String userId = user.getUSER_ID();
 		if(mapRole.get("adds").equals("1")||mapRole.get("adds").equals("2")){
 			if(mapRole.get("adds").equals("2")){//2为基层单位管理员，可以看到本单位所有人员问题，所以按部门搜索
-				strDeptCode = Jurisdiction.getCurrentDepartmentID();
+				strDeptCode = user.getUNIT_CODE();
 			}else{//1为基层普通用户，只能查询自己申请的数据
 				strDeptCode="";
 				pd.put("BILL_USER", userId);

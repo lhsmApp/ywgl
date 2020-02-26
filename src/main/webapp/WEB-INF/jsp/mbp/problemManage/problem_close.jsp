@@ -462,13 +462,13 @@ function initList(url){
 function addItem(item){
 	var htmlProState='';
 	if(item.PRO_STATE=="2"){
-		htmlProState='<span class="list-item-value blue">'+item.PRO_STATE_NAME+'</span>'
+		htmlProState='<span class="label label-xs label-info">'+item.PRO_STATE_NAME+'</span>'
 	}else if(item.PRO_STATE=="3"){
-		htmlProState='<span class="list-item-value orange">'+item.PRO_STATE_NAME+'</span>'
+		htmlProState='<span class="label label-xs label-warning">'+item.PRO_STATE_NAME+'</span>'
 	}else if(item.PRO_STATE=="4"){
-		htmlProState='<span class="list-item-value grey">'+item.PRO_STATE_NAME+'</span>'
+		htmlProState='<span class="label label-xs label-inverse">'+item.PRO_STATE_NAME+'</span>'
 	}else{
-		htmlProState='<span class="list-item-value green">'+item.PRO_STATE_NAME+'</span>'
+		htmlProState='<span class="label label-xs label-success">'+item.PRO_STATE_NAME+'</span>'
 	}
 	var htmlItem='<li class="item-grey clearfix list-item-hover" onclick=getDetail("'+item.PRO_CODE+'")>'
 	+'<input name="PRO_CODE" id="PRO_CODE" type="hidden" value="'+item.PRO_CODE+'" />'

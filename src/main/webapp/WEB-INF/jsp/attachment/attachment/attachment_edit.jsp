@@ -10,22 +10,24 @@
 <html lang="en">
 	<head>
 	<base href="<%=basePath%>">
-	<!-- 下拉框 -->
-	<link rel="stylesheet" href="static/ace/css/chosen.css" />
 	<!-- jsp文件头和头部 -->
 	<%@ include file="../../system/index/top.jsp"%>
-	<script type="text/javascript" src="static/ace/js/jquery.js"></script>
+	<!-- <script type="text/javascript" src="static/ace/js/jquery.js"></script> -->
+	<script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
+	<script type="text/javascript" src="static/ace/js/jquery.form.js"></script>
+	<link rel="stylesheet" href="static/ace/css/bootstrap.css" />
+	<link rel="stylesheet" href="static/ace/css/bootstrap-editable.css" />
 	<!-- 上传插件 -->
 	<!-- <link href="plugins/uploadify/uploadify.css" rel="stylesheet" type="text/css">
 	<script type="text/javascript" src="plugins/uploadify/swfobject.js"></script>
 	<script type="text/javascript" src="plugins/uploadify/jquery.uploadify.v2.1.4.min.js"></script> -->
 	
-	<link href="plugins/uploadify3.2.1/uploadify.css" rel="stylesheet" type="text/css">
+	<%-- <link href="plugins/uploadify3.2.1/uploadify.css" rel="stylesheet" type="text/css">
 	<script type="text/javascript" src="plugins/uploadify3.2.1/jquery.uploadify.js"></script>
 	<!-- 上传插件 -->
 	<script type="text/javascript">
 		var jsessionid = "<%=session.getId()%>";  //勿删，uploadify兼容火狐用到
-	</script>
+	</script> --%>
 </head>
 <body class="no-skin">
 <!-- /section:basics/navbar.layout -->
@@ -40,6 +42,7 @@
 					<form action="attachment/${msg }.do" name="Form" id="Form" method="post">
 						<input type="hidden" value="${pd.BUSINESS_TYPE}" name="BUSINESS_TYPE" id="BUSINESS_TYPE" />
 						<input type="hidden" value="${pd.BILL_CODE}" name="BILL_CODE" id="BILL_CODE" />
+						<input type="hidden"  value="${pd.ATTACHMENT_PATH}" name="ATTACHMENT_PATH" id="ATTACHMENT_PATH"/> 
 						<!-- <input type="hidden" value="no" id="hasTp1" /> -->
 						<div id="zhongxin" style="padding-top: 13px;">
 						<table id="table_report" class="table table-striped table-bordered table-hover">
@@ -49,13 +52,15 @@
 							</tr>
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">文件:</td>
-								<td>
+								<!-- <td>
 									<div id="fileQueue">
 										<input type="file" name="File_name" id="uploadify1" keepDefaultStyle = "true"/>
 										<input type="hidden" name="ATTACHMENT_PATH" id="ATTACHMENT_PATH" value=""/>
 									</div>
-								</td>
+								</td> -->
+								<td><input id="attachment" name="attachment" type="file"/></td>
 							</tr>
+							
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">附件说明:</td>
 								<td><input type="text" name="ATTACHMENT_MEMO" id="ATTACHMENT_MEMO" value="" maxlength="100" placeholder="这里输入附件说明" title="附件说明" style="width:98%;"/></td>
@@ -85,12 +90,11 @@
 
 	<!-- 页面底部js¨ -->
 	<%@ include file="../../system/index/foot.jsp"%>
-	<!-- 下拉框 -->
-	<script src="static/ace/js/chosen.jquery.js"></script>
-	<!-- 日期框 -->
-	<script src="static/ace/js/date-time/bootstrap-datepicker.js"></script>
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
+	<!-- ace scripts -->
+	<script src="static/ace/js/ace/elements.fileinput.js"></script>
+	<script src="static/ace/js/ace/ace.js"></script>
 		<script type="text/javascript">
 		$(top.hangge());
 		
@@ -105,8 +109,22 @@
 		            time:2
 		        });
 				$("#ATTACHMENT_NAME").focus();
-			return false;
+				return false;
 			}
+			if($("#ATTACHMENT_PATH").val()==""){
+				$("#attachment").tips({
+					side:3,
+		            msg:'请选择附件',
+		            bg:'#AE81FF',
+		            time:2
+		        });
+				$("#attachment").focus();
+				return false;
+			}
+			$("#Form").submit();
+			$("#zhongxin").hide();
+			$("#zhongxin2").show();
+			
 			/* if($("#hasTp1").val()=="no"){
 				$("#FILEPATHn").tips({
 					side:2,
@@ -117,18 +135,83 @@
 			return false;
 			} */
 			//$('#uploadify1').uploadifyUpload();
-			$('#uploadify1').uploadify('upload', '*');
+			
+			//$('#uploadify1').uploadify('upload', '*');
 		}
 		
 		//====================上传=================
 		$(document).ready(function(){
-			/* if ($.browser.msie) {
+			//上传视频
+			$('#attachment').ace_file_input({
+				no_file:'选择文件',
+				btn_choose:'选择',
+				btn_change:'选择',
+				droppable:false,
+				onchange:null,
+				thumbnail:false,
+				before_change:function(files,dropped){
+					var file = files[0];
+					var name = file.name;
+					//判断文件类型
+					/* if (!name.endsWith(".mp4")){
+						$("#attachment").tips({
+							side:3,
+				            msg:'仅可上传 .mp4 格式视频',
+				            bg:'#AE81FF',
+				            time:2
+				        });
+						return false;	 
+					} */
+					//判断文件大小
+					if(file.size > 2147483648){
+						$("#attachment").tips({
+							side:3,
+				            msg:'文件大小不能超过2G',
+				            bg:'#AE81FF',
+				            time:2
+				        });
+						return false;
+					}
+					var options = {
+						url: '<%=basePath%>attachment/uploadAttachment.do?tm='+new Date().getTime(),
+						type: 'POST',
+						dataType: 'json',
+						cache: false,
+						success: function(data){
+							// 动态追加video地址 
+							$("#ATTACHMENT_PATH").attr("value",data.path);
+							$("#attachment").tips({
+								side:3,
+					            msg:'文件上传成功',
+					            bg:'#AE81FF',
+					            time:2
+					        });
+						},
+						error: function(data){
+							$("#attachment").tips({
+								side:3,
+					            msg:'文件上传失败',
+					            bg:'#AE81FF',
+					            time:2
+					        });
+						}
+					}
+					$("#Form").ajaxSubmit(options);
+					return true;
+				}
+			});
+			$(".remove").bind('click',function(){
+				//取消上传
+			})
+			
+			
+			<%-- /* if ($.browser.msie) {
 		    	$(&quot;.swfupload&quot;).attr(&quot;classid&quot;,&quot;clsid:D27CDB6E-AE6D-11cf-96B8-444553540000&quot;);
 		    } */
 			
 			var str='';
 			$("#uploadify1").uploadify({
-				<%-- 'buttonImg'	: 	"<%=basePath%>static/images/fileup.png",
+				'buttonImg'	: 	"<%=basePath%>static/images/fileup.png",
 				'uploader'	:	"<%=basePath%>plugins/uploadify/uploadify.swf",
 				'script'    :	"<%=basePath%>plugins/uploadify/uploadFile.jsp;jsessionid="+jsessionid,
 				'cancelImg' :	"<%=basePath%>plugins/uploadify/cancel.png",
@@ -157,7 +240,7 @@
 		    	},
 		    	'onSelect' : function(event, queueId, fileObj){
 		    		$("#hasTp1").val("ok");
-		    	} --%>
+		    	}
 		    	
 		    	
 		        'formData':{
@@ -220,7 +303,7 @@
 		        'onUploadSuccess' : function(file, data, response){  
 		        	$("#ATTACHMENT_PATH").val(data.trim());
 		        } ,
-			});
+			}); --%>
 		});
 		//====================上传=================
 			//清除空格
