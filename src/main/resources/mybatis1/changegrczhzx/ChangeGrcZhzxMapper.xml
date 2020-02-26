@@ -130,7 +130,7 @@
 		BILL_CODE = #{BILL_CODE}
 	</update>
 	<!-- 通过ID获取数据 -->
-	<select id="findById" parameterType="pd" resultType="pd">
+	<select id="findById1" parameterType="pd" resultType="pd">
 		SELECT 
 				a.BILL_CODE AS BILL_CODE,	
 				a.UNIT_CODE AS UNIT_CODE,		
@@ -213,6 +213,51 @@
 				)
 		</if>
 		</where>
+	</select>
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+			SELECT * FROM (SELECT 
+				t.*,
+				u.NAME AS UNIT_NAME,
+				v.NAME USERNAME,
+				w.NAME  DEPT_NAME,
+				x.NAME  USER_DEPTNAME
+			FROM 
+			(SELECT 
+				a.BILL_CODE AS BILL_CODE,	
+				a.UNIT_CODE AS UNIT_CODE,		
+				a.DEPT_CODE AS DEPT_CODE,	
+				a.ENTRY_DATE AS ENTRY_DATE,	
+				a.SERIAL_NUM AS SERIAL_NUM,	
+				a.USER_CODE AS USER_CODE,	
+				a.USER_DEPT AS USER_DEPT,	
+				a.USER_JOB AS USER_JOB,	
+				a.USER_CONTACT AS USER_CONTACT,	
+				a.EFFECTIVE_DATE  AS EFFECTIVE_DATE,	
+				a.SYSTEM AS SYSTEM,	
+				a.ACCOUNT_NAME  AS ACCOUNT_NAME,
+				a.CANCLE_REASON  AS CANCLE_REASON,
+				a.BILL_STATE AS BILL_STATE,	
+				a.BILL_USER AS BILL_USER,	
+				a.BILL_DATE AS BILL_DATE,
+				b.APPROVAL_STATE AS APPROVAL_STATE
+			FROM
+				tb_change_grc_zhzx a  left join tb_approval_main b		
+			on
+			a.BILL_CODE=b.BILL_CODE)  AS t
+				left join oa_department u
+				on  u.DEPARTMENT_CODE = t.UNIT_CODE
+		 		left join sys_user v 
+	 			on t.USER_CODE=v.USER_ID
+	 			left join oa_department w
+		  		ON
+				w.DEPARTMENT_CODE = t.DEPT_CODE
+				left join oa_department x
+				on
+				x.DEPARTMENT_CODE = t.USER_DEPT
+				) AS h
+			where
+			BILL_CODE=#{BILL_CODE}
 	</select>
 		<!-- 列表 -->
 	<select id="datalistPage" parameterType="page" resultType="pd">
