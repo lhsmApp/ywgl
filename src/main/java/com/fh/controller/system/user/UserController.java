@@ -43,8 +43,11 @@ import com.fh.util.ObjectExcelRead;
 import com.fh.util.PageData;
 import com.fh.util.ObjectExcelView;
 import com.fh.util.PathUtil;
+import com.fh.util.StringUtil;
 import com.fh.util.Tools;
+import com.fh.util.base.ConvertUtils;
 
+import cn.jpush.http.StringUtils;
 import net.sf.json.JSONArray;
 
 /**
@@ -102,7 +105,12 @@ public class UserController extends BaseController {
 		if(userName.equals("admin")){
 			pd.put("UNIT_CODE", pd.getString("DEPARTMENT_ID"));
 		}else{
-			pd.put("UNIT_CODE", unitCode);
+			Map<String, String> mapRole=Jurisdiction.getHC();//角色权限
+			if(ConvertUtils.strToInt(mapRole.get("adds"),0)>=3){
+				pd.put("UNIT_CODE", "");
+			}else{
+				pd.put("UNIT_CODE", unitCode);
+			}
 		}
 		
 		page.setPd(pd);

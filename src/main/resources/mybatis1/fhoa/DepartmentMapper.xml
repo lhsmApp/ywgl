@@ -152,25 +152,30 @@
 	<!-- 列表 -->
 	<select id="datalistPage" parameterType="page" resultType="pd">
 		select
-		<include refid="Field"></include>
+		<!-- <include refid="Field"></include>
 		from 
 		<include refid="tableName"></include>
 		where
-			1=1
-		<if test="pd.DEPARTMENT_CODE!= null and pd.DEPARTMENT_CODE != ''"><!-- 检索 -->
-		and PARENT_CODE = #{pd.DEPARTMENT_CODE}
-		</if>
-		<if test="pd.keywords != null and pd.keywords != ''"><!-- 关键词检索 -->
-			and
-				(
-				 NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
-				 or 
-				 NAME_EN LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
-				 or
-				 DEPARTMENT_CODE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
-				)
-		</if>
-		order by DEPARTMENT_CODE
+			1=1 -->
+		A.*,B.NAME PARENT_NAME from oa_department A
+		left join oa_department B
+		on A.PARENT_CODE=B.DEPARTMENT_CODE
+		<where>
+			<if test="pd.DEPARTMENT_CODE!= null and pd.DEPARTMENT_CODE != ''"><!-- 检索 -->
+			and A.PARENT_CODE = #{pd.DEPARTMENT_CODE}
+			</if>
+			<if test="pd.keywords != null and pd.keywords != ''"><!-- 关键词检索 -->
+				and
+					(
+					 A.NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or 
+					 A.NAME_EN LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+					 or
+					 A.DEPARTMENT_CODE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					)
+			</if>
+		</where>
+		order by A.DEPARTMENT_CODE
 	</select>
 	
 	<!-- 通过ID获取其子级列表 -->

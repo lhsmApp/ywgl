@@ -60,6 +60,7 @@
 									<!-- <th class="center">英文</th> -->
 									<th class="center">编码</th>
 									<th class="center">负责人</th>
+									<th class="center">上级单位</th>
 									<th class="center">单位职能</th>
 									<th class="center">操作</th>
 								</tr>
@@ -77,6 +78,7 @@
 											<%-- <td class='center'><a href="javascript:goSondict('${var.DEPARTMENT_CODE }')">${var.NAME_EN}</a></td> --%>
 											<td class='center'>${var.DEPARTMENT_CODE}</td>
 											<td class='center'>${var.HEADMAN}</td>
+											<td class='center'>${var.PARENT_NAME}</td>
 											<td class='center'>${var.FUNCTIONS}</td>
 											<td class="center">
 												<%-- <c:if test="${QX.edit != 1 && QX.del != 1 }">

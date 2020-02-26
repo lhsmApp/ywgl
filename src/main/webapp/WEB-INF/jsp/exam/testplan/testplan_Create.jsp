@@ -46,7 +46,13 @@
 								<tr>
 									<td width="25%"><span>考试计划名称：</span></td>
 									<td width="40%"><input type="text" name="TEST_PLAN_NAME" id="TEST_PLAN_NAME" value="${pd.TEST_PLAN_NAME}" maxlength="32" placeholder="这里输入考试计划名称" title="计划名称" /></td>
-									<td  width="35%" rowspan="2"><img src="static/images/rw.jpg"></td>
+									<td  width="35%" rowspan="2">
+									<!-- <img src="static/images/rw.jpg"> -->
+									<div id="uploadPic" class="col-xs-6" style="width: 100%;">
+										<input id="pic" name="pic" type="file">
+									</div>
+									<input hidden="hidden" id="COURSE_COVER" name="COURSE_COVER">
+									</td>
 								</tr>									
 								<tr>
 									<td width="25%"><span>选择试卷：</span></td>
@@ -160,6 +166,9 @@
 	<script src="static/ace/js/date-time/bootstrap-datepicker.js"></script>
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
+	<!-- 上传文件 -->
+	<script src="static/ace/js/ace/elements.fileinput.js"></script>
+	<script type="text/javascript" src="static/ace/js/jquery.form.js"></script>
 	<script type="text/javascript">
 		$(top.hangge());//关闭加载状态
 		function save1(){
@@ -180,11 +189,13 @@
 			var endDate=$("#END_DATE").val();//结束时间
 			var testPersons=$("#TEST_PLAN_PERSONS").val();//考试人员
 			var testMemo=$("#TEST_PLAN_MEMO").val();//	任务描述
+			var COURSE_COVER=$("#COURSE_COVER").val();//图片路径
 			$.ajax({
 				type: "POST",
 				url: '<%=basePath%>testplan/save.do',
-				data:{TEST_PLAN_ID:testID,TEST_PLAN_NAME:testName,TEST_PAPER_ID:paperId,START_DATE:startDate,END_DATE:endDate,TEST_PLAN_PERSONS:testPersons,TEST_PLAN_MEMO:testMemo},
+				data:{TEST_PLAN_ID:testID,TEST_PLAN_NAME:testName,TEST_PAPER_ID:paperId,START_DATE:startDate,END_DATE:endDate,TEST_PLAN_PERSONS:testPersons,TEST_PLAN_MEMO:testMemo,COURSE_COVER:COURSE_COVER},
 		    	dataType:'json',
+		    	async: false, 
 				cache: false,
 				success: function(response){
 					if(response.code==0){
@@ -220,6 +231,67 @@
 			$("#tobodyUser").html('');
 		}
 		$(function() {
+			//上传区域框
+			$('#uploadPic').find('input[type=file]').ace_file_input({
+				style:'well',
+				btn_choose:'点击选择图片上传/修改',
+				btn_change:null,
+				no_icon:'ace-icon fa fa-picture-o',
+				thumbnail:'large',
+				droppable:true,
+				before_change: function(files, dropped){
+					var file = files[0];
+					var name = file.name;
+					//判断文件类型
+					if (!name.endsWith(".jpg") && !name.endsWith(".jpeg") && !name.endsWith(".png") 
+						&& !name.endsWith(".gif") && !name.endsWith(".bmp")){
+						$("#pic").tips({
+							side:3,
+				            msg:'仅可上传 jpg jpeg png gif bmp 类型图片',
+				            bg:'#AE81FF',
+				            time:2
+				        });
+						return false;	 
+					}
+					//判断文件大小
+					if(file.size > 2097152){
+						$("#pic").tips({
+							side:3,
+				            msg:'文件大小不能超过2M',
+				            bg:'#AE81FF',
+				            time:2
+				        });
+						return false;
+					}
+					//上传图片
+					var options = {
+						url: '<%=basePath%>coursebase/uploadPic.do?tm='+new Date().getTime(),
+						type: 'POST',
+						dataType: 'json',
+						cache: false,
+						success: function(data){
+							// 动态追加pic地址 
+							$("#COURSE_COVER").attr("value",data.path);
+							$("#pic").tips({
+								side:3,
+					            msg:'上传图片成功',
+					            bg:'#AE81FF',
+					            time:2
+					        });
+						},
+						error: function(data){
+							$("#pic").tips({
+								side:3,
+					            msg:'图片上传失败',
+					            bg:'#AE81FF',
+					            time:2
+					        });
+						}
+					}
+					$("#Form").ajaxSubmit(options);
+					return true;
+				}
+			})
 			//日期框
 			$('.date-picker').datepicker({
 				autoclose: true,

@@ -134,6 +134,7 @@
 		<include refid="Field"></include>
 		from 
 		<include refid="tableName"></include>
+		
 	</select>
 	
 	<!-- 通过ID获取其子级列表 -->
@@ -143,6 +144,7 @@
 		from 
 		<include refid="tableName"></include>
 		where 
-			PRO_TYPE_PARENT_ID = #{parentId} order by PRO_TYPE_ID 
+			state='1'
+			AND PRO_TYPE_PARENT_ID = #{parentId} order by PRO_TYPE_ID 
 	</select>
 </mapper>

@@ -134,19 +134,22 @@
 	<select id="getUserInfo" parameterType="pd" resultType="pd">
 		select <include refid="Field"></include> from
 		<include refid="tableName"></include>
-		where 1=1
-		<if test="USERNAME!=null and PASSWORD!=null">
-		and USERNAME = #{USERNAME} and PASSWORD=#{PASSWORD}
-		</if>
-		<if test="USER_ID!=null and USER_ID>0">
-		and USER_ID = #{USER_ID}
-		</if>
+		<where>
+			STATUS='1'
+			<if test="USERNAME!=null and PASSWORD!=null">
+			and USERNAME = #{USERNAME} and PASSWORD=#{PASSWORD}
+			</if>
+			<if test="USER_ID!=null and USER_ID>0">
+			and USER_ID = #{USER_ID}
+			</if>
+		</where>
 	</select>
 	
 	<!-- 判断用户名和密码 -->
 	<select id="getStudentInfo" parameterType="pd" resultType="pd">
 		select * from tb_train_student 
 		<where>
+			STATE='1'
 			<if test="STUDENT_CODE!=null and PASSWORD!=null">
 				and STUDENT_CODE = #{STUDENT_CODE} and PASSWORD=#{PASSWORD}
 			</if>
@@ -610,15 +613,22 @@
 	
 	<!-- 获取用户信息-->
 	<select id="getUserValue" parameterType="pd" resultType="pd" >
-		select * from <include refid="tableName"></include>
+		select A.* from <include refid="tableName"></include> A
+		left join sys_role B
+		on A.ROLE_ID=B.ROLE_ID
 		<where> 
 			<if test="UNIT_CODE != null and UNIT_CODE != ''"><!-- 状态检索 -->
-				and UNIT_CODE=#{UNIT_CODE} 
+				and A.UNIT_CODE=#{UNIT_CODE} 
 			</if>
-			<if test="ROLE_ID != null and ROLE_ID != ''"><!-- 状态检索 -->
+			<!-- <if test="ROLE_ID != null and ROLE_ID != ''">状态检索
 				and ROLE_ID in (${ROLE_ID}) 
+			</if> -->
+			<if test="STATUS != null and STATUS != ''"><!-- 状态检索 -->
+				and A.STATUS=#{STATUS} 
 			</if>
-			
+			<if test="CONDITION != null and CONDITION != ''"><!-- 其它条件检索 -->
+				${CONDITION} 
+			</if>
 		</where>
 	</select>
 		

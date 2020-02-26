@@ -45,6 +45,7 @@ import com.fh.util.ObjectExcelView;
 import com.fh.util.PageData;
 import com.fh.util.SqlTools;
 import com.fh.util.StringUtil;
+import com.fh.util.base.ConvertUtils;
 import com.fh.util.date.DateUtils;
 import com.fh.util.enums.BillNumType;
 import com.fh.util.enums.FundsConfirmInfoState;
@@ -87,7 +88,7 @@ public class MBPController extends BaseController {
 	private DepartmentService departmentService;
 	
 	// 判断当前人员的所在组织机构是否只有自己单位
-	private int departSelf = 0;
+	//private int departSelf = 0;
 	
 	/**列表
 	 * @param page
@@ -162,11 +163,9 @@ public class MBPController extends BaseController {
 		mv.addObject("proPriorityList", ProPriority.values());//优先级
 		
 		//受理人
-		pd.put("KEY_CODE", "ProblemReceiverRole");
-		String receiverRole = sysConfigManager.getSysConfigByKey(pd);
-		String receiverRoleIn=com.fh.controller.common.QueryFeildString.getSqlInString(receiverRole);
 		PageData pdCondition1=new PageData();
-		pdCondition1.put("ROLE_ID", receiverRoleIn);
+		pdCondition1.put("STATUS", "1");
+		pdCondition1.put("CONDITION", "AND B.DEL_QX='1'");
 		List<PageData> receiveUserList=DictsUtil.getSysUserDicByCondition(userService,pdCondition1);//接收用户
 		mv.addObject("receiveUserList",receiveUserList);
 		
@@ -192,7 +191,13 @@ public class MBPController extends BaseController {
 		pd.put("CURRENT_DATE", DateUtils.getCurrentTime());
 		mv.addObject("pd",pd);
 		mv.addObject("systemList", DictsUtil.getDictsByParentBianma(dictionariesService, "SYSTEM"));//系统类型
-		mv.addObject("userList", DictsUtil.getSysUserDic(userService));//用户
+		//mv.addObject("userList", DictsUtil.getSysUserDic(userService));//用户
+		//受理人
+		PageData pdCondition1=new PageData();
+		pdCondition1.put("STATUS", "1");
+		pdCondition1.put("CONDITION", "AND B.DEL_QX='1'");
+		List<PageData> receiveUserList=DictsUtil.getSysUserDicByCondition(userService,pdCondition1);//接收用户
+		mv.addObject("userList",receiveUserList);
 		mv.addObject("proPriorityList", ProPriority.values());//优先级
 		
 		List<PageData> zproblemTypePdList = new ArrayList<PageData>();
@@ -217,7 +222,13 @@ public class MBPController extends BaseController {
 		pd.put("CURRENT_DATE", DateUtils.getCurrentTime());
 		mv.addObject("pd",pd);
 		mv.addObject("systemList", DictsUtil.getDictsByParentBianma(dictionariesService, "SYSTEM"));//系统类型
-		mv.addObject("userList", DictsUtil.getSysUserDic(userService));//用户
+		//mv.addObject("userList", DictsUtil.getSysUserDic(userService));//用户
+		
+		PageData pdCondition1=new PageData();
+		pdCondition1.put("STATUS", "1");
+		pdCondition1.put("CONDITION", "AND B.DEL_QX='1'");
+		List<PageData> receiveUserList=DictsUtil.getSysUserDicByCondition(userService,pdCondition1);//接收用户
+		mv.addObject("userList",receiveUserList);
 		mv.addObject("proPriorityList", ProPriority.values());//优先级
 		
 		List<PageData> zproblemTypePdList = new ArrayList<PageData>();
@@ -291,7 +302,7 @@ public class MBPController extends BaseController {
 		Map<String, String> mapRole=Jurisdiction.getHC();//角色权限
 		if(mapRole.get("adds").equals("1")||mapRole.get("adds").equals("2"))
 		{
-			this.departSelf = 1;
+			//this.departSelf = 1;
 			pd.put("departTreeSource", "0");
 		} else {
 			pd.put("departTreeSource", "1");
@@ -358,9 +369,9 @@ public class MBPController extends BaseController {
 		Map<String, String> mapRole=Jurisdiction.getHC();//角色权限
 		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 		String userId = user.getUSER_ID();
-		if (departSelf == 1){
+		if(mapRole.get("adds").equals("1")||mapRole.get("adds").equals("2")){
 			if(mapRole.get("adds").equals("2")){//2为基层单位管理员，可以看到本单位所有人员问题，所以按部门搜索
-				strDeptCode = Jurisdiction.getCurrentDepartmentID();
+				strDeptCode = user.getUNIT_CODE();
 			}else{//1为基层普通用户，只能查询自己申请的数据
 				strDeptCode="";
 				pd.put("BILL_USER", userId);

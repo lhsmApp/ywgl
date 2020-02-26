@@ -46,6 +46,8 @@
 	/* .title a{ padding: 0 30px; color: #a2a2a2;} */
 	/* .title a.active{ color: #404040;} */
 	.title a.last{ border-left: 1px solid #cecece;}
+	
+	
 </style>
 <script>
 	//window.setTimeout(showfh,3000); 
@@ -84,7 +86,7 @@
 	};
 </script>
 </head>
-<body>
+<body style="background-image:url(static/login/images/erpdenglu1.jpg);background-repeat:no-repeat;background-size: cover;">
 
 	<c:if test="${pd.isMusic == 'yes' }">
 		<div style="display: none">
@@ -92,17 +94,23 @@
 		</div>
 	</c:if>
 	<canvas class="cavs"></canvas>
-	<div
-		style="width: 100%; text-align: center; margin: 0 auto; position: absolute;">
+	
+	<div style="width: 100%; text-align: center; margin: 0 auto; position: absolute;">
 		<!-- 管理员登录 -->
 		<div id="windows1">
+			
 			<div id="loginbox">
+				
 				<form action="" method="post" name="loginForm" id="loginForm">
+					
 					<div class="control-group normal_text">
+						
+							<!-- <span style="font-size:20px;font-weight:bold;">ERP运维管理平台</span> -->
 						<h3>
-							<img src="static/login/logo.png" alt="东部管道人工成本核算系统" />
+							ERP运维管理平台
 						</h3>
 					</div>
+					
 					<div class="control-group">
 						<div class="controls">
 							<div class="main_input_box">
@@ -159,7 +167,7 @@
 				<div class="controls">
 					<div class="main_input_box">
 						<font color="white"><span id="nameerr">Copyright ©
-								lhsm 2017</span></font>
+								lhsm 2020</span></font>
 					</div>
 				</div>
 			</div>
@@ -251,26 +259,9 @@
 		</div>
 
 	</div>
-	<div id="templatemo_banner_slide" class="container_wapper">
-		<div class="camera_wrap camera_emboss" id="camera_slide">
-			<!-- 背景图片 -->
-			<c:choose>
-				<c:when test="${not empty pd.listImg}">
-					<c:forEach items="${pd.listImg}" var="var" varStatus="vs">
-						<div data-src="static/login/images/${var.FILEPATH }"></div>
-					</c:forEach>
-				</c:when>
-				<c:otherwise>
-					<div data-src="static/login/images/banner_slide_01.jpg"></div>
-					<div data-src="static/login/images/banner_slide_02.jpg"></div>
-					<div data-src="static/login/images/banner_slide_03.jpg"></div>
-					<div data-src="static/login/images/banner_slide_04.jpg"></div>
-					<div data-src="static/login/images/banner_slide_05.jpg"></div>
-				</c:otherwise>
-			</c:choose>
-		</div>
-		<!-- #camera_wrap_3 -->
-	</div>
+	
+	<!-- <img alt="" style="background-size: cover; background-repeat: no-repeat;" src="static/login/images/banner_slide_05.jpg"> -->
+
 
 	<script type="text/javascript">
 		//服务器校验

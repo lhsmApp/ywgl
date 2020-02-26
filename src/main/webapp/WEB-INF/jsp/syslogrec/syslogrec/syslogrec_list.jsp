@@ -50,7 +50,7 @@
 				<div class="page-content">
 					<!-- /section:settings.box -->
 					<div class="page-header">
-						<span class="label label-xlg label-success arrowed-right">东部管道</span>
+						<span class="label label-xlg label-success arrowed-right">系统设置</span>
 						<!-- arrowed-in-right -->
 						<span class="label label-xlg label-yellow arrowed-in arrowed-right"
 							id="subTitle" style="margin-left: 2px;">日志查询</span> <span

@@ -19,7 +19,8 @@
 		TEST_PLAN_PERSONS,	
 		STATE,	
 		CREATE_USER,	
-		CREATE_DATE
+		CREATE_DATE,
+		COURSE_COVER
 	</sql>
 	
 	<!-- 字段值 -->
@@ -34,7 +35,8 @@
 		#{TEST_PLAN_PERSONS},	
 		#{STATE},	
 		#{CREATE_USER},	
-		#{CREATE_DATE}
+		#{CREATE_DATE},
+		#{COURSE_COVER}
 	</sql>
 	
 	<!-- 新增-->
@@ -72,7 +74,7 @@
 	<update id="edit" parameterType="pd">
 		update
 		<include refid="tableName"></include>
-		set 
+		<set>
 			TEST_PLAN_ID = #{TEST_PLAN_ID},
 			TEST_PLAN_NAME = #{TEST_PLAN_NAME},
 			START_DATE = #{START_DATE},
@@ -83,7 +85,11 @@
 			TEST_PLAN_PERSONS = #{TEST_PLAN_PERSONS},
 			STATE = #{STATE},
 			CREATE_USER = #{CREATE_USER},
-			CREATE_DATE = #{CREATE_DATE}
+			CREATE_DATE = #{CREATE_DATE},
+			<if test="COURSE_COVER!= null and COURSE_COVER!= ''">
+				COURSE_COVER = #{COURSE_COVER},
+			</if>
+		</set>
 		where 
 		TEST_PLAN_ID = #{TEST_PLAN_ID}
 	</update>

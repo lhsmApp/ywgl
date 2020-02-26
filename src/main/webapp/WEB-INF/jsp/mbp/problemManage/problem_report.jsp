@@ -378,10 +378,11 @@
 											
 											<div >
 												<h4>
-													<button id="btnAddProAnswerAttachment" class="btn btn-success btn-xs"
+													<!-- <button id="btnAddProAnswerAttachment" class="btn btn-success btn-xs"
 														onclick="addProAttachmentByType('PROBLEM_ANSWER')">
 														<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>附件</span>
-													</button>
+													</button> -->
+													<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>附件</span>
 												</h4>
 												<table id="simple-table" class="table table-striped table-bordered table-hover" style="margin-top:5px;">	
 													<thead>
@@ -598,13 +599,13 @@ function initList(url){
 function addItem(item){
 	var htmlProState='';
 	if(item.PRO_STATE=="2"){
-		htmlProState='<span class="list-item-value blue">'+item.PRO_STATE_NAME+'</span>'
+		htmlProState='<span class="label label-xs label-info">'+item.PRO_STATE_NAME+'</span>'
 	}else if(item.PRO_STATE=="3"){
-		htmlProState='<span class="list-item-value orange">'+item.PRO_STATE_NAME+'</span>'
+		htmlProState='<span class="label label-xs label-warning">'+item.PRO_STATE_NAME+'</span>'
 	}else if(item.PRO_STATE=="4"){
-		htmlProState='<span class="list-item-value grey">'+item.PRO_STATE_NAME+'</span>'
+		htmlProState='<span class="label label-xs label-inverse">'+item.PRO_STATE_NAME+'</span>'
 	}else{
-		htmlProState='<span class="list-item-value green">'+item.PRO_STATE_NAME+'</span>'
+		htmlProState='<span class="label label-xs label-success">'+item.PRO_STATE_NAME+'</span>'
 	}
 	var htmlItem='<li class="item-grey clearfix list-item-hover" onclick=getDetail("'+item.PRO_CODE+'")>'
 	+'<input name="PRO_CODE" id="PRO_CODE" type="hidden" value="'+item.PRO_CODE+'" />'
@@ -1187,6 +1188,34 @@ function addProAttachmentByType(type){
             time:3
         });
 		return;
+	}
+	if(currentItem.PRO_STATE=='2'){//已提交
+		$("#btnAddProInfoAttachment").tips({
+			side : 3,
+			msg : '当前问题"已提交"，不能再上传附件',
+			bg : '#AE81FF',
+			time : 2
+		});
+		$("#btnAddProInfoAttachment").focus();
+		return false;
+	}else if(currentItem.PRO_STATE=='3'){//受理中
+		$("#btnAddProInfoAttachment").tips({
+			side : 3,
+			msg : '当前问题"受理中"，不能再上传附件',
+			bg : '#AE81FF',
+			time : 2
+		});
+		$("#btnAddProInfoAttachment").focus();
+		return false;
+	}else if(currentItem.PRO_STATE=='4'){//已关闭
+		$("#btnAddProInfoAttachment").tips({
+			side : 3,
+			msg : '当前问题"已关闭"，不能再上传附件',
+			bg : '#AE81FF',
+			time : 2
+		});
+		$("#btnAddProInfoAttachment").focus();
+		return false;
 	}
 	
 	 var proCode=currentItem.PRO_CODE;
