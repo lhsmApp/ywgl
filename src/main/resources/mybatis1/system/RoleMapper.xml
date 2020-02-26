@@ -57,7 +57,7 @@
 		<include refid="tableName"></include>
 		where
 			PARENT_ID = #{ROLE_ID}
-			and ADD_QX &lt;= #{ADD_QX}
+			and ADD_QX &lt; #{ADD_QX}
 		ORDER BY ROLE_ID
 	</select>
 	
