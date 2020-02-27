@@ -416,7 +416,9 @@
 			$("#EFFECTIVE_DATE").val("");//申请生效日期
 			$("#BILL_CODE").val("");//申请单号
 			$("#ADD_ROLES").val("");//新增角色
-			$("#DELETE_ROLES").val("");//删除角色		
+			$("#DELETE_ROLES").val("");//删除角色
+			$("#USER_EMAIL").val("");//Email
+			$("#USER_TEL").val("");//电话
 		}
 		
 		//删除

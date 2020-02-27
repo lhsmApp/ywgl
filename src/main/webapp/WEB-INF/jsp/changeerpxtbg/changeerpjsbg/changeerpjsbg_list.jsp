@@ -355,6 +355,8 @@
 			$("#BILL_CODE").val("");//申请单号
 			$("#ADD_ROLE").val("");//新增角色
 			$("#DEL_ROLE").val("");//删除角色
+			$("#USER_EMAIL").val("");//Email
+			$("#USER_TEL").val("");//电话
 			
 		}
 		

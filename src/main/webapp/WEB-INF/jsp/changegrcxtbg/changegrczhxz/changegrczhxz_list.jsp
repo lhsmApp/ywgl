@@ -491,6 +491,8 @@
 			$("#ACCOUNT_ROLES").val("");//帐号角色
 			$("#EFFECTIVE_DATE").val("");//申请生效日期
 			$("#BILL_CODE").val("");//申请单号
+			$("#USER_EMAIL").val("");//Email
+			$("#USER_TEL").val("");//电话
 			
 // 			 top.jzts();
 // 			 var diag = new top.Dialog();

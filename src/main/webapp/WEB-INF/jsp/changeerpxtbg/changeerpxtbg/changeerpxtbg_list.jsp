@@ -348,7 +348,9 @@
 			$("#USER_JOB").val("");//申请人岗位
 			$("#USER_CONTACT").val("");//联系方式
 			$("#EFFECTIVE_DATE").val("");//变更预期时间
-			$("#BILL_CODE").val("");//申请单号		
+			$("#BILL_CODE").val("");//申请单号	
+			$("#USER_EMAIL").val("");//Email
+			$("#USER_TEL").val("");//电话
 		}
 		//删除
 		function del(Id){
