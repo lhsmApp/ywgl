@@ -54,15 +54,15 @@
   </tr>
   <tr>
         <td height="40" align="center" width="100" bgcolor="EFEFFF">申请人</td>
-        <td align="center" width="200" bgcolor="#FFFFFF">${pd.USER_CODE}</td>
+        <td align="center" width="200" bgcolor="#FFFFFF">${pd.USERNAME}</td>
         <td align="center" width="100" bgcolor="EFEFFF">申请人部门</br>/岗位</td>
-        <td align="center" width="200" bgcolor="#FFFFFF">${pd.USER_DEPT}</br>${pd.USER_JOB}</td>
+        <td align="center" width="200" bgcolor="#FFFFFF">${pd.USER_DEPTNAME}</br>${pd.USER_JOB}</td>
   </tr>
   <tr>
         <td height="40" align="center" bgcolor="EFEFFF">变更名称</td>
         <td align="center" bgcolor="#FFFFFF">${pd.BG_NAME}</td>
         <td align="center" bgcolor="EFEFFF">联系方式</br>(Email,电话)</td>
-        <td align="center" bgcolor="#FFFFFF">${pd.USER_CONTACT}</td>
+        <td align="center" bgcolor="#FFFFFF">${pd.USER_EMAIL},${pd.USER_TEL}</td>
   </tr>	
     <tr>
         <td height="40" align="center" bgcolor="EFEFFF">ERP系统名称</td>
@@ -73,23 +73,36 @@
         </td>
   </tr>	
   <tr>
-          <td height="200" colspan="4" align="left"  bgcolor="#FFFFFF">变更原因：</br>&nbsp;&nbsp;&nbsp;&nbsp;${pd.BG_REASON}</br>变更内容：</br>&nbsp;&nbsp;&nbsp;&nbsp;${pd.BG_REASON}</br>变更变更预期时间：</br>&nbsp;&nbsp;&nbsp;&nbsp;${pd.EFFECTIVE_DATE}</td>
+          <td height="200" colspan="4" align="left"  bgcolor="#FFFFFF">变更原因：</br>&nbsp;&nbsp;&nbsp;&nbsp;${pd.BG_REASON}</br>变更内容：</br>&nbsp;&nbsp;&nbsp;&nbsp;${pd.BG_NR}</br>变更预期时间：</br>&nbsp;&nbsp;&nbsp;&nbsp;${pd.EFFECTIVE_DATE}</td>
   </tr>	
   <tr>
-        <td  colspan="2"  height="70"  align="left" bgcolor="#FFFFFF">单位主管领导审批</br>变更申请  符合   不符合业务需求</td>
-		<td  colspan="2"  height="70"  align="left" bgcolor="#FFFFFF">签字                             年         月           日</td>
+        <td  colspan="2"  height="60"  align="left" bgcolor="#FFFFFF">
+          <table>
+          <tr  colspan="5" ><td>  单位主管领导审批</td></tr>
+          <tr><td>变更申请</td><td align="right" ><div class="one"></div></td><td>符合</td><td>  <div class="one"></div></td><td>不符合业务需求</td></tr></table>       
+        </td>
+		<td  colspan="2"  height="60"  align="left" bgcolor="#FFFFFF">
+		<table><tr><td width="150">签字： </td><td width="75"> 年</td><td width="75">月</td><td width="75">日</td></tr></table>                           
+		
+		</td>
   </tr>
     <tr>
-         <td  colspan="2"  height="70"  align="left" bgcolor="#FFFFFF">油田公司业务主管部门审批意见</td>
-		<td  colspan="2"  height="70"  align="left" bgcolor="#FFFFFF">签字                             年         月           日</td>  
+         <td  colspan="2"  height="60"  align="left" bgcolor="#FFFFFF">油田公司业务主管部门审批意见</td>
+		<td  colspan="2"  height="60"  align="left" bgcolor="#FFFFFF">
+				<table><tr><td width="150">签字： </td><td width="75"> 年</td><td width="75">月</td><td width="75">日</td></tr></table>          
+				</td>  
   </tr>	
   <tr>
-         <td  colspan="2"  height="70"  align="left" bgcolor="#FFFFFF">油田公司内控审批意见</td>
-		<td  colspan="2"  height="70"  align="left" bgcolor="#FFFFFF">签字                             年         月           日</td>  
+         <td  colspan="2"  height="60"  align="left" bgcolor="#FFFFFF">油田公司内控审批意见</td>
+		<td  colspan="2"  height="60"  align="left" bgcolor="#FFFFFF">		
+		<table><tr><td width="150">签字： </td><td width="75"> 年</td><td width="75">月</td><td width="75">日</td></tr></table>         
+		 </td>  
   </tr>	
     <tr>
-         <td  colspan="2"  height="70"  align="left" bgcolor="#FFFFFF">系统负责人审批意见</td>
-		<td  colspan="2"  height="70"  align="left" bgcolor="#FFFFFF">签字                             年         月           日</td>  
+         <td  colspan="2"  height="60"  align="left" bgcolor="#FFFFFF">系统负责人审批意见</td>
+		<td  colspan="2"  height="60"  align="left" bgcolor="#FFFFFF">
+				<table><tr><td width="150">签字： </td><td width="75"> 年</td><td width="75">月</td><td width="75">日</td></tr></table>          
+</td>  
   </tr>	
 </table>
 <table width="750" height="10" border="0" align="center" cellpadding="2" cellspacing="0" bgcolor="#FFFFFF">
@@ -102,28 +115,30 @@
     <td colspan="4"  height="30" align="center">变更受理（总部ERP运维主管填写）</td>
   </tr>
   <tr>
-        <td height="70" align="center" width="100" bgcolor="EFEFFF">是否可实施</br>该变更</td>
-        <td align="center" width="200" bgcolor="#FFFFFF">是        否</td>
-        <td  rowspan="2" width="100" bgcolor="EFEFFF">对该变更的</br>总体意见 </td>
-        <td  rowspan="2" valign="bottom" width="100" bgcolor="EFEFFF">签字                             年         月           日 </td>
+        <td height="60" align="center" width="80" bgcolor="EFEFFF">是否可实施</br>该变更</td>
+        <td align="center" width="150" bgcolor="#FFFFFF">
+		 <table><tr><td align="left" ><div class="one"></div></td><td align="left" >是</td><td align="left" >  <div class="one"></div></td><td align="left" >否</td></tr></table>       </td>
+        <td  rowspan="2" width="80" align="center"  bgcolor="EFEFFF">对该变更的</br>总体意见 </td>
+        <td  rowspan="2" valign="bottom" width="150" bgcolor="EFEFFF">
+        <table><tr><td width="100">签字： </td><td width="40"> 年</td><td width="40">月</td><td width="40">日</td></tr></table>           </td>
   </tr>
   <tr>
         <td height="70" align="center" bgcolor="EFEFFF">变更功能测试</td>
-        <td align="center"  bgcolor="#FFFFFF">需要测试           不需要测试</td>
+        <td align="center"  bgcolor="#FFFFFF">
+ <table><tr><td><div class="one"></div></td><td>需要测试</td><td>  <div class="one"></div></td><td>不需要测试</td></tr></table>       </td>
 
   </tr>	
-</table>
-<table width="750" height="30" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
-  <tr>
-    <td align="right"><button onClick="window.print()">打印</button>&nbsp;</td>
-  </tr>
 </table>
 
 <hr/>
 <div>1对变更是否涉及跨部门业务、是否涉及数据迁移以及对现有业务流程的影响等问题发表意见，根据这些意见判断变更是否需要进行功能测试以及用户接受性测试。</div>
 
 </div>
-		
+<table width="750" height="20" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
+  <tr>
+    <td align="right"><button onClick="window.print()">打印</button>&nbsp;</td>
+  </tr>
+</table>		
 		<div id="zhongxin2" class="center" style="display:none"><br/><br/><br/><br/><br/><img src="static/images/jiazai.gif" /><br/><h4 class="lighter block green">提交中...</h4></div>
 	
 		<!-- 引入 -->
