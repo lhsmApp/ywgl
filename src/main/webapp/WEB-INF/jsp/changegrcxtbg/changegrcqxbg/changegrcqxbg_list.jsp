@@ -207,9 +207,17 @@
 														<label for="form-field-jsbg-report-delrole">删除角色</label>
 														<input type="text" name="DELETE_ROLES" id="DELETE_ROLES" class="form-control" placeholder="请输入新增角色"/>
 													</div>
+<!-- 													<div style="margin:10px 0px;"> -->
+<!-- 														<label for="form-field-jsbg-report-contact">联系方式</label> -->
+<!-- 														<input type="text" name="USER_CONTACT" id="USER_CONTACT" class="form-control" placeholder="请输入联系方式"/> -->
+<!-- 													</div> -->
 													<div style="margin:10px 0px;">
-														<label for="form-field-jsbg-report-contact">联系方式</label>
-														<input type="text" name="USER_CONTACT" id="USER_CONTACT" class="form-control" placeholder="请输入联系方式"/>
+														<label for="form-field-xtbg-report-contact">Email</label>
+														<input type="text" name="USER_EMAIL" id="USER_EMAIL" class="form-control" placeholder="请输入联系方式"/>
+													</div>
+													<div style="margin:10px 0px;">
+														<label for="form-field-xtbg-report-contact">电话</label>
+														<input type="text" name="USER_TEL" id="USER_TEL" class="form-control" placeholder="请输入联系方式"/>
 													</div>
 													<div style="margin:10px 0px;">
 														<label for="form-field-select-1">变更预期时间</label>
@@ -338,6 +346,8 @@
 			var billCode=$("#BILL_CODE").val();//申请单号
 			var addRole=$("#ADD_ROLES").val();//新增角色
 			var delRole=$("#DELETE_ROLES").val();//删除角色
+			var uesrEmail=$("#USER_EMAIL").val();//Email
+			var uesrTel=$("#USER_TEL").val();//电话
 			if(bgReason==""||bgReason==null){    
 		        alert('变更原因不能为空！');
 		        $("#BG_REASON").focus();
@@ -359,7 +369,7 @@
 			$.ajax({
 				type: "POST",
 				url: '<%=basePath%>changegrcqxbg/save.do',
-				data:{BG_REASON:bgReason,UNIT_CODE:unitCode,DEPT_CODE:deptCode,USER_CODE:userCode,USER_DEPT:uesrDept,USER_JOB:uesrJob,USER_CONTACT:uesrContact,EFFECTIVE_DATE:bgyqDate,BILL_CODE:billCode,ADD_ROLES:addRole,DELETE_ROLES:delRole},
+				data:{USER_EMAIL:uesrEmail,USER_TEL:uesrTel,BG_REASON:bgReason,UNIT_CODE:unitCode,DEPT_CODE:deptCode,USER_CODE:userCode,USER_DEPT:uesrDept,USER_JOB:uesrJob,USER_CONTACT:uesrContact,EFFECTIVE_DATE:bgyqDate,BILL_CODE:billCode,ADD_ROLES:addRole,DELETE_ROLES:delRole},
 		    	dataType:'json',
 				cache: false,
 				success: function(response){
@@ -541,6 +551,8 @@
 		    			$("#EFFECTIVE_DATE").val(datas.EFFECTIVE_DATE);//申请生效日期
 		    			$("#ADD_ROLES").val(datas.ADD_ROLES);//新增角色
 		    			$("#DELETE_ROLES").val(datas.DELETE_ROLES);//删除角色
+		       			$("#USER_EMAIL").val(datas.USER_EMAIL);//Email
+		    			$("#USER_TEL").val(datas.USER_TEL);//电话
 		            	$('#detail-tab').html(html);
 		            	var html = '';
 		      		     html += setDetail(datas);			          
@@ -610,7 +622,7 @@
 			 var diag = new top.Dialog();
 			 diag.Drag=true;
 			 diag.Title ="系统变更申请单打印";
-			 diag.URL = '<%=basePath%>changegrcqxbg/goPrint.do?BILL_CODE='+encodeURI(Id);
+			 diag.URL = '<%=basePath%>changegrcqxbg/printf.do?BILL_CODE='+encodeURI(Id);
 			 diag.Width = 800;
 			 diag.Height = 600;
 			 diag.Modal = true;				//有无遮罩窗口

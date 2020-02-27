@@ -92,7 +92,7 @@ public class ChangeErpJsbgController extends BaseController {
 			changeerpjsbgService.save(pd);
 			commonBase.setCode(0);
 		}else{
-			pd.put("UPDATE_DATE", DateUtils.getCurrentTime());
+			pd.put("UPDATE_DATE", DateUtils.getCurrentTime().split(" ")[0]);
 			changeerpjsbgService.updateEdit(pd);
 			commonBase.setCode(0);
 		}

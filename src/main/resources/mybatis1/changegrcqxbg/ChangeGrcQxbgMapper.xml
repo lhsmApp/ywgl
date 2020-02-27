@@ -136,7 +136,7 @@
 			USER_TEL = #{USER_TEL},
 			USER_EMAIL = #{USER_EMAIL},			
 <!-- 			BG_TYPE = #{BG_TYPE}, -->
-<!-- 			ADD_ROLES = #{ADD_ROLES}, -->
+			ADD_ROLES = #{ADD_ROLES},
 			DELETE_ROLES = #{DELETE_ROLES}
 <!-- 			BILL_STATE = #{BILL_STATE}, -->
 <!-- 			BILL_USER = #{BILL_USER}, -->
