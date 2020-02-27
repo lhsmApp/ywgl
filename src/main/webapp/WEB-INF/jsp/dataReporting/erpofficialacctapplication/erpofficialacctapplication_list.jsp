@@ -81,7 +81,9 @@
 									<td style="vertical-align:top;padding-left:3px;">
 										<a class="btn btn-info btn-sm" onclick="tosearch()"><i class="ace-icon fa fa-search bigger-110"></i></a>
 										<c:if test="${pd.confirmState==1 }">
+										<c:if test="${pd.busiDate ==null ||pd.busiDate =='' || pd.month== pd.busiDate}">
 										<a class="btn btn-white btn-info btn-bold" onclick="addRows()"><span class="ace-icon fa fa-plus-circle purple"></span>添加</a>						
+										</c:if>
 										<a class="btn btn-white btn-info btn-bold" onclick="edit()"><span class="ace-icon fa fa-pencil-square-o purple"></span>编辑</a>
 										<a class="btn btn-white btn-info btn-bold" onclick="save()"><i class="ace-icon fa fa-floppy-o bigger-120 blue"></i>保存</a>
 										</c:if>
@@ -95,7 +97,9 @@
 										<a class="btn btn-white btn-info btn-bold" onclick="backReport('确定要撤回上报吗?');" title="批量驳回" ><i class="ace-icon fa fa-exclamation-triangle red bigger-110"></i>撤销上报</a>
 										</c:if>
 										<c:if test="${pd.confirmState==1 }">
+										<c:if test="${pd.busiDate ==null ||pd.busiDate =='' || pd.month== pd.busiDate}">
 										<a class="btn btn-white btn-info btn-bold" onclick="importExcel()"><span class="ace-icon fa fa-cloud-upload"></span>导入</a>
+										</c:if>
 										</c:if>
 										<a class="btn btn-white btn-info btn-bold" onclick="toExcel()"><span class="ace-icon fa fa-cloud-download"></span>导出</a>
 									</td>
