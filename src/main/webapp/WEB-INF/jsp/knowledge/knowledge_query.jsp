@@ -87,7 +87,7 @@
 										<th class="center">状态</th>
 										
 										<th class="center">详情</th>
-										<th class="center">附件</th>
+										<!-- <th class="center">附件</th> -->
 									</tr>
 								</thead>
 														
@@ -119,11 +119,11 @@
 														<button class="btn btn-xs btn-yellow" onClick="viewKnowledgeDetail('${knowledge.KNOWLEDGE_ID}')">详情</button>
 													</div>
 												</td>
-												<td class="center">
+												<%-- <td class="center">
 													<div class="hidden-sm hidden-xs btn-group">
 														<button class="btn btn-xs btn-orange" onClick="viewAttachment('KNOWLEDGE','${knowledge.KNOWLEDGE_ID}')">附件</button>
 													</div>
-												</td>
+												</td> --%>
 											</tr>
 										</c:forEach>
 									</c:when>

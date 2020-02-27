@@ -22,7 +22,9 @@
 			<div class="page-content">
 				<div class="row">
 					<div class="col-xs-12">
-						<div style="padding-top: 13px;" class="clearfix">
+						<h5 class="lighter block blue"><i class="ace-icon fa fa-rss blue"></i>&nbsp;知识详情</h5>
+						<hr />
+						<div style="padding-top: 0px;" class="clearfix">
 							<div>
 								<label class="inline" style="margin-bottom:5px;">
 									<span class="list-item-value-title">${pd.KNOWLEDGE_TITLE}</span>
@@ -45,13 +47,39 @@
 								</label>
 								
 							</div>
-
+							
 							
 						</div>
 					</div>
 					<!-- /.col -->
 				</div>
+				<br/>
 				<!-- /.row -->
+				
+				<div class="row">
+					<div style="margin:10px 12px;">
+						<h5 class="lighter block blue"><i class="ace-icon fa fa-rss blue"></i>&nbsp;附件</h5>
+						<hr />
+						<table id="simple-table" class="table table-striped table-bordered table-hover" style="margin-top:5px;">	
+							<thead>
+								<tr>
+									<th class="center" style="width:50px;">序号</th>
+									<th class="center">附件名</th>
+									<th class="center">附件说明</th>
+									<th class="center">附件大小</th>
+									<th class="center">上传人</th>
+									<th class="center">上传日期</th>
+									<th class="center">操作</th>
+								</tr>
+							</thead>
+													
+							<tbody id="tbodyAttachment">
+								
+							</tbody>
+						</table>
+					</div>
+				</div>
+				
 			</div>
 			<!-- /.page-content -->
 		</div>
@@ -67,8 +95,59 @@
 	$(top.hangge());
 	
 	
-	$(function() {
+	/**
+	 * 获取附件信息
+	 */
+	function getAttachment(attachmentID,attachmentType){
+		$("#tbodyAttachment").html('');
+		top.jzts();
 		
+		$.ajax({
+				type: "GET",
+				url: '<%=basePath%>attachment/getAttachmentByType.do?BUSINESS_TYPE='+attachmentType+'&BILL_CODE='+attachmentID,
+		    	//data: {},
+				//dataType:'json',
+				cache: false,
+				success: function(data){
+					console.log(data);
+					if(data){
+						$.each(data, function(i, item){
+							var tr=addItemAttachment(item,i+1,attachmentType); 
+							$('#tbodyAttachment').append(tr);
+							
+					 	});
+					}
+					top.hangge();
+				}
+		});
+	}
+
+	/**
+	 * 增加附件tr
+	 */
+	function addItemAttachment(item,index,type){
+		var href='<%=basePath%>/attachment/download.do?ATTACHMENT_ID='+item.ATTACHMENT_ID;
+		var ext=item.ATTACHMENT_PATH.substring(19,item.ATTACHMENT_PATH.length);
+		var htmlLog='<tr>'
+			+'<td class="center" style="width: 30px;">'+index+'</td>'
+			+'<td class="center">'+item.ATTACHMENT_NAME+ext+'</td>'
+			+'<td class="center">'+item.ATTACHMENT_MEMO+'</td>'
+			+'<td class="center">'+item.ATTACHMENT_SIZE+'&nbsp;KB</td>'
+			+'<td class="center">'+item.CREATE_USER+'</td>'
+			+'<td class="center">'+item.CREATE_DATE+'</td>'
+			+'<td class="center">'
+				+'<div>'
+					+'<a class="btn btn-xs btn-success" onclick=window.location.href="'+href+'">'
+						+'<i class="ace-icon fa fa-cloud-download bigger-120" title="下载"></i>'
+					+'</a>'
+				+'</div>'
+			+'</td>'
+		+'</tr>';
+		return htmlLog;
+	}
+	
+	$(function() {
+		getAttachment('${pd.KNOWLEDGE_ID}','KNOWLEDGE');
 	});
 	</script>
 </body>

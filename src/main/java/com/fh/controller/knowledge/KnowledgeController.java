@@ -201,15 +201,15 @@ public class KnowledgeController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/getPageListKnowledge")
-	public @ResponseBody List<PageData> getPageListKnowledge(Page page) throws Exception{
+	public @ResponseBody List<PageData> getPageListKnowledge() throws Exception{
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		String keywords = pd.getString("keywords");				//关键词检索条件
 		if(null != keywords && !"".equals(keywords)){
 			pd.put("keywords", keywords.trim());
 		}
-		page.setPd(pd);
-		List<PageData>	varList = knowledgeService.list(page);	//列出Knowledge列表
+		//page.setPd(pd);
+		List<PageData>	varList = knowledgeService.listAll(pd);	//列出Knowledge列表
 		return varList;
 	}
 	

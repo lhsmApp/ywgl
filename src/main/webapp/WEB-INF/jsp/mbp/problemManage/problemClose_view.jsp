@@ -132,7 +132,7 @@
 	}
 	
 	$(function() {
-		getAttachment('${pd.CLOSE_ID}','PROBLEM_CLOSE');
+		getAttachment('${pd.PRO_CODE}','PROBLEM_CLOSE');
 	});
 	</script>
 </body>

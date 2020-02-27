@@ -257,7 +257,7 @@
 												<div>
 													<div style="margin:10px 0px;">
 														<label>选择信息</label>
-														<select class="form-control" id="ff-answer-info" onChange="getAnswerContent()">
+														<select class="form-control" id="ff-answer-info" onChange="answerListChange()">
 															<%-- <option value=""></option>
 															<c:forEach items="${systemList}" var="system">
 																<option value="${system.DICT_CODE}">${system.NAME}</option>
@@ -446,6 +446,7 @@ $(function() {
 			//edit();
 		}else if($(this).attr('href')=="#answer-tab"){
 			getProAnswers();
+			
 		}
     });
 	
@@ -634,7 +635,7 @@ function getDetail(problemCode){
 				 /* 获取提报中附件信息 */
 				 getProAttachment("PROBLEM_INFO");
 				 /* 获取回复中附件信息 */
-				 getProAttachment("PROBLEM_ANSWER");
+				 //getProAttachment("PROBLEM_ANSWER");//转移到切换回复卡时获取附件信息，因为回复列表是在切换回复卡的时候加载的
 				 
 				 if(data.PRO_STATE=="2"){
 					 jumpStep(2);
@@ -685,12 +686,25 @@ function getProAnswers(){
 						$('#ff-answer-info').append(option);
 				 	});
 					if(first){
-						getAnswerContent();//根据ID获取回复内容
+						//getAnswerContent();//根据ID获取回复内容
+						/* 获取回复中附件信息 */
+						//getProAttachment("PROBLEM_ANSWER");
+						
+						answerListChange();
 					}
 				}
 				top.hangge();
 			}
 	});
+}
+
+/**
+ * 回复列表变化
+ */
+function answerListChange(){
+	getAnswerContent();//根据ID获取回复内容
+	/* 获取回复中附件信息 */
+	getProAttachment("PROBLEM_ANSWER");
 }
 
 /**
@@ -730,6 +744,8 @@ function newAnswer(){
 	var option = new Option('', '', true, true);
 	$('#ff-answer-info').append(option);
 	UE.getEditor('editorAnswer').setContent('');
+	
+	$("#tbodyProAnswerAttachment").html('');
 }
 
 /**
@@ -896,20 +912,27 @@ function addItemLog(item,index){
  * 获取问题附件信息
  */
 function getProAttachment(attachmentType){
+	
+	var billCode;
 	if(attachmentType=="PROBLEM_INFO"){
 		$("#tbodyProInfoAttachment").html('');
+		billCode=currentItem.PRO_CODE;//问题单号
 	}else if(attachmentType=="PROBLEM_ANSWER"){
+		
 		$("#tbodyProAnswerAttachment").html('');
+		billCode=$("#ff-answer-info").val();//回复ID
+		console.log("BILL_CODE"+billCode);
 	}else if(attachmentType=="PROBLEM_CLOSE"){
 		$("#tbodyProCloseAttachment").html('');
+		billCode=currentItem.PRO_CODE;//问题单号
 	}
 	
 	top.jzts();
 	var proCode=currentItem.PRO_CODE;//问题单号
 	$.ajax({
 			type: "GET",
-			url: '<%=basePath%>attachment/getAttachmentByType.do?BUSINESS_TYPE='+attachmentType+'&BILL_CODE='+proCode,
-	    	data: {PRO_CODE:proCode},
+			url: '<%=basePath%>attachment/getAttachmentByType.do?BUSINESS_TYPE='+attachmentType+'&BILL_CODE='+billCode,
+	    	//data: {PRO_CODE:proCode},
 			//dataType:'json',
 			cache: false,
 			success: function(data){
@@ -962,17 +985,24 @@ function addItemAttachment(item,index,type){
  * 上传附件
  */
 function addProAttachmentByType(type){
-	 var proCode=currentItem.PRO_CODE;
-	 /* var answerID=$("#ff-answer-info").val();
+	 //var proCode=currentItem.PRO_CODE;
+	 var answerID=$("#ff-answer-info").val();
 	    //if(typeof answerID == "undefined" || answerID == null || answerID == ""){
-	    if(answerID == null){
-	    	answerID='';
-	    } */
+    console.log("sdf"+answerID);
+	    	if(answerID == null|| answerID == ""){
+    	$("#btnAddProAnswerAttachment").tips({
+			side:3,
+            msg:'请先提交回复信息后，再上传附件',
+            bg:'#cc0033',
+            time:3
+        });
+		return;
+    }
 	 top.jzts();
 	 var diag = new top.Dialog();
 	 diag.Drag=true;
 	 diag.Title ="上传附件";
-	 diag.URL = '<%=basePath%>attachment/goAdd.do?BUSINESS_TYPE='+type+'&BILL_CODE='+proCode;
+	 diag.URL = '<%=basePath%>attachment/goAdd.do?BUSINESS_TYPE='+type+'&BILL_CODE='+answerID;
 	 diag.Width = 460;
 	 diag.Height = 290;
 	 diag.Modal = true;				//有无遮罩窗口
@@ -980,7 +1010,6 @@ function addProAttachmentByType(type){
      diag.ShowMinButton = true;		//最小化按钮
 	 diag.CancelEvent = function(){ //关闭事件
 		if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
-			console.log('gggg');
 		 	getProAttachment(type);
 		}
 		diag.close();

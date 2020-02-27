@@ -144,10 +144,30 @@
 	
 	<!-- 列表(全部) -->
 	<select id="listAll" parameterType="pd" resultType="pd">
-		select
-		<include refid="Field"></include>
-		from 
-		<include refid="tableName"></include>
+		select A.*  
+		from tb_knowledge_base A 
+		left join  tb_knowledge_type B
+		on A.KNOWLEDGE_TYPE=B.KNOWLEDGE_TYPE_ID
+		<where>
+			<if test="keywords!= null and keywords != ''"><!-- 关键词检索 -->
+				and
+					(
+						A.KNOWLEDGE_TITLE LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+						<!--	根据需求自己加检索条件	-->
+						or 
+						A.KNOWLEDGE_TAG LIKE CONCAT(CONCAT('%', #{keywords}),'%') 
+						or 
+						A.AUTHOR LIKE CONCAT(CONCAT('%', #{keywords}),'%') 
+						or 
+						B.KNOWLEDGE_TYPE_NAME LIKE CONCAT(CONCAT('%', #{keywords}),'%') 
+					)
+			</if>
+			
+			<!-- <if test="KNOWLEDGE_TYPE!= null and KNOWLEDGE_TYPE != ''">知识库类别
+				and KNOWLEDGE_TYPE=#{KNOWLEDGE_TYPE}
+			</if> -->
+		</where>
+		order by A.KNOWLEDGE_ID desc
 	</select>
 	
 	<!-- 批量删除 -->

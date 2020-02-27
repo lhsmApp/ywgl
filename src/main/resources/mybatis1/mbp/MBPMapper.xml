@@ -461,7 +461,7 @@
 	
 	<!-- 获取问题关闭信息列表 -->
 	<select id="getProCloses" parameterType="pd" resultType="pd">
-		select A.* from tb_problem_close A 
+		select *,PRO_CODE as PRO_CODE1 from tb_problem_close 
 		where PRO_CODE=#{PRO_CODE}
 	</select>
 	
@@ -470,7 +470,7 @@
 		SELECT *
 		FROM tb_problem_close
 		where 
-			CLOSE_ID = #{CLOSE_ID}
+			PRO_CODE = #{PRO_CODE}
 	</select>
 	
 	<!-- 问题关闭-->

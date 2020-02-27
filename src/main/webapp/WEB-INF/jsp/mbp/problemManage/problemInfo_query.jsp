@@ -360,7 +360,7 @@ $("#jqGridBaseClose").jqGrid({
 		{ label: '关闭人', name: 'BILL_USER', width: 90,editable: false, edittype: 'select',formatter:'select',editoptions:{value:"${userStr}"},formatoptions:{value:"${userStr}"},stype: 'select',searchoptions:{value:"${userStr}"}},
 		{ label: '关闭时间', name: 'BILL_DATE', width: 150,editable: false},
 		{ label: '关闭内容', name: 'CLOSE_CONTENT', width: 250,editable: false},
-		{ label: '关闭详情', name: 'CLOSE_ID', width: 100,align:'center', editable: false,formatter: customFmatterDetailClose}                   
+		{ label: '关闭详情', name: 'PRO_CODE1', width: 100,align:'center', editable: false,formatter: customFmatterDetailClose}                   
 	],
 	altRows: true, //斑马条纹
 });
@@ -457,12 +457,12 @@ function viewProblemDetailAnswer(answerID){
 /**
  * 查看关闭详情
  */
-function viewProblemDetailClose(closeID){
+function viewProblemDetailClose(proCode){
 	top.jzts();
 	var diag = new top.Dialog();
 	diag.Drag=true;
 	diag.Title ="关闭详情";
-	diag.URL = '<%=basePath%>mbp/goViewClose.do?CLOSE_ID='+closeID;
+	diag.URL = '<%=basePath%>mbp/goViewClose.do?PRO_CODE='+proCode;
 	diag.Width = 600;
 	diag.Height = 460;
 	diag.CancelEvent = function(){ //关闭事件
