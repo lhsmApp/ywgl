@@ -78,8 +78,8 @@ public class ChangeGrcZhxzController extends BaseController {
 			User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 		    String userId=user.getUSER_ID();
 		    pd.put("BILL_USER", userId);	
-		    pd.put("BILL_DATE", DateUtils.getCurrentTime());//创建日期
-		    pd.put("ENTRY_DATE", DateUtils.getCurrentTime());//填表日期
+		    pd.put("BILL_DATE", DateUtils.getCurrentTime().split(" ")[0]);//创建日期
+		    pd.put("ENTRY_DATE", DateUtils.getCurrentTime().split(" ")[0]);//填表日期
 			String billCode=BillnumUtil.getBillnum(billNumService, BillNumType.ERP_ZHXZ, pd.getString("UNIT_CODE"), "");
 			pd.put("BILL_CODE", billCode);
 			changegrczhxzService.save(pd);

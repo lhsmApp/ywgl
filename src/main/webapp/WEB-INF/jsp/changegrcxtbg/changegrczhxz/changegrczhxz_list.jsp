@@ -240,10 +240,10 @@
 														<label for="form-field-xtbg-report-job">申请人岗位</label>
 														<input type="text" name="USER_JOB" id="USER_JOB" class="form-control" placeholder="请输入申请人岗位"/>
 													</div>
-													<div style="margin:10px 0px;">
-														<label for="form-field-xtbg-report-contact">联系方式</label>
-														<input type="text" name="USER_CONTACT" id="USER_CONTACT" class="form-control" placeholder="请输入联系方式"/>
-													</div>
+<!-- 													<div style="margin:10px 0px;"> -->
+<!-- 														<label for="form-field-xtbg-report-contact">联系方式</label> -->
+<!-- 														<input type="text" name="USER_CONTACT" id="USER_CONTACT" class="form-control" placeholder="请输入联系方式"/> -->
+<!-- 													</div> -->
 													<div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-contact">新增帐号</label>
 														<input type="text" name="ACCOUNT_NEW" id="ACCOUNT_NEW" class="form-control" placeholder="请输入新增帐号"/>
@@ -271,6 +271,14 @@
 																<i class="ace-icon fa fa-calendar" ></i>
 															</span>
 														</div>
+																											<div style="margin:10px 0px;">
+														<label for="form-field-xtbg-report-contact">Email</label>
+														<input type="text" name="USER_EMAIL" id="USER_EMAIL" class="form-control" placeholder="请输入联系方式"/>
+													</div>
+													<div style="margin:10px 0px;">
+														<label for="form-field-xtbg-report-contact">电话</label>
+														<input type="text" name="USER_TEL" id="USER_TEL" class="form-control" placeholder="请输入联系方式"/>
+													</div>
 													</div>
 													<hr />
 													<div class="row">
@@ -418,6 +426,8 @@
 			var accountReason=$("#ACCOUNT_REASON").val();//新增帐号原因
 			var accountRoles=$("#ACCOUNT_ROLES").val();//帐号角色	
 			var billCode=$("#BILL_CODE").val();//申请单号
+			var uesrEmail=$("#USER_EMAIL").val();//Email
+			var uesrTel=$("#USER_TEL").val();//电话
 			if(accountNew==""||accountNew==null){    
 		        alert('新增帐号不能为空！');
 		        $("#ACCOUNT_NEW").focus();
@@ -433,7 +443,7 @@
 			$.ajax({
 				type: "POST",
 				url: '<%=basePath%>changegrczhxz/save.do',
-				data:{UNIT_CODE:unitCode,DEPT_CODE:deptCode,USER_CODE:userCode,USER_DEPT:uesrDept,USER_JOB:uesrJob,USER_CONTACT:uesrContact,EFFECTIVE_DATE:sqsxDate,ACCOUNT_NEW:accountNew,ACCOUNT_VALIDITY:zhyxq,ACCOUNT_REASON:accountReason,ACCOUNT_ROLES:accountRoles,BILL_CODE:billCode},
+				data:{USER_EMAIL:uesrEmail,USER_TEL:uesrTel,UNIT_CODE:unitCode,DEPT_CODE:deptCode,USER_CODE:userCode,USER_DEPT:uesrDept,USER_JOB:uesrJob,USER_CONTACT:uesrContact,EFFECTIVE_DATE:sqsxDate,ACCOUNT_NEW:accountNew,ACCOUNT_VALIDITY:zhyxq,ACCOUNT_REASON:accountReason,ACCOUNT_ROLES:accountRoles,BILL_CODE:billCode},
 		    	dataType:'json',
 				cache: false,
 				success: function(response){
@@ -687,6 +697,8 @@
 		    			$("#ACCOUNT_REASON").val(datas.ACCOUNT_REASON);//新增帐号原因
 		    			$("#ACCOUNT_ROLES").val(datas.ACCOUNT_ROLES);//帐号角色
 		    			$("#EFFECTIVE_DATE").val(datas.EFFECTIVE_DATE);//申请生效日期
+		    			$("#USER_EMAIL").val(datas.USER_EMAIL);//Email
+		    			$("#USER_TEL").val(datas.USER_TEL);//电话
 		            	var html = '';
 		      		     html += setDetail(datas);
 			            //console.log(html);
@@ -723,7 +735,7 @@
 			        + item.UNIT_NAME
 			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请部门： </div><div class="profile-info-value"><span>'
 			        +item.DEPT_NAME
-			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 账号撤销原因 ：</div><div class="profile-info-value"><span>'
+			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 新增帐号原因 ：</div><div class="profile-info-value"><span>'
 			        +item.ACCOUNT_REASON
 			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人部门： </div><div class="profile-info-value"><span>'
 			        +item.USER_DEPTNAME
@@ -732,7 +744,9 @@
 			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人岗位： </div><div class="profile-info-value"><span>'
 			        +item.USER_JOB
 			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 联系方式： </div><div class="profile-info-value"><span>'
-			        +item.USER_CONTACT
+			        +item.USER_EMAIL
+			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 联系方式： </div><div class="profile-info-value"><span>'
+			        +item.USER_TEL
 			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请生效日期： </div><div class="profile-info-value"><span>'
 			        +item.EFFECTIVE_DATE
 			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请日期： </div><div class="profile-info-value"><span>'
@@ -757,7 +771,7 @@
 			 diag.Title ="grc帐号新增申请单打印";
 			 diag.URL = '<%=basePath%>changegrczhxz/printf.do?BILL_CODE='+encodeURI(Id);
 			 diag.Width = 800;
-			 diag.Height = 600;
+			 diag.Height = 550;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮 
