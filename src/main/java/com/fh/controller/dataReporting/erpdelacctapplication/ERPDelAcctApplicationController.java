@@ -275,9 +275,11 @@ public class ERPDelAcctApplicationController extends BaseController {
     @RequestMapping(value = "/excel")
     public ModelAndView exportExcel(Page page) throws Exception {
         logBefore(logger, Jurisdiction.getUsername() + "导出ERPOfficialAcctApplication到excel");
-        PageData getPd = this.getPageData();
-        getPd.put("confirmState", "1,2,4"); // 1未上报 2已上报 3撤销上报 4已驳回
-        page.setPd(getPd);
+        PageData pd = new PageData();
+        pd = this.getPageData();
+        pd.put("confirmState", pd.get("confirmState")); //1未上报 2已上报 3撤销上报 4已驳回
+        pd.put("BUSI_DATE", pd.get("BUSI_DATE")); //月份
+        page.setPd(pd);
         List<PageData> varOList = erpdelacctapplicationService.exportList(page);
         return export(varOList, "", Map_SetColumnsList);
     }

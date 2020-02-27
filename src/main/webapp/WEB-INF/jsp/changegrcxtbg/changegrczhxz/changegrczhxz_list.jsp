@@ -203,14 +203,19 @@
 														<input type="hidden" name="DEPT_CODE" id="DEPT_CODE"/>
 														<input type="text" name="DEPT_NAME" id="DEPT_NAME" class="form-control" placeholder="请输入部门"/>
 													</div>									
-													<div style="margin:10px 0px;">
+<!-- 													<div style="margin:10px 0px;"> -->
+<!-- 														<label for="form-field-xtbg-report-user">申请人</label> -->
+<!-- 															<select class="form-control" name="USER_CODE" id="USER_CODE"> -->
+<!-- 																	<option value=""></option> -->
+<%-- 																	<c:forEach items="${userList}" var="user"> --%>
+<%-- 																	<option value="${user.USER_ID}">${user.USERNAME}</option> --%>
+<%-- 																	</c:forEach> --%>
+<!-- 																</select> -->
+<!-- 													</div> -->
+														<div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-user">申请人</label>
-															<select class="form-control" name="USER_CODE" id="USER_CODE">
-																	<option value=""></option>
-																	<c:forEach items="${userList}" var="user">
-																	<option value="${user.USER_ID}">${user.USERNAME}</option>
-																	</c:forEach>
-																</select>
+														<input type="hidden" name="USER_CODE" id="USER_CODE"/> 
+														<input type="text" name="USER_NAME" id="USER_NAME" class="form-control" placeholder="请输入申请人"/> 
 													</div>
 <!-- 												    <div style="margin:10px 0px;"> -->
 <!-- 														<label for="form-field-xtbg-report-depart">申请人部门</label> -->
@@ -454,7 +459,8 @@
 			$("#selectTree2_input").val('<%=unitName%>');//单位名称
 			$("#DEPT_CODE").val('<%=departId%>');//部门编码
 			$("#DEPT_NAME").val('<%=departName%>');//部门名称	
-			$("#"+'<%=userId%>').val('<%=userName%>');//申请人
+			$("#USER_CODE").val('<%=userId%>');//申请人
+			$("#USER_NAME").val('<%=userName%>');//申请人姓名
 			$("#USER_DEPT").val('<%=departId%>');//申请人部门编码
 			$("#USER_DEPTNAME").val('<%=departName%>');//申请人部门名称
 			$("#USER_JOB").val("");//申请人岗位
@@ -465,7 +471,6 @@
 			$("#ACCOUNT_ROLES").val("");//帐号角色
 			$("#EFFECTIVE_DATE").val("");//申请生效日期
 			$("#BILL_CODE").val("");//申请单号
-
 			
 // 			 top.jzts();
 // 			 var diag = new top.Dialog();

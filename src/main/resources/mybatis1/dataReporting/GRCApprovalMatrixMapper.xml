@@ -109,6 +109,10 @@
 			<include refid="tableName"></include>
 		where 
 			STATE = 1
+			and USER_DEPART = #{pd.USER_DEPART}
+			<if test="pd.BUSI_DATE!= null and pd.BUSI_DATE!= ''">
+			and BUSI_DATE = #{pd.BUSI_DATE}
+			</if>
 		order by 
 			ID,STAFF_NAME
 	</select>

@@ -185,7 +185,10 @@
 		where 
 			STATE = 1
 		and 
-			CONFIRM_STATE IN (${pd.confirmState})
+			CONFIRM_STATE = #{pd.confirmState}
+		<if test="pd.BUSI_DATE!= null and pd.BUSI_DATE!= ''">
+			and BUSI_DATE = #{pd.BUSI_DATE}
+		</if>
 		order by 
 			CONFIRM_STATE ASC
 	</select>

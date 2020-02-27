@@ -41,11 +41,11 @@
 								<td style="width:115px;text-align: right;padding-top: 13px;">申请单号:</td>
 								<td><input type="text" name="BILL_CODE" id="BILL_CODE" value="${pd.BILL_CODE}" maxlength="100" title="申请单号" style="width:98%;"/></td>
 								<td style="width:115px;text-align: right;padding-top: 13px;">单位简称:</td>
-								<td><input type="text" name="UNIT_CODE" id="UNIT_CODE" value="${pd.UNIT_CODE}" maxlength="30" title="单位简称" style="width:98%;"/></td>		 
+								<td><input type="text" name="UNIT_CODE" id="UNIT_CODE" value="${pd.UNIT_NAME}" maxlength="30" title="单位简称" style="width:98%;"/></td>		 
 							</tr>
 							<tr>
 								<td style="width:115px;text-align: right;padding-top: 13px;">部门简称:</td>
-								<td><input type="text" name="DEPT_CODE" id="DEPT_CODE" value="${pd.DEPT_CODE}" maxlength="30" title="部门简称" style="width:98%;"/></td>
+								<td><input type="text" name="DEPT_CODE" id="DEPT_CODE" value="${pd.DEPT_NAME}" maxlength="30" title="部门简称" style="width:98%;"/></td>
 								<td style="width:115px;text-align: right;padding-top: 13px;">填表日期:</td>
 								<td><input type="text" name="ENTRY_DATE" id="ENTRY_DATE" value="${pd.ENTRY_DATE}" maxlength="30" title="填表日期" style="width:98%;"/></td>
 							</tr>
@@ -53,11 +53,11 @@
 								<td style="width:115px;text-align: right;padding-top: 13px;">序号:</td>
 								<td><input type="text" name="SERIAL_NUM" id="SERIAL_NUM" value="${pd.SERIAL_NUM}" maxlength="20"  title="序号" style="width:98%;"/></td>
 								<td style="width:115px;text-align: right;padding-top: 13px;">申请人:</td>
-								<td><input type="text" name="USER_CODE" id="USER_CODE" value="${pd.USER_CODE}" maxlength="20"  title="申请人" style="width:98%;"/></td>
+								<td><input type="text" name="USER_CODE" id="USER_CODE" value="${pd.USERNAME}" maxlength="20"  title="申请人" style="width:98%;"/></td>
 							</tr>
 							<tr>
 								<td style="width:115px;text-align: right;padding-top: 13px;">申请人部门:</td>
-								<td><input type="text" name="USER_DEPT" id="USER_DEPT" value="${pd.USER_DEPT}" maxlength="30"  title="申请人部门" style="width:98%;"/></td>
+								<td><input type="text" name="USER_DEPT" id="USER_DEPT" value="${pd.USER_DEPTNAME}" maxlength="30"  title="申请人部门" style="width:98%;"/></td>
 								<td style="width:115px;text-align: right;padding-top: 13px;">申请人岗位:</td>
 								<td><input type="text" name="USER_JOB" id="USER_JOB" value="${pd.USER_JOB}" maxlength="50"  title="申请人岗位" style="width:98%;"/></td>
 							</tr>

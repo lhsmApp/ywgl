@@ -232,10 +232,14 @@ public class GRCApprovalMatrixController extends BaseController {
 		logBefore(logger, Jurisdiction.getUsername() + "导出GRCApprovalMatrix到excel");
 		// if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;}
 
-		PageData getPd = this.getPageData();
+		PageData pd = new PageData();
+		pd = this.getPageData();
 		// 页面显示数据的年月
 		// getPd.put("SystemDateTime", SystemDateTime);
-		page.setPd(getPd);
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		pd.put("USER_DEPART", user.getUNIT_CODE()); //单位
+		pd.put("BUSI_DATE", pd.get("BUSI_DATE")); //月份
+		page.setPd(pd);
 		List<PageData> varOList = grcapprovalmatrixService.exportList(page);
 		return export(varOList, "", Map_SetColumnsList);
 	}

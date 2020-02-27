@@ -67,11 +67,11 @@
 										<c:forEach items="${varList}" var="var" varStatus="vs">	
 											<tr>
 											<td class='center' style="width: 30px;">${vs.index+1}</td>
-											<td class='center'style="width: 200px;">${var.BILL_CODE}</td>
-											<td class='center'style="width: 200px;">${var.BG_NAME}</td>
-											<td class='center'style="width: 200px;">${var.UNIT_NAME}</td>
+											<td class='center'style="width: 100px;">${var.BILL_CODE}</td>
+											<td class='center'style="width: 100px;">${var.BG_NAME}</td>
+											<td class='center'style="width: 100px;">${var.UNIT_NAME}</td>
 											<td class='center'style="width: 100px;">${var.DEPT_NAME}</td>
-											<td class='center'style="width: 200px;">${var.BG_REASON}</td>					
+											<td class='center'style="width: 100px;">${var.BG_REASON}</td>					
 											<td class='center'style="width: 100px;">${var.USERNAME}</td>
 											<td class='center'style="width: 100px;">${var.USER_DEPTNAME}</td>
 											<td class='center'style="width: 100px;">${var.USER_JOB}</td>
