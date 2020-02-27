@@ -110,10 +110,20 @@
 	
 	<!-- 根据附件类型获取附件列表 -->
 	<select id="getAttachmentByType" parameterType="pd" resultType="pd">
-		select 
-		<include refid="Field"></include>
+		select A.ATTACHMENT_ID,
+		A.BUSINESS_TYPE,
+		A.BILL_CODE,
+		A.ATTACHMENT_NAME,
+		A.ATTACHMENT_MEMO,
+		A.ATTACHMENT_TYPE,
+		A.ATTACHMENT_SIZE,
+		A.ATTACHMENT_PATH,
+		A.CREATE_DATE,
+		B.NAME as CREATE_USER 
 		from 
-		<include refid="tableName"></include>
+		<include refid="tableName"></include> A
+		left join sys_user B 
+		on A.CREATE_USER=B.USER_ID 
 		where 
 			BUSINESS_TYPE = #{BUSINESS_TYPE}
 			AND BILL_CODE=#{BILL_CODE}
