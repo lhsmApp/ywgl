@@ -31,7 +31,7 @@
 <div id="zhongxin">
 <table width="750" height="30" border="0" align="center" cellpadding="2" cellspacing="0" bgcolor="#FFFFFF">
   <tr  style ="font-size:50 px" >
-    <td align="center">权限管理系统用户权限变更申请表</td>
+    <td align="center">权限管理系统用户帐号撤销申请表</td>
   </tr>
     <tr>
     <td  height="10" ></td>
@@ -39,7 +39,7 @@
 </table>
 <table width="750" height="30" border="0" align="center" cellpadding="2" cellspacing="0" bgcolor="#FFFFFF">
   <tr>
-    <td align="center"  width="40">编号：</td><td align="center" width="120"><u>${pd.UNIT_NAME}</u></td><td align="center" width="100">-<u>${pd.DEPT_NAME}</u></td><td align="center" width="70">-ERP-AQ-02</td><td align="center" width="100">-<u>${pd.ENTRY_DATE}</u></td><td align="center" width="60">-<u>${pd.SERIAL_NUM}</u></td>
+    <td align="center"  width="40">编号：</td><td align="center" width="120"><u>${pd.UNIT_NAME}</u></td><td align="center" width="100">-<u>${pd.DEPT_NAME}</u></td><td align="center" width="70">-GRC-AQ-01</td><td align="center" width="100">-<u>${pd.ENTRY_DATE}</u></td><td align="center" width="60">-<u>${pd.SERIAL_NUM}</u></td>
  </tr>
    <tr>
      <td align="center" width="40"> </td><td align="center" width="120">单位简称</td><td align="center" width="100">部门简称</td><td align="center" width="70">表单号</td><td align="center" width="100">填表日期</td><td align="center" width="60">序号</td>
@@ -53,7 +53,7 @@
   </tr></table>
 <table width="750"    border="1" align="center" cellspacing="0" bgcolor="#221144">
   <tr>
-        <td height="40" align="center" width="100" bgcolor="EFEFFF">申请人及</br>帐号名</td>
+        <td height="40" align="center" width="100" bgcolor="EFEFFF">申请人</td>
         <td align="center" width="200" bgcolor="#FFFFFF">${pd.USERNAME}</td>
         <td align="center" width="100" bgcolor="EFEFFF">申请人部门</br>/岗位</td>
         <td align="center" width="200" bgcolor="#FFFFFF">${pd.USER_DEPTNAME}</br>${pd.USER_JOB}</td>
@@ -73,23 +73,12 @@
      
   </tr>	
   <tr>
-   		<td height="60" align="center" bgcolor="EFEFFF">权限变更</br>申请原因</br>及内容</td>
-   		<td height="60" colspan="3" bgcolor="#FFFFFF">&nbsp; ${pd.BG_REASON}</td>
+   		<td height="60" align="center" rowspan="2" bgcolor="EFEFFF">帐号撤销</td>
+        <td height="60" colspan="3" align="left"  bgcolor="EFEFFF">&nbsp;帐号名： ${pd.ACCOUNT_NAME}</td>
   </tr>	
-  <tr>
-        <td height="40"  align="center" bgcolor="EFEFFF">申请类别</td>
-		<td  colspan="3"  height="70"  align="left" bgcolor="#FFFFFF"> 
-		 <table><tr><td><div class="one"></div></td><td>角色新增</td><td>  <div class="one"></div></td><td>角色删除</td></tr></table>       
-		</td>
-  </tr>
-  <tr>
-        <td height="40"  align="center" bgcolor="EFEFFF">新增角色</td>
-		<td  colspan="3"  height="70"  align="left" bgcolor="#FFFFFF"> &nbsp; ${pd.ADD_ROLES}</td>
-  </tr>
-    <tr>
-        <td height="40"  align="center" bgcolor="EFEFFF">删除角色</td>
-		<td  colspan="3"  height="70"  align="left" bgcolor="#FFFFFF"> &nbsp; ${pd.DELETE_ROLES}</td>
-  </tr>
+   <tr>
+   		<td height="60"colspan="3"   align="left"  bgcolor="#FFFFFF">&nbsp;撤销帐号原因：${pd.CANCLE_REASON}</td>
+  </tr>	
   <tr>
         <td height="40"  align="center" bgcolor="EFEFFF">支持人员</br>（三级运维）</td>
 		<td  colspan="3"  height="70"  align="right" bgcolor="#FFFFFF">
@@ -107,14 +96,21 @@
     <td  height="10" ></td>
   </tr>
 </table>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;实施情况（地区分公司ERP用户管理员填写）</div>
+<div>&nbsp;&nbsp;&nbsp;&nbsp;实施情况</div>
 <table width="750"    border="1" align="center" cellspacing="0" bgcolor="#221144">
 
+  <tr>
+     <tr>
+        <td height="50" align="center" width="100" bgcolor="EFEFFF">分配的</br>用户组</td>
+        <td align="center" width="200" bgcolor="#FFFFFF"> </td>
+        <td align="center" width="100" bgcolor="EFEFFF">备注</td>
+        <td align="center" width="200" bgcolor="#FFFFFF"></td>
+  </tr>
     <tr>
         <td height="50" align="center" width="100" bgcolor="EFEFFF">实施人</td>
         <td align="center" width="200" bgcolor="#FFFFFF"> </td>
         <td align="center" width="100" bgcolor="EFEFFF">实施日期</td>
-        <td align="center" width="200" bgcolor="#FFFFFF"><table><tr><td width="50"></td><td width="75"> 年</td><td width="75">月</td><td width="75">日</td></tr></table>  </td>
+        <td align="center" width="200" bgcolor="#FFFFFF"><table><tr><td width="150">签字： </td><td width="75"> 年</td><td width="75">月</td><td width="75">日</td></tr></table>  </td>
   </tr>
 
 

@@ -78,14 +78,14 @@ public class ChangeGrcZhzxController extends BaseController {
 			User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 		    String userId=user.getUSER_ID();
 		    pd.put("BILL_USER", userId);	
-		    pd.put("BILL_DATE", DateUtils.getCurrentTime());//创建日期
-		    pd.put("ENTRY_DATE", DateUtils.getCurrentTime());//填表日期
+		    pd.put("BILL_DATE", DateUtils.getCurrentTime().split(" ")[0]);//创建日期
+		    pd.put("ENTRY_DATE", DateUtils.getCurrentTime().split(" ")[0]);//填表日期
 			String billCode=BillnumUtil.getBillnum(billNumService, BillNumType.ERP_ZHZX, pd.getString("UNIT_CODE"), "");
 			pd.put("BILL_CODE", billCode);
 			changegrczhzxService.save(pd);
 			commonBase.setCode(0);
 		}else{
-			pd.put("UPDATE_DATE", DateUtils.getCurrentTime());
+			pd.put("UPDATE_DATE",DateUtils.getCurrentTime().split(" ")[0]);
 			changegrczhzxService.updateEdit(pd);
 			commonBase.setCode(0);
 		}	
@@ -323,6 +323,23 @@ public class ChangeGrcZhzxController extends BaseController {
 			pdResult.put("Table", listPageData);
 			return 	pdResult;
 		}
+		 /**html打印
+			 * @param
+			 * @throws Exception
+			 */
+			@RequestMapping(value="/printf")
+			public ModelAndView printf()throws Exception{
+				ModelAndView mv = this.getModelAndView();
+				PageData pd = new PageData();
+				pd = this.getPageData();
+				pd = changegrczhzxService.findById(pd);	//根据ID读取
+				JSONArray json = JSONArray.fromObject(pd); 
+				mv.setViewName("changegrcxtbg/changegrczhzx/grcZhzxPrintPage");
+				mv.addObject("pd", pd);
+				mv.addObject("billCode", pd.get("BILL_CODE"));
+				
+				return mv;
+			}
 		/**列表
 		 * @param page
 		 * @throws Exception

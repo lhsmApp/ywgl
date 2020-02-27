@@ -203,9 +203,17 @@
 														<label for="form-field-xtbg-report-job">申请人岗位</label>
 														<input type="text" name="USER_JOB" id="USER_JOB" class="form-control" placeholder="请输入申请人部门"/>
 													</div>
+<!-- 													<div style="margin:10px 0px;"> -->
+<!-- 														<label for="form-field-xtbg-report-contact">联系方式</label> -->
+<!-- 														<input type="text" name="USER_CONTACT" id="USER_CONTACT" class="form-control" placeholder="请输入联系方式"/> -->
+<!-- 													</div> -->
 													<div style="margin:10px 0px;">
-														<label for="form-field-xtbg-report-contact">联系方式</label>
-														<input type="text" name="USER_CONTACT" id="USER_CONTACT" class="form-control" placeholder="请输入联系方式"/>
+														<label for="form-field-xtbg-report-contact">Email</label>
+														<input type="text" name="USER_EMAIL" id="USER_EMAIL" class="form-control" placeholder="请输入联系方式"/>
+													</div>
+													<div style="margin:10px 0px;">
+														<label for="form-field-xtbg-report-contact">电话</label>
+														<input type="text" name="USER_TEL" id="USER_TEL" class="form-control" placeholder="请输入联系方式"/>
 													</div>
 													<div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-contact">帐号名</label>
@@ -346,6 +354,8 @@
 			var accountName=$("#ACCOUNT_NAME").val();//帐号名
 			var cancleReason=$("#CANCLE_REASON").val();//帐号撤销原因
 			var billCode=$("#BILL_CODE").val();//申请单号
+			var uesrEmail=$("#USER_EMAIL").val();//Email
+			var uesrTel=$("#USER_TEL").val();//电话
 			if(accountName==""||accountName==null){    
 		        alert('帐号名不能为空！');
 		        $("#ACCOUNT_NAME").focus();
@@ -373,7 +383,7 @@
 			$.ajax({
 				type: "POST",
 				url: '<%=basePath%>changegrczhzx/save.do',
-				data:{UNIT_CODE:unitCode,DEPT_CODE:deptCode,USER_CODE:userCode,USER_DEPT:uesrDept,USER_JOB:uesrJob,USER_CONTACT:uesrContact,EFFECTIVE_DATE:sqsxDate,ACCOUNT_NAME:accountName,CANCLE_REASON:cancleReason,BILL_CODE:billCode},
+				data:{USER_EMAIL:uesrEmail,USER_TEL:uesrTel,UNIT_CODE:unitCode,DEPT_CODE:deptCode,USER_CODE:userCode,USER_DEPT:uesrDept,USER_JOB:uesrJob,USER_CONTACT:uesrContact,EFFECTIVE_DATE:sqsxDate,ACCOUNT_NAME:accountName,CANCLE_REASON:cancleReason,BILL_CODE:billCode},
 		    	dataType:'json',
 				cache: false,
 				success: function(response){
@@ -550,6 +560,8 @@
 		    			$("#ACCOUNT_NAME").val(datas.ACCOUNT_NAME);//新增帐号
 		    			$("#CANCLE_REASON").val(datas.CANCLE_REASON);//新增帐号原因
 		    			$("#EFFECTIVE_DATE").val(datas.EFFECTIVE_DATE);//申请生效日期
+		      			$("#USER_EMAIL").val(datas.USER_EMAIL);//Email
+		    			$("#USER_TEL").val(datas.USER_TEL);//电话
 		            	var html = '';
 		      		     html += setDetail(datas);
 		      			$('#detail-tab').html(html);
@@ -595,8 +607,10 @@
 		        +item.NAME
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人岗位： </div><div class="profile-info-value"><span>'
 		        +item.USER_JOB
-		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 联系方式： </div><div class="profile-info-value"><span>'
-		        +item.USER_CONTACT
+		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 邮箱： </div><div class="profile-info-value"><span>'
+		        +item.USER_EMAIL
+		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 电话： </div><div class="profile-info-value"><span>'
+		        +item.USER_TEL
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请生效日期： </div><div class="profile-info-value"><span>'
 		        +item.EFFECTIVE_DATE
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请日期： </div><div class="profile-info-value"><span>'
@@ -610,7 +624,7 @@
 			 var diag = new top.Dialog();
 			 diag.Drag=true;
 			 diag.Title ="系统变更申请单打印";
-			 diag.URL = '<%=basePath%>changegrczhzx/goPrint.do?BILL_CODE='+encodeURI(Id);
+			 diag.URL = '<%=basePath%>changegrczhzx/printf.do?BILL_CODE='+encodeURI(Id);
 			 diag.Width = 800;
 			 diag.Height = 600;
 			 diag.Modal = true;				//有无遮罩窗口
