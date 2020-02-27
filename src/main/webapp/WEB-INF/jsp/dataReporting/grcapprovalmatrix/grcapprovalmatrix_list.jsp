@@ -382,68 +382,67 @@
 		//批量操作
 		function makeAll(msg){
 			if(!checkPermission()){return;} //权限控制
+			var str = '';
+			for(var i=0;i < document.getElementsByName('ids').length;i++){
+			  if(document.getElementsByName('ids')[i].checked){
+			  	if(str=='') str += document.getElementsByName('ids')[i].value;
+			  	else str += ',' + document.getElementsByName('ids')[i].value;
+			  }
+			}
+			if(str==''){
+				bootbox.dialog({
+					message: "<span class='bigger-110'>您没有选择任何内容!</span>",
+					buttons: 			
+					{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+				});
+				$("#zcheckbox").tips({
+					side:1,
+		            msg:'点这里全选',
+		            bg:'#AE81FF',
+		            time:8
+		        });
+				return;
+			}
 			bootbox.confirm(msg, function(result) {
 				if(result) {
-					var str = '';
-					for(var i=0;i < document.getElementsByName('ids').length;i++){
-					  if(document.getElementsByName('ids')[i].checked){
-					  	if(str=='') str += document.getElementsByName('ids')[i].value;
-					  	else str += ',' + document.getElementsByName('ids')[i].value;
-					  }
-					}
-					if(str==''){
-						bootbox.dialog({
-							message: "<span class='bigger-110'>您没有选择任何内容!</span>",
-							buttons: 			
-							{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
-						});
-						$("#zcheckbox").tips({
-							side:1,
-				            msg:'点这里全选',
-				            bg:'#AE81FF',
-				            time:8
-				        });
-						return;
-					}else{
-						if(msg == '确定要删除选中的数据吗?'){
-							top.jzts();
-							$.ajax({
-								type: "POST",
-								url: '<%=basePath%>grcapprovalmatrix/deleteAll.do?tm='+new Date().getTime(),
-						    	data: {DATA_IDS:str},
-								dataType:'json',
-								cache: false,
-								success: function(response){
-									if(response.code==0){
-										$(top.hangge());//关闭加载状态
-										history.go(0); //刷新页面
-										$("#subTitle").tips({
-											side:3,
-								            msg:'删除成功',
-								            bg:'#009933',
-								            time:3
-								        });
-									}else{
-										$(top.hangge());//关闭加载状态
-										$("#subTitle").tips({
-											side:3,
-								            msg:'删除失败,'+response.message,
-								            bg:'#cc0033',
-								            time:3
-								        });
-									}
-								},
-						    	error: function(e) {
-						    		$(top.hangge());//关闭加载状态
+					if(msg == '确定要删除选中的数据吗?'){
+						top.jzts();
+						$.ajax({
+							type: "POST",
+							url: '<%=basePath%>grcapprovalmatrix/deleteAll.do?tm='+new Date().getTime(),
+					    	data: {DATA_IDS:str},
+							dataType:'json',
+							cache: false,
+							success: function(response){
+								if(response.code==0){
+									$(top.hangge());//关闭加载状态
+									history.go(0); //刷新页面
 									$("#subTitle").tips({
 										side:3,
-							            msg:'删除失败,'+response.responseJSON.message,
+							            msg:'删除成功',
+							            bg:'#009933',
+							            time:3
+							        });
+								}else{
+									$(top.hangge());//关闭加载状态
+									$("#subTitle").tips({
+										side:3,
+							            msg:'删除失败,'+response.message,
 							            bg:'#cc0033',
 							            time:3
 							        });
-						    	}
-							});
-						}
+								}
+							},
+					    	error: function(e) {
+					    		$(top.hangge());//关闭加载状态
+								$("#subTitle").tips({
+									side:3,
+						            msg:'删除失败,'+response.responseJSON.message,
+						            bg:'#cc0033',
+						            time:3
+						        });
+					    	}
+						});
 					}
 				}
 			});
@@ -470,7 +469,7 @@
 		
 		/* 导出excel */
 		function toExcel(){
-			window.location.href='<%=basePath%>grcapprovalmatrix/excel.do';
+			window.location.href='<%=basePath%>grcapprovalmatrix/excel.do?BUSI_DATE='+$("#busiDate").val();
 		}
 	</script>
 </body>

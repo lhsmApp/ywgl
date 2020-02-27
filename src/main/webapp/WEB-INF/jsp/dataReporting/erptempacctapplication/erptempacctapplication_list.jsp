@@ -77,13 +77,23 @@
 								</td>
 								<td style="vertical-align:top;padding-left:2px;">
 								<a class="btn btn-info btn-sm" onclick="tosearch()"><i class="ace-icon fa fa-search bigger-110"></i></a>
+								<c:if test="${pd.confirmState==1 }">
 								<a class="btn btn-white btn-info btn-bold" onclick="addRows()"><span class="ace-icon fa fa-plus-circle purple"></span>添加</a>						
 								<a class="btn btn-white btn-info btn-bold" onclick="edit()"><span class="ace-icon fa fa-pencil-square-o purple"></span>编辑</a>
 								<a class="btn btn-white btn-info btn-bold" onclick="save()"><i class="ace-icon fa fa-floppy-o bigger-120 blue"></i>保存</a>
+								</c:if>
+								<c:if test="${pd.confirmState!=2 }">
 								<a class="btn btn-white btn-info btn-bold" onclick="makeAll('确定要删除选中的数据吗?');" title="批量删除" ><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>删除</a>
+								</c:if>
+								<c:if test="${pd.confirmState==1 }">
 								<a class="btn btn-white btn-info btn-bold" onclick="report('确定要上报当前数据吗?')"><i class="ace-icon fa fa-check-square-o bigger-110"></i>批量上报</a>
+								</c:if>
+								<c:if test="${pd.confirmState==2 }">
 								<a class="btn btn-white btn-info btn-bold" onclick="backReport('确定要撤回上报吗?');" title="批量驳回" ><i class="ace-icon fa fa-exclamation-triangle red bigger-110"></i>撤销上报</a>
+								</c:if>
+								<c:if test="${pd.confirmState==1 }">
 								<a class="btn btn-white btn-info btn-bold" onclick="importExcel()"><span class="ace-icon fa fa-cloud-upload"></span>导入</a>
+								</c:if>
 								<a class="btn btn-white btn-info btn-bold" onclick="toExcel()"><span class="ace-icon fa fa-cloud-download"></span>导出</a>
 								</td>
 							</tr>
@@ -444,15 +454,29 @@
 		//批量操作
 		function makeAll(msg){
 			if(!checkPermission()){return;} //权限控制
+			var str = '';
+			for(var i=0;i < document.getElementsByName('ids').length;i++){
+			  if(document.getElementsByName('ids')[i].checked){
+			  	if(str=='') str += document.getElementsByName('ids')[i].value;
+			  	else str += ',' + document.getElementsByName('ids')[i].value;
+			  }
+			}
+			if(str==''){
+				bootbox.dialog({
+					message: "<span class='bigger-110'>您没有选择任何内容!</span>",
+					buttons: 			
+					{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+				});
+				$("#zcheckbox").tips({
+					side:1,
+		            msg:'点这里全选',
+		            bg:'#AE81FF',
+		            time:8
+		        });
+				return;
+			}
 			bootbox.confirm(msg, function(result) {
 				if(result) {
-					var str = '';
-					for(var i=0;i < document.getElementsByName('ids').length;i++){
-					  if(document.getElementsByName('ids')[i].checked){
-					  	if(str=='') str += document.getElementsByName('ids')[i].value;
-					  	else str += ',' + document.getElementsByName('ids')[i].value;
-					  }
-					}
 					if($("#confirmState").val() == 2){
 						bootbox.dialog({
 							message: "<span class='bigger-110'>已上报内容不可修改!</span>",
@@ -461,60 +485,47 @@
 						});
 						return;
 					}
-					if(str==''){
-						bootbox.dialog({
-							message: "<span class='bigger-110'>您没有选择任何内容!</span>",
-							buttons: 			
-							{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
-						});
-						$("#zcheckbox").tips({
-							side:1,
-				            msg:'点这里全选',
-				            bg:'#AE81FF',
-				            time:8
-				        });
-						return;
-					}else{
-						if(msg == '确定要删除选中的数据吗?'){
-							top.jzts();
-							$.ajax({
-								type: "POST",
-								url: '<%=basePath%>erptempacctapplication/deleteAll.do?tm='+new Date().getTime(),
-						    	data: {DATA_IDS:str},
-								dataType:'json',
-								cache: false,
-								success: function(response){
-									if(response.code==0){
-										$(top.hangge());//关闭加载状态
-										history.go(0); //刷新页面
-										$("#subTitle").tips({
-											side:3,
-								            msg:'删除成功',
-								            bg:'#009933',
-								            time:3
-								        });
-									}else{
-										$(top.hangge());//关闭加载状态
-										$("#subTitle").tips({
-											side:3,
-								            msg:'删除失败,'+response.message,
-								            bg:'#cc0033',
-								            time:3
-								        });
-									}
-								},
-						    	error: function(e) {
-						    		$(top.hangge());//关闭加载状态
+					
+					if(msg == '确定要删除选中的数据吗?'){
+						top.jzts();
+						$.ajax({
+							type: "POST",
+							url: '<%=basePath%>erptempacctapplication/deleteAll.do?tm='+new Date().getTime(),
+					    	data: {DATA_IDS:str},
+							dataType:'json',
+							cache: false,
+							success: function(response){
+								if(response.code==0){
+									$(top.hangge());//关闭加载状态
+									history.go(0); //刷新页面
 									$("#subTitle").tips({
 										side:3,
-							            msg:'删除失败,'+response.responseJSON.message,
+							            msg:'删除成功',
+							            bg:'#009933',
+							            time:3
+							        });
+								}else{
+									$(top.hangge());//关闭加载状态
+									$("#subTitle").tips({
+										side:3,
+							            msg:'删除失败,'+response.message,
 							            bg:'#cc0033',
 							            time:3
 							        });
-						    	}
-							});
-						}
+								}
+							},
+					    	error: function(e) {
+					    		$(top.hangge());//关闭加载状态
+								$("#subTitle").tips({
+									side:3,
+						            msg:'删除失败,'+response.responseJSON.message,
+						            bg:'#cc0033',
+						            time:3
+						        });
+					    	}
+						});
 					}
+					
 				}
 			});
 		};
@@ -522,34 +533,26 @@
 		/*全部上报*/
 		function report(msg){
 			if(!checkPermission()){return;} //权限控制
+			var str = '';
+	  		var confirm_state = '';
+			for(var i=0;i < document.getElementsByName('ids').length;i++){
+				confirm_state = document.getElementsByName('CONFIRM_STATE')[i].value;
+				if(document.getElementsByName('ids')[i].checked){
+					if(str=='') str += document.getElementsByName('ids')[i].value;
+				  	else str += ',' + document.getElementsByName('ids')[i].value;
+				}
+	  		}
+			if(str == ''){
+				bootbox.dialog({
+					message: "<span class='bigger-110'>当前暂无待上报数据,请重新筛选!</span>",
+					buttons: 			
+					{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+				});
+				return;
+		  	} 
 			bootbox.confirm(msg, function(result) {
 			  	if(result){
-			  		var str = '';
-			  		var confirm_state = '';
-					for(var i=0;i < document.getElementsByName('ids').length;i++){
-						confirm_state = document.getElementsByName('CONFIRM_STATE')[i].value;
-						if(confirm_state != '2'){
-							if(str=='') str += document.getElementsByName('ids')[i].value;
-						  	else str += ',' + document.getElementsByName('ids')[i].value;
-						}
-			  		}
 					if(msg == '确定要上报当前数据吗?'){
-						if($("#confirmState").val() == 2){
-							bootbox.dialog({
-								message: "<span class='bigger-110'>已上报内容不可重复上报!</span>",
-								buttons: 			
-								{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
-							});
-							return;
-						}  
-						if(str == ''){
-							bootbox.dialog({
-								message: "<span class='bigger-110'>当前暂无待上报数据,请重新筛选!</span>",
-								buttons: 			
-								{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
-							});
-							return;
-					  	} 
 						top.jzts();
 						$.ajax({
 							type: "POST",
@@ -586,27 +589,27 @@
 		/*撤销上报*/
 		function backReport(msg){
 			if(!checkPermission()){return;} //权限控制
+			var str = '';
+			var confirm_state = '';
+			for(var i=0;i < document.getElementsByName('ids').length;i++){
+			  	confirm_state = document.getElementsByName('CONFIRM_STATE')[i].value;
+			  	if(document.getElementsByName('ids')[i].checked){
+					if(str=='') str += document.getElementsByName('ids')[i].value;
+			  		else str += ',' + document.getElementsByName('ids')[i].value;
+					console.log(document.getElementsByName('CONFIRM_STATE')[i].value);
+			  	}
+			}
+			if(str == ''){
+				bootbox.dialog({
+					message: "<span class='bigger-110'>请选择需要撤销的内容!</span>",
+					buttons: 			
+					{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+				});
+				return;
+		  	}
 			bootbox.confirm(msg, function(result) {
 				if(result){
-					var str = '';
-					var confirm_state = '';
-					for(var i=0;i < document.getElementsByName('ids').length;i++){
-					  	confirm_state = document.getElementsByName('CONFIRM_STATE')[i].value;
-						if(confirm_state != '4'){
-							if(str=='') str += document.getElementsByName('ids')[i].value;
-					  		else str += ',' + document.getElementsByName('ids')[i].value;
-							console.log(document.getElementsByName('CONFIRM_STATE')[i].value);
-					  	}
-					}
 					if(msg == '确定要撤回上报吗?'){
-						if(str == ''){
-							bootbox.dialog({
-								message: "<span class='bigger-110'>已驳回无法撤销上报,请筛选出未驳回的数据撤销上报!</span>",
-								buttons: 			
-								{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
-							});
-							return;
-					  	}
 						top.jzts();
 						$.ajax({
 							type: "POST",
@@ -660,7 +663,7 @@
 		}
 		//导出excel
 		function toExcel(){
-			window.location.href='<%=basePath%>erptempacctapplication/excel.do';
+			window.location.href='<%=basePath%>erptempacctapplication/excel.do?BUSI_DATE='+$("#busiDate").val()+'&confirmState='+$("#confirmState").val();
 		}
 		
 	</script>
