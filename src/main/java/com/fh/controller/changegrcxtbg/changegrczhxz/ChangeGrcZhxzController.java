@@ -316,7 +316,22 @@ public class ChangeGrcZhxzController extends BaseController {
 		pdResult.put("Table", listPageData);
 		return 	pdResult;
 	}
-	
+	 /**html打印
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/printf")
+	public ModelAndView printf()throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		pd = changegrczhxzService.findById(pd);	//根据ID读取
+		mv.setViewName("changegrcxtbg/changegrczhxz/grcZhxzPrintPage");
+		mv.addObject("pd", pd);
+		mv.addObject("billCode", pd.get("BILL_CODE"));
+		
+		return mv;
+	}
 	/**列表
 	 * @param page
 	 * @throws Exception

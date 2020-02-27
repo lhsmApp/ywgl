@@ -342,7 +342,7 @@ public class ChangeErpXtbgController extends BaseController {
 		pd1 = changeerpxtbgService.findById(pd1);	//根据ID读取
 		return pd1;
 	}
-	 /**打印
+	 /**html打印
 	 * @param
 	 * @throws Exception
 	 */

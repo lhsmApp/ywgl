@@ -170,6 +170,10 @@ public class ChangeErpJsbgController extends BaseController {
 			}		
 		} 	
 		mv.addObject("userList", DictsUtil.getSysUserDic(userService));//用户
+		pd.put("DEPARTMENT_CODE",  user.getUNIT_CODE());
+		page.setPd(pd);
+		List<PageData> userDeptList= departmentService.list(page);
+		mv.addObject("userDeptList", userDeptList);//用户
 		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
 		JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0",zdepartmentPdList));
 		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
@@ -341,6 +345,23 @@ public class ChangeErpJsbgController extends BaseController {
 			PageData pdResult=new PageData();
 			pdResult.put("Table", listPageData);
 			return 	pdResult;
+		}
+		 /**html打印
+		 * @param
+		 * @throws Exception
+		 */
+		@RequestMapping(value="/printf")
+		public ModelAndView printf()throws Exception{
+			ModelAndView mv = this.getModelAndView();
+			PageData pd = new PageData();
+			pd = this.getPageData();
+			pd = changeerpjsbgService.findById(pd);	//根据ID读取
+			JSONArray json = JSONArray.fromObject(pd); 
+			mv.setViewName("changeerpxtbg/changeerpjsbg/jsbgPrintPage");
+			mv.addObject("pd", pd);
+			mv.addObject("billCode", pd.get("BILL_CODE"));
+			
+			return mv;
 		}
 	 /**批量删除
 	 * @param

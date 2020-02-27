@@ -145,6 +145,8 @@
 										<div class="row">
 											<div class="col-xs-5">
 												<input type="hidden" name="BILL_CODE" id="BILL_CODE" />
+													<input type="hidden" name="ADD_ROLE" id="ADD_ROLE"   />
+													<input type="hidden" name="DEL_ROLE" id="DEL_ROLE"   />
 												<div id="zhongxin" style="padding-top: 13px;">
 													<div style="margin:10px 0px;">
 														<label for="form-field-jsbg-report-bgname">角色变更名称</label>
@@ -162,10 +164,21 @@
 														<input type="hidden" name="UNIT_CODE" id="UNIT_CODE"   />
 														<div class="selectTree" id="selectTree" style="float:none;display:block;"></div>												
 													</div>
-													<div style="margin:10px 0px;">
+<!-- 													<div style="margin:10px 0px;"> -->
+<!-- 														<label for="form-field-xtbg-report-dept">部门</label> -->
+<!-- 														<input type="hidden" name="DEPT_CODE" id="DEPT_CODE"/> -->
+<!-- 														<input type="text" name="DEPT_NAME" id="DEPT_NAME" class="form-control" placeholder="请输入部门"/> -->
+<!-- 													</div> -->
+	 												<div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-dept">部门</label>
-														<input type="hidden" name="DEPT_CODE" id="DEPT_CODE"/>
-														<input type="text" name="DEPT_NAME" id="DEPT_NAME" class="form-control" placeholder="请输入部门"/>
+<!-- 														<input type="hidden" name="DEPT_CODE" id="DEPT_CODE"/> -->
+<!-- 														<input type="text" name="DEPT_NAME" id="DEPT_NAME" class="form-control" placeholder="请输入部门"/> -->
+														<select class="form-control" name="DEPT_CODE" id="DEPT_CODE">
+															<option value=""></option>
+															<c:forEach items="${userDeptList}" var="dept">
+															<option value="${dept.DEPARTMENT_CODE}">${dept.NAME}</option>
+															</c:forEach>
+														</select>
 													</div>
 <!-- 													<div style="margin:10px 0px;"> -->
 <!-- 														<label for="form-field-jsbg-report-user">申请人</label> -->
@@ -181,26 +194,33 @@
 														<input type="hidden" name="USER_CODE" id="USER_CODE"/>
 														<input type="text" name="USER_NAME" id="USER_NAME" class="form-control" placeholder="请输入申请人"/>
 													</div>
-												    <div style="margin:10px 0px;">
-														<label for="form-field-jsbg-report-depart">申请人部门</label>
-														<input type="hidden" name="USER_DEPT" id="USER_DEPT" />
-														<input type="text" name="USER_DEPTNAME" id="USER_DEPTNAME" class="form-control" placeholder="请输入申请人部门"/>
+<!-- 												    <div style="margin:10px 0px;"> -->
+<!-- 														<label for="form-field-jsbg-report-depart">申请人部门</label> -->
+<!-- 														<input type="hidden" name="USER_DEPT" id="USER_DEPT" /> -->
+<!-- 														<input type="text" name="USER_DEPTNAME" id="USER_DEPTNAME" class="form-control" placeholder="请输入申请人部门"/> -->
+<!-- 													</div> -->
+	   	 											<div style="margin:10px 0px;">
+														<label for="form-field-xtbg-report-userdept">申请人部门</label>
+														<select class="form-control" name="USER_DEPT" id="USER_DEPT">
+																	<option value=""></option>
+																	<c:forEach items="${userDeptList}" var="dept">
+																	<option value="${dept.DEPARTMENT_CODE}">${dept.NAME}</option>
+																	</c:forEach>
+																</select>
+<!-- 														<input type="hidden" name="USER_DEPT" id="USER_DEPT" /> -->
+<!-- 														<input type="text" name="USER_DEPTNAME" id="USER_DEPTNAME" class="form-control" placeholder="请输入申请人部门"/> -->
 													</div>
 										   			<div style="margin:10px 0px;">
 														<label for="form-field-jsbg-report-job">申请人岗位</label>
 														<input type="text" name="USER_JOB" id="USER_JOB" class="form-control" placeholder="请输入申请人岗位"/>
 													</div>
 													<div style="margin:10px 0px;">
-														<label for="form-field-jsbg-report-addrole">新增角色</label>
-														<input type="text" name="ADD_ROLE" id="ADD_ROLE" class="form-control" placeholder="请输入新增角色"/>
+														<label for="form-field-xtbg-report-contact">Email</label>
+														<input type="text" name="USER_EMAIL" id="USER_EMAIL" class="form-control" placeholder="请输入联系方式"/>
 													</div>
 													<div style="margin:10px 0px;">
-														<label for="form-field-jsbg-report-delrole">删除角色</label>
-														<input type="text" name="DEL_ROLE" id="DEL_ROLE" class="form-control" placeholder="请输入删除角色"/>
-													</div>
-													<div style="margin:10px 0px;">
-														<label for="form-field-jsbg-report-contact">联系方式</label>
-														<input type="text" name="USER_CONTACT" id="USER_CONTACT" class="form-control" placeholder="请输入联系方式"/>
+														<label for="form-field-xtbg-report-contact">电话</label>
+														<input type="text" name="USER_TEL" id="USER_TEL" class="form-control" placeholder="请输入联系方式"/>
 													</div>
 													<div style="margin:10px 0px;">
 														<label for="form-field-select-1">变更预期时间</label>
@@ -372,7 +392,9 @@
 			var bgyqDate=$("#EFFECTIVE_DATE").val();//变更预期时间
 			var billCode=$("#BILL_CODE").val();//申请单号
 			var addRole=$("#ADD_ROLE").val();//新增角色
-			var delRole=$("#DEL_ROLE").val();//删除角色
+			var delRole=$("#DEL_ROLE").val();//删除角色 
+			var uesrEmail=$("#USER_EMAIL").val();//Email
+			var uesrTel=$("#USER_TEL").val();//电话
 			if(bgName==""||bgName==null){    
 		        alert('系统变更名称不能为空！');
 		        $("#BG_NAME").focus();
@@ -388,7 +410,7 @@
 			$.ajax({
 				type: "POST",
 				url: '<%=basePath%>changeerpjsbg/save.do',
-				data:{BG_NAME:bgName,BG_REASON:bgReason,UNIT_CODE:unitCode,DEPT_CODE:deptCode,USER_CODE:uesrCode,USER_DEPT:uesrDept,USER_JOB:uesrJob,USER_CONTACT:uesrContact,EFFECTIVE_DATE:bgyqDate,BILL_CODE:billCode,ADD_ROLE:addRole,DEL_ROLE:delRole},
+				data:{USER_EMAIL:uesrEmail,USER_TEL:uesrTel,BG_NAME:bgName,BG_REASON:bgReason,UNIT_CODE:unitCode,DEPT_CODE:deptCode,USER_CODE:uesrCode,USER_DEPT:uesrDept,USER_JOB:uesrJob,USER_CONTACT:uesrContact,EFFECTIVE_DATE:bgyqDate,BILL_CODE:billCode,ADD_ROLE:addRole,DEL_ROLE:delRole},
 		    	dataType:'json',
 				cache: false,
 				success: function(response){
@@ -516,12 +538,15 @@
 		    			$("#selectTree2_input").val(datas.depnameUnit);
 		    			$("#DEPT_CODE").val(datas.DEPT_CODE);//部门
 		    			$("#USER_CODE").val(datas.USER_CODE);//申请人
+		    			$("#USER_NAME").val(datas.NAME);//申请人姓名
 		    			$("#USER_DEPT").val(datas.USER_DEPT);//申请人部门
 		    			$("#USER_JOB").val(datas.USER_JOB);//申请人岗位
 		    			$("#USER_CONTACT").val(datas.USER_CONTACT);//联系方式
 		    			$("#EFFECTIVE_DATE").val(datas.EFFECTIVE_DATE);//变更预期时间
 		    			$("#ADD_ROLE").val(datas.ADD_ROLE);//新增角色
 		    			$("#DEL_ROLE").val(datas.DEL_ROLE);//删除角色
+		    			$("#USER_EMAIL").val(datas.USER_EMAIL);//Email
+		    			$("#USER_TEL").val(datas.USER_TEL);//电话
 		            	var html = '';
 		      		     html += setDetail(datas);
 		      			$('#detail-tab').html(html);
@@ -561,18 +586,14 @@
 		        +item.DEPT_NAME
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 变更原因 ：</div><div class="profile-info-value"><span>'
 		        +item.BG_REASON
-		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 增加角色 ：</div><div class="profile-info-value"><span>'
-		        +item.ADD_ROLE
-		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 删除角色 ：</div><div class="profile-info-value"><span>'
-		        +item.DEL_ROLE
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人部门： </div><div class="profile-info-value"><span>'
 		        +item.USER_DEPTNAME
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人： </div><div class="profile-info-value"><span>'
 		        +item.NAME
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人岗位： </div><div class="profile-info-value"><span>'
 		        +item.USER_JOB
-		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 联系方式： </div><div class="profile-info-value"><span>'
-		        +item.USER_CONTACT
+		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> Email,电话： </div><div class="profile-info-value"><span>'
+		        +item.USER_EMAIL+','+item.USER_TEL
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请日期： </div><div class="profile-info-value"><span>'
 		        +item.ENTRY_DATE
 		        +'</span></div></div>'
@@ -583,8 +604,8 @@
 			 top.jzts();
 			 var diag = new top.Dialog();
 			 diag.Drag=true;
-			 diag.Title ="系统变更申请单打印";
-			 diag.URL = '<%=basePath%>changeerpjsbg/goPrint.do?BILL_CODE='+encodeURI(Id);
+			 diag.Title ="ERP角色变更申请单打印";
+			 diag.URL = '<%=basePath%>changeerpjsbg/printf.do?BILL_CODE='+encodeURI(Id);
 			 diag.Width = 800;
 			 diag.Height = 550;
 			 diag.Modal = true;				//有无遮罩窗口

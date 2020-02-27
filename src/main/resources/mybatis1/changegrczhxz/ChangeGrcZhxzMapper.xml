@@ -102,6 +102,8 @@
 			ACCOUNT_ROLES = #{ACCOUNT_ROLES},
 			BILL_STATE = #{BILL_STATE},
 			BILL_USER = #{BILL_USER},
+			USER_TEL = #{USER_TEL},
+			USER_EMAIL = #{USER_EMAIL},
 			BILL_DATE = #{BILL_DATE},
 			CUS_COLUMN1 = #{CUS_COLUMN1},
 			CUS_COLUMN2 = #{CUS_COLUMN2},
@@ -129,6 +131,8 @@
 			ACCOUNT_NEW = #{ACCOUNT_NEW},
 			ACCOUNT_VALIDITY = #{ACCOUNT_VALIDITY},
 			ACCOUNT_REASON = #{ACCOUNT_REASON},
+			USER_TEL = #{USER_TEL},
+			USER_EMAIL = #{USER_EMAIL},
 			ACCOUNT_ROLES = #{ACCOUNT_ROLES}
 <!-- 			BILL_STATE = #{BILL_STATE}, -->
 <!-- 			BILL_USER = #{BILL_USER}, -->
@@ -191,7 +195,9 @@
 				a.ACCOUNT_REASON,
 				a.ACCOUNT_ROLES,
 				a.BILL_STATE,	
-				a.BILL_USER,	
+				a.BILL_USER,
+				a.USER_EMAIL,
+				a.USER_TEL,		
 				a.BILL_DATE,
 				b.APPROVAL_STATE
 			FROM
@@ -293,6 +299,8 @@
 				a.BILL_STATE,	
 				a.BILL_USER,	
 				a.BILL_DATE,
+				a.USER_EMAIL,
+				a.USER_TEL,	
 				b.APPROVAL_STATE
 				FROM 
 				tb_change_grc_zhxz a LEFT JOIN tb_approval_main b
@@ -346,6 +354,8 @@
 				a.BILL_STATE,	
 				a.BILL_USER,	
 				a.BILL_DATE,	
+				a.USER_EMAIL,
+				a.USER_TEL,	
 				b.NAME AS UNIT_NAME,
 				c.USERNAME,
 				c.NAME,

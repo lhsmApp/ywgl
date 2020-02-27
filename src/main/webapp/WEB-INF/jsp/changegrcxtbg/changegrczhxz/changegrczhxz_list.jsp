@@ -754,8 +754,8 @@
 			 top.jzts();
 			 var diag = new top.Dialog();
 			 diag.Drag=true;
-			 diag.Title ="系统变更申请单打印";
-			 diag.URL = '<%=basePath%>changegrczhxz/goPrint.do?BILL_CODE='+encodeURI(Id);
+			 diag.Title ="grc帐号新增申请单打印";
+			 diag.URL = '<%=basePath%>changegrczhxz/printf.do?BILL_CODE='+encodeURI(Id);
 			 diag.Width = 800;
 			 diag.Height = 600;
 			 diag.Modal = true;				//有无遮罩窗口
