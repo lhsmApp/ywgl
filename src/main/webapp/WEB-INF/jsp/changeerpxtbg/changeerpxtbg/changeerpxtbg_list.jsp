@@ -476,6 +476,7 @@
 		      			$("#BG_NAME").val(datas.BG_NAME);//变更名称
 		    			$("#BG_REASON").val(datas.BG_REASON);//变更原因
 		    			$("#USER_CODE").val(datas.USER_CODE);//申请人
+		    			$("#USER_NAME").val(datas.NAME);//申请人姓名
 		    			$("#BILL_USER").val(datas.BILL_USER);//创建人
 		    			$("#UNIT_CODE").val(datas.UNIT_CODE);//申请人单位
 		    			$("#selectTree2_input").val(datas.depnameUnit);

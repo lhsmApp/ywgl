@@ -158,23 +158,33 @@
 														<input type="hidden" name="UNIT_CODE" id="UNIT_CODE"   />
 														<div class="selectTree" id="selectTree" style="float:none;display:block;"></div>												
 													</div>
-<!-- 													   <div style="margin:10px 0px;"> -->
-<!-- 														<label for="form-field-jsbg-report-dept">部门</label> -->
-<!-- 														<input type="text" name="DEPT_CODE" id="DEPT_CODE" class="form-control" placeholder="请输入申请人部门"/> -->
+<!-- 													 <div style="margin:10px 0px;"> -->
+<!-- 														<label for="form-field-xtbg-report-dept">部门</label> -->
+<!-- 														<input type="hidden" name="DEPT_CODE" id="DEPT_CODE"/> -->
+<!-- 														<input type="text" name="DEPT_NAME" id="DEPT_NAME" class="form-control" placeholder="请输入部门"/> -->
 <!-- 													</div> -->
-													 <div style="margin:10px 0px;">
+		 											<div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-dept">部门</label>
-														<input type="hidden" name="DEPT_CODE" id="DEPT_CODE"/>
-														<input type="text" name="DEPT_NAME" id="DEPT_NAME" class="form-control" placeholder="请输入部门"/>
+														<select class="form-control" name="DEPT_CODE" id="DEPT_CODE">
+															<option value=""></option>
+															<c:forEach items="${userDeptList}" var="dept">
+															<option value="${dept.DEPARTMENT_CODE}">${dept.NAME}</option>
+															</c:forEach>
+														</select>
 													</div>
+<!-- 													<div style="margin:10px 0px;"> -->
+<!-- 														<label for="form-field-jsbg-report-user">申请人</label> -->
+<!-- 															<select class="form-control" name="USER_CODE" id="USER_CODE"> -->
+<!-- 																	<option value=""></option> -->
+<%-- 																	<c:forEach items="${userList}" var="user"> --%>
+<%-- 																	<option value="${user.USER_ID}">${user.USERNAME}</option> --%>
+<%-- 																	</c:forEach> --%>
+<!-- 																</select> -->
+<!-- 													</div> -->
 													<div style="margin:10px 0px;">
-														<label for="form-field-jsbg-report-user">申请人</label>
-															<select class="form-control" name="USER_CODE" id="USER_CODE">
-																	<option value=""></option>
-																	<c:forEach items="${userList}" var="user">
-																	<option value="${user.USER_ID}">${user.USERNAME}</option>
-																	</c:forEach>
-																</select>
+														<label for="form-field-xtbg-report-user">申请人</label>
+														<input type="hidden" name="USER_CODE" id="USER_CODE"/> 
+														<input type="text" name="USER_NAME" id="USER_NAME" class="form-control" placeholder="请输入申请人"/> 
 													</div>
 <!-- 												    <div style="margin:10px 0px;"> -->
 <!-- 														<label for="form-field-jsbg-report-depart">申请人部门</label> -->
@@ -386,7 +396,9 @@
 			$("#selectTree2_input").val('<%=unitName%>');//单位名称
 			$("#DEPT_CODE").val('<%=departId%>');//部门编码
 			$("#DEPT_NAME").val('<%=departName%>');//部门名称	
-			$("#"+'<%=userId%>').val('<%=userName%>');//申请人
+<%-- 			$("#"+'<%=userId%>').val('<%=userName%>');//申请人 --%>
+			$("#USER_CODE").val('<%=userId%>');//申请人编码
+			$("#USER_NAME").val('<%=userName%>');//申请人姓名
 			$("#USER_DEPT").val('<%=departId%>');//申请人部门编码
 			$("#USER_DEPTNAME").val('<%=departName%>');//申请人部门名称
 			$("#USER_JOB").val("");//申请人岗位
@@ -521,7 +533,9 @@
 		    			$("#selectTree2_input").val(datas.depnameUnit);
 		    			$("#DEPT_CODE").val(datas.DEPT_CODE);//部门
 		    			$("#USER_CODE").val(datas.USER_CODE);//申请人
+		    			$("#USER_NAME").val(datas.NAME);//申请人
 		    			$("#USER_DEPT").val(datas.USER_DEPT);//申请人部门
+		    			$("#USER_DEPTNAME").val(datas.USER_DEPTNAME);//申请人部门
 		    			$("#USER_JOB").val(datas.USER_JOB);//申请人岗位
 		    			$("#USER_CONTACT").val(datas.USER_CONTACT);//联系方式
 		    			$("#EFFECTIVE_DATE").val(datas.EFFECTIVE_DATE);//申请生效日期

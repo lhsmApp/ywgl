@@ -8,9 +8,6 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-	<style>
-		.one{width:15px; height:15px; background-color:transparent;border:1px solid}
-	</style>
 		<base href="<%=basePath%>">
 		<meta charset="utf-8" />
 		<title></title>
@@ -68,9 +65,7 @@
         <td height="40" align="center" bgcolor="EFEFFF">ERP系统名称</td>
         <td align="center" bgcolor="#FFFFFF">CP6勘探与生产ERP2.0系统</td>
         <td align="center" bgcolor="EFEFFF">变更类型</td>
-        <td align="center" bgcolor="#FFFFFF" >
-        <table><tr><td><div class="one"></div></td><td>日常变更</td><td>  <div class="one"></div></td><td>紧急变更</td></tr></table>       
-        </td>
+        <td align="center" bgcolor="#FFFFFF"><i class="ace-icon fa fa-square-o"></i>日常变更 紧急变更</td>
   </tr>	
   <tr>
           <td height="200" colspan="4" align="left"  bgcolor="#FFFFFF">变更原因：</br>&nbsp;&nbsp;&nbsp;&nbsp;${pd.BG_REASON}</br>变更内容：</br>&nbsp;&nbsp;&nbsp;&nbsp;${pd.BG_REASON}</br>变更变更预期时间：</br>&nbsp;&nbsp;&nbsp;&nbsp;${pd.EFFECTIVE_DATE}</td>
