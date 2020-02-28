@@ -27,7 +27,7 @@
 				<div class="page-content">
 					<div class="page-header">
 						<!-- 检索  -->
-						<form class="form-inline" action="changegrczhxz/queryList.do" id="grczhxzForm" name="grczhxzForm">
+						<form class="form-inline" action="changegrczhxz/queryList.do" id="grczhxzForm" name="grczhxzForm" method="post">
 									<div class="nav-search">
 										<span class="input-icon">
 										<input type="text" placeholder="这里输入关键词" class="nav-search-input" id="nav-search-input" autocomplete="off" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词"/>
