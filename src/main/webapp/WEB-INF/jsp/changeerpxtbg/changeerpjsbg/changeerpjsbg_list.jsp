@@ -152,9 +152,13 @@
 														<label for="form-field-jsbg-report-bgname">角色变更名称</label>
 														<input type="text" name="BG_NAME" id="BG_NAME" class="form-control" placeholder="请输入角色变更名称"/>
 													</div>
-														<div style="margin:10px 0px;">
+													<div style="margin:10px 0px;">
 														<label for="form-field-jsbg-report-reason">变更原因</label>
 														<input type="text" name="BG_REASON" id="BG_REASON" class="form-control" placeholder="请输入变更原因"/>
+													</div>
+													<div style="margin:10px 0px;">
+														<label for="form-field-jsbg-report-bgname">变更内容</label>
+														<input type="text" name="BG_CONTENT" id="BG_CONTENT" class="form-control" placeholder="请输入角色变更名称"/>
 													</div>
 													    <div style="margin:10px 0px;">
 														<label for="form-field-jsbg-report-depart">单位</label>
@@ -357,6 +361,7 @@
 			$("#DEL_ROLE").val("");//删除角色
 			$("#USER_EMAIL").val("");//Email
 			$("#USER_TEL").val("");//电话
+			$("#BG_CONTENT").val("");//变更内容
 			
 		}
 		
@@ -397,6 +402,8 @@
 			var delRole=$("#DEL_ROLE").val();//删除角色 
 			var uesrEmail=$("#USER_EMAIL").val();//Email
 			var uesrTel=$("#USER_TEL").val();//电话
+			var bgContent=$("#BG_CONTENT").val();//变更内容
+			
 			if(bgName==""||bgName==null){    
 		        alert('系统变更名称不能为空！');
 		        $("#BG_NAME").focus();
@@ -412,7 +419,7 @@
 			$.ajax({
 				type: "POST",
 				url: '<%=basePath%>changeerpjsbg/save.do',
-				data:{USER_EMAIL:uesrEmail,USER_TEL:uesrTel,BG_NAME:bgName,BG_REASON:bgReason,UNIT_CODE:unitCode,DEPT_CODE:deptCode,USER_CODE:uesrCode,USER_DEPT:uesrDept,USER_JOB:uesrJob,USER_CONTACT:uesrContact,EFFECTIVE_DATE:bgyqDate,BILL_CODE:billCode,ADD_ROLE:addRole,DEL_ROLE:delRole},
+				data:{BG_CONTENT:bgContent,USER_EMAIL:uesrEmail,USER_TEL:uesrTel,BG_NAME:bgName,BG_REASON:bgReason,UNIT_CODE:unitCode,DEPT_CODE:deptCode,USER_CODE:uesrCode,USER_DEPT:uesrDept,USER_JOB:uesrJob,USER_CONTACT:uesrContact,EFFECTIVE_DATE:bgyqDate,BILL_CODE:billCode,ADD_ROLE:addRole,DEL_ROLE:delRole},
 		    	dataType:'json',
 				cache: false,
 				success: function(response){
@@ -549,6 +556,7 @@
 		    			$("#DEL_ROLE").val(datas.DEL_ROLE);//删除角色
 		    			$("#USER_EMAIL").val(datas.USER_EMAIL);//Email
 		    			$("#USER_TEL").val(datas.USER_TEL);//电话
+		    			$("#BG_CONTENT").val(datas.BG_CONTENT);//变更内容	    			
 		            	var html = '';
 		      		     html += setDetail(datas);
 		      			$('#detail-tab').html(html);
@@ -588,14 +596,18 @@
 		        +item.DEPT_NAME
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 变更原因 ：</div><div class="profile-info-value"><span>'
 		        +item.BG_REASON
+		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 变更内容 ：</div><div class="profile-info-value"><span>'
+		        +item.BG_CONTENT
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人部门： </div><div class="profile-info-value"><span>'
 		        +item.USER_DEPTNAME
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人： </div><div class="profile-info-value"><span>'
 		        +item.NAME
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人岗位： </div><div class="profile-info-value"><span>'
 		        +item.USER_JOB
-		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> Email,电话： </div><div class="profile-info-value"><span>'
-		        +item.USER_EMAIL+','+item.USER_TEL
+		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 邮箱： </div><div class="profile-info-value"><span>'
+		        +item.USER_EMAIL
+		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 电话： </div><div class="profile-info-value"><span>'
+		        +item.USER_TEL
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请日期： </div><div class="profile-info-value"><span>'
 		        +item.ENTRY_DATE
 		        +'</span></div></div>'

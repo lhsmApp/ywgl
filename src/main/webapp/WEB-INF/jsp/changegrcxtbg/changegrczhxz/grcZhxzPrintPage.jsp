@@ -82,7 +82,7 @@
   </tr>	
   <tr>
         <td height="40"  align="center" bgcolor="EFEFFF">帐号角色</td>
-		<td  colspan="3"  height="70"  align="right" bgcolor="#FFFFFF"> </td>
+		<td  colspan="3"  height="70"  align="left" bgcolor="#FFFFFF"> ${pd.ACCOUNT_ROLES}</td>
   </tr>
   <tr>
         <td height="40"  align="center" bgcolor="EFEFFF">支持人员</br>（三级运维）</td>
@@ -122,7 +122,7 @@
 </table>
 <table width="750" height="30" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
   <tr>
-    <td align="right"><button onClick="window.print()">打印</button>&nbsp;</td>
+       <td align="right"><button id="printf" onClick="printf()">打印</button>&nbsp;</td>
   </tr>
 </table>
 
@@ -144,6 +144,12 @@
 		
 		<script type="text/javascript">
 		$(top.hangge());
+		
+		function printf(){
+			$("#printf").css('display','none');//隐藏
+			window.print();
+			$("#printf").css('display','block');//显示
+		}
 		</script>
 </body>
 </html>

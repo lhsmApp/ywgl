@@ -25,6 +25,7 @@
 		<script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
 		
 		<script language="javascript" src="static/js/jquery.jqprint-0.3.js"></script>
+
 	
 	</head>
 <body   bgcolor="#FFFFFF">
@@ -75,7 +76,7 @@
   </tr>	
    <tr>
    		<td height="120"  align="center"  bgcolor="EFEFFF">角色变更</br>申请内容</td>
-        <td height="120" colspan="3" align="left"  bgcolor="#FFFFFF">&nbsp;${pd.BG_REASON}</td>
+        <td height="120" colspan="3" align="left"  bgcolor="#FFFFFF">&nbsp;${pd.BG_CONTENT}</td>
   </tr>	
     <tr>
         <td height="200" align="center" bgcolor="EFEFFF">是否符合敏感</br>事务权限设置</br>要求</td>
@@ -158,7 +159,7 @@
 </table>
 <table width="750" height="30" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
   <tr>
-    <td align="right"><button onClick="window.print()">打印</button>&nbsp;</td>
+    <td align="right"><button id="printf" onClick="printf()">打印</button>&nbsp;</td>
   </tr>
 </table>
 
@@ -183,6 +184,13 @@
 		
 		<script type="text/javascript">
 		$(top.hangge());
+		
+		function printf(){
+			$("#printf").css('display','none');//隐藏
+			window.print();
+			$("#printf").css('display','block');//显示
+		}
+		
 		</script>
 </body>
 </html>

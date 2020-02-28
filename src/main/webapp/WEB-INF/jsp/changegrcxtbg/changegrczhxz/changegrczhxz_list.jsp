@@ -739,15 +739,21 @@
 			        +item.DEPT_NAME
 			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 新增帐号原因 ：</div><div class="profile-info-value"><span>'
 			        +item.ACCOUNT_REASON
+			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 新增帐号 ：</div><div class="profile-info-value"><span>'
+			        +item.ACCOUNT_NEW
+			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 帐号有效期：</div><div class="profile-info-value"><span>'
+			        +item.ACCOUNT_VALIDITY
+			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 帐号角色 ：</div><div class="profile-info-value"><span>'
+			        +item.ACCOUNT_ROLES
 			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人部门： </div><div class="profile-info-value"><span>'
 			        +item.USER_DEPTNAME
 			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人： </div><div class="profile-info-value"><span>'
 			        +item.NAME
 			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人岗位： </div><div class="profile-info-value"><span>'
 			        +item.USER_JOB
-			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 联系方式： </div><div class="profile-info-value"><span>'
+			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 邮箱： </div><div class="profile-info-value"><span>'
 			        +item.USER_EMAIL
-			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 联系方式： </div><div class="profile-info-value"><span>'
+			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 电话： </div><div class="profile-info-value"><span>'
 			        +item.USER_TEL
 			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请生效日期： </div><div class="profile-info-value"><span>'
 			        +item.EFFECTIVE_DATE

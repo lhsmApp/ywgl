@@ -601,6 +601,8 @@
 		        + item.UNIT_NAME
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请部门： </div><div class="profile-info-value"><span>'
 		        +item.DEPT_NAME
+		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 用户帐号： </div><div class="profile-info-value"><span>'
+		        +item.ACCOUNT_NAME
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 账号撤销原因 ：</div><div class="profile-info-value"><span>'
 		        +item.CANCLE_REASON
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人部门： </div><div class="profile-info-value"><span>'

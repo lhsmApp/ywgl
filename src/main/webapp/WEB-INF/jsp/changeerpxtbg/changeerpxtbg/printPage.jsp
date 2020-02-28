@@ -136,7 +136,7 @@
 </div>
 <table width="750" height="20" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
   <tr>
-    <td align="right"><button onClick="window.print()">打印</button>&nbsp;</td>
+ 	<td align="right"><button id="printf" onClick="printf()">打印</button>&nbsp;</td>
   </tr>
 </table>		
 		<div id="zhongxin2" class="center" style="display:none"><br/><br/><br/><br/><br/><img src="static/images/jiazai.gif" /><br/><h4 class="lighter block green">提交中...</h4></div>
@@ -149,6 +149,12 @@
 		
 		<script type="text/javascript">
 		$(top.hangge());
+		
+		function printf(){
+			$("#printf").css('display','none');//隐藏
+			window.print();
+			$("#printf").css('display','block');//显示
+		}
 		</script>
 </body>
 </html>

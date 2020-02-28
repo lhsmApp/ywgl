@@ -351,6 +351,7 @@
 			$("#BILL_CODE").val("");//申请单号	
 			$("#USER_EMAIL").val("");//Email
 			$("#USER_TEL").val("");//电话
+			$("#BG_NR").val("");//变更内容
 		}
 		//删除
 		function del(Id){
@@ -557,8 +558,7 @@
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人岗位： </div><div class="profile-info-value"><span>'
 		        +item.USER_JOB
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> Email,电话： </div><div class="profile-info-value"><span>'
-		        +item.USER_EMAIL+','+item.USER_TEL
-		
+		        +item.USER_EMAIL+','+item.USER_TEL		
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请日期： </div><div class="profile-info-value"><span>'
 		        +item.ENTRY_DATE
 		        +'</span></div></div>'

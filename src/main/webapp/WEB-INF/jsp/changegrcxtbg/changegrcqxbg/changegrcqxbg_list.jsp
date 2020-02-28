@@ -594,6 +594,10 @@
 			        +item.DEPT_NAME
 			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 账号撤销原因 ：</div><div class="profile-info-value"><span>'
 			        +item.BG_REASON
+			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 新增角色 ：</div><div class="profile-info-value"><span>'
+			        +item.ADD_ROLES
+			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name">删除角色 ：</div><div class="profile-info-value"><span>'
+			        +item.DELETE_ROLES
 			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人部门： </div><div class="profile-info-value"><span>'
 			        +item.USER_DEPTNAME
 			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人： </div><div class="profile-info-value"><span>'
