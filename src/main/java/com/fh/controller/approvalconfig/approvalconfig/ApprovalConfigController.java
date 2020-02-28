@@ -364,6 +364,9 @@ public class ApprovalConfigController extends BaseController {
 		if(null==listResult||listResult.size()==0){
 			pd.put("msg", "该单据未上报不能撤销！");
 			return pd;
+		}else if(listResult.get(0).getString("APPROVAL_STATE").equals("1")){
+			pd.put("msg", "该单据已完成不能撤销上报！");
+			return pd;
 		}
 		String BILL_CODE = pd.getString("BILL_CODE");
 		if(null != BILL_CODE && !"".equals(BILL_CODE)){	
