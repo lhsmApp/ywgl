@@ -1232,6 +1232,9 @@
 			update tb_approval_main
 		set 
 		APPROVAL_STATE=#{APPROVAL_STATE_MAIN}
+		<!-- 车易家 2020-03-01 添加 -->
+		where 
+		BILL_CODE = #{BILL_CODE}
 	</update>
 	
 	<!-- 审批退回-更新审批明细表和主表 -->

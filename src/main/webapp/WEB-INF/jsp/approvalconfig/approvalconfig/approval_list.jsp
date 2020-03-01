@@ -307,20 +307,20 @@
 		function getChangeData(){
 		    var html = '';
 		    for(var i = 0;i<data.length;i++){
-/* 		    	if(data[i].BG_NAME==""){
+ 		    	if(data[i].BG_NAME==""){
 		    		if(data[i].BUSINESS_CODE==3){
 		    			data[i].BG_NAME='GRC帐号新增';
-		    			data[i].BG_REASON=data[i].ACCOUNT_REASON;
+		    			//data[i].BG_REASON=data[i].ACCOUNT_REASON;
 						
 					}else if(data[i].BUSINESS_CODE==4){
 						data[i].BG_NAME='GRC权限变更';
-						data[i].BG_REASON=data[i].BG_REASON;
+						//data[i].BG_REASON=data[i].BG_REASON;
 						
 					}else{
 						data[i].BG_NAME='GRC帐号撤销';
-						data[i].BG_REASON=data[i].CANCLE_REASON;
+						//data[i].BG_REASON=data[i].CANCLE_REASON;
 					}
-		    	} */
+		    	} 
 				data[i].BG_REASON=data[i].REASON;
 				//console.log(data);
 		        html += setDiv(data[i]);
@@ -404,6 +404,16 @@
 		    return div;
 		}
 		function showDetail(code,current,next,businessType=0){
+			if(event){
+				$("#tasks li").each(function(){
+					var item = this;
+					$(item).removeClass("bc-light-orange");
+				}); 
+				$($(event.srcElement).closest('li')).addClass("bc-light-orange");
+			}else{
+				$("#tasks li").first().addClass("bc-light-orange");
+				//$($(event.srcElement).parents('li')).addClass("bc-light-orange");
+			}
 			bill_code=code;
 		 	current_level=current;//当前审批级别
 		    next_level=next;//下一审批级别	 
