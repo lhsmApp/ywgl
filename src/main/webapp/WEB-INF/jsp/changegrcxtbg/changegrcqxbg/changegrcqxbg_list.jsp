@@ -805,7 +805,6 @@
 						top.hangge();
 					}
 			});
-			$("#grcqxbg-tab li[tag=detail-tab'] a").click();
 		}
 		
 		/**

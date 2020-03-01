@@ -58,9 +58,9 @@
 								<tr>
 									<th class="center" style="width:50px;">序号</th>
 									<th class="center">课程分类名称</th>
-									<th class="center">课件数</th>
+									<!-- <th class="center">课件数</th>
 									<th class="center">试卷数</th>
-									<th class="center">题目数</th>
+									<th class="center">题目数</th> -->
 									<th class="center">负责人</th>
 									<th class="center">状态</th>
 									
@@ -76,9 +76,9 @@
 										<tr>
 											<td class='center' style="width: 30px;">${vs.index+1}</td>
 											<td class='center'><a href="javascript:goSondict('${var.COURSE_TYPE_ID}')"><i class="ace-icon fa fa-share bigger-100"></i>&nbsp;${var.COURSE_TYPE_NAME}</a></td>
-											<td class='center'><i class="ace-icon fa fa-book icon-only bigger-110 red"> 2</td></i>
+											<!-- <td class='center'><i class="ace-icon fa fa-book icon-only bigger-110 red"> 2</td></i>
 											<td class='center'><i class="ace-icon fa fa-flag icon-only bigger-110 green"> 3</td></i>
-											<td class='center'><i class="ace-icon fa fa-credit-card icon-only bigger-110 orange"> 22</td></i>
+											<td class='center'><i class="ace-icon fa fa-credit-card icon-only bigger-110 orange"> 22</td></i> -->
 											<td class='center'>${var.LEADER}</td>
 											<td style="width: 80px;" class="center">
 												<c:if test="${var.STATE == '0' }"><span class="label label-important arrowed-in">停用</span></c:if>
