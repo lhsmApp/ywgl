@@ -135,11 +135,11 @@
   </tr>
   <tr>
     <tr>
-   		<td height="60" align="center"  bgcolor="EFEFFF">角色变更</br>测试结果</td>
+   		<td height="60" align="center"  bgcolor="EFEFFF">角色变更</br>测试结果<sup>3</sup></td>
         <td height="60" colspan="3" align="center"  bgcolor="#FFFFFF"> </td>
   </tr>	
     <tr>
-        <td height="40" align="center" width="100" bgcolor="EFEFFF">测试人员</td>
+        <td height="40" align="center" width="100" bgcolor="EFEFFF">测试人员<sup>4</sup></td>
         <td align="center" width="200" bgcolor="#FFFFFF"> </td>
         <td align="center" width="100" bgcolor="EFEFFF">测试日期</td>
         <td align="center" width="200" bgcolor="#FFFFFF"><table><tr><td width="150">签字： </td><td width="75"> 年</td><td width="75">月</td><td width="75">日</td></tr></table>  </td>
@@ -166,7 +166,7 @@
 <hr/>
 <div>
 	<div>1如申请人为非中国石油的外部人员，应明确填写单位信息。</div>
- 	<div>2 填写该变更应在ERP系统中生效的日期，例如填写需要使用该变更角色的日期。</div>
+ 	<div>2填写该变更应在ERP系统中生效的日期，例如填写需要使用该变更角色的日期。</div>
  	<div>3应包括总部ERP维护支持组和发起申请的用户分别进行的测试。</div>
   	<div>4总部ERP维护支持组测试人员应在总部ERP维护支持组和发起申请的用户分别进行的测试结果均正常后，对测试结果进行签字确认。</div>
 

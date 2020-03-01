@@ -367,7 +367,7 @@ public class ChangeErpXtbgController extends BaseController {
 	public @ResponseBody PageData showDetail() throws Exception{
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		pd = changeerpxtbgService.findByBillCode(pd);	//根据ID读取
+		pd = changeerpxtbgService.findById(pd);	//根据ID读取
 		pd.put("DEPARTMENT_CODE", pd.getString("UNIT_CODE"));
 		PageData pdDepartResultUnit=departmentService.findByBianma(pd);
 		//获取申请单位

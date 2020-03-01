@@ -129,19 +129,19 @@ public class ApprovalConfigController extends BaseController {
 		pd = this.getPageData();
 		switch(pd.getString("BUSINESS_CODE")){
 		case "1":   //系统变更;	 
-			pd = changeerpxtbgService.findByBillCode(pd);
+			pd = changeerpxtbgService.findById(pd);
 		    break;
 		case "2": //角色变更;		   
-			pd = changeerpjsbgService.findByBillCode(pd);
+			pd = changeerpjsbgService.findById(pd);
 		    break;	
 		case "3": //GRC帐号新增;		   
-			pd = changegrczhxzService.findByBillCode(pd);
+			pd = changegrczhxzService.findById(pd);
 		    break;
 		case "4": //GRC权限变更;		   
-			pd = changegrcqxbgService.findByBillCode(pd);
+			pd = changegrcqxbgService.findById(pd);
 		    break;
 		case "5": //GRC账号撤销;		   
-			pd = changegrczhzxService.findByBillCode(pd);
+			pd = changegrczhzxService.findById(pd);
 		    break;
 		default:
 			

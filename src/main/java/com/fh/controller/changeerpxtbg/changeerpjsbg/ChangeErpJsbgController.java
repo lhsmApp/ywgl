@@ -303,7 +303,7 @@ public class ChangeErpJsbgController extends BaseController {
 	public @ResponseBody PageData showDetail() throws Exception{
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		pd = changeerpjsbgService.findByBillCode(pd);	//根据ID读取
+		pd = changeerpjsbgService.findById(pd);	//根据ID读取
 		pd.put("DEPARTMENT_CODE", pd.getString("UNIT_CODE"));
 		PageData pdDepartResultUnit=departmentService.findByBianma(pd);
 		if(pdDepartResultUnit!=null)

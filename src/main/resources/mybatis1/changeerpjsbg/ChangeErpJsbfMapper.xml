@@ -187,8 +187,8 @@
 				t.*,
 				u.NAME AS UNIT_NAME,
 				v.NAME USERNAME,
-				w.NAME  DEPT_NAME,
-				x.NAME  USER_DEPTNAME				
+				w.NAME DEPT_NAME,
+				x.NAME USER_DEPTNAME				
 			FROM 
 			(SELECT 
 				a.BILL_CODE AS BILL_CODE,	

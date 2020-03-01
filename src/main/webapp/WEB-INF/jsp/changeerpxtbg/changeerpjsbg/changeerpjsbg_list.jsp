@@ -196,7 +196,7 @@
 													<div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-dept">申请人</label>
 														<input type="hidden" name="USER_CODE" id="USER_CODE"/>
-														<input type="text" name="USER_NAME" id="USER_NAME" class="form-control" placeholder="请输入申请人"/>
+														<input type="text" name="USER_NAME" id="USER_NAME" class="form-control" readonly="readonly" placeholder="请输入申请人"/>
 													</div>
 <!-- 												    <div style="margin:10px 0px;"> -->
 <!-- 														<label for="form-field-jsbg-report-depart">申请人部门</label> -->
@@ -539,24 +539,7 @@
 		            success:function(datas){
 		            	//全局变量存放当前点击的变更申请单号
 		            	bill_code=datas.BILL_CODE;
-		            	$('#detail-tab').html(html);
-		      			$("#BILL_CODE").val(datas.BILL_CODE);//申请单号
-		      			$("#BG_NAME").val(datas.BG_NAME);//变更名称
-		    			$("#BG_REASON").val(datas.BG_REASON);//变更原因
-		    			$("#UNIT_CODE").val(datas.UNIT_CODE);//单位
-		    			$("#selectTree2_input").val(datas.depnameUnit);
-		    			$("#DEPT_CODE").val(datas.DEPT_CODE);//部门
-		    			$("#USER_CODE").val(datas.USER_CODE);//申请人
-		    			$("#USER_NAME").val(datas.NAME);//申请人姓名
-		    			$("#USER_DEPT").val(datas.USER_DEPT);//申请人部门
-		    			$("#USER_JOB").val(datas.USER_JOB);//申请人岗位
-		    			$("#USER_CONTACT").val(datas.USER_CONTACT);//联系方式
-		    			$("#EFFECTIVE_DATE").val(datas.EFFECTIVE_DATE);//变更预期时间
-		    			$("#ADD_ROLE").val(datas.ADD_ROLE);//新增角色
-		    			$("#DEL_ROLE").val(datas.DEL_ROLE);//删除角色
-		    			$("#USER_EMAIL").val(datas.USER_EMAIL);//Email
-		    			$("#USER_TEL").val(datas.USER_TEL);//电话
-		    			$("#BG_CONTENT").val(datas.BG_CONTENT);//变更内容	    			
+		            	$('#detail-tab').html(html);		            	
 		            	var html = '';
 		      		     html += setDetail(datas);
 		      			$('#detail-tab').html(html);
@@ -566,23 +549,88 @@
 		    			$("#step1").removeClass('active');
 		    			$("#step2").removeClass('active');
 		    			$("#step3").removeClass('active');
+		    			yesEdit();
+		    			setValue(datas);
 		    			}else if(datas.APPROVAL_STATE==0)//0为审批中
 		    			{
 		      			$("#step1").addClass('active');
 		    			$("#step2").addClass('active');
 		    			$("#step3").removeClass('active');
+		    			noEdit();
 		    			}else if (datas.APPROVAL_STATE==1)//1 为完成状态
 						{
 		      			$("#step1").addClass('active');
 		    			$("#step2").addClass('active');
 			    		$("#step3").addClass('active');
+			    		noEdit();
 		    			}else{
 		    				$("#step1").addClass('active');
 			    			$("#step2").removeClass('active');
 			    			$("#step3").removeClass('active');
+			    			yesEdit();
+			    			setValue(datas);
 		    			}
 		            } 
 		         });
+		}
+		//编辑文本框赋值
+		function setValue(datas){
+			$("#BILL_CODE").val(datas.BILL_CODE);//申请单号
+  			$("#BG_NAME").val(datas.BG_NAME);//变更名称
+			$("#BG_REASON").val(datas.BG_REASON);//变更原因
+			$("#UNIT_CODE").val(datas.UNIT_CODE);//单位
+			$("#selectTree2_input").val(datas.depnameUnit);
+			$("#DEPT_CODE").val(datas.DEPT_CODE);//部门
+			$("#USER_CODE").val(datas.USER_CODE);//申请人
+			$("#USER_NAME").val(datas.USERNAME);//申请人姓名
+			$("#USER_DEPT").val(datas.USER_DEPT);//申请人部门
+			$("#USER_JOB").val(datas.USER_JOB);//申请人岗位
+			$("#USER_CONTACT").val(datas.USER_CONTACT);//联系方式
+			$("#EFFECTIVE_DATE").val(datas.EFFECTIVE_DATE);//变更预期时间
+			$("#ADD_ROLE").val(datas.ADD_ROLE);//新增角色
+			$("#DEL_ROLE").val(datas.DEL_ROLE);//删除角色
+			$("#USER_EMAIL").val(datas.USER_EMAIL);//Email
+			$("#USER_TEL").val(datas.USER_TEL);//电话
+			$("#BG_CONTENT").val(datas.BG_CONTENT);//变更内容	
+		}
+		//设置文本框不可编辑
+		function noEdit(){
+			$("#BILL_CODE").attr("disabled","disabled");//申请单号
+  			$("#BG_NAME").attr("disabled","disabled");//变更名称
+			$("#BG_REASON").attr("disabled","disabled");//变更原因
+			$("#UNIT_CODE").attr("disabled","disabled");//申请人
+			$("#selectTree2_input").attr("disabled","disabled");//申请人姓名
+			$("#DEPT_CODE").attr("disabled","disabled");//创建人
+			$("#USER_CODE").attr("disabled","disabled");//申请人单位
+			$("#USER_NAME").attr("disabled","disabled");
+			$("#USER_DEPT").attr("disabled","disabled");//申请部门
+			$("#USER_JOB").attr("disabled","disabled");//申请人岗位
+			$("#USER_CONTACT").attr("disabled","disabled");//联系方式
+			$("#EFFECTIVE_DATE").attr("disabled","disabled");//变更预期时间
+			$("#ADD_ROLE").attr("disabled","disabled");
+			$("#USER_EMAIL").attr("disabled","disabled");
+			$("#USER_TEL").attr("disabled","disabled");//申请人部门
+			$("#BG_CONTENT").attr("disabled","disabled");
+			
+		}
+		//设置文本框可编辑
+		function yesEdit(){
+			$("#BILL_CODE").removeAttr("disabled");//申请单号
+  			$("#BG_NAME").removeAttr("disabled");//变更名称
+			$("#BG_REASON").removeAttr("disabled");//变更原因
+			$("#UNIT_CODE").removeAttr("disabled");//申请人
+			$("#selectTree2_input").removeAttr("disabled");//申请人姓名
+			$("#DEPT_CODE").removeAttr("disabled");//创建人
+			$("#USER_CODE").removeAttr("disabled");//申请人单位
+			$("#USER_NAME").removeAttr("disabled");
+			$("#USER_DEPT").removeAttr("disabled");//申请部门
+			$("#USER_JOB").removeAttr("disabled");//申请人岗位
+			$("#USER_CONTACT").removeAttr("disabled");//联系方式
+			$("#EFFECTIVE_DATE").removeAttr("disabled");//变更预期时间
+			$("#ADD_ROLE").removeAttr("disabled");
+			$("#USER_EMAIL").removeAttr("disabled");
+			$("#USER_TEL").removeAttr("disabled");//申请人部门
+			$("#BG_CONTENT").removeAttr("disabled");			
 		}
 		//动态加载变更单详情
 		function setDetail(item){
@@ -601,7 +649,7 @@
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人部门： </div><div class="profile-info-value"><span>'
 		        +item.USER_DEPTNAME
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人： </div><div class="profile-info-value"><span>'
-		        +item.NAME
+		        +item.USERNAME
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人岗位： </div><div class="profile-info-value"><span>'
 		        +item.USER_JOB
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 邮箱： </div><div class="profile-info-value"><span>'

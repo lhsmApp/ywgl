@@ -229,7 +229,7 @@
 					top.jzts();
 					var url = "<%=basePath%>changeerpxtbg/delete.do?BILL_CODE="+encodeURI(Id);
 					$.get(url,function(data){
-						console.log(data);
+						//console.log(data);
 						//nextPage(${page.currentPage});
 					});
 				}
@@ -322,7 +322,7 @@
 					}
 		    	} */
 				data[i].BG_REASON=data[i].REASON;
-				console.log(data);
+				//console.log(data);
 		        html += setDiv(data[i]);
 		    }
 		    //document.getElementById("tasks").innerHTML = html;
@@ -427,6 +427,7 @@
 		            	var html = '';
 		      		     html += setDetail(datas, businessType);
 		      			$('#detail-tab').html(html);
+		      			console.log(datas.APPROVAL_STATE);
 		      		    if(datas.APPROVAL_STATE==2)
 		    			{
 		    			$("#step1").removeClass('active');
@@ -486,11 +487,13 @@
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人部门： </div><div class="profile-info-value"><span>'
 		        +item.USER_DEPTNAME
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人： </div><div class="profile-info-value"><span>'
-		        +item.NAME
+		        +item.USERNAME
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人岗位： </div><div class="profile-info-value"><span>'
 		        +item.USER_JOB
-		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 联系方式： </div><div class="profile-info-value"><span>'
-		        +item.USER_CONTACT
+		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 邮箱： </div><div class="profile-info-value"><span>'
+		        +item.USER_EMAIL
+		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 电话： </div><div class="profile-info-value"><span>'
+		        +item.USER_TEL
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请日期： </div><div class="profile-info-value"><span>'
 		        +item.ENTRY_DATE
 		        +'</span></div></div>'
