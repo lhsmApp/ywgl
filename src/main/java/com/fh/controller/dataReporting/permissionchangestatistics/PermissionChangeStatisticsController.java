@@ -421,8 +421,13 @@ public class PermissionChangeStatisticsController extends BaseController {
 			pd.put("YEAR_MONTH", pd.getString("YEAR_MONTH").replace("-", ""));
 		}
 		if (null != pd.getString("WEEKSTEXT") && !"".equals(pd.getString("WEEKSTEXT"))) {
-			String startDate = pd.getString("WEEKSTEXT").substring(4, 14);
-			String endDate = pd.getString("WEEKSTEXT").substring(15, 25);
+			//从字符串中获取出日期
+			String[] strArr1 = pd.getString("WEEKSTEXT").split("\\(");
+			String[] strArr2 = strArr1[1].split("/");
+			String[] strArr3 = strArr2[1].split("\\)");
+			
+			String startDate = strArr2[0];
+			String endDate = strArr3[0];
 			pd.put("START_DATE", startDate.replace("-", ""));
 			pd.put("END_DATE", endDate.replace("-", ""));
 			// 当选择"周"时，按周查询，不按期间查询

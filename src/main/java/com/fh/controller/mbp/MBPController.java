@@ -1046,7 +1046,9 @@ public class MBPController extends BaseController {
 		}
 		mv.addObject("pd", pd);
 		mv.addObject("varList", varList);	
-		mv.addObject("pd1", varList.get(0));
+		if(varList.size()>0) {			
+			mv.addObject("pd1", varList.get(0));
+		}
 		mv.setViewName("statisticAnalysis/timeliness/problemLogTime_query");
 		return mv;
 	}
