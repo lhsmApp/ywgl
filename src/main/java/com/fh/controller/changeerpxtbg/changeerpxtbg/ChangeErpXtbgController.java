@@ -172,9 +172,9 @@ public class ChangeErpXtbgController extends BaseController {
 		page.setPd(pd);
 		List<PageData> userDeptList= departmentService.list(page);
 		mv.addObject("userDeptList", userDeptList);//用户
-		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
-		JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0",zdepartmentPdList));
-		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
+//		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
+//		JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0",zdepartmentPdList));
+//		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
 		mv.setViewName("changeerpxtbg/changeerpxtbg/changeerpxtbg_list");
 		mv.addObject("varList", JSON.toJSONString(varList));
 		mv.addObject("pd", pd);

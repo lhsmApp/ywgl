@@ -73,7 +73,16 @@
         </td>
   </tr>	
   <tr>
-          <td height="200" colspan="4" align="left"  bgcolor="#FFFFFF">变更原因：</br>&nbsp;&nbsp;&nbsp;&nbsp;${pd.BG_REASON}</br>变更内容：</br>&nbsp;&nbsp;&nbsp;&nbsp;${pd.BG_NR}</br>变更预期时间：</br>&nbsp;&nbsp;&nbsp;&nbsp;${pd.EFFECTIVE_DATE}</td>
+          <td height="200" colspan="4" align="left"  bgcolor="#FFFFFF">
+          <table width="750"  height="200">
+          <tr><td align="left" colspan="3">变更原因：</td></tr>
+          <tr><td align="left" colspan="3">&nbsp;&nbsp;&nbsp;&nbsp;${pd.BG_REASON}</td></tr>
+          <tr><td align="left" colspan="3"></br>变更内容：</br></br></td></tr>
+          <tr><td align="left" colspan="3">&nbsp;&nbsp;&nbsp;&nbsp;${pd.BG_NR}</td></tr>
+          <tr><td align="left"></br>变更预期时间：</br></br></td><td align="left">&nbsp;&nbsp;&nbsp;&nbsp;${pd.EFFECTIVE_DATE}</td><td align="right">（本栏可为附件）</td></tr>          
+          </table>
+<%--           变更原因：</br></br>&nbsp;&nbsp;&nbsp;&nbsp;${pd.BG_REASON}</br>变更内容：</br></br>&nbsp;&nbsp;&nbsp;&nbsp;${pd.BG_NR}</br>变更预期时间：</br></br>&nbsp;&nbsp;&nbsp;&nbsp;${pd.EFFECTIVE_DATE} --%>
+          </td>
   </tr>	
   <tr>
         <td  colspan="2"  height="60"  align="left" bgcolor="#FFFFFF">
@@ -118,7 +127,7 @@
         <td height="60" align="center" width="80" bgcolor="EFEFFF">是否可实施</br>该变更</td>
         <td align="center" width="150" bgcolor="#FFFFFF">
 		 <table><tr><td align="left" ><div class="one"></div></td><td align="left" >是</td><td align="left" >  <div class="one"></div></td><td align="left" >否</td></tr></table>       </td>
-        <td  rowspan="2" width="80" align="center"  bgcolor="EFEFFF">对该变更的</br>总体意见 </td>
+        <td  rowspan="2" width="80" align="center"  bgcolor="EFEFFF">对该变更的</br>总体意见 <sup>1</sup></td>
         <td  rowspan="2" valign="bottom" width="150" bgcolor="EFEFFF">
         <table><tr><td width="100">签字： </td><td width="40"> 年</td><td width="40">月</td><td width="40">日</td></tr></table>           </td>
   </tr>

@@ -161,14 +161,19 @@
 														<label for="form-field-xtbg-report-reason">变更内容</label>
 														<input type="text" name="BG_NR" id="BG_NR" class="form-control" placeholder="请输入变更内容" required="required" />
 													</div>
-													 <div style="margin:10px 0px;">
-														<label for="form-field-xtbg-report-depart">单位</label>
+<!-- 													 <div style="margin:10px 0px;"> -->
+<!-- 														<label for="form-field-xtbg-report-depart">单位</label> -->
 <!-- 														<input type="text" name="UNIT_CODE" id="UNIT_CODE" class="form-control" placeholder="请输入申请人单位"/> -->
-													</div>
+<!-- 													</div> -->
+<!-- 													<div style="margin:10px 0px;"> -->
+<!-- 														<input type="hidden" name="UNIT_CODE" id="UNIT_CODE"   /> -->
+<!-- 														<div class="selectTree" id="selectTree" style="float:none;display:block;"></div>												 -->
+<!-- 													</div>	 -->
 													<div style="margin:10px 0px;">
-														<input type="hidden" name="UNIT_CODE" id="UNIT_CODE"   />
-														<div class="selectTree" id="selectTree" style="float:none;display:block;"></div>												
-													</div>	
+														<label for="form-field-xtbg-report-user">单位</label>
+														<input type="hidden" name="UNIT_CODE" id="UNIT_CODE"/> 
+														<input type="text" name="UNIT_NAME" id="UNIT_NAME" class="form-control" readonly="readonly" placeholder="请输入单位" /> 
+													</div>
 													 <div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-dept">部门</label>
 <!-- 														<input type="hidden" name="DEPT_CODE" id="DEPT_CODE"/> -->
@@ -207,7 +212,7 @@
 													</div>
 										   			<div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-job">申请人岗位</label>
-														<input type="text" name="USER_JOB" id="USER_JOB" class="form-control" readonly="readonly" 
+														<input type="text" name="USER_JOB" id="USER_JOB" class="form-control" 
 														placeholder="请输入申请人岗位"/>
 													</div>
 <!-- 													<div style="margin:10px 0px;"> -->
@@ -331,6 +336,7 @@
 		
 		//新增
 		function add(){
+			yesEdit();
 			//点击新增按钮，弹到提报tab页
 			$("#xtbg-tab li[tag='report-tab'] a").click();
 			$("#DEPT_CODE").val('');//部门编码
@@ -339,7 +345,7 @@
 			$("#BG_NAME").val("");//变更名称
 			$("#BG_REASON").val("");//变更原因
 			$("#UNIT_CODE").val('<%=unitCode%>');//单位编码
-			$("#selectTree2_input").val('<%=unitName%>');//单位名称
+			$("#UNIT_NAME").val('<%=unitName%>');//单位名称
 			$("#DEPT_CODE").val('<%=departId%>');//部门编码
 			$("#DEPT_NAME").val('<%=departName%>');//部门名称			
 			$("#USER_CODE").val('<%=userId%>');//申请人
@@ -529,7 +535,8 @@
 			$("#USER_NAME").val(datas.USERNAME);//申请人姓名
 			$("#BILL_USER").val(datas.BILL_USER);//创建人
 			$("#UNIT_CODE").val(datas.UNIT_CODE);//申请人单位
-			$("#selectTree2_input").val(datas.depnameUnit);
+// 			$("#selectTree2_input").val(datas.depnameUnit);
+			$("#UNIT_NAME").val(datas.UNIT_NAME);
 			$("#DEPT_CODE").val(datas.DEPT_CODE);//申请部门
 			$("#USER_JOB").val(datas.USER_JOB);//申请人岗位
 			$("#USER_CONTACT").val(datas.USER_CONTACT);//联系方式
@@ -554,20 +561,20 @@
 			$("#USER_NAME").attr("disabled","disabled");//申请人姓名
 			$("#BILL_USER").attr("disabled","disabled");//创建人
 			$("#UNIT_CODE").attr("disabled","disabled");//申请人单位
-			$("#selectTree2_input").attr("disabled","disabled");;
+			$("#UNIT_NAME").attr("disabled","disabled");
 			$("#DEPT_CODE").attr("disabled","disabled");//申请部门
 			$("#USER_JOB").attr("disabled","disabled");//申请人岗位
 			$("#USER_CONTACT").attr("disabled","disabled");//联系方式
 			$("#EFFECTIVE_DATE").attr("disabled","disabled");//变更预期时间
-			$("#ENTRY_DATE").attr("disabled","disabled");;
-			$("#SERIAL_NUM").attr("disabled","disabled");;
-			$("#USER_DEPT").attr("disabled","disabled");;//申请人部门
-			$("#SYSTEM").attr("disabled","disabled");;
-			$("#BG_TYPE").attr("disabled","disabled");;
-			$("#BILL_STATE").attr("disabled","disabled");;
-			$("#BILL_DATE").attr("disabled","disabled");;
-			$("#USER_EMAIL").attr("disabled","disabled");;//Email
-			$("#USER_TEL").attr("disabled","disabled");;//电话
+			$("#ENTRY_DATE").attr("disabled","disabled");
+			$("#SERIAL_NUM").attr("disabled","disabled");
+			$("#USER_DEPT").attr("disabled","disabled");//申请人部门
+			$("#SYSTEM").attr("disabled","disabled");
+			$("#BG_TYPE").attr("disabled","disabled");
+			$("#BILL_STATE").attr("disabled","disabled");
+			$("#BILL_DATE").attr("disabled","disabled");
+			$("#USER_EMAIL").attr("disabled","disabled");//Email
+			$("#USER_TEL").attr("disabled","disabled");//电话
 		}
 		//设置文本框可编辑
 		function yesEdit(){
@@ -579,7 +586,7 @@
 			$("#USER_NAME").removeAttr("disabled");//申请人姓名
 			$("#BILL_USER").removeAttr("disabled");//创建人
 			$("#UNIT_CODE").removeAttr("disabled");//申请人单位
-			$("#selectTree2_input").removeAttr("disabled");
+			$("#UNIT_NAME").removeAttr("disabled");
 			$("#DEPT_CODE").removeAttr("disabled");//申请部门
 			$("#USER_JOB").removeAttr("disabled");//申请人岗位
 			$("#USER_CONTACT").removeAttr("disabled");//联系方式
@@ -715,46 +722,46 @@
 			});
 				 
 		}
-		function initComplete(){
-			//下拉树
-			var defaultNodes = {"treeNodes":${zTreeNodes}};
-			//绑定change事件
-			$("#selectTree").bind("change",function(){
+// 		function initComplete(){
+// 			//下拉树
+// 			var defaultNodes = {"treeNodes":${zTreeNodes}};
+// 			//绑定change事件
+// 			$("#selectTree").bind("change",function(){
 
-				if(!$(this).attr("relValue")){
-			    }else{
-					$("#UNIT_CODE").val($(this).attr("relValue"));	
-			    }
-				 //清空select框中数据
-				   $('#USER_CODE').empty();
-				   $('#USER_DEPT').empty();
-				   $('#DEPT_CODE').empty();
-				$.ajax({
-					   type: "POST",
-					   url: '<%=basePath%>changeerpxtbg/getUsers.do',
-					   data: {'UNIT_CODE':$("#UNIT_CODE").val()},
-					   dataType:'json',
-					   cache: false,
-					   success: function (data) {
-					           $('#USER_CODE').append("<option value='0'>--请选择申请人--</option>");
-					            //遍历成功返回的数据
-					            $.each(data, function (index,item) {
-					                var userName = data[index].NAME;
-					                var userId = data[index].USER_ID;
-					                //构造动态option
-					                $('#USER_CODE').append("<option value='"+userId+"'>"+userName+"</option>")
-					             });
-					    },
-					    error: function () {
+// 				if(!$(this).attr("relValue")){
+// 			    }else{
+// 					$("#UNIT_CODE").val($(this).attr("relValue"));	
+// 			    }
+// 				 //清空select框中数据
+// 				   $('#USER_CODE').empty();
+// 				   $('#USER_DEPT').empty();
+// 				   $('#DEPT_CODE').empty();
+// 				$.ajax({
+// 					   type: "POST",
+<%-- 					   url: '<%=basePath%>changeerpxtbg/getUsers.do', --%>
+// 					   data: {'UNIT_CODE':$("#UNIT_CODE").val()},
+// 					   dataType:'json',
+// 					   cache: false,
+// 					   success: function (data) {
+// 					           $('#USER_CODE').append("<option value='0'>--请选择申请人--</option>");
+// 					            //遍历成功返回的数据
+// 					            $.each(data, function (index,item) {
+// 					                var userName = data[index].NAME;
+// 					                var userId = data[index].USER_ID;
+// 					                //构造动态option
+// 					                $('#USER_CODE').append("<option value='"+userId+"'>"+userName+"</option>")
+// 					             });
+// 					    },
+// 					    error: function () {
 
-					    }
-					  });
+// 					    }
+// 					  });
 
-			});
-			//赋给data属性
-			$("#selectTree").data("data",defaultNodes);  
-			$("#selectTree").render();
-		}		
+// 			});
+// 			//赋给data属性
+// 			$("#selectTree").data("data",defaultNodes);  
+// 			$("#selectTree").render();
+// 		}		
 		/**
 		 * 初始化列表信息
 		 */

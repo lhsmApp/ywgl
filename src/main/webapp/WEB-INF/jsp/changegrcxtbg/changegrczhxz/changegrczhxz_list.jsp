@@ -186,14 +186,19 @@
 											<form action="" name="problemAssignForm" id="problemAssignForm" method="post">
 												<input type="hidden" name="BILL_CODE" id="BILL_CODE" value="${pd.BILL_CODE }"/>
 												<div id="zhongxin" style="padding-top: 13px;">		
-												 <div style="margin:10px 0px;">
-														<label for="form-field-xtbg-report-depart">单位</label>
+<!-- 												 <div style="margin:10px 0px;"> -->
+<!-- 														<label for="form-field-xtbg-report-depart">单位</label> -->
 <!-- 														<input type="text" name="UNIT_CODE" id="UNIT_CODE" class="form-control" placeholder="请输入申请人单位"/> -->
-													</div>
+<!-- 													</div> -->
+<!-- 													<div style="margin:10px 0px;"> -->
+<!-- 														<input type="hidden" name="UNIT_CODE" id="UNIT_CODE"   /> -->
+<!-- 														<div class="selectTree" id="selectTree" style="float:none;display:block;"></div>												 -->
+<!-- 													</div>	 -->
 													<div style="margin:10px 0px;">
-														<input type="hidden" name="UNIT_CODE" id="UNIT_CODE"   />
-														<div class="selectTree" id="selectTree" style="float:none;display:block;"></div>												
-													</div>	
+														<label for="form-field-xtbg-report-user">单位</label>
+														<input type="hidden" name="UNIT_CODE" id="UNIT_CODE"/> 
+														<input type="text" name="UNIT_NAME" id="UNIT_NAME" class="form-control" readonly="readonly" placeholder="请输入单位" /> 
+													</div>
 <!-- 													   <div style="margin:10px 0px;"> -->
 <!-- 														<label for="form-field-xtbg-report-dept">部门</label> -->
 <!-- 														<input type="text" name="DEPT_CODE" id="DEPT_CODE" class="form-control" placeholder="请输入申请人部门"/> -->
@@ -472,11 +477,12 @@
 		}
 		//新增
 		function add(){
+			yesEdit();
 			//点击新增按钮，弹到提报tab页
 			$("#zhxz-tab li[tag='report-tab'] a").click();
 			//新增清空文本框
 			$("#UNIT_CODE").val('<%=unitCode%>');//单位编码
-			$("#selectTree2_input").val('<%=unitName%>');//单位名称
+			$("#UNIT_NAME").val('<%=unitName%>');//单位名称
 			$("#DEPT_CODE").val('<%=departId%>');//部门编码
 			$("#DEPT_NAME").val('<%=departName%>');//部门名称	
 			$("#USER_CODE").val('<%=userId%>');//申请人编码
@@ -722,7 +728,7 @@
 		function setValue(datas){
 			$("#BILL_CODE").val(datas.BILL_CODE);//单号
         	$("#UNIT_CODE").val(datas.UNIT_CODE);//单位
-    		$("#selectTree2_input").val(datas.depnameUnit);
+    		$("#UNIT_NAME").val(datas.depnameUnit);
 			$("#DEPT_CODE").val(datas.DEPT_CODE);//部门
 			$("#USER_CODE").val(datas.USER_CODE);//申请人
 			$("#USER_NAME").val(datas.USERNAME);//申请人
@@ -742,7 +748,7 @@
 		function noEdit(){
 			$("#BILL_CODE").attr("disabled","disabled");//申请单号
 			$("#UNIT_CODE").attr("disabled","disabled");//申请人
-			$("#selectTree2_input").attr("disabled","disabled");//申请人姓名
+			$("#UNIT_NAME").attr("disabled","disabled");//申请人姓名
 			$("#DEPT_CODE").attr("disabled","disabled");//创建人
 			$("#USER_CODE").attr("disabled","disabled");//申请人单位
 			$("#USER_NAME").attr("disabled","disabled");
@@ -762,7 +768,7 @@
 		function yesEdit(){
 			$("#BILL_CODE").removeAttr("disabled");//申请单号
 			$("#UNIT_CODE").removeAttr("disabled");//申请人
-			$("#selectTree2_input").removeAttr("disabled");//申请人姓名
+			$("#UNIT_NAME").removeAttr("disabled");//申请人姓名
 			$("#DEPT_CODE").removeAttr("disabled");//创建人
 			$("#USER_CODE").removeAttr("disabled");//申请人单位
 			$("#USER_NAME").removeAttr("disabled");

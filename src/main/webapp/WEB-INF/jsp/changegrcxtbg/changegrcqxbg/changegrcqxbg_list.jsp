@@ -150,13 +150,18 @@
 														<label for="form-field-jsbg-report-reason">变更原因</label>
 														<input type="text" name="BG_REASON" id="BG_REASON" class="form-control" placeholder="请输入变更内容及原因"/>
 													</div>
-													    <div style="margin:10px 0px;">
-														<label for="form-field-jsbg-report-depart">单位</label>
+<!-- 													<div style="margin:10px 0px;"> -->
+<!-- 														<label for="form-field-jsbg-report-depart">单位</label> -->
 <!-- 														<input type="text" name="UNIT_CODE" id="UNIT_CODE" class="form-control" placeholder="请输入申请人单位"/> -->
-													</div>
-														<div style="margin:10px 0px;">
-														<input type="hidden" name="UNIT_CODE" id="UNIT_CODE"   />
-														<div class="selectTree" id="selectTree" style="float:none;display:block;"></div>												
+<!-- 													</div> -->
+<!-- 													<div style="margin:10px 0px;"> -->
+<!-- 														<input type="hidden" name="UNIT_CODE" id="UNIT_CODE"   /> -->
+<!-- 														<div class="selectTree" id="selectTree" style="float:none;display:block;"></div>												 -->
+<!-- 													</div> -->
+													<div style="margin:10px 0px;">
+														<label for="form-field-xtbg-report-user">单位</label>
+														<input type="hidden" name="UNIT_CODE" id="UNIT_CODE"/> 
+														<input type="text" name="UNIT_NAME" id="UNIT_NAME" class="form-control" readonly="readonly" placeholder="请输入单位" /> 
 													</div>
 <!-- 													 <div style="margin:10px 0px;"> -->
 <!-- 														<label for="form-field-xtbg-report-dept">部门</label> -->
@@ -398,12 +403,14 @@
 		}
 		//新增
 		function add(){
+			yesEdit();
 			//点击新增按钮，弹到提报tab页
 			$("#grcqxbg-tab li[tag='report-tab'] a").click();
 			//新增清空文本框
 			$("#BG_REASON").val("");//变更原因
 			$("#UNIT_CODE").val('<%=unitCode%>');//单位编码
-			$("#selectTree2_input").val('<%=unitName%>');//单位名称
+			$("#UNIT_NAME").val('<%=unitName%>');//单位名称
+<%-- 			$("#selectTree2_input").val('<%=unitName%>');//单位名称 --%>
 			$("#DEPT_CODE").val('<%=departId%>');//部门编码
 			$("#DEPT_NAME").val('<%=departName%>');//部门名称	
 <%-- 			$("#"+'<%=userId%>').val('<%=userName%>');//申请人 --%>
@@ -578,7 +585,8 @@
 			$("#BILL_CODE").val(datas.BILL_CODE);//申请单号
 			$("#BG_REASON").val(datas.BG_REASON);//变更原因
 			$("#UNIT_CODE").val(datas.UNIT_CODE);//单位
-			$("#selectTree2_input").val(datas.depnameUnit);
+// 			$("#selectTree2_input").val(datas.depnameUnit);			
+			$("#UNIT_NAME").val(datas.UNIT_NAME);
 			$("#DEPT_CODE").val(datas.DEPT_CODE);//部门
 			$("#USER_CODE").val(datas.USER_CODE);//申请人
 			$("#USER_NAME").val(datas.USERNAME);//申请人
@@ -596,8 +604,9 @@
 		function noEdit(){
 			$("#BILL_CODE").attr("disabled","disabled");//申请单号
 			$("#BG_REASON").attr("disabled","disabled");//变更原因
-			$("#UNIT_CODE").attr("disabled","disabled");//申请人
-			$("#selectTree2_input").attr("disabled","disabled");//申请人姓名
+			$("#UNIT_CODE").attr("disabled","disabled");//单位编码
+// 			$("#selectTree2_input").attr("disabled","disabled");//单位名称
+			$("#UNIT_NAME").attr("disabled","disabled");//单位名称
 			$("#DEPT_CODE").attr("disabled","disabled");//创建人
 			$("#USER_CODE").attr("disabled","disabled");//申请人单位
 			$("#USER_NAME").attr("disabled","disabled");
@@ -617,8 +626,8 @@
 		function yesEdit(){
 			$("#BILL_CODE").removeAttr("disabled");//申请单号
 			$("#BG_REASON").removeAttr("disabled");//变更原因
-			$("#UNIT_CODE").removeAttr("disabled");//申请人
-			$("#selectTree2_input").removeAttr("disabled");//申请人姓名
+			$("#UNIT_CODE").removeAttr("disabled");//单位编码
+			$("#UNIT_NAME").removeAttr("disabled");//单位名称
 			$("#DEPT_CODE").removeAttr("disabled");//创建人
 			$("#USER_CODE").removeAttr("disabled");//申请人单位
 			$("#USER_NAME").removeAttr("disabled");
