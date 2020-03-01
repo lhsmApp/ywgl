@@ -230,8 +230,10 @@
 			bootbox.confirm("确定要删除吗?", function(result) {
 				if(result) {
 					top.jzts();
-					var url = "<%=basePath%>testquestion/delete.do?TESTQUESTION_ID="+Id+"&tm="+new Date().getTime();
+					var url = "<%=basePath%>testquestion/delete.do?TEST_QUESTION_ID="+Id+"&tm="+new Date().getTime();
 					$.get(url,function(data){
+						$(top.hangge());
+						location.reload()
 					});
 				}
 			});
