@@ -596,7 +596,7 @@ public class MBPController extends BaseController {
 		}
 		else{
 			pd.put("UPDATE_DATE", DateUtils.getCurrentTime());
-			pd.put("PRO_DEPART", user.getDEPARTMENT_ID());
+			pd.put("PRO_DEPART", user.getUNIT_CODE());
 			mbpService.edit(pd);
 			commonBase.setCode(0);
 		}

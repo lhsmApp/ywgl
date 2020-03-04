@@ -80,7 +80,7 @@
 									    <div class="widget-main">
 									     <form action="changegrczhxz/getPageList.do" >
 								 		</form>
-										    <form class="form-inline">
+										    <!-- <form class="form-inline"> -->
 												<span class="input-icon pull-left" style="margin-right: 5px;">
 													<input id="SelectedBillCode" class="nav-search-input" autocomplete="off" type="text" name="keywords" value="${pd.keywords }" placeholder="在已有申请中搜索"> 
 													<i class="ace-icon fa fa-search nav-search-icon"></i>
@@ -108,7 +108,7 @@
 												             <i class="ace-icon fa fa-print bigger-110"></i>
 															打印
 												            </label>										
-										    </form>
+										    <!-- </form> -->
 									    </div>
 								    </div>
 							    </div>
@@ -289,10 +289,10 @@
 													<div class="row">
 												<div style="margin:10px 12px;">
 													<h4>
-														<button id="btnAddProInfoAttachment" class="btn btn-success btn-xs"
-															onclick="addProAttachmentByType('PROBLEM_INFO')">
+														<a id="btnAddProInfoAttachment" class="btn btn-success btn-xs"
+															onclick="addProAttachmentByType('CHANGE_GRC_ZHXZ')">
 															<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>上传附件</span>
-														</button>
+														</a>
 													</h4>
 													<table id="simple-table" class="table table-striped table-bordered table-hover" style="margin-top:5px;">	
 														<thead>
@@ -362,12 +362,13 @@
 		$(top.hangge());//关闭加载状态
 		//检索
 		function tosearch(){
-			top.jzts();
-			$("#Form").submit();
+			/* top.jzts();
+			$("#Form").submit(); */
+			initList(initUrl);
 		}
 		$(function() {
-			var data=${varList};
-			showDetail(data[0].BILL_CODE);
+			//var data=${varList};
+			//showDetail(data[0].BILL_CODE);
 			//日期框
 		$( "#EFFECTIVE_DATE" ).datepicker({
 				showOtherMonths: true,
@@ -375,7 +376,7 @@
 				autoclose: true,
 				todayHighlight: true
 			});
-			getChangrData();
+			//getChangrData();
 			//下拉框
 			if(!ace.vars['touch']) {
 				$('.chosen-select').chosen({allow_single_deselect:true}); 
@@ -477,6 +478,14 @@
 		}
 		//新增
 		function add(){
+			$("#tasks li").each(function(){
+				var item = this;
+				$(item).removeClass("bc-light-orange");
+			}); 
+			bill_code=null;	
+			//$("#tbodyProInfoAttachment").html('');
+			
+		
 			yesEdit();
 			//点击新增按钮，弹到提报tab页
 			$("#zhxz-tab li[tag='report-tab'] a").click();
@@ -527,12 +536,21 @@
 		 * 上传附件
 		 */
 		function addProAttachmentByType(type){
-			 var proCode=0;
+			console.log(bill_code);
+			if(bill_code==undefined||bill_code==null){
+				$("#btnAddProInfoAttachment").tips({
+					side:3,
+		            msg:'请先保存GRC账号新增信息后，再上传附件',
+		            bg:'#cc0033',
+		            time:3
+		        });
+				return;
+			}
 			 top.jzts();
 			 var diag = new top.Dialog();
 			 diag.Drag=true;
 			 diag.Title ="上传附件";
-			 diag.URL = '<%=basePath%>attachment/goAdd.do?BUSINESS_TYPE='+type+'&BILL_CODE='+proCode;
+			 diag.URL = '<%=basePath%>attachment/goAdd.do?BUSINESS_TYPE='+type+'&BILL_CODE='+bill_code;
 			 diag.Width = 460;
 			 diag.Height = 290;
 			 diag.Modal = true;				//有无遮罩窗口
@@ -540,16 +558,42 @@
 		     diag.ShowMinButton = true;		//最小化按钮
 			 diag.CancelEvent = function(){ //关闭事件
 				if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
-					addItemAttachment();
+					getProAttachment(type);
+					//addItemAttachment();
 				}
 				diag.close();
 			 };
 			 diag.show();
 		}
+		
+		/**
+		 * 获取问题附件信息
+		 */
+		function getProAttachment(attachmentType){
+			$("#tbodyProInfoAttachment").html('');
+			top.jzts();
+			$.ajax({
+					type: "GET",
+					url: '<%=basePath%>attachment/getAttachmentByType.do?BUSINESS_TYPE='+attachmentType+'&BILL_CODE='+bill_code,
+			    	//data: {PRO_CODE:proCode},
+					//dataType:'json',
+					cache: false,
+					success: function(data){
+						if(data){
+							$.each(data, function(i, item){
+								var tr=addItemAttachment(item,i+1,attachmentType); 
+								$('#tbodyProInfoAttachment').append(tr);
+						 	});
+						}
+						top.hangge();
+					}
+			});
+		}
+		
 		/**
 		 * 增加附件tr
 		 */
-		function addItemAttachment(item,index){
+		function addItemAttachment(item,index,type){
 			var href='<%=basePath%>/attachment/download.do?ATTACHMENT_ID='+item.ATTACHMENT_ID;
 			var ext=item.ATTACHMENT_PATH.substring(19,item.ATTACHMENT_PATH.length);
 			var htmlLog='<tr>'
@@ -564,7 +608,7 @@
 						+'<a class="btn btn-xs btn-success" onclick=window.location.href="'+href+'">'
 							+'<i class="ace-icon fa fa-cloud-download bigger-120" title="下载"></i>'
 						+'</a>'
-						+'<a class="btn btn-xs btn-danger" onclick=delProAttachment("'+item.ATTACHMENT_ID+'")>'
+						+'<a class="btn btn-xs btn-danger" onclick=delProAttachment("'+item.ATTACHMENT_ID+'","'+type+'")>'
 							+'<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>'
 						+'</a>'
 					+'</div>'
@@ -572,6 +616,20 @@
 			+'</tr>';
 			return htmlLog;
 		}
+		
+		//删除
+		function delProAttachment(Id,type){
+			bootbox.confirm("确定要删除吗?", function(result) {
+				if(result) {
+					top.jzts();
+					var url = "<%=basePath%>attachment/delete.do?ATTACHMENT_ID="+Id;
+					$.get(url,function(data){
+						getProAttachment(type);
+					});
+				}
+			});
+		}
+		
 		//删除
 		function del(Id){
 			bootbox.confirm("确定要删除吗?", function(result) {
@@ -641,7 +699,7 @@
 			});
 		};
 		//console.log(${varList});
-		var data=${varList};
+		/* var data=${varList};
 		//循环加载到页面
 		function getChangrData(){
 		    var html = '';
@@ -650,7 +708,7 @@
 		    }
 		    //document.getElementById("tasks").innerHTML = html;
 			$('#tasks').html(html);
-		}		
+		}	 */	
 		//动态加载变更数据
 		function setDiv(item){
 		    var div = '<li  class="item-grey clearfix" onclick="showDetail(\''+item.BILL_CODE+'\');"><div><label class="inline" style="margin-bottom:5px;"><span class="list-item-value-title">'
@@ -721,6 +779,9 @@
 			    			yesEdit();
 			    			setValue(datas);
 		    			}
+		      		   
+		      		 	/* 获取提报中附件信息 */
+						 getProAttachment("CHANGE_GRC_ZHXZ");
 		            } 
 		         });
 		}
@@ -921,6 +982,7 @@
 		 * 初始化列表信息
 		 */
 		function initList(initUrl){
+			console.log('initList');
 			$("#tasks li").remove(); 
 			top.jzts();
 			var keywords = $("#SelectedBillCode").val();
@@ -932,12 +994,19 @@
 					cache: false,
 					success: function(data){
 						$("#page").html(data.pageHtml);
+						var first;
 						if(data.rows){
 							$.each(data.rows, function(i, item){
+								if(i==0){
+									first=item;
+								}
 							    var html = '';
 							        html += setDiv(item);
 								$("#tasks").append(html);
 						 	});
+							if(first){
+								showDetail(first.BILL_CODE);
+							}
 						}
 						else{
 							addEmpty();
