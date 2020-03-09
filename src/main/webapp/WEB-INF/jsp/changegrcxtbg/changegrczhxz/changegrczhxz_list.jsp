@@ -180,7 +180,30 @@
 									<div class="tab-content padding-8">
 									
 										<div id="detail-tab" class="tab-pane active">
-											
+											<div id="detail-info">
+											</div>
+											<hr />
+											<div >
+												<h5 class="lighter block blue"><i class="ace-icon fa fa-rss blue"></i>&nbsp;附件</h5>
+												<hr />
+												<table id="simple-table" class="table table-striped table-bordered table-hover" style="margin-top:5px;">	
+													<thead>
+														<tr>
+															<th class="center" style="width:50px;">序号</th>
+															<th class="center">附件名</th>
+															<th class="center">附件说明</th>
+															<th class="center">附件大小</th>
+															<th class="center">上传人</th>
+															<th class="center">上传日期</th>
+															<th class="center">操作</th>
+														</tr>
+													</thead>
+																			
+													<tbody id="tbodyAttachment">
+														
+													</tbody>
+												</table>
+											</div>
 										</div>
 											<div id="report-tab" class="tab-pane">
 											<form action="" name="problemAssignForm" id="problemAssignForm" method="post">
@@ -483,7 +506,7 @@
 				$(item).removeClass("bc-light-orange");
 			}); 
 			bill_code=null;	
-			//$("#tbodyProInfoAttachment").html('');
+			$("#tbodyProInfoAttachment").html('');
 			
 		
 			yesEdit();
@@ -570,6 +593,7 @@
 		 * 获取问题附件信息
 		 */
 		function getProAttachment(attachmentType){
+			$("#tbodyAttachment").html('');
 			$("#tbodyProInfoAttachment").html('');
 			top.jzts();
 			$.ajax({
@@ -582,6 +606,7 @@
 						if(data){
 							$.each(data, function(i, item){
 								var tr=addItemAttachment(item,i+1,attachmentType); 
+								$('#tbodyAttachment').append(tr);
 								$('#tbodyProInfoAttachment').append(tr);
 						 	});
 						}
@@ -751,7 +776,7 @@
 		            	var html = '';
 		      		     html += setDetail(datas);
 			            //console.log(html);
-		      			$('#detail-tab').html(html);
+		      			$('#detail-info').html(html);
 // 		      		    console.log(datas);
 		      		   if(datas.APPROVAL_STATE==2)
 		    			{
