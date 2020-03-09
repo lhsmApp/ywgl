@@ -68,10 +68,10 @@
 									            <label class="btn btn-sm btn-danger " onclick="add()"> 
 									    	          <i class="ace-icon fa  glyphicon-plus bigger-110"></i>新增
 									            </label> 
-									            <label class="btn btn-sm btn-primary" onclick="edit(bill_code)"> 
+									            <label id="editButton" class="btn btn-sm btn-primary" onclick="edit(bill_code)"> 
 									            <i class="ace-icon fa fa-pencil-square-o bigger-110"></i>编辑
 									            </label> 
-									            <label class="btn btn-sm btn-success" onclick="del(bill_code)"> 	
+									            <label id="delButton" class="btn btn-sm btn-success" onclick="del(bill_code)"> 	
 									            <i class="ace-icon fa fa-trash-o bigger-110"></i>删除
 									            </label>
 									            <label class="btn btn-sm btn-purple" onclick="report(bill_code)"> 
@@ -126,10 +126,10 @@
 								<div class="widget-toolbar no-border">
 									<ul class="nav nav-tabs" id="jsbg-tab">
 										<li class="active" tag="detail-tab">
-											<a data-toggle="tab" href="#detail-tab">详情</a>
+											<a id="tabDetailButton" data-toggle="tab" href="#detail-tab">详情</a>
 										</li>		
 										<li  tag="report-tab">
-											<a data-toggle="tab" href="#report-tab">提报</a>
+											<a id="tabEditButton" data-toggle="tab" href="#report-tab">提报</a>
 										</li>
 									</ul>
 								</div>
@@ -374,6 +374,15 @@
 		
 		//删除
 		function del(Id){
+			if($("#step2").hasClass("active")){
+				$("#delButton").tips({
+					side : 3,
+					msg : '该单据已上报，不能删除!',
+					bg : '#AE81FF',
+					time : 2
+				});
+				return false;
+			}
 			bootbox.confirm("确定要删除吗?", function(result) {
 				if(result) {
 					top.jzts();
@@ -388,6 +397,15 @@
 		
 		//修改
 		function edit(Id){
+			if($("#step2").hasClass("active")){
+				$("#editButton").tips({
+					side : 3,
+					msg : '该单据已上报，不能修改!',
+					bg : '#AE81FF',
+					time : 2
+				});
+				return false;
+			}
 			//点击新增按钮，弹到提报tab页
 			$("#jsbg-tab li[tag='report-tab'] a").click();
 		}
@@ -544,11 +562,12 @@
 		            //返回数据的格式
 		        	dataType:'json',		          
 		            success:function(datas){
+		    			$("#tabEditButton").show()
 		            	//全局变量存放当前点击的变更申请单号
 		            	bill_code=datas.BILL_CODE;
 		            	$('#detail-tab').html(html);		            	
 		            	var html = '';
-		      		     html += setDetail(datas);
+		      		    html += setDetail(datas);
 		      			$('#detail-tab').html(html);
                       //2为退回状态
 		      		  if(datas.APPROVAL_STATE==2)
@@ -560,16 +579,20 @@
 		    			setValue(datas);
 		    			}else if(datas.APPROVAL_STATE==0)//0为审批中
 		    			{
+		    				$("#tabDetailButton").click();
+			    			$("#tabEditButton").hide()
 		      			$("#step1").addClass('active');
 		    			$("#step2").addClass('active');
 		    			$("#step3").removeClass('active');
 		    			noEdit();
 		    			}else if (datas.APPROVAL_STATE==1)//1 为完成状态
 						{
-		      			$("#step1").addClass('active');
-		    			$("#step2").addClass('active');
-			    		$("#step3").addClass('active');
-			    		noEdit();
+			    			$("#tabDetailButton").click();
+			    			$("#tabEditButton").hide()
+			      			$("#step1").addClass('active');
+			    			$("#step2").addClass('active');
+				    		$("#step3").addClass('active');
+				    		noEdit();
 		    			}else{
 		    				$("#step1").addClass('active');
 			    			$("#step2").removeClass('active');
@@ -580,6 +603,8 @@
 		            } 
 		         });
 		}
+		
+		
 		//编辑文本框赋值
 		function setValue(datas){
 			$("#BILL_CODE").val(datas.BILL_CODE);//申请单号

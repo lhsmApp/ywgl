@@ -342,21 +342,21 @@ public class ApprovalConfigController extends BaseController {
 				}				
 			}
 		}else{
-//			pd1.put("msg", "审批级别配置表中未找到相关信息，请确认！");
-//			return pd1;
-			PageData p = new PageData();
-			p.put("BUSINESS_CODE", businessCode);
-			p.put("BILL_CODE",billCode);
-			p.put("CURRENT_LEVEL",1);
-			p.put("APPROVAL_LEVEL","1");
-			p.put("APPROVAL_STATE","0");
-			p.put("NEXT_LEVEL", 0);
-			p.put("ACTIVE_FLAG",'1');
-			p.put("SCHEME_CODE","4ELHC1M0USRELHC1M0USR004");
-			p.put("DEPART_CODE","ELHC1M0USR004");
-			p.put("UNIT_CODE","ELHC1M0USR");
-			p.put("ROLE_CODE","68a2eb8394484984bb78338c05807533");
-			list.add(p);
+			pd1.put("msg", "审批级别配置表中未找到相关信息，请确认！");
+			return pd1;
+//			PageData p = new PageData();
+//			p.put("BUSINESS_CODE", businessCode);
+//			p.put("BILL_CODE",billCode);
+//			p.put("CURRENT_LEVEL",1);
+//			p.put("APPROVAL_LEVEL","1");
+//			p.put("APPROVAL_STATE","0");
+//			p.put("NEXT_LEVEL", 0);
+//			p.put("ACTIVE_FLAG",'1');
+//			p.put("SCHEME_CODE","4ELHC1M0USRELHC1M0USR004");
+//			p.put("DEPART_CODE","ELHC1M0USR004");
+//			p.put("UNIT_CODE","ELHC1M0USR");
+//			p.put("ROLE_CODE","68a2eb8394484984bb78338c05807533");
+//			list.add(p);
 		}
 		pd1.put("listDetail", list);
 		approvalconfigService.save(pd1);
@@ -433,8 +433,8 @@ public class ApprovalConfigController extends BaseController {
 		pd = this.getPageData();
 		try{
 			User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
-		    String userName=user.getUSERNAME();  
-		    pd.put("APPROVAL_USER",userName);//实际审批人
+		    String userId=user.getUSER_ID();  
+		    pd.put("APPROVAL_USER",userId);//实际审批人
 			pd.put("APPROVAL_DATE", DateUtils.getCurrentTime());//审批日期
 			pd.put("APPROVAL_ADVICE", "退回");
 			pd.put("APPROVAL_STATE", "2");
