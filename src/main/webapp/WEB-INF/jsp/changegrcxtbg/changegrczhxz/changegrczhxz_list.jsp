@@ -890,6 +890,9 @@
 		}		
 		//修改
 		function printf(Id){
+			if(typeof Id== null || Id== "" || Id== undefined) {
+				return;
+			}else{
 			 top.jzts();
 			 var diag = new top.Dialog();
 			 diag.Drag=true;
@@ -901,6 +904,7 @@
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮 
 			 diag.show();
+			}
 		}
 		//导出excel
 		function toExcel(){

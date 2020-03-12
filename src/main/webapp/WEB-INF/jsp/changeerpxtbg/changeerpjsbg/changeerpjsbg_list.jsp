@@ -292,8 +292,6 @@
 // 			$("#Form").submit();
 // 		}
 		$(function() {
-			var data=${varList};
-			showDetail(data[0].BILL_CODE);
 			//日期框
 			$( "#EFFECTIVE_DATE").datepicker({
 				showOtherMonths: true,
@@ -301,6 +299,9 @@
 				autoclose: true,
 				todayHighlight: true
 			});
+			var data=${varList};
+			showDetail(data[0].BILL_CODE);
+	
 			getChangrData();
 			//下拉框
 			if(!ace.vars['touch']) {
@@ -608,7 +609,7 @@
 			$("#BG_REASON").attr("disabled","disabled");//变更原因
 			$("#UNIT_CODE").attr("disabled","disabled");//申请人
 			$("#UNIT_NAME").attr("disabled","disabled");//申请人姓名
-			$("#DEPT_CODE").attr("disabled","disabled");//创建人
+			$("#DEPT_CODE").attr("disabled","disabled");//部门
 			$("#USER_CODE").attr("disabled","disabled");//申请人单位
 			$("#USER_NAME").attr("disabled","disabled");
 			$("#USER_DEPT").attr("disabled","disabled");//申请部门
@@ -671,6 +672,9 @@
 		}			
 		//打印
 		function printf(Id){
+			if(typeof Id== null || Id== "" || Id== undefined) {
+				return;
+			}else{
 			 top.jzts();
 			 var diag = new top.Dialog();
 			 diag.Drag=true;
@@ -682,6 +686,7 @@
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮 
 			 diag.show();
+			}
 		}
 		//导出excel
 		function toExcel(){

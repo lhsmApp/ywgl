@@ -285,8 +285,6 @@
 			$("#Form").submit();
 		}
 		$(function() {
-			var data=${varList};
-			showDetail(data[0].BILL_CODE);
 			//日期框
 			$("#EFFECTIVE_DATE" ).datepicker({
 				showOtherMonths: true,
@@ -294,6 +292,9 @@
 				autoclose: true,
 				todayHighlight: true
 			});
+			var data=${varList};
+			showDetail(data[0].BILL_CODE);
+		
 			getChangrData();
 			//下拉框
 			if(!ace.vars['touch']) {
@@ -686,17 +687,23 @@
 		}		
 		//修改
 		function printf(Id){
-			 top.jzts();
-			 var diag = new top.Dialog();
-			 diag.Drag=true;
-			 diag.Title ="系统变更申请单打印";
-			 diag.URL = '<%=basePath%>changegrcqxbg/printf.do?BILL_CODE='+encodeURI(Id);
-			 diag.Width = 800;
-			 diag.Height = 600;
-			 diag.Modal = true;				//有无遮罩窗口
-			 diag. ShowMaxButton = true;	//最大化按钮
-		     diag.ShowMinButton = true;		//最小化按钮 
-			 diag.show();
+			if(typeof Id== null || Id== "" || Id== undefined) {
+				return;
+			}else{
+				 top.jzts();
+				 var diag = new top.Dialog();
+				 diag.Drag=true;
+				 diag.Title ="系统变更申请单打印";
+				 diag.URL = '<%=basePath%>changegrcqxbg/printf.do?BILL_CODE='+encodeURI(Id);
+				 diag.Width = 800;
+				 diag.Height = 600;
+				 diag.Modal = true;				//有无遮罩窗口
+				 diag. ShowMaxButton = true;	//最大化按钮
+			     diag.ShowMinButton = true;		//最小化按钮 
+				 diag.show(); 
+			}
+				
+		
 		}
 		//导出excel
 		function toExcel(){

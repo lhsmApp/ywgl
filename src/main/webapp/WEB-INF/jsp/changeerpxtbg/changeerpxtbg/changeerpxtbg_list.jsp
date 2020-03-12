@@ -284,15 +284,15 @@
 	    //var unit_Code=undefined;
 		$(top.hangge());//关闭加载状态
 		$(function() {
-			
-			showDetail(data[0].BILL_CODE);
 			//日期框
-				$("#EFFECTIVE_DATE" ).datepicker({
-				showOtherMonths: true,
-				selectOtherMonths: false,
-				autoclose: true,
-				todayHighlight: true
-			});
+			$("#EFFECTIVE_DATE" ).datepicker({
+			showOtherMonths: true,
+			selectOtherMonths: false,
+			autoclose: true,
+			todayHighlight: true
+		});
+			showDetail(data[0].BILL_CODE);
+	
 			getChangrData();
 			//下拉框
 			if(!ace.vars['touch']) {
@@ -632,7 +632,10 @@
 		}			
 		//打印
 		function printf(Id){
-			 top.jzts();
+			if(typeof Id== null || Id== "" || Id== undefined) {
+				return;
+			}else{
+				top.jzts();
 			 var diag = new top.Dialog();
 			 diag.Drag=true;
 			 diag.Title ="系统变更申请单打印";
@@ -643,6 +646,7 @@
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮 
 			 diag.show();
+			}
 <%-- 			 window.location.href='<%=basePath%>changeerpxtbg/printf.do?BILL_CODE='+encodeURI(Id); --%>
 		}
 		

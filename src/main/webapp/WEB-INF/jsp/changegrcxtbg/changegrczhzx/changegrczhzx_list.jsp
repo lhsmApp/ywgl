@@ -295,15 +295,16 @@
 // 			$("#Form").submit();
 // 		}
 		$(function() {
-			var data=${varList};
-			showDetail(data[0].BILL_CODE);
 			//日期框
 			$("#EFFECTIVE_DATE" ).datepicker({
 			showOtherMonths: true,
 			selectOtherMonths: false,
 			autoclose: true,
 			todayHighlight: true
-		});
+		});			
+			var data=${varList};
+			showDetail(data[0].BILL_CODE);
+
 			getChangrData();
 			//下拉框
 			if(!ace.vars['touch']) {
@@ -677,6 +678,9 @@
 		}			
 		//打印
 		function printf(Id){
+			if(typeof Id== null || Id== "" || Id== undefined) {
+				return;
+			}else{
 			 top.jzts();
 			 var diag = new top.Dialog();
 			 diag.Drag=true;
@@ -688,6 +692,7 @@
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮 
 			 diag.show();
+			}
 		}
 		//导出excel
 		function toExcel(){
