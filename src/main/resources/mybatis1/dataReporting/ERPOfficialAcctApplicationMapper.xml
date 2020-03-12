@@ -189,6 +189,10 @@
 		<if test="pd.BUSI_DATE!= null and pd.BUSI_DATE!= ''">
 			and BUSI_DATE = #{pd.BUSI_DATE}
 		</if>
+		<if test="pd.USER_DEPART!= null and pd.USER_DEPART!= ''">
+			and USER_DEPART = #{pd.USER_DEPART}
+		</if>
+		
 		order by 
 			CONFIRM_STATE ASC
 	</select>

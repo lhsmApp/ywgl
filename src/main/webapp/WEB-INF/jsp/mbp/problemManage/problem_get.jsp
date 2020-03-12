@@ -814,6 +814,16 @@ function addAssign(){
 		$("#ff-assign-pro-type").focus();
 		return false;
 	}
+    if ($.trim($("#ff-assign-pro-accept-user").val()) == "") {
+		$("#ff-assign-pro-accept-user").tips({
+			side : 3,
+			msg : '请选择受理人',
+			bg : '#AE81FF',
+			time : 2
+		});
+		$("#ff-assign-pro-accept-user").focus();
+		return false;
+	}
 	
 	var proCode=currentItem.PRO_CODE;//问题单号
 	var proAcceptUser=$("#ff-assign-pro-accept-user").val();//受理人

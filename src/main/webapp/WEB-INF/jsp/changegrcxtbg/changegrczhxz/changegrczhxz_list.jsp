@@ -91,10 +91,10 @@
 												            <label class="btn btn-sm btn-danger " onclick="add()"> 
 												    	          <i class="ace-icon fa  glyphicon-plus bigger-110"></i>新增
 												            </label> 
-												            <label class="btn btn-sm btn-primary" onclick="edit(bill_code)"> 
+												            <label id="editButton" class="btn btn-sm btn-primary" onclick="edit(bill_code)"> 
 												            <i class="ace-icon fa fa-pencil-square-o bigger-110"></i>编辑
 												            </label> 
-												            <label class="btn btn-sm btn-success" onclick="del(bill_code)"> 	
+												            <label id="delButton" class="btn btn-sm btn-success" onclick="del(bill_code)"> 	
 												            <i class="ace-icon fa fa-trash-o bigger-110"></i>删除
 												            </label>
 												            <label class="btn btn-sm btn-purple" onclick="report(bill_code)"> 
@@ -166,10 +166,10 @@
 								<div class="widget-toolbar no-border">
 								<ul class="nav nav-tabs" id="zhxz-tab">
 										<li class="active"  tag="detail-tab">
-											<a data-toggle="tab" href="#detail-tab">详情</a>
+											<a id="tabDetailButton" data-toggle="tab" href="#detail-tab">详情</a>
 										</li>
 										<li tag="report-tab">
-											<a data-toggle="tab" href="#report-tab">提报</a>
+											<a id="tabEditButton" data-toggle="tab" href="#report-tab">提报</a>
 										</li>
 									</ul>
 								</div>
@@ -180,7 +180,30 @@
 									<div class="tab-content padding-8">
 									
 										<div id="detail-tab" class="tab-pane active">
-											
+											<div id="detail-info">
+											</div>
+											<hr />
+											<div >
+												<h5 class="lighter block blue"><i class="ace-icon fa fa-rss blue"></i>&nbsp;附件</h5>
+												<hr />
+												<table id="simple-table" class="table table-striped table-bordered table-hover" style="margin-top:5px;">	
+													<thead>
+														<tr>
+															<th class="center" style="width:50px;">序号</th>
+															<th class="center">附件名</th>
+															<th class="center">附件说明</th>
+															<th class="center">附件大小</th>
+															<th class="center">上传人</th>
+															<th class="center">上传日期</th>
+															<th class="center">操作</th>
+														</tr>
+													</thead>
+																			
+													<tbody id="tbodyAttachment">
+														
+													</tbody>
+												</table>
+											</div>
 										</div>
 											<div id="report-tab" class="tab-pane">
 											<form action="" name="problemAssignForm" id="problemAssignForm" method="post">
@@ -483,7 +506,7 @@
 				$(item).removeClass("bc-light-orange");
 			}); 
 			bill_code=null;	
-			//$("#tbodyProInfoAttachment").html('');
+			$("#tbodyProInfoAttachment").html('');
 			
 		
 			yesEdit();
@@ -570,6 +593,7 @@
 		 * 获取问题附件信息
 		 */
 		function getProAttachment(attachmentType){
+			$("#tbodyAttachment").html('');
 			$("#tbodyProInfoAttachment").html('');
 			top.jzts();
 			$.ajax({
@@ -582,6 +606,7 @@
 						if(data){
 							$.each(data, function(i, item){
 								var tr=addItemAttachment(item,i+1,attachmentType); 
+								$('#tbodyAttachment').append(tr);
 								$('#tbodyProInfoAttachment').append(tr);
 						 	});
 						}
@@ -632,6 +657,15 @@
 		
 		//删除
 		function del(Id){
+			if($("#step2").hasClass("active")){
+				$("#delButton").tips({
+					side : 3,
+					msg : '该单据已上报，不能删除!',
+					bg : '#AE81FF',
+					time : 2
+				});
+				return false;
+			}
 			bootbox.confirm("确定要删除吗?", function(result) {
 				if(result) {
 					top.jzts();
@@ -650,6 +684,15 @@
 		
 		//修改
 		function edit(Id){
+			if($("#step2").hasClass("active")){
+				$("#editButton").tips({
+					side : 3,
+					msg : '该单据已上报，不能修改!',
+					bg : '#AE81FF',
+					time : 2
+				});
+				return false;
+			}
 			$("#zhxz-tab li[tag='report-tab'] a").click();
 		}
 		
@@ -746,12 +789,13 @@
 		            //返回数据的格式
 		        	dataType:'json',		          
 		            success:function(datas){
+		            	$("#tabEditButton").show()
 		            	//全局变量存放当前点击的变更申请单号
 		            	bill_code=datas.BILL_CODE;		            	
 		            	var html = '';
 		      		     html += setDetail(datas);
 			            //console.log(html);
-		      			$('#detail-tab').html(html);
+		      			$('#detail-info').html(html);
 // 		      		    console.log(datas);
 		      		   if(datas.APPROVAL_STATE==2)
 		    			{
@@ -762,12 +806,16 @@
 		    			setValue(datas);
 		    			}else if(datas.APPROVAL_STATE==0)//0为审批中
 		    			{
+		    				$("#tabDetailButton").click();
+			    			$("#tabEditButton").hide()
 		      			$("#step1").addClass('active');
 		    			$("#step2").addClass('active');
 		    			$("#step3").removeClass('active');
 		    			noEdit();
 		    			}else if (datas.APPROVAL_STATE==1)//1 为完成状态
 						{
+		    				$("#tabDetailButton").click();
+			    			$("#tabEditButton").hide()
 		      			$("#step1").addClass('active');
 		    			$("#step2").addClass('active');
 			    		$("#step3").addClass('active');

@@ -111,7 +111,29 @@
 									<div class="widget-main padding-4">
 										<div class="tab-content padding-8">
 											<div id="detail-tab" class="tab-pane active">
-												
+												<div id="detail-info"></div>
+												<hr />
+												<div id="attachment" style="visibility:hidden;">
+													<h5 class="lighter block blue"><i class="ace-icon fa fa-rss blue"></i>&nbsp;附件</h5>
+													<hr />
+													<table id="simple-table" class="table table-striped table-bordered table-hover" style="margin-top:5px;">	
+														<thead>
+															<tr>
+																<th class="center" style="width:50px;">序号</th>
+																<th class="center">附件名</th>
+																<th class="center">附件说明</th>
+																<th class="center">附件大小</th>
+																<th class="center">上传人</th>
+																<th class="center">上传日期</th>
+																<th class="center">操作</th>
+															</tr>
+														</thead>
+																				
+														<tbody id="tbodyAttachment">
+															
+														</tbody>
+													</table>
+												</div>
 											</div>
 										</div>
 									</div>
@@ -194,7 +216,73 @@
 					else $(row).removeClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', false);
 				});
 			});
+			
+			/* $('input:radio[name="level_select"]').change( function(){
+				var value=$(".level_select:checked").val();
+				console.log(value);
+				if(null==value||value==''){
+	            	value='1';
+	            }
+				if(value==3){
+					$('#attachment').css("visibility",'visible');
+					
+				}else{
+					$('#attachment').css("visibility",'hidden');
+				}
+		    }); */
 		});
+		
+		/**
+		 * 获取问题附件信息
+		 */
+		function getProAttachment(billCode,attachmentType){
+			$("#tbodyAttachment").html('');
+			top.jzts();
+			$.ajax({
+					type: "GET",
+					url: '<%=basePath%>attachment/getAttachmentByType.do?BUSINESS_TYPE='+attachmentType+'&BILL_CODE='+billCode,
+			    	data: {},
+					//dataType:'json',
+					cache: false,
+					success: function(data){
+						if(data){
+							$.each(data, function(i, item){
+								var tr=addItemAttachment(item,i+1,attachmentType); 
+								$('#tbodyAttachment').append(tr);
+						 	});
+						}
+						top.hangge();
+					}
+			});
+		}
+
+		/**
+		 * 增加附件tr
+		 */
+		function addItemAttachment(item,index,type){
+			var href='<%=basePath%>/attachment/download.do?ATTACHMENT_ID='+item.ATTACHMENT_ID;
+			var ext=item.ATTACHMENT_PATH.substring(19,item.ATTACHMENT_PATH.length);
+			console.log(ext);
+			var htmlLog='<tr>'
+				+'<td class="center" style="width: 30px;">'+index+'</td>'
+				+'<td class="center">'+item.ATTACHMENT_NAME+ext+'</td>'
+				+'<td class="center">'+item.ATTACHMENT_MEMO+'</td>'
+				+'<td class="center">'+item.ATTACHMENT_SIZE+'&nbsp;KB</td>'
+				+'<td class="center">'+item.CREATE_USER+'</td>'
+				+'<td class="center">'+item.CREATE_DATE+'</td>'
+				+'<td class="center">'
+					+'<div class="hidden-sm hidden-xs btn-group">'
+						+'<a class="btn btn-xs btn-success" onclick=window.location.href="'+href+'">'
+							+'<i class="ace-icon fa fa-cloud-download bigger-120" title="下载"></i>'
+						+'</a>'
+						/* +'<a class="btn btn-xs btn-danger" onclick=delProAttachment("'+item.ATTACHMENT_ID+'","'+type+'")>'
+							+'<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>'
+						+'</a>' */
+					+'</div>'
+				+'</td>'
+			+'</tr>';
+			return htmlLog;
+		}
 		
 		//新增
 		function add(){
@@ -436,7 +524,7 @@
 		            	//console.log(datas);
 		            	var html = '';
 		      		     html += setDetail(datas, businessType);
-		      			$('#detail-tab').html(html);
+		      			$('#detail-info').html(html);
 		      			console.log(datas.APPROVAL_STATE);
 		      		    if(datas.APPROVAL_STATE==2)
 		    			{
@@ -472,17 +560,23 @@
 			if(value==1||value==2){
 				title=item.BG_NAME;
 				reason=item.BG_REASON;
+				$('#attachment').css("visibility",'hidden');
 			}else if(value==3){
 				title='GRC帐号新增';
 				reason=item.ACCOUNT_REASON;
 				
+				$('#attachment').css("visibility",'visible');
+				/* 获取附件信息 */
+				 getProAttachment(item.BILL_CODE,"CHANGE_GRC_ZHXZ");
 			}else if(value==4){
 				title='GRC权限变更';
 				reason=item.BG_REASON;
+				$('#attachment').css("visibility",'hidden');
 				
 			}else{
 				title='GRC帐号撤销';
 				reason=item.CANCLE_REASON;
+				$('#attachment').css("visibility",'hidden');
 			}
 		    var div = '<div class="profile-user-info"><div class="profile-info-row"><div class="profile-info-name">变更名称：</div><div class="profile-info-value"><span>'
 		    	+title

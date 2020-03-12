@@ -76,12 +76,15 @@ public class ERPController extends BaseController {
 		String confirmState = pd.getString("confirmState");
 		String busiDate = pd.getString("busiDate");
 		pd.put("KEY_CODE","SystemDataTime");
-		String date = sysconfigService.getSysConfigByKey(pd);
+		//String date = sysconfigService.getSysConfigByKey(pd);
+		Date dNow = new Date( );
+	    SimpleDateFormat ft = new SimpleDateFormat ("yyyyMM");
+		String date = ft.format(dNow);
 		if(null == confirmState || StringUtil.isEmpty(confirmState)) {
 			pd.put("confirmState", "2"); //2待审批 3已审批
 		}
 		if(null == busiDate || StringUtil.isEmpty(busiDate)) {
-			pd.put("busiDate",date);
+//			pd.put("busiDate",date);
 		}
 		page.setPd(pd);
 		//获取业务期间
@@ -102,6 +105,7 @@ public class ERPController extends BaseController {
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		
 		Map_SetColumnsList.clear();
+        Map_SetColumnsList.put("BUSI_DATE", new TmplConfigDetail("BUSI_DATE", "录入时间", "1", false));
 		Map_SetColumnsList.put("STAFF_CODE", new TmplConfigDetail("STAFF_CODE", "员工编号", "1", false));
 		Map_SetColumnsList.put("STAFF_NAME", new TmplConfigDetail("STAFF_NAME", "员工姓名", "1", false));
 		Map_SetColumnsList.put("DEPART_CODE", new TmplConfigDetail("DEPART_CODE", "二级单位", "1", false));
@@ -133,12 +137,15 @@ public class ERPController extends BaseController {
 		String confirmState = pd.getString("confirmState");
 		String busiDate = pd.getString("busiDate");
 		pd.put("KEY_CODE","SystemDataTime");
-		String date = sysconfigService.getSysConfigByKey(pd);
+//		String date = sysconfigService.getSysConfigByKey(pd);
+		Date dNow = new Date( );
+	    SimpleDateFormat ft = new SimpleDateFormat ("yyyyMM");
+		String date = ft.format(dNow);
 		if(null == confirmState || StringUtil.isEmpty(confirmState)) {
 			pd.put("confirmState", "2"); //2待审批 3已审批
 		}
 		if(null == busiDate || StringUtil.isEmpty(busiDate)) {
-			pd.put("busiDate",date);
+//			pd.put("busiDate",date);
 		}
 		page.setPd(pd);
 		//获取业务期间
@@ -160,6 +167,7 @@ public class ERPController extends BaseController {
 		
 		//***********************************************************
 		Map_SetColumnsList.clear();//清空,重新添加防止导出时污染输出源
+		Map_SetColumnsList.put("BUSI_DATE", new TmplConfigDetail("BUSI_DATE", "录入时间", "1", false));
 		Map_SetColumnsList.put("STAFF_CODE", new TmplConfigDetail("STAFF_CODE", "员工编号", "1", false));
 		Map_SetColumnsList.put("STAFF_NAME", new TmplConfigDetail("STAFF_NAME", "员工姓名", "1", false));
 		Map_SetColumnsList.put("DEPART_CODE", new TmplConfigDetail("DEPART_CODE", "二级单位", "1", false));
@@ -194,12 +202,15 @@ public class ERPController extends BaseController {
 		String confirmState = pd.getString("confirmState");
 		String busiDate = pd.getString("busiDate");
 		pd.put("KEY_CODE","SystemDataTime");
-		String date = sysconfigService.getSysConfigByKey(pd);
+//		String date = sysconfigService.getSysConfigByKey(pd);
+		Date dNow = new Date( );
+	    SimpleDateFormat ft = new SimpleDateFormat ("yyyyMM");
+		String date = ft.format(dNow);
 		if(null == confirmState || StringUtil.isEmpty(confirmState)) {
 			pd.put("confirmState", "2"); //2待审批 3已审批
 		}
 		if(null == busiDate || StringUtil.isEmpty(busiDate)) {
-			pd.put("busiDate",date);
+//			pd.put("busiDate",date);
 		}
 		page.setPd(pd);
 		List<PageData>	varList = erptempacctapplicationService.list(page);	//列出ERPTempAcctApplication列表
@@ -221,6 +232,7 @@ public class ERPController extends BaseController {
 		
 		//***********************************************************
 		Map_SetColumnsList.clear();
+		Map_SetColumnsList.put("BUSI_DATE", new TmplConfigDetail("BUSI_DATE", "录入时间", "1", false));
 		Map_SetColumnsList.put("STAFF_CODE", new TmplConfigDetail("STAFF_CODE", "员工编号", "1", false));
 		Map_SetColumnsList.put("STAFF_NAME", new TmplConfigDetail("STAFF_NAME", "员工姓名", "1", false));
 		Map_SetColumnsList.put("STAFF_UNIT_LEVEL2", new TmplConfigDetail("STAFF_UNIT", "二级单位", "1", false));
@@ -327,7 +339,9 @@ public class ERPController extends BaseController {
 	public ModelAndView oaaExportExcel(Page page) throws Exception {
 		logBefore(logger, Jurisdiction.getUsername() + "导出ERP审批数据到excel");
 		PageData pd = this.getPageData();
-		pd.put("confirmState", "2,3"); //2待审批 3已审批
+		pd.put("confirmState", pd.get("confirmState")); //2待审批 3已审批
+		pd.put("BUSI_DATE", pd.get("busiDate"));
+		
 		page.setPd(pd);
 		List<PageData> varOList = erpofficialacctapplicationService.exportList(page);
 		return export(varOList, "", Map_SetColumnsList);
@@ -343,7 +357,8 @@ public class ERPController extends BaseController {
 	public ModelAndView taaExportExcel(Page page) throws Exception {
 		logBefore(logger, Jurisdiction.getUsername() + "导出ERP审批数据到excel");
 		PageData pd = this.getPageData();
-		pd.put("confirmState", "2,3"); //2待审批 3已审批
+		pd.put("confirmState", pd.get("confirmState")); //2待审批 3已审批
+		pd.put("BUSI_DATE", pd.get("busiDate"));
 		page.setPd(pd);
 		List<PageData> varOList = erptempacctapplicationService.exportList(page);
 		return export(varOList, "", Map_SetColumnsList);
@@ -359,7 +374,8 @@ public class ERPController extends BaseController {
 	public ModelAndView daaExportExcel(Page page) throws Exception {
 		logBefore(logger, Jurisdiction.getUsername() + "导出ERP审批数据到excel");
 		PageData pd = this.getPageData();
-		pd.put("confirmState", "2,3"); //2待审批 3已审批
+		pd.put("confirmState", pd.get("confirmState")); //2待审批 3已审批
+		pd.put("BUSI_DATE", pd.get("busiDate"));
 		page.setPd(pd);
 		List<PageData> varOList = erpdelacctapplicationService.exportList(page);
 		return export(varOList, "", Map_SetColumnsList);
