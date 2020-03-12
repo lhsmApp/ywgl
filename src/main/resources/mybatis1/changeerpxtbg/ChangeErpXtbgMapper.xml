@@ -286,7 +286,7 @@
 				x.DEPARTMENT_CODE = t.USER_DEPT
 				) AS h
 		<where>
-				<if test="pd.BILL_USER!= null and pd.BILL_USER != ''">
+			<if test="pd.BILL_USER!= null and pd.BILL_USER != ''">
 			AND
 			(BILL_USER=#{pd.BILL_USER}
 				or
