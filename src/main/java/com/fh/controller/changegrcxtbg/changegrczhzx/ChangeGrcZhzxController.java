@@ -253,6 +253,11 @@ public class ChangeGrcZhzxController extends BaseController {
 				roles2[0] = roleStr2;
 			}
 		}
+	    pd.put("BILL_USER", userId);	
+			String keywords = pd.getString("keywords");	
+			if(null != keywords && !"".equals(keywords)){
+				pd.put("keywords", keywords.trim());
+			}
 		if (null != roles && !"".equals(roles)) {
 			if (Arrays.asList(roles).contains(roleId)){
 				pd.put("BILL_USER", "");
@@ -264,11 +269,7 @@ public class ChangeGrcZhzxController extends BaseController {
 				pd.put("UNIT_CODE", unitCode);
 			}
 		}
-	    pd.put("BILL_USER", userId);	
-		String keywords = pd.getString("keywords");	
-		if(null != keywords && !"".equals(keywords)){
-			pd.put("keywords", keywords.trim());
-		}
+	
 		page.setPd(pd);
 		List<PageData>	varList = changegrczhzxService.list(page);	//列出ChangeErpXtbg列表
 		mv.setViewName("changegrcxtbg/changegrczhzx/changegrczhzxQuery");
