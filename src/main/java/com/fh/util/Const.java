@@ -55,4 +55,7 @@ public class Const {
 	public static final int CUT_STRING_NUM = 15;	//截取的字符串长度
 	public static final String ORG_CODE = "admin/config/ORG.txt";//总部组织机构编码
 	public static final String ROOT_DEPT_CODE = "admin/config/ROOTDEPT.txt";//组织机构根节点编码
+	
+	
+	public static final String CUST_COLUMN1 = "GL";// 自定义管理标志，区分管理员单位和其他单位 yijche
 }
