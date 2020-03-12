@@ -49,7 +49,7 @@
 								<tr>							
 								<td style="padding-left:2px;">
 									<div class="input-group input-group-sm">
-										<input type="text" id="busiDate" name="busiDate"  class="form-control"   placeholder="请选择查询年月" />
+										<input type="text" id="busiDate" name="busiDate"  class="form-control"   placeholder="请选择查询年月" value="${pd.busiDate}"/>
 										<span class="input-group-addon">
 											<i class="ace-icon fa fa-calendar" ></i>
 										</span>
@@ -57,18 +57,19 @@
 								</td>								
 	<!-- 								<td style="padding-left:2px;"><input class="span10 date-picker" name="START_DATE" id="START_DATE"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="开始日期" title="开始日期"/></td> -->
 	<!-- 								<td style="padding-left:2px;"><input class="span10 date-picker" name="END_DATE" name="END_DATE"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="结束日期"/></td> -->
-									<td><label> <i class="ace-icon  bigger-110"></i>请选择单位：</label> </td>
+									<!-- <td><label> <i class="ace-icon  bigger-110"></i>请选择单位：</label> </td> 
 									<td>
 											<div style="margin:10px 0px;">
 													<input type="hidden" name="UNIT_CODE" id="UNIT_CODE"   />
 													<div class="selectTree" id="selectTree" style="float:none;display:block;"></div>												
 												</div>				
-										</td>	
+										</td>-->	
 									<td style="padding-left:2px;">																		 
 													<button type="button" class="btn btn-info btn-xs" onclick="tosearch();">
 													    <i class="ace-icon fa fa-search bigger-110"></i>
 													</button>	
 									</td>	
+									
 									<td style="padding-left:6px;"><a class="btn btn-primary btn-xs inline pull-right" onclick="toExcel()">
 								<i class="ace-icon fa fa-share bigger-110"></i> <span>导出</span>
 							</a></td>
@@ -181,7 +182,8 @@
 			    }
 			//检索
 			function tosearch(){
-				$("#tobodyUser tr").remove();
+				location.href = '<%=basePath%>erpuserlist/queryList.do?busiDate='+$("#busiDate").val()+'&UNIT_CODE='+$("#UNIT_CODE").val()
+				<%-- $("#tobodyUser tr").remove();
 				top.jzts();
 				var busiDate = $("#busiDate").val();
 				var unitCode = $("#UNIT_CODE").val();				
@@ -201,7 +203,7 @@
 							}
 							top.hangge();
 						}
-				});
+				}); --%>
 			}
 			function setUserTable(item,i){
 				rows='<tr><td class="center" style="width: 30px;">'

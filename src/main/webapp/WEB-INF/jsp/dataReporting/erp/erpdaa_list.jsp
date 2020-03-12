@@ -72,7 +72,7 @@
 									<td>
 										<c:if test="${not empty listBusiDate}"> 	
 											<select class="form-control" id="busiDate" name="busiDate" style="width:150px;margin-left: 5px;">
-												<!-- <option value=""></option> -->
+												<option value="">全部</option>
 												<c:forEach items="${listBusiDate}" var="var">
 													<option value="${var.BUSI_DATE}" <c:if test="${pd.busiDate == var.BUSI_DATE}">selected="selected"</c:if>>${var.BUSI_DATE}</option>
 												</c:forEach>
@@ -94,8 +94,10 @@
 									</td>
 									<td style="vertical-align:top;padding-left:3px;">
 										<a class="btn btn-info btn-sm" onclick="tosearch()"><i class="ace-icon fa fa-search bigger-110"></i></a>
-										<a class="btn btn-white btn-info btn-bold" onclick="daaReport('确定要审批当前数据吗?')"><i class="ace-icon fa fa-check-square-o bigger-110"></i>批量审批</a>
-										<a class="btn btn-white btn-info btn-bold" onclick="daaBackReport('确定要驳回吗?');" title="批量驳回" ><i class="ace-icon fa fa-exclamation-triangle red bigger-110"></i>批量驳回</a>
+										<c:if test="${pd.confirmState == 2}">
+										<a class="btn btn-white btn-info btn-bold" onclick="daaReport('确定要审批通过当前页面所有申请吗?')"><i class="ace-icon fa fa-check-square-o bigger-110"></i>批量审批</a>
+										<a class="btn btn-white btn-info btn-bold" onclick="daaBackReport('确定要驳回当前页面所有申请吗?');" title="批量驳回" ><i class="ace-icon fa fa-exclamation-triangle red bigger-110"></i>批量驳回</a>
+										</c:if>
 										<a class="btn btn-white btn-info btn-bold" onclick="toExcel()"><span class="ace-icon fa fa-cloud-download"></span>导出</a>
 									</td>
 								</tr>
@@ -230,7 +232,7 @@
 	
 	//导出excel
 	function toExcel(){
-		window.location.href='<%=basePath%>erp/daaExcel.do';
+		window.location.href='<%=basePath%>erp/daaExcel.do?confirmState='+$("#confirmState").val()+'&busiDate='+$("#busiDate").val()+'&USER_DEPART='+$("#SelectedDepartCode").val();
 	}
 	
 	/*批量审批*/
@@ -250,7 +252,7 @@
 					});
 					return;
 				}
-				if(msg == '确定要审批当前数据吗?'){
+				if(msg == '确定要审批通过当前页面所有申请吗?'){
 					top.jzts();
 					$.ajax({
 						type: "POST",
@@ -301,7 +303,7 @@
 					});
 					return;
 				}
-				if(msg == '确定要驳回吗?'){
+				if(msg == '确定要驳回当前页面所有申请吗?'){
 					top.jzts();
 					$.ajax({
 						type: "POST",

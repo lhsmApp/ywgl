@@ -288,7 +288,7 @@
         "STAFF_JOB":{isMust:false,valiType:''},
         "STAFF_MODULE":{isMust:false,valiType:''},
         "PHONE":{isMust:false,valiType:'isTelOrMobile'},
-        "MAIL":{isMust:false,valiType:'getElementsByName'},
+        "MAIL":{isMust:false,valiType:'isEmail'},
         "PERMISSION_CHANGE":{isMust:false,valiType:''},
         "APPLY_DATE":{isMust:false,valiType:''},
         "ACCOUNT_DELETE_REASON":{isMust:false,valiType:''},

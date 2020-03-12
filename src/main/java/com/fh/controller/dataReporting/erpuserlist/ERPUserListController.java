@@ -88,12 +88,19 @@ public class ERPUserListController extends BaseController {
 		pd = this.getPageData();
 		listData = pd.getString("listData");
 		JSONArray array = JSONArray.fromObject(listData);
+		
+		//获取所有单位和对应的单位id
+		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
+		departmentService.listAllDepartmentToSelect("0", zdepartmentPdList);
+		Map <String,String> map=new HashMap<>();
+		for(PageData a:zdepartmentPdList) {
+			map.put(a.get("name").toString(),a.get("id").toString());
+		}
 		@SuppressWarnings("unchecked")
 		List<String> listTransferData = (List<String>) JSONArray.toCollection(array, PageData.class);// 过时方法
 		for (int i = 0; i < listTransferData.size(); i++) {
 			staffId = listTransferData.get(i).trim();
 			PageData pageData = new PageData();
-			pageData.put("USER_DEPART", user.getUNIT_CODE());
 			pageData.put("BUSI_DATE", DateUtils.getCurrentDateMonth()); // 业务期间
 			pageData.put("STATE", "1");
 			pageData.put("BILL_USER", user.getUSER_ID());
@@ -106,6 +113,7 @@ public class ERPUserListController extends BaseController {
 			pageData.put("START_DATE", listTransferData.get(i++).trim());
 			pageData.put("END_DATE", listTransferData.get(i++).trim());
 			pageData.put("DEPART", listTransferData.get(i++).trim());
+			pageData.put("USER_DEPART", map.get(pageData.getString("DEPART")));//翻译单位名
 			pageData.put("JOB", listTransferData.get(i++).trim());
 			pageData.put("CHANGE_NO", listTransferData.get(i++).trim());
 			pageData.put("PHONE", listTransferData.get(i).trim());
@@ -136,7 +144,6 @@ public class ERPUserListController extends BaseController {
 		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 		pd = this.getPageData();
 		String busiDate = pd.getString("busiDate");
-		pd.put("USER_DEPART", user.getUNIT_CODE());
 		pd.put("KEY_CODE", "erpuserlistMustKey");
 		data.put("BUSI_TYPE", SysDeptTime.ERP_USER_LIST.getNameKey());
 		data.put("DEPT_CODE", user.getUNIT_CODE());
@@ -344,10 +351,17 @@ public class ERPUserListController extends BaseController {
 			judgement = true;
 		}
 		if (judgement) {
+			//获取所有单位和对应的单位id
+			List<PageData> zdepartmentPdList = new ArrayList<PageData>();
+			departmentService.listAllDepartmentToSelect("0", zdepartmentPdList);
+			Map <String,String> map=new HashMap<>();
+			for(PageData a:zdepartmentPdList) {
+				map.put(a.get("name").toString(),a.get("id").toString());
+			}
 			User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 			for (PageData pageData : listUploadAndRead) {
 				// 将每条数据插入新内容
-				pageData.put("USER_DEPART", StringUtil.toString(user.getUNIT_CODE(), ""));
+				pageData.put("USER_DEPART", map.get(pageData.get("DEPART").toString().trim()));
 				pageData.put("BUSI_DATE", DateUtils.getCurrentDateMonth()); // 业务期间
 				pageData.put("STATE", "1");
 				pageData.put("BILL_USER", user.getUSER_ID());
@@ -385,36 +399,14 @@ public class ERPUserListController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
-		String roleId = user.getRole().getROLE_ID();
 		pd = this.getPageData();
 		pd.put("USER_DEPART", user.getUNIT_CODE());
-		pd.put("KEY_CODE", "xxglbRoles");
-		String roleStr = sysconfigService.getSysConfigByKey(pd);
-		String[] roles = null;
-		if (StringUtil.isNotEmpty(roleStr)) {
-			if (roleStr.contains(",")) {
-				roles = roleStr.split(",");
-			} else {
-				roles = new String[1];
-				roles[0] = roleStr;
-			}
-		}
 		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
-		// 判断是否为信息管理部管理角色
-		if (null != roles) {
-			if (Arrays.asList(roles).contains(roleId)) {
-				// 若是则树形结构加载所有单位，并将用户单位查询条件更新为所选单位
-				JSONArray arr = JSONArray
-						.fromObject(departmentService.listAllDepartmentToSelect("0", zdepartmentPdList));
-				mv.addObject("zTreeNodes", (null == arr ? "" : arr.toString()));
-				pd.put("USER_DEPART", pd.getString("UNIT_CODE"));
-
-			} else {
-				mv.addObject("zTreeNodes", pd.getString("USER_DEPART"));// 若不是则只显示本单位数据
-			}
-		} else {
-			mv.addObject("zTreeNodes", pd.getString("USER_DEPART"));// 未维护管理单位查询配置，则只显示各单位数据
-		}
+		
+		// 若是则树形结构加载所有单位，并将用户单位查询条件更新为所选单位
+		JSONArray arr = JSONArray
+				.fromObject(departmentService.listAllDepartmentToSelect("0", zdepartmentPdList));
+		mv.addObject("zTreeNodes", (null == arr ? "" : arr.toString()));
 		page.setPd(pd);
 		List<PageData> varList = erpuserlistService.list(page); // 列出GRCPerson列表
 		mv.setViewName("statisticAnalysis/erpuserliststatistics/erpuUserListStatistic_list");
@@ -424,43 +416,7 @@ public class ERPUserListController extends BaseController {
 		return mv;
 	}
 
-	/**
-	 * 查询统计列表
-	 * 
-	 * @param page
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/queryDataList")
-	public @ResponseBody List<PageData> queryDataList(Page page) throws Exception {
-
-		PageData pd = new PageData();
-		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
-		String roleId = user.getRole().getROLE_ID();
-		pd = this.getPageData();
-		pd.put("USER_DEPART", user.getUNIT_CODE());
-		pd.put("KEY_CODE", "xxglbRoles");
-		String roleStr = sysconfigService.getSysConfigByKey(pd);
-		String[] roles = null;
-		if (StringUtil.isNotEmpty(roleStr)) {
-			if (roleStr.contains(",")) {
-				roles = roleStr.split(",");
-			} else {
-				roles = new String[1];
-				roles[0] = roleStr;
-			}
-		}
-		// 判断是否为信息管理部管理角色
-		if (null != roles) {
-			if (Arrays.asList(roles).contains(roleId)) {
-				// 若是则树形结构加载所有单位，并将用户单位查询条件更新为所选单位
-				pd.put("USER_DEPART", pd.getString("UNIT_CODE"));
-			}
-		}
-		page.setPd(pd);
-		List<PageData> varList = erpuserlistService.list(page); // 列出GRCPerson列表
-		return varList;
-	}
-
+	
 	/**
 	 * 导出用户清单统计表到excel
 	 * 
@@ -472,27 +428,8 @@ public class ERPUserListController extends BaseController {
 		ModelAndView mv = new ModelAndView();
 		PageData pd = new PageData();
 		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
-		String roleId = user.getRole().getROLE_ID();
 		pd = this.getPageData();
 		pd.put("USER_DEPART", user.getUNIT_CODE());
-		pd.put("KEY_CODE", "xxglbRoles");
-		String roleStr = sysconfigService.getSysConfigByKey(pd);
-		String[] roles = null;
-		if (StringUtil.isNotEmpty(roleStr)) {
-			if (roleStr.contains(",")) {
-				roles = roleStr.split(",");
-			} else {
-				roles = new String[1];
-				roles[0] = roleStr;
-			}
-		}
-		// 判断是否为信息管理部管理角色
-		if (null != roles) {
-			if (Arrays.asList(roles).contains(roleId)) {
-				// 若是则树形结构加载所有单位，并将用户单位查询条件更新为所选单位
-				pd.put("USER_DEPART", pd.getString("UNIT_CODE"));
-			}
-		}
 		page.setPd(pd);
 		Map<String, Object> dataMap = new HashMap<String, Object>();
 		List<String> titles = new ArrayList<String>();
