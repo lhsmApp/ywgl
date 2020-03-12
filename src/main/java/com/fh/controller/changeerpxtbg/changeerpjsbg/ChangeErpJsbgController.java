@@ -233,12 +233,12 @@ public class ChangeErpJsbgController extends BaseController {
 		if(null != keywords && !"".equals(keywords)){
 			pd.put("keywords", keywords.trim());
 		}
-		if (null != roles) {
+		if (null != roles && !"".equals(roles)) {
 			if (Arrays.asList(roles).contains(roleId)){
 				pd.put("BILL_USER", "");
 			}
 		}
-		if (null != roles2) {
+		if (null != roles2 && !"".equals(roles2)){
 			if (Arrays.asList(roles2).contains(roleId)){
 				pd.put("BILL_USER", "");
 				pd.put("UNIT_CODE", unitCode);

@@ -285,22 +285,14 @@
 			USER_CODE=#{pd.BILL_USER})
  			</if>
  			<if test="pd.UNIT_CODE!= null and pd.UNIT_CODE != ''">
-			AND UNIT_CODE=#{pd.UNIT_CODE}
-			
+			AND UNIT_CODE=#{pd.UNIT_CODE}			
  			</if>
-<!-- 		 AND -->
-<!-- 		(APPROVAL_STATE='2' OR  APPROVAL_STATE='' OR APPROVAL_STATE IS NULL) -->
-		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
 			and
 				(
 				BG_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
-				<!--	根据需求自己加检索条件
-					字段1 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
-					 or 
-					字段2 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
-				-->
 				)
-		</if>
+			</if>
 		</where>
 	</select>
 	
