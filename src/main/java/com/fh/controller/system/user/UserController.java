@@ -227,6 +227,39 @@ public class UserController extends BaseController {
 		return mv;
 	}
 	
+	
+	/**
+	 * 批量添加用户
+	 * @throws Exception
+	 * @author yijche
+	 */
+	@RequestMapping(value="/batchAddUser")
+	public void batchAddUser() throws Exception{
+		PageData pd = new PageData();
+		for(int i=0;i<NewUser.newUserStr.length;i++) {
+			pd.clear();
+			/***************************/
+			pd.put("USERNAME", NewUser.newUserStr[i][0]);
+			pd.put("PASSWORD", NewUser.newUserStr[i][1]);
+			pd.put("NAME", NewUser.newUserStr[i][2]);
+			pd.put("ROLE_ID", NewUser.newUserStr[i][3]);
+			pd.put("UNIT_CODE", NewUser.newUserStr[i][4]);
+			pd.put("DEPARTMENT_ID", NewUser.newUserStr[i][5]);
+			pd.put("PHONE", NewUser.newUserStr[i][6]);
+			/***************************/
+			pd.put("LAST_LOGIN", "");				//最后登录时间
+			pd.put("IP", "");						//IP
+			pd.put("STATUS", "1");					//状态
+			pd.put("SKIN", "default");
+			pd.put("RIGHTS", "");		
+			pd.put("PASSWORD", new SimpleHash("SHA-1", pd.getString("USERNAME"), pd.getString("PASSWORD")).toString());	//密码加密
+			
+			if(null == userService.findByUsername(pd)){	//判断用户名是否存在
+				userService.saveU(pd); 					//执行保存
+			}
+		}
+	}
+	
 	/**判断用户名是否存在
 	 * @return
 	 */
