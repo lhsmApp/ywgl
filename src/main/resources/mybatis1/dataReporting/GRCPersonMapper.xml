@@ -22,7 +22,8 @@
 		STATE,
 		BILL_USER,	
 		USER_DEPART,
-		BILL_DATE
+		BILL_DATE,
+		CUST_COLUMN1
 	</sql>
 	
 	<!-- 字段值 -->
@@ -40,7 +41,8 @@
 		#{STATE},
 		#{BILL_USER},	
 		#{USER_DEPART},
-		#{BILL_DATE}
+		#{BILL_DATE},
+		#{CUST_COLUMN1}
 	</sql>
 	
 	<!-- 新增-->
@@ -65,6 +67,7 @@
 			STAFF_DEPART = #{STAFF_DEPART},
 			STAFF_POSITION = #{STAFF_POSITION},
 			STAFF_JOB = #{STAFF_JOB},
+			USER_DEPART = #{USER_DEPART},
 			PHONE = #{PHONE},
 			MOBILE_PHONE = #{MOBILE_PHONE},
 			ZSY_MAIL = #{ZSY_MAIL}
@@ -92,9 +95,11 @@
 		and 
 			BUSI_DATE = #{pd.busiDate}
 		</if>
-		<if test="pd.USER_DEPART != null and pd.USER_DEPART != ''">
-		and 
-			USER_DEPART = #{pd.USER_DEPART}
+		<if test="pd.USER_DEPART!= null and pd.USER_DEPART!= ''">
+			and USER_DEPART = #{pd.USER_DEPART}
+		</if>
+		<if test="pd.CUST_COLUMN1!= null">
+			and CUST_COLUMN1 = #{pd.CUST_COLUMN1}
 		</if>
 	</select>
 	
@@ -125,9 +130,15 @@
 			<include refid="tableName"></include>
 		where 
 			STATE = 1
-			and USER_DEPART = #{pd.USER_DEPART}
+			
 			<if test="pd.BUSI_DATE!= null and pd.BUSI_DATE!= ''">
 			and BUSI_DATE = #{pd.BUSI_DATE}
+			</if>
+			<if test="pd.USER_DEPART!= null and pd.USER_DEPART!= ''">
+				and USER_DEPART = #{pd.USER_DEPART}
+			</if>
+			<if test="pd.CUST_COLUMN1!= null">
+				and CUST_COLUMN1 = #{pd.CUST_COLUMN1}
 			</if>
 		order by 
 			ID,STAFF_NAME
@@ -156,7 +167,8 @@
 					#{item.STATE},
 					#{item.BILL_USER},	
 					#{item.USER_DEPART},
-					#{item.BILL_DATE}
+					#{item.BILL_DATE},
+					#{item.CUST_COLUMN1}
 				);
 		</foreach>
 	</update>

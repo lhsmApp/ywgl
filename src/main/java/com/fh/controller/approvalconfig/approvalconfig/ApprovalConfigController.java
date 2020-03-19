@@ -344,6 +344,7 @@ public class ApprovalConfigController extends BaseController {
 		}else{
 //			pd1.put("msg", "审批级别配置表中未找到相关信息，请确认！");
 //			return pd1;
+			//默认路径 yijche，等配置页做好之后再删掉
 			PageData p = new PageData();
 			p.put("BUSINESS_CODE", businessCode);
 			p.put("BILL_CODE",billCode);
@@ -433,8 +434,8 @@ public class ApprovalConfigController extends BaseController {
 		pd = this.getPageData();
 		try{
 			User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
-		    String userName=user.getUSERNAME();  
-		    pd.put("APPROVAL_USER",userName);//实际审批人
+		    String userId=user.getUSER_ID();  
+		    pd.put("APPROVAL_USER",userId);//实际审批人
 			pd.put("APPROVAL_DATE", DateUtils.getCurrentTime());//审批日期
 			pd.put("APPROVAL_ADVICE", "退回");
 			pd.put("APPROVAL_STATE", "2");

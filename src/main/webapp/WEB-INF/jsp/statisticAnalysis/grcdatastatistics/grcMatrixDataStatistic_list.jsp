@@ -41,15 +41,38 @@
 		<div class="main-content">
 			<div class="main-content-inner">
 				<div class="page-content">
+				<div class="page-header">
+						<table style="width:100%;">
+							<tbody>
+								<tr>
+									<td>
+										<div class="pull-right">
+											<span class="green middle bolder">填报类型: &nbsp;</span>
+											<div class="btn-toolbar inline middle no-margin">
+												<div data-toggle="buttons" class="btn-group no-margin">
+													<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toGRCPerson()">
+														<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>GRC人员信息</span>
+													</button>
+													<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toGRCApprovalMatrix()">
+															<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>GRC审批矩阵</span>
+													</button>
+												</div>
+											</div>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 					<div class="row">
 						<div class="col-xs-12">							
 						<!-- 检索  -->
-						<form action="erpuserlist/queryList.do" method="post" name="Form" id="Form">
+						<form action="grcapprovalmatrix/queryList.do" method="post" name="Form" id="Form">
 							<table style="margin-top:5px;">
 								<tr>							
 								<td style="padding-left:2px;">
 									<div class="input-group input-group-sm">
-										<input type="text" id="busiDate" name="busiDate"  class="form-control"   placeholder="请选择查询年月" value="${pd.busiDate}"/>
+										<input type="text" id="busiDate" name="busiDate"  class="form-control"   placeholder="请选择查询年月" value="${ pd.busiDate}"/>
 										<span class="input-group-addon">
 											<i class="ace-icon fa fa-calendar" ></i>
 										</span>
@@ -57,19 +80,17 @@
 								</td>								
 	<!-- 								<td style="padding-left:2px;"><input class="span10 date-picker" name="START_DATE" id="START_DATE"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="开始日期" title="开始日期"/></td> -->
 	<!-- 								<td style="padding-left:2px;"><input class="span10 date-picker" name="END_DATE" name="END_DATE"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="结束日期"/></td> -->
-									<!-- <td><label> <i class="ace-icon  bigger-110"></i>请选择单位：</label> </td> 
 									<td>
-											<div style="margin:10px 0px;">
+											<!-- <div style="margin:10px 0px;">
 													<input type="hidden" name="UNIT_CODE" id="UNIT_CODE"   />
 													<div class="selectTree" id="selectTree" style="float:none;display:block;"></div>												
-												</div>				
-										</td>-->	
+												</div>		 -->		
+										</td>	
 									<td style="padding-left:2px;">																		 
 													<button type="button" class="btn btn-info btn-xs" onclick="tosearch();">
 													    <i class="ace-icon fa fa-search bigger-110"></i>
 													</button>	
 									</td>	
-									
 									<td style="padding-left:6px;"><a class="btn btn-primary btn-xs inline pull-right" onclick="toExcel()">
 								<i class="ace-icon fa fa-share bigger-110"></i> <span>导出</span>
 							</a></td>
@@ -81,17 +102,12 @@
 						<table id="simple-table" class="mtable" style="margin-top:20px; width: 100%;">	
 							<thead>
 								<tr>
-									<th style="background-color: #BEBEC5; text-align: center;">序号</th>
-									<th style="background-color: #BEBEC5; text-align: center;">用户名</th>
-									<th style="background-color: #BEBEC5; text-align: center;">姓名</th>
-									<th  style="background-color: #BEBEC5; text-align: center;">用户组</th>
-									<th style="background-color: #BEBEC5; text-align: center;">帐号状态</th>
-									<th style="background-color: #BEBEC5; text-align: center;">有效期自</th>
-									<th style="background-color: #BEBEC5; text-align: center;">有效期至</th>
-									<th style="background-color: #BEBEC5; text-align: center;">单位</th>
-									<th style="background-color: #BEBEC5; text-align: center;">岗位</th>
-									<th style="background-color: #BEBEC5; text-align: center;">变更序号</th>
-									<th style="background-color: #BEBEC5; text-align: center;">电话</th>
+									<th style="width:60px; height:30px; background-color: #BEBEC5; text-align: center;">序号</th>
+									<th style="width:110px; height:30px; background-color: #BEBEC5; text-align: center;">业务模块</th>
+									<th style="width:110px; background-color: #BEBEC5; text-align: center;">申请人员工编号</th>
+									<th style="width:110px; background-color: #BEBEC5; text-align: center;">申请人员工姓名</th>
+									<th style="width:110px; background-color: #BEBEC5; text-align: center;">一级审批人员工编号</th>
+									<th style="width:110px; background-color: #BEBEC5; text-align: center;">一级审批人员工姓名</th>
 								</tr>
 							</thead>												
 							<tbody id="tobodyUser">
@@ -101,16 +117,11 @@
 										<c:forEach items="${varList}" var="var" varStatus="vs">	
 										<tr>
 											<td class='center'>${vs.index+1}</td>
-											<td class='center'>${var.USER_NAME}</td>
-											<td class='center'>${var.NAME}</td>
-											<td class='center'>${var.USER_GROUP}</td>
-											<td class='center'>${var.ACCOUNT_STATE}</td>
-											<td class='center'>${var.START_DATE}</td>
-											<td class='center'>${var.END_DATE}</td>
-											<td class='center'>${var.DEPART}</td>
-											<td class='center'>${var.JOB}</td>
-											<td class='center'>${var.CHANGE_NO}</td>
-											<td class='center'>${var.PHONE}</td>
+											<td class='center'>${var.BUSINESS_MODULE}</td>
+											<td class='center'>${var.STAFF_CODE}</td>
+											<td class='center'>${var.STAFF_NAME}</td>
+											<td class='center'>${var.STAFF_CODE_APPROVAL1}</td>
+											<td class='center'>${var.STAFF_NAME_APPROVAL1}</td>
 										</tr>									
 									</c:forEach>																		
 								</c:when>
@@ -162,10 +173,10 @@
 			$(top.hangge());//关闭加载状态
 		
 			//检索
-			function tosearch9999(){
+			function tosearch1111(){
 				top.jzts();
 				$("#Form").submit();
-			}			
+			}
 			$(function() {
 				//日期
 				$("#busiDate").datepicker({
@@ -176,20 +187,21 @@
 				    minViewMode: 1,
 				    maxViewMode: 1
 				});
-			})		
+			})
+		
 			  function toExcel(){
-					window.location.href='<%=basePath%>erpuserlist/listStatisticExcel.do?busiDate='+$("#busiDate").val()+'&UNIT_CODE='+$("#UNIT_CODE").val();	    
+				window.location.href='<%=basePath%>grcapprovalmatrix/listStatisticExcel.do?BUSI_DATE='+$("#busiDate").val()+'&UNIT_CODE='+$("#UNIT_CODE").val();  
 			    }
 			//检索
 			function tosearch(){
-				location.href = '<%=basePath%>erpuserlist/queryList.do?busiDate='+$("#busiDate").val()+'&UNIT_CODE='+$("#UNIT_CODE").val()
+				location.href = '<%=basePath%>grcapprovalmatrix/queryList.do?busiDate='+$("#busiDate").val()+'&UNIT_CODE='+$("#UNIT_CODE").val()
 				<%-- $("#tobodyUser tr").remove();
 				top.jzts();
 				var busiDate = $("#busiDate").val();
 				var unitCode = $("#UNIT_CODE").val();				
 				$.ajax({
 						type: "POST",
-						url: '<%=basePath%>erpuserlist/queryDataList.do',
+						url: '<%=basePath%>grcperson/queryDataList.do',
 				    	data: {busiDate:busiDate,UNIT_CODE:unitCode},
 						dataType:'json',
 						cache: false,
@@ -205,33 +217,40 @@
 						}
 				}); --%>
 			}
+			/* GRC人员信息 */
+			function toGRCPerson(){
+				window.location.href='<%=basePath%>grcperson/queryList.do';
+			}
+			
+			/* GRC审批矩阵 */
+			function toGRCApprovalMatrix(){
+				window.location.href='<%=basePath%>grcapprovalmatrix/queryList.do';
+			}
 			function setUserTable(item,i){
 				rows='<tr><td class="center" style="width: 30px;">'
 					+i 
 					+"</td><td class='center'>"
-					+item.USER_NAME
+					+item.STAFF_CODE
 					+"</td><td class='center'>"
-					+item.NAME
+					+item.STAFF_NAME
 					+"</td><td class='center'>"
-					+item.USER_GROUP
+					+item.STAFF_UNIT
 					+"</td><td class='center'>"
-					+item.ACCOUNT_STATE
+					+item.STAFF_DEPART
 					+"</td><td class='center'>"
-					+item.START_DATE
+					+item.STAFF_POSITION
 					+"</td><td class='center'>"
-					+item.END_DATE
-					+"</td><td class='center'>"
-					+item.DEPART
-					+"</td><td class='center'>"
-					+item.JOB
-					+"</td><td class='center'>"
-					+item.CHANGE_NO
+					+item.STAFF_JOB
 					+"</td><td class='center'>"
 					+item.PHONE
+					+"</td><td class='center'>"
+					+item.MOBILE_PHONE
+					+"</td><td class='center'>"
+					+item.ZSY_MAIL
 					+'</td></tr>';				
 					return rows;	
-			}			
-			function initComplete(){
+			}		
+			/* function initComplete(){
 					//下拉树
 					var defaultNodes = {"treeNodes":${zTreeNodes}};
 					//绑定change事件
@@ -245,7 +264,7 @@
 					//赋给data属性
 					$("#selectTree").data("data",defaultNodes);  
 					$("#selectTree").render();
-				}	
+				}	 */
 	</script>
 
 

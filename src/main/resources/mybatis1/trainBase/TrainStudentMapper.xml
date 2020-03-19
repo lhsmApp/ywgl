@@ -23,6 +23,7 @@
 	
 	<!-- 字段 -->
 	<sql id="InsertField">
+		STUDENT_ID,
 		STUDENT_CODE,
 		PASSWORD,	
 		STUDENT_NAME,
@@ -36,10 +37,12 @@
 	
 	<!-- 字段值 -->
 	<sql id="FieldValue">
+		#{STUDENT_ID},
 		#{STUDENT_CODE},
 		#{PASSWORD},
-		#{STUDENT_NAME},	
+		#{STUDENT_NAME},
 		#{ROLE_ID},
+		<!-- 'a8bcf49238da4d13a445d162a361be7a', -->
 		#{ACCOUNT},
 		#{UNIT_CODE},	
 		#{DEPART_CODE},	

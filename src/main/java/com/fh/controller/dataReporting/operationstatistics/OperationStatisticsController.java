@@ -165,6 +165,8 @@ public class OperationStatisticsController extends BaseController {
 		mv.addObject("QX", Jurisdiction.getHC()); // 按钮权限
 
 		// ***********************************************************
+		Map_SetColumnsList.clear();
+		Map_SetColumnsList.put("BUSI_DATE", new TmplConfigDetail("BUSI_DATE", "录入日期", "1", false));
 		Map_SetColumnsList.put("COMPANY_NAME", new TmplConfigDetail("COMPANY_NAME", "单位", "1", false));
 		Map_SetColumnsList.put("AGENCY_OPER_NUM", new TmplConfigDetail("AGENCY_OPER_NUM", "机关计算机运维数量", "1", false));
 		Map_SetColumnsList.put("NETWORK_OPER_NUM", new TmplConfigDetail("NETWORK_OPER_NUM", "网络运维数量", "1", false));

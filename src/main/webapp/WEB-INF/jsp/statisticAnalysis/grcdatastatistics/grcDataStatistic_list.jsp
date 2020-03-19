@@ -41,6 +41,29 @@
 		<div class="main-content">
 			<div class="main-content-inner">
 				<div class="page-content">
+				<div class="page-header">
+						<table style="width:100%;">
+							<tbody>
+								<tr>
+									<td>
+										<div class="pull-right">
+											<span class="green middle bolder">填报类型: &nbsp;</span>
+											<div class="btn-toolbar inline middle no-margin">
+												<div data-toggle="buttons" class="btn-group no-margin">
+													<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toGRCPerson()">
+														<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>GRC人员信息</span>
+													</button>
+													<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toGRCApprovalMatrix()">
+															<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>GRC审批矩阵</span>
+													</button>
+												</div>
+											</div>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 					<div class="row">
 						<div class="col-xs-12">							
 						<!-- 检索  -->
@@ -49,7 +72,7 @@
 								<tr>							
 								<td style="padding-left:2px;">
 									<div class="input-group input-group-sm">
-										<input type="text" id="busiDate" name="busiDate"  class="form-control"   placeholder="请选择查询年月" />
+										<input type="text" id="busiDate" name="busiDate"  class="form-control"   placeholder="请选择查询年月" value="${ pd.busiDate}"/>
 										<span class="input-group-addon">
 											<i class="ace-icon fa fa-calendar" ></i>
 										</span>
@@ -57,7 +80,6 @@
 								</td>								
 	<!-- 								<td style="padding-left:2px;"><input class="span10 date-picker" name="START_DATE" id="START_DATE"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="开始日期" title="开始日期"/></td> -->
 	<!-- 								<td style="padding-left:2px;"><input class="span10 date-picker" name="END_DATE" name="END_DATE"  value="" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="结束日期"/></td> -->
-									<td><label> <i class="ace-icon  bigger-110"></i>请选择单位：</label> </td>
 									<td>
 											<div style="margin:10px 0px;">
 													<input type="hidden" name="UNIT_CODE" id="UNIT_CODE"   />
@@ -176,11 +198,21 @@
 			})
 		
 			  function toExcel(){
-				window.location.href='<%=basePath%>grcperson/listStatisticExcel.do?busiDate='+$("#busiDate").val()+'&UNIT_CODE='+$("#UNIT_CODE").val();  
+				window.location.href='<%=basePath%>grcperson/listStatisticExcel.do?BUSI_DATE='+$("#busiDate").val()+'&UNIT_CODE='+$("#UNIT_CODE").val();  
 			    }
+			/* GRC人员信息 */
+			function toGRCPerson(){
+				window.location.href='<%=basePath%>grcperson/queryList.do';
+			}
+			
+			/* GRC审批矩阵 */
+			function toGRCApprovalMatrix(){
+				window.location.href='<%=basePath%>grcapprovalmatrix/queryList.do';
+			}
 			//检索
 			function tosearch(){
-				$("#tobodyUser tr").remove();
+				location.href = '<%=basePath%>grcperson/queryList.do?busiDate='+$("#busiDate").val()+'&UNIT_CODE='+$("#UNIT_CODE").val()
+				<%-- $("#tobodyUser tr").remove();
 				top.jzts();
 				var busiDate = $("#busiDate").val();
 				var unitCode = $("#UNIT_CODE").val();				
@@ -200,7 +232,7 @@
 							}
 							top.hangge();
 						}
-				});
+				}); --%>
 			}
 			function setUserTable(item,i){
 				rows='<tr><td class="center" style="width: 30px;">'

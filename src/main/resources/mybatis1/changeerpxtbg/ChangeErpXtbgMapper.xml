@@ -286,11 +286,15 @@
 				x.DEPARTMENT_CODE = t.USER_DEPT
 				) AS h
 		<where>
+			<if test="pd.BILL_USER!= null and pd.BILL_USER != ''">
+			AND
 			(BILL_USER=#{pd.BILL_USER}
-			or
+				or
 			USER_CODE=#{pd.BILL_USER})
-<!-- 		 AND -->
-<!-- 		(APPROVAL_STATE='2' OR  APPROVAL_STATE='' OR APPROVAL_STATE IS NULL) -->
+ 			</if>
+ 			<if test="pd.UNIT_CODE!= null and pd.UNIT_CODE != ''">
+			AND UNIT_CODE=#{pd.UNIT_CODE}			
+ 			</if>
 		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
 			and
 				(

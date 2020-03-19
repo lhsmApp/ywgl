@@ -157,13 +157,16 @@
 	
 	<!-- *********************导入导出********************************* -->
 	<!-- 导出列表 -->
-	<select id="exportList" parameterType="Page" resultType="pd">
+	<select id="exportList" parameterType="page" resultType="pd">
 		select 
 			<include refid="Field"></include>
 		from 
 			<include refid="tableName"></include>
 		where 
 			STATE = 1
+			<if test="pd.BUSI_DATE!= null and pd.BUSI_DATE!= ''">
+			and BUSI_DATE = #{pd.BUSI_DATE}
+			</if>
 		order by 
 			ID
 	</select>

@@ -70,6 +70,7 @@
 			DEPART = #{DEPART},
 			JOB = #{JOB},
 			CHANGE_NO = #{CHANGE_NO},
+			USER_DEPART = #{USER_DEPART},
 			PHONE = #{PHONE}
 		where 
 		ID = #{ID}
@@ -137,6 +138,12 @@
 			<include refid="tableName"></include>
 		where 
 			STATE = 1
+			<if test="pd.BUSI_DATE!= null and pd.BUSI_DATE!= ''">
+			and BUSI_DATE = #{pd.BUSI_DATE}
+			</if>
+			<if test="pd.USER_DEPART!= null and pd.USER_DEPART!= ''">
+			and USER_DEPART = #{pd.USER_DEPART}
+		</if>
 		order by 
 			ID,BUSI_DATE
 	</select>

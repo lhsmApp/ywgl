@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +30,7 @@ import com.fh.util.AppUtil;
 import com.fh.util.Const;
 import com.fh.util.ObjectExcelView;
 import com.fh.util.PageData;
+import com.fh.util.StringUtil;
 import com.fh.util.Jurisdiction;
 import com.fh.util.Tools;
 import com.fh.util.date.DateUtils;
@@ -40,6 +42,7 @@ import com.fh.service.billnum.BillNumManager;
 import com.fh.service.changeerpxtbg.changeerpjsbg.ChangeErpJsbgManager;
 import com.fh.service.changeerpxtbg.changeerpxtbg.ChangeErpXtbgManager;
 import com.fh.service.fhoa.department.DepartmentManager;
+import com.fh.service.sysConfig.sysconfig.SysConfigManager;
 import com.fh.service.system.dictionaries.DictionariesManager;
 import com.fh.service.system.user.UserManager;
 
@@ -70,6 +73,9 @@ public class ChangeErpJsbgController extends BaseController {
 	
 	@Resource(name = "userService")
 	private UserManager userService;
+	
+	@Resource(name = "sysconfigService")
+	private SysConfigManager sysconfigService;
 	
 	/**保存
 	 * @param
@@ -193,13 +199,50 @@ public class ChangeErpJsbgController extends BaseController {
 		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
+		PageData pd1 = new PageData();
+		PageData pd2 = new PageData();
 		pd = this.getPageData();
 		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 	    String userId=user.getUSER_ID();
+	    String roleId = user.getRole().getROLE_ID();//获取当前用户所属角色ID
+	    String unitCode=user.getUNIT_CODE();//获取当前用户所属单位
+		pd1.put("KEY_CODE", "xxglbRoles");//信息管理部角色
+		pd2.put("KEY_CODE", "jcdwczyRoles");//基层单位操作员角色
+		String roleStr = sysconfigService.getSysConfigByKey(pd1);
+		String roleStr2 = sysconfigService.getSysConfigByKey(pd2);
+		String[] roles = null;
+		if (StringUtil.isNotEmpty(roleStr)) {
+			if (roleStr.contains(",")) {
+				roles = roleStr.split(",");
+			} else {
+				roles = new String[1];
+				roles[0] = roleStr;
+			}
+		}
+		String[] roles2 = null;
+		if (StringUtil.isNotEmpty(roleStr)) {
+			if (roleStr2.contains(",")) {
+				roles2 = roleStr2.split(",");
+			} else {
+				roles2 = new String[1];
+				roles2[0] = roleStr2;
+			}
+		}
 	    pd.put("BILL_USER", userId);	
 		String keywords = pd.getString("keywords");	
 		if(null != keywords && !"".equals(keywords)){
 			pd.put("keywords", keywords.trim());
+		}
+		if (null != roles && !"".equals(roles)) {
+			if (Arrays.asList(roles).contains(roleId)){
+				pd.put("BILL_USER", "");
+			}
+		}
+		if (null != roles2 && !"".equals(roles2)){
+			if (Arrays.asList(roles2).contains(roleId)){
+				pd.put("BILL_USER", "");
+				pd.put("UNIT_CODE", unitCode);
+			}
 		}
 		page.setPd(pd);
 		List<PageData>	varList = changeerpjsbgService.list(page);	//列出ChangeErpXtbg列表

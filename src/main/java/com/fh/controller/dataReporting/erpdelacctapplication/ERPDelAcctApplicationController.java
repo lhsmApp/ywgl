@@ -175,6 +175,7 @@ public class ERPDelAcctApplicationController extends BaseController {
         mv.addObject("pd", pd);
         mv.addObject("QX", Jurisdiction.getHC()); // 按钮权限
 //        mv.addObject("mandatory", mandatory);
+        Map_SetColumnsList.put("BUSI_DATE", new TmplConfigDetail("BUSI_DATE", "录入时间", "1", false));
         Map_SetColumnsList.put("STAFF_CODE", new TmplConfigDetail("STAFF_CODE", "员工编号", "1", false));
         Map_SetColumnsList.put("STAFF_NAME", new TmplConfigDetail("STAFF_NAME", "员工姓名", "1", false));
         Map_SetColumnsList.put("DEPART_CODE", new TmplConfigDetail("DEPART_CODE", "二级单位", "1", false));
@@ -279,6 +280,8 @@ public class ERPDelAcctApplicationController extends BaseController {
         pd = this.getPageData();
         pd.put("confirmState", pd.get("confirmState")); //1未上报 2已上报 3撤销上报 4已驳回
         pd.put("BUSI_DATE", pd.get("BUSI_DATE")); //月份
+        User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		pd.put("USER_DEPART", user.getUNIT_CODE()); //单位
         page.setPd(pd);
         List<PageData> varOList = erpdelacctapplicationService.exportList(page);
         return export(varOList, "", Map_SetColumnsList);
