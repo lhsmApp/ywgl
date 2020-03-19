@@ -15,13 +15,13 @@
 <!-- jsp文件头和头部 -->
 <%@ include file="../../system/index/top.jsp"%>
 <!-- 树形下拉框start -->
-<script type="text/javascript" src="plugins/selectZtree/selectTree.js"></script>
+<!-- <script type="text/javascript" src="plugins/selectZtree/selectTree.js"></script>
 <script type="text/javascript" src="plugins/selectZtree/framework.js"></script>
 <link rel="stylesheet" type="text/css"
 	href="plugins/selectZtree/import_fh.css" />
 <script type="text/javascript" src="plugins/selectZtree/ztree/ztree.js"></script>
 <link type="text/css" rel="stylesheet"
-	href="plugins/selectZtree/ztree/ztree.css"></link>
+	href="plugins/selectZtree/ztree/ztree.css"></link> -->
 <!-- 树形下拉框end -->
 <!-- 下拉框 -->
 <link rel="stylesheet" href="static/ace/css/chosen.css" />
@@ -87,27 +87,17 @@
 												</select>
 											</span>
 											<span class="pull-left" style="margin-right: 5px;"> 
-												<%-- <select
-													class="chosen-select form-control" name="BILL_OFF"
-													id="BILL_OFF" data-placeholder="请选择帐套"
-													style="vertical-align: top; height: 32px; width: 150px;">
-														<option value="">请选择帐套</option>
-														<c:forEach items="${fmisacc}" var="fmi">
-															<option value="${fmi.DICT_CODE}">${fmi.NAME}</option>
-														</c:forEach>
-												</select> --%>
-												
 												<input id="BILL_OFF" value="9870" class="hidden" type="text">
 											</span>
-											<span class="pull-left" style="margin-right: 5px;">
+											<!-- <span class="pull-left" style="margin-right: 5px;">
 												<div class="selectTree" id="selectTree" multiMode="false"
 													allSelectable="false" noGroup="false"></div>
-											</span>
-											<span class="input-icon pull-left" style="margin-right: 5px;">
+											</span> -->
+											<!-- <span class="input-icon pull-left" style="margin-right: 5px;">
 												<input id="busiDate" class="input-mask-date" type="text"
 												placeholder="请输入业务区间"> <i
 												class="ace-icon fa fa-calendar blue"></i>
-											</span>
+											</span> -->
 											<button type="button" class="btn btn-info btn-sm" onclick="tosearch();">
 												<i class="ace-icon fa fa-search bigger-110"></i>
 											</button>
@@ -165,7 +155,7 @@
 		
 		$(top.hangge());//关闭加载状态
 		$('.input-mask-date').mask('999999');
-		$("#busiDate").val('${pd.busiDate}');
+		/* $("#busiDate").val('${pd.busiDate}'); */
 		
 		//resize to fit page size
 		$(window).on('resize.jqGrid', function () {
@@ -179,23 +169,23 @@
 			datatype: "json",
 			 colModel: [
 				//隐藏where条件
-				{ label: '期间', name: 'RPT_DUR', width: 60,hidden : true,editable: true,},
+				/* { label: '期间', name: 'RPT_DUR', width: 60,hidden : true,editable: true,}, */
 				/* { label: '帐套', name: 'BILL_OFF', width: 60,hidden : true,editable: true,}, */
-				{ label: '单位编码', name: 'DEPT_CODE', width: 60,hidden : true,editable: true,},
+				/* { label: '单位编码', name: 'DEPT_CODE', width: 60,hidden : true,editable: true,}, */
 				{ label: '表编码', name: 'TABLE_CODE', width: 60,hidden : true,editable: true,},
 				{ label: '列编码', name: 'COL_CODE', width: 60,hidden : true,editable: true,},
 				
-				{ label: '业务期间',name:'RPT_DUR', width:60}, 
+				/* { label: '业务期间',name:'RPT_DUR', width:60},  */
 				/* { label: '帐套', name: 'BILL_OFF', width: 80,align:'center',editable: true,edittype: 'select',formatter:'select',formatteroptions:{value:"${dictBillOffString}"},editoptions:{value:"${dictBillOffString}"}}, */
-				{ label: '单位',name:'DNAME', width:100}, 
+				/* { label: '单位',name:'DNAME', width:100}, */ 
 				{ label: '表名', name: 'TABLE_NAME', width: 90},
 				{ label: '列编码', name: 'COL_CODE', width: 60},
 				{ label: '列名称', name: 'COL_NAME', width: 60,editable: true,},
 				{ label: '显示序号', name: 'DISP_ORDER', width: 80,formatter: 'int', sorttype: 'number',editable: true,},
-				{ label: '字典翻译', name: 'DICT_TRANS', width: 80,align:'center',editable: true,edittype: 'select',formatter:'select',formatteroptions:{value:"${dictString}"},editoptions:{value:"${dictString}"}},                  
-				{ label: '列显示', name: 'COL_HIDE', width: 80, editable: true,align:'center',edittype:"checkbox",editoptions: {value:"1:0"},unformat: aceSwitch,formatter: customFmatterState},                   
-				{ label: '列汇总', name: 'COL_SUM', width: 80, editable: true,align:'center',edittype:"checkbox",editoptions: {value:"1:0"},unformat: aceSwitch,formatter: customFmatterState},                   
-				{ label: '列平均值', name: 'COL_AVE', width: 80, editable: true,align:'center',edittype:"checkbox",editoptions: {value:"1:0"},unformat: aceSwitch,formatter: customFmatterState}
+				/* { label: '字典翻译', name: 'DICT_TRANS', width: 80,align:'center',editable: true,edittype: 'select',formatter:'select',formatteroptions:{value:"${dictString}"},editoptions:{value:"${dictString}"}},  */                
+				{ label: '列显示', hidden : true,name: 'COL_HIDE', width: 80, editable: true,align:'center',edittype:"checkbox",editoptions: {value:"1:0"},unformat: aceSwitch,formatter: customFmatterState},                   
+				{ label: '列汇总', hidden : true,name: 'COL_SUM', width: 80, editable: true,align:'center',edittype:"checkbox",editoptions: {value:"1:0"},unformat: aceSwitch,formatter: customFmatterState},                   
+				{ label: '列平均值', hidden : true,name: 'COL_AVE', width: 80, editable: true,align:'center',edittype:"checkbox",editoptions: {value:"1:0"},unformat: aceSwitch,formatter: customFmatterState} 
 				/* { label: '是否传输', name: 'COL_TRANSFER', width: 80, editable: true,align:'center',edittype:"checkbox",editoptions: {value:"1:0"},unformat: aceSwitch,formatter: customFmatterState} */
 			],
 			reloadAfterSubmit: true, 
@@ -410,7 +400,7 @@
 		}
 	};
 	
-	function initComplete(){
+	/* function initComplete(){
 		//下拉树
 		var defaultNodes = {"treeNodes":${zTreeNodes}};
 		//绑定change事件
@@ -427,7 +417,7 @@
 		$("#selectTree2_input").val('${pd.rootDepartName}');
 		document.getElementById("DEPARTMENT_CODE").value='${pd.rootDepartCode}'; 
 		document.getElementById("DNAME").value='${pd.rootDepartName}'; //总部
-	}
+	} */
 	
 	//检索
 	function tosearch() {
@@ -460,12 +450,13 @@
 		var DEPARTMENT_CODE = $("#DEPARTMENT_CODE").val(); 
 		var TABLE_NAME = $("#KPI_CODE").find("option:selected").text();
 		var DNAME = $("#DNAME").val(); 
-		var busiDate = $("#busiDate").val(); 
+		/* var busiDate = $("#busiDate").val();  */
 		$("#jqGrid").jqGrid('setGridParam',{  // 重新加载数据
 			url:'<%=basePath%>tmplconfig/getPageList.do?KPI_CODE='+KPI_CODE
 			+'&BILL_OFF='+fmi
 			+'&DEPARTMENT_CODE='+DEPARTMENT_CODE
-			+'&RPT_DUR='+busiDate+'&TABLE_NAME='+TABLE_NAME+'&DNAME='+DNAME,  
+			/* +'&RPT_DUR='+busiDate */
+			+'&TABLE_NAME='+TABLE_NAME+'&DNAME='+DNAME,  
 			datatype:'json',
 		      page:1
 		}).trigger("reloadGrid");
@@ -486,14 +477,14 @@
 		}
        	var KPI_CODE = $("#KPI_CODE").val(); 
 		var DEPARTMENT_CODE = $("#DEPARTMENT_CODE").val(); 
-		var busiDate = $("#busiDate").val(); 
+		/* var busiDate = $("#busiDate").val();  */
        	 top.jzts();
 		 var diag = new top.Dialog();
 		 diag.Drag = true;
 		 diag.Title = "复制";
 		 diag.URL = '<%=basePath%>department/listAllDepartmentCopy.do?KPI_CODE='+KPI_CODE
 				 +'&DEPARTMENT_CODE='+DEPARTMENT_CODE
-				 +'&RPT_DUR='+busiDate
+				 /* +'&RPT_DUR='+busiDate */
 				 +'&local=tmplconfig';
 		 diag.Width = 320;
 		 diag.Height = 450;

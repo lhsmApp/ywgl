@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AssessDepartMapper">
+	
+	<resultMap type="AssessDepart" id="assessdepartResultMap">
+		<id column="DEPART_CODE" property="ASSESSDEPART_ID"/>
+		<result column="DEPART_NAME" property="NAME"/>
+		<result column="DEPART_PARENT_CODE" property="PARENT_ID"/>
+	</resultMap>
+	
+	<!--表名 -->
+	<sql id="tableName">
+		tb_assess_depart
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		DEPART_ID,	
+		DEPART_CODE,	
+		DEPART_NAME,	
+		DEPART_PARENT_CODE,	
+		LOCAL_DEPART_CODE,
+		IS_MERGE_DEPART,	
+		STATE
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="InsertField">
+		DEPART_CODE,
+		DEPART_NAME,	
+		DEPART_PARENT_CODE,	
+		LOCAL_DEPART_CODE,
+		IS_MERGE_DEPART,	
+		STATE
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{DEPART_CODE},	
+		#{DEPART_NAME},	
+		#{DEPART_PARENT_CODE},	
+		#{LOCAL_DEPART_CODE},	
+		#{IS_MERGE_DEPART},
+		#{STATE}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="InsertField"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			DEPART_ID = #{ASSESSDEPART_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			DEPART_CODE = #{DEPART_CODE},
+			DEPART_NAME = #{DEPART_NAME},
+			DEPART_PARENT_CODE = #{DEPART_PARENT_CODE},
+			LOCAL_DEPART_CODE = #{LOCAL_DEPART_CODE},
+			IS_MERGE_DEPART = #{IS_MERGE_DEPART},
+			STATE = #{STATE}
+		where 
+		DEPART_ID = #{DEPART_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			DEPART_ID = #{ASSESSDEPART_ID}
+	</select>
+	
+	<!-- 通过Code获取数据 -->
+	<select id="findByCode" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			DEPART_CODE = #{DEPART_CODE}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select A.*,B.NAME as LOCAL_DEPART_NAME 
+		from 
+		<include refid="tableName"></include> A
+		left join 
+		oa_department B
+		on A.LOCAL_DEPART_CODE=B.DEPARTMENT_CODE 
+		<where>
+			<if test="pd.ASSESSDEPART_ID!= null and pd.ASSESSDEPART_ID != ''"><!-- 检索 -->
+			and DEPART_PARENT_CODE = #{pd.ASSESSDEPART_ID}
+			</if>
+			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+				and
+				`DEPART_NAME` LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+			</if>
+		</where>
+	</select>
+	
+	<!-- 通过ID获取其子级列表 -->
+	<select id="listByParentId" parameterType="String" resultMap="assessdepartResultMap">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			DEPART_PARENT_CODE = #{parentId} order by DEPART_PARENT_CODE,DEPART_CODE 
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+	</select>
+	
+	<!-- 通过ID获取其子级列表 -->
+	<select id="listSubAssessDepartByParentId" parameterType="String" resultMap="assessdepartResultMap">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			DEPART_PARENT_CODE = #{parentId} order by DEPART_CODE 
+	</select>
+</mapper>

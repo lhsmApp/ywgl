@@ -64,7 +64,7 @@ public class AssessDataService implements AssessDataManager{
 			list= (List<PageData>)dao.findForList("IntegrateVoucherCxMapper.datalistJqPage", page);
 			break;
 		default:
-			list= (List<PageData>)dao.findForList("NewAssetsBpdMapper.datalistJqPage", page);
+			list= (List<PageData>)dao.findForList("KhTotalMapper.datalistJqPage", page);
 			break;
 		}
 		return list;
@@ -113,7 +113,7 @@ public class AssessDataService implements AssessDataManager{
 			count=(int)dao.findForObject("IntegrateVoucherCxMapper.countJqGridExtend", page);
 			break;	
 		default:
-			count=(int)dao.findForObject("NewAssetsBpdMapper.countJqGridExtend", page);
+			count=(int)dao.findForObject("KhTotalMapper.countJqGridExtend", page);
 			break;
 		}
 		return count;
@@ -162,7 +162,7 @@ public class AssessDataService implements AssessDataManager{
 			pageData=(PageData)dao.findForObject("IntegrateVoucherCxMapper.getFooterSummary", page);
 			break;
 		default:
-			pageData=(PageData)dao.findForObject("NewAssetsBpdMapper.getFooterSummary", page);
+			pageData=(PageData)dao.findForObject("KhTotalMapper.getFooterSummary", page);
 			break;
 		}
 		return pageData;
@@ -175,6 +175,57 @@ public class AssessDataService implements AssessDataManager{
 	@SuppressWarnings("unchecked")
 	public List<PageData> getRepeat(List<PageData> listData)throws Exception{
 		return (List<PageData>)dao.findForList("NewAssetsBpdMapper.getRepeat", listData);
+	}
+	
+	/**用于当前月份是否已经导入过数据
+	 * @param pd
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public PageData checkRepeat(String kpiCode,String busiDate)throws Exception{
+		PageData pageData;
+		switch (kpiCode) {
+		case "Z1AM1":
+			pageData= (PageData)dao.findForObject("NewAssetsBpdMapper.checkRepeat", busiDate);
+			break;
+		case "Z1AM2":
+			pageData= (PageData)dao.findForObject("AmsAotdMapper.checkRepeat", busiDate);
+			break;
+		case "Z1FI1":
+			pageData= (PageData)dao.findForObject("FmisCfttditMapper.checkRepeat", busiDate);
+			break;
+		case "Z1MM1":
+			pageData= (PageData)dao.findForObject("PiNitMapper.checkRepeat", busiDate);
+			break;
+		case "Z1MM2":
+			pageData= (PageData)dao.findForObject("PaToNitMapper.checkRepeat", busiDate);
+			break;
+		case "Z1PS1":
+			pageData= (PageData)dao.findForObject("ProjectScheduleNitMapper.checkRepeat", busiDate);
+			break;
+		case "Z2AM1":
+			pageData= (PageData)dao.findForObject("NewAssetsCardMapper.checkRepeat", busiDate);
+			break;
+		case "Z2MM1":
+			pageData= (PageData)dao.findForObject("UmdMapper.checkRepeat", busiDate);
+			break;
+		case "Z2PM1":
+			pageData= (PageData)dao.findForObject("EliMapper.checkRepeat", busiDate);
+			break;
+		case "Z2PS1":
+			pageData= (PageData)dao.findForObject("IncompleteProMapper.checkRepeat", busiDate);
+			break;
+		case "Z3AM1":
+			pageData= (PageData)dao.findForObject("AssetsCxMapper.checkRepeat", busiDate);
+			break;
+		case "Z3FI2":
+			pageData= (PageData)dao.findForObject("IntegrateVoucherCxMapper.checkRepeat", busiDate);
+			break;
+		default:
+			pageData= (PageData)dao.findForObject("KhTotalMapper.checkRepeat", busiDate);
+			break;
+		}
+		return pageData; 
 	}
 	
 	/**导出列表
@@ -222,7 +273,7 @@ public class AssessDataService implements AssessDataManager{
 			list= (List<PageData>)dao.findForList("IntegrateVoucherCxMapper.exportList", page);
 			break;
 		default:
-			list= (List<PageData>)dao.findForList("NewAssetsBpdMapper.exportList", page);
+			list= (List<PageData>)dao.findForList("KhTotalMapper.exportList", page);
 			break;
 		}
 		return list; 
@@ -272,7 +323,7 @@ public class AssessDataService implements AssessDataManager{
 			list= (List<PageData>)dao.findForList("IntegrateVoucherCxMapper.exportModel", pd);
 			break;
 		default:
-			list= (List<PageData>)dao.findForList("NewAssetsBpdMapper.exportModel", pd);
+			list= (List<PageData>)dao.findForList("KhTotalMapper.exportModel", pd);
 			break;
 		}
 		return list; 
@@ -321,7 +372,7 @@ public class AssessDataService implements AssessDataManager{
 			dao.delete("IntegrateVoucherCxMapper.deleteAll", listData);
 			break;
 		default:
-			dao.delete("NewAssetsBpdMapper.deleteAll", listData);
+			dao.delete("KhTotalMapper.deleteAll", listData);
 			break;
 		}
 		
@@ -370,7 +421,7 @@ public class AssessDataService implements AssessDataManager{
 			dao.update("IntegrateVoucherCxMapper.batchDelAndIns", listData);
 			break;
 		default:
-			dao.update("NewAssetsBpdMapper.batchDelAndIns", listData);
+			dao.update("KhTotalMapper.batchDelAndIns", listData);
 			break;
 		}
 		
@@ -419,7 +470,7 @@ public class AssessDataService implements AssessDataManager{
 			dao.update("IntegrateVoucherCxMapper.batchCoverAdd", listData);
 			break;
 		default:
-			dao.update("NewAssetsBpdMapper.batchCoverAdd", listData);
+			dao.update("KhTotalMapper.batchCoverAdd", listData);
 			break;
 		}
 		

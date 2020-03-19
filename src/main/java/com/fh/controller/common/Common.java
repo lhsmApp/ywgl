@@ -170,6 +170,20 @@ public class Common {
 		}
 		return m_SetColumnsList;
 	}
+	public static Map<String, TmplConfigDetail> GetSetColumnsListByTableName(String tableName, String departCode, String billOff,
+			TmplConfigManager tmplconfigService) throws Exception{
+		Map<String, TmplConfigDetail> m_SetColumnsList = new LinkedHashMap<String, TmplConfigDetail>();
+		
+		// 前端数据表格界面字段,动态取自tb_tmpl_config_detail，根据当前单位编码及表名获取字段配置信息
+		List<TmplConfigDetail> m_columnsList = Common.getShowColumnList(tableName, departCode, billOff,tmplconfigService);
+		if (m_columnsList != null && m_columnsList.size() > 0) {
+			for (int i = 0; i < m_columnsList.size(); i++) {
+				String getCOL_CODE = m_columnsList.get(i).getCOL_CODE();
+				m_SetColumnsList.put(getCOL_CODE, m_columnsList.get(i));
+			}
+		}
+		return m_SetColumnsList;
+	}
 
 	//查询记录，带公式
 	public static String GetRetSelectColoumns(Map<String, TableColumns> haveColumnsList,
@@ -680,7 +694,7 @@ public class Common {
 		}
 		pd.put("InsertField", InsertField);
 		pd.put("InsertVale", InsertVale);
-		pd.put("InsertLogVale", InsertLogVale);
+		//pd.put("InsertLogVale", InsertLogVale);
 	}
 	
 	public static void setSumDetailSave(PageData bill, Map<String, TableColumns> haveColumnsList, 

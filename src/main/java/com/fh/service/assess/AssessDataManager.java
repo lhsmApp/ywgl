@@ -34,6 +34,13 @@ public interface AssessDataManager{
 	 */
 	public List<PageData> getRepeat(List<PageData> listData)throws Exception;
 
+	/**用于当前月份是否已经导入过数据
+	 * @param pd
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public PageData checkRepeat(String kpiCode,String busiDate)throws Exception;
+	
 	/**导出列表
 	 * @param page
 	 * @throws Exception

@@ -53,7 +53,7 @@
 								    <span class="label label-xlg label-success arrowed-right">考核管理</span>
 									<!-- arrowed-in-right --> 
 									<span class="label label-xlg label-yellow arrowed-in arrowed-right"
-									    id="subTitle" style="margin-left: 2px;">数据导入</span> 
+									    id="subTitle" style="margin-left: 2px;">排行榜</span> 
                                     <span style="border-left: 1px solid #e2e2e2; margin: 0px 10px;">&nbsp;</span>
 								
 									<button id="btnQuery" class="btn btn-white btn-info btn-sm"
@@ -78,20 +78,6 @@
 												  placeholder="请输入业务区间"> 
 												<i class="ace-icon fa fa-calendar blue"></i>
 											</span>
-											<span class="pull-left" style="margin-right: 5px;">
-													<select class="chosen-select form-control"
-														name="KPI_CODE" id="KPI_CODE"
-														style="vertical-align: top; height:32px;width: 150px;">
-														<option value="">请选择考核指标</option>
-														<c:forEach items="${listKPI}" var="each">
-															<%-- <option value="${each.KPI_CODE}">${each.KPI_NAME}</option> --%>
-															
-															<option value="${each.KPI_CODE}"
-																<c:if test="${pd.KPI_CODE==each.KPI_CODE}">selected</c:if>>${each.KPI_NAME}
-															</option>
-														</c:forEach>
-													</select>
-											</span>
 											<button type="button" class="btn btn-info btn-sm" onclick="tosearch();">
 												<i class="ace-icon fa fa-search bigger-110"></i>
 											</button>
@@ -104,82 +90,7 @@
 
 					<div class="row">
 						<div class="col-xs-12">
-							<ul class="nav nav-tabs" id="assess-tab">
-								<li class="active" tag="kpi-tab">
-									<a data-toggle="tab" href="#kpi-tab">考核指标说明</a>
-								</li>
-
-								<li tag="import-tab">
-									<a data-toggle="tab" href="#import-tab">考核数据查询</a>
-								</li>
-							</ul>
 							<div class="tab-content padding-8">
-								<div id="kpi-tab" class="tab-pane active">
-									<h3 class="lighter block black" style="text-align:center;"><i class="ace-icon fa fa-rss"></i>&nbsp;
-										<span>考核指标说明</span>
-									</h3>
-									<div class="profile-user-info " >
-										<div class="profile-info-row">
-											<div class="profile-info-name">分类</div>
-	
-											<div class="profile-info-value">
-												<span id="valKPI_TYPE">${KPI.KPI_TYPE}</span>
-											</div>
-										</div>
-										<div class="profile-info-row">
-											<div class="profile-info-name">指标代码</div>
-	
-											<div class="profile-info-value">
-												<span id="valKPI_CODE">${KPI.KPI_CODE}</span>
-											</div>
-										</div>
-										
-										<div class="profile-info-row">
-											<div class="profile-info-name"> 指标作用 </div>
-	
-											<div class="profile-info-value">
-												<span id="valKPI_EFFECT">${KPI.KPI_EFFECT}</span>
-											</div>
-										</div>
-										
-										<div class="profile-info-row">
-											<div class="profile-info-name">考核对象</div>
-	
-											<div class="profile-info-value">
-												<span id="valASSESS_OBJECT">${KPI.ASSESS_OBJECT}</span>
-											</div>
-										</div>
-									</div>
-									<h3 class="lighter block" style="text-align:center;"><i class="ace-icon fa fa-rss"></i>&nbsp;指标评分标准</h3>
-									
-									<div class="profile-user-info " >
-										<div class="profile-info-row">
-											<div class="profile-info-name">指标名称</div>
-	
-											<div class="profile-info-value">
-												<span id="valKPI_NAME">${KPI.KPI_NAME}</span>
-											</div>
-										</div>
-										
-										<div class="profile-info-row">
-											<div class="profile-info-name">判断标准</div>
-	
-											<div class="profile-info-value">
-												<span id="valJUDGEMENT_STANDARD">${KPI.JUDGEMENT_STANDARD}</span>
-											</div>
-										</div>
-										
-										<div class="profile-info-row">
-											<div class="profile-info-name">计算公式</div>
-	
-											<div class="profile-info-value">
-												<span id="valFORMULA">${KPI.FORMULA}</span>
-											</div>
-										</div>
-										
-									</div>
-								</div>
-								
 								<div id="import-tab" class="tab-pane">
 								    <table id="jqGridBase"></table>
 								    <div id="jqGridBasePager"></div>
@@ -249,10 +160,7 @@
 			//当前期间,取自tb_system_config的SystemDateTime字段
 	        var SystemDateTime = '${SystemDateTime}';
 			$("#SelectedBusiDate").val(SystemDateTime);
-			ShowDataBusiDate = SystemDateTime;
-			//当前登录人所在二级单位
-		    var DepartName = '${DepartName}';
-		    //$("#showDur").text('当前期间：' + SystemDateTime + ' 登录人单位：' + DepartName);
+
 		    $("#showDur").text('当前期间：' + SystemDateTime);
 	        //前端数据表格界面字段,动态取自tb_tmpl_config_detail，根据当前单位编码及表名获取字段配置信息
 	        jqGridColModel = "[]";
@@ -280,43 +188,14 @@
          * 导出
          */
         function exportItems(){
-        	window.location.href='<%=basePath%>assessData/excel.do?'
-        		+ 'SelectedBusiDate='+$("#SelectedBusiDate").val()
-                +'&ShowDataBusiDate='+ShowDataBusiDate
-                +'&KPI_CODE='+$("#KPI_CODE").val();
+        	window.location.href='<%=basePath%>assessData/excelRank.do?'
+        		+ 'SelectedBusiDate='+$("#SelectedBusiDate").val();
         }
 	
 	    //检索
 	    function tosearch() {
-	    	var kpiCode=$("#KPI_CODE").val();
 			var selectDate=$("#SelectedBusiDate").val();
 	    	
-	    	$.ajax({
-				type: "POST",
-				url: '<%=basePath%>assessData/getKpi.do?KPI_CODE='+kpiCode,
-				dataType:'json',
-				cache: false,
-				success: function(response){
-						$("#valKPI_TYPE").text(response.KPI_TYPE);
-						$("#valKPI_CODE").text(response.KPI_CODE);
-						$("#valKPI_NAME").text(response.KPI_NAME);
-						$("#valKPI_EFFECT").text(response.KPI_EFFECT);
-						$("#valASSESS_OBJECT").text(response.ASSESS_OBJECT);
-						$("#valJUDGEMENT_STANDARD").text(response.JUDGEMENT_STANDARD);
-						$("#valFORMULA").text(response.FORMULA);
-				},
-		    	error: function() {
-					$("#subTitle").tips({
-						side:3,
-			            msg:'获取指标信息出错',
-			            bg:'#cc0033',
-			            time:3
-			        });
-		    	}
-			});
-	    	
-			
-
 			$(gridBase_selector).jqGrid('GridUnload'); 
 			//前端数据表格界面字段,动态取自tb_tmpl_config_detail，根据当前单位编码及表名获取字段配置信息
 		    jqGridColModel = "[]";
@@ -324,8 +203,7 @@
 			top.jzts();
 			$.ajax({
 				type: "POST",
-				url: '<%=basePath%>assessData/getShowColModel.do?KPI_CODE='+kpiCode
-    	            + '&SystemDateTime='+selectDate,
+				url: '<%=basePath%>assessData/getShowColModel.do?SystemDateTime='+selectDate,
 				dataType:'json',
 				cache: false,
 				success: function(response){
@@ -371,10 +249,8 @@
     	    });
     		
     		$(gridBase_selector).jqGrid({
-    			url: '<%=basePath%>assessData/getPageList.do?'
-            		+ 'SelectedBusiDate='+$("#SelectedBusiDate").val()
-                    + '&ShowDataBusiDate='+ShowDataBusiDate
-                    + '&KPI_CODE='+$("#KPI_CODE").val(),
+    			<%-- url: '<%=basePath%>assessData/getRankList.do?'
+            		+ 'SelectedBusiDate='+$("#SelectedBusiDate").val(), --%>
     			datatype: "json",
     			colModel: jqGridColModel,
     			reloadAfterSubmit: true, 
@@ -386,11 +262,7 @@
                 multiboxonly: true,
                 sortable: true,
     			altRows: true, //斑马条纹
-    			editurl: '<%=basePath%>assessData/edit.do?'
-            		+ 'SelectedBusiDate='+$("#SelectedBusiDate").val()
-                    + '&ShowDataBusiDate='+ShowDataBusiDate
-                    + '&KPI_CODE='+$("#KPI_CODE").val(),
-    			
+    			editurl: '',
     			pager: pagerBase_selector,
     			footerrow: true,
     			userDataOnFooter: true,
