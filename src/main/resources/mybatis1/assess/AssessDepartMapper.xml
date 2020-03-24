@@ -144,4 +144,13 @@
 		where 
 			DEPART_PARENT_CODE = #{parentId} order by DEPART_CODE 
 	</select>
+	
+	<!-- 获取合并后的部门 -->
+	<select id="listMergeDeparts" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> 
+		
+	</select>
 </mapper>

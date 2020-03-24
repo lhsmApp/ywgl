@@ -329,7 +329,6 @@ public class AssessDataController extends BaseController {
 		this.map_SetColumnsList = Common.GetSetColumnsListByTableName("tb_kh_rank", "", "9870",
 				tmplconfigService);
 		String jqGridColModel = tmpl.generateStructureNoEditByTableCode("tb_kh_rank", "","9870");
-		
 		/*this.map_DicList = Common.GetDicList(getPd.getString("KPI_CODE"), "", "9870", tmplconfigService,
 				tmplconfigdictService, dictionariesService, departmentService, userService, "");*/
 
@@ -988,6 +987,29 @@ public class AssessDataController extends BaseController {
 		ObjectExcelView erv = new ObjectExcelView();
 		mv = new ModelAndView(erv, dataMap);
 		return mv;
+	}
+
+	/**
+	 * 导出到excel
+	 * 
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/excelRank")
+	public ModelAndView exportExcelRank(JqPage page) throws Exception {
+		PageData getPd = this.getPageData();
+
+		// 页面选择区间
+		String SelectedBusiDate = getPd.getString("SelectedBusiDate");
+		// 多条件过滤条件
+		String filters = getPd.getString("filters");
+		if (null != filters && !"".equals(filters)) {
+			getPd.put("filterWhereResult", SqlTools.constructWhere(filters, null));
+		}
+		TransferPd(getPd, SelectedBusiDate);
+		page.setPd(getPd);
+		List<PageData> varOList = assessDataService.exportList(page);
+		return export(varOList, "", map_SetColumnsList, map_DicList);
 	}
 
 	/**

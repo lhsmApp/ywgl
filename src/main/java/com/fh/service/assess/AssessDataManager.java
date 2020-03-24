@@ -17,11 +17,22 @@ public interface AssessDataManager{
 	 * @throws Exception
 	 */
 	public List<PageData> JqPage(JqPage page)throws Exception;
+	/**排行榜列表
+	 * @param page
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PageData> JqPageRank(JqPage page)throws Exception;
 	/**获取记录数量
 	 * @param pd
 	 * @throws Exception
 	 */
 	public int countJqGridExtend(JqPage page)throws Exception;
+	/**获取排行榜记录数量
+	 * @param pd
+	 * @throws Exception
+	 */
+	public int countJqGridExtendRank(JqPage page)throws Exception;
 	/**获取记录总合计
 	 * @param pd
 	 * @throws Exception

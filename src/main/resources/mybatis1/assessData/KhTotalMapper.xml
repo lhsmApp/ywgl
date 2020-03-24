@@ -62,6 +62,31 @@
 		</where>
 	</select>
 	
+	<!-- 列表 -->
+	<select id="datalistJqPageRank" parameterType="jqPage" resultType="pd">
+		select * from tb_kh_rank
+		<where>
+		    <if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			    ${pd.filterWhereResult}
+		    </if>
+		</where>
+		<if test="sidx != null and sidx.trim() != ''" >
+			order by ${sidx} ${sord} 
+    	</if>
+    	<if test="currentResult != null and rowNum != null" >           
+              limit #{currentResult}, #{rowNum} 
+        </if>
+	</select>
+	
+	<select id="countJqGridExtendRank" parameterType="jqPage" resultType="int">
+		select count(*) from tb_kh_rank
+		<where>
+		    <if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+			    ${pd.filterWhereResult}
+		    </if>
+		</where>
+	</select>
+	
 	<!-- 用于当前月份是否已经导入过数据 -->
 	<select id="checkRepeat" parameterType="pd" resultType="pd">
 		select 1
@@ -124,6 +149,16 @@
 		</foreach>
 	</update>
 	
+	<update id="batchDelAndInsRank" parameterType="pd">
+		delete from tb_kh_rank 
+		where BUSI_DATE = #{item.BUSI_DATE};
+		<foreach item="item" index="index" collection="list" open=" " separator=" " close=" ">
+		    insert into tb_kh_rank
+		    (COMPANY_CODE,COMPANY_NAME,FINAL_SCORE,Z1FI1_DEDUCK_SCORE,Z1FI1_TOTAL_NUM,Z1FI1_SCORE,Z3FI2_DEDUCK_SCORE,Z3FI2_TOTAL_NUM,Z3FI2_SCORE) 
+		    values (#{COMPANY_CODE},#{COMPANY_NAME},#{FINAL_SCORE},#{Z1FI1_DEDUCK_SCORE},#{Z1FI1_TOTAL_NUM},#{Z1FI1_SCORE},#{Z3FI2_DEDUCK_SCORE},#{Z3FI2_TOTAL_NUM},#{Z3FI2_SCORE});
+		</foreach>
+	</update>
+	
 	<update id="batchCoverAdd" parameterType="pd">
 		<foreach item="item" index="index" collection="list" open=" " separator=" " close=" ">
 		    delete from
@@ -137,4 +172,33 @@
 		    (${item.InsertField}) values (${item.InsertVale});
 		</foreach>
 	</update>
+	
+	<!-- 列表 -->
+	<select id="getCountOfVoucherNum" parameterType="pd" resultType="pd">
+		<if test="KPI_CODE== 'Z1FI1'">
+			SELECT 'Z1FI1' KPI_CODE,COUNT(*) AS Z1FI1_DEDUCK_SCORE FROM tb_kh_fmis_cfttdit 
+		</if>
+		<if test="KPI_CODE== 'Z3FI2'">
+			SELECT 'Z3FI2' KPI_CODE,COUNT(*) AS Z3FI2_DEDUCK_SCORE FROM tb_kh_integrate_voucher_cx 
+		</if>
+		<where>
+		    <if test="BUSI_DATE!= null and BUSI_DATE!= != ''">
+		        and BUSI_DATE=#{BUSI_DATE}
+		    </if>
+		</where>
+		GROUP BY COMPANY_CODE
+	</select>
+	
+	<!-- 根据业务日期、KPI_CODE获取考核项总数 -->
+	<select id="getKhTotal" parameterType="pd" resultType="pd">
+		SELECT * FROM tb_kh_total 
+		<where>
+		    <if test="KPI_CODE!= null and KPI_CODE!= != ''">
+			    and KPI_CODE=#{KPI_CODE}
+		    </if>
+		    <if test="BUSI_DATE!= null and BUSI_DATE!= != ''">
+		        and BUSI_DATE=#{BUSI_DATE}
+		    </if>
+		</where>
+	</select>
 </mapper>
