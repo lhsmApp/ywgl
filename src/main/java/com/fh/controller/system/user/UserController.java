@@ -25,14 +25,17 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fh.controller.base.BaseController;
+import com.fh.controller.trainBase.TrainStudentController;
 import com.fh.entity.Page;
 import com.fh.entity.system.Role;
 import com.fh.entity.system.User;
 import com.fh.service.fhoa.department.DepartmentManager;
+import com.fh.service.sysConfig.sysconfig.SysConfigManager;
 import com.fh.service.system.fhlog.FHlogManager;
 import com.fh.service.system.menu.MenuManager;
 import com.fh.service.system.role.RoleManager;
 import com.fh.service.system.user.UserManager;
+import com.fh.service.trainBase.TrainStudentManager;
 import com.fh.util.AppUtil;
 import com.fh.util.Const;
 import com.fh.util.FileDownload;
@@ -74,6 +77,12 @@ public class UserController extends BaseController {
 	
 	@Resource(name="departmentService")
 	private DepartmentManager departmentService;
+	
+	@Resource(name="trainstudentService")
+	private TrainStudentManager trainstudentService;
+	
+	@Resource(name = "sysconfigService")
+	private SysConfigManager sysconfigService;
 	
 	/**显示用户列表
 	 * @param page
@@ -208,23 +217,94 @@ public class UserController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
+		//获取系统配置中的学员id
+		pd.put("KEY_CODE", "studentRoldId");
+		String studentRoldId = sysconfigService.getSysConfigByKey(pd);
+		
 		//pd.put("USER_ID", this.get32UUID());	//ID 主键
 		pd.put("LAST_LOGIN", "");				//最后登录时间
 		pd.put("IP", "");						//IP
 		pd.put("STATUS", "1");					//状态
 		pd.put("SKIN", "default");
-		pd.put("RIGHTS", "");		
-		pd.put("PASSWORD", new SimpleHash("SHA-1", pd.getString("USERNAME"), pd.getString("PASSWORD")).toString());	//密码加密
+		pd.put("RIGHTS", "");
+		String PW = pd.getString("PASSWORD");
+		pd.put("PASSWORD", new SimpleHash("SHA-1", pd.getString("USERNAME"), PW).toString());	//密码加密
 		
 		if(null == userService.findByUsername(pd)){	//判断用户名是否存在
 			userService.saveU(pd); 					//执行保存
 			FHLOG.save(Jurisdiction.getUsername(), "新增系统用户："+pd.getString("USERNAME"));
+			//学员
+			PageData pd2 = new PageData();
+			pd2.put("DEPART_CODE", pd.getString("DEPARTMENT_ID"));
+			pd2.put("UNIT_CODE", pd.getString("UNIT_CODE"));
+			pd2.put("ACCOUNT", pd.getString("USERNAME"));
+			pd2.put("STATE", 1);
+			pd2.put("STUDENT_CODE", pd.getString("USERNAME"));
+			pd2.put("PASSWORD", new SimpleHash("SHA-1", pd.get("STUDENT_CODE")+"", PW).toString());	//密码加密
+			pd2.put("MEMO", "");
+			pd2.put("STUDENT_NAME", pd.getString("NAME"));
+			pd2.put("STUDENT_ID", pd.getString("USERNAME"));
+			pd2.put("ROLE_ID", studentRoldId);
+			
+			trainstudentService.save(pd2);
+			
 			mv.addObject("msg","success");
 		}else{
 			mv.addObject("msg","failed");
 		}
 		mv.setViewName("save_result");
 		return mv;
+	}
+	
+	
+	/**
+	 * 批量添加用户
+	 * @throws Exception
+	 * @author yijche
+	 */
+	@RequestMapping(value="/batchAddUser")
+	public void batchAddUser() throws Exception{
+		PageData pd = new PageData();
+		//获取系统配置中的学员id
+		pd.put("KEY_CODE", "studentRoldId");
+		String studentRoldId = sysconfigService.getSysConfigByKey(pd);
+		for(int i=0;i<NewUser.newUserStr.length;i++) {
+			pd.clear();
+			/***************************/
+			pd.put("USERNAME", NewUser.newUserStr[i][0]);
+			String PW = NewUser.newUserStr[i][1];
+			pd.put("PASSWORD", PW);
+			pd.put("NAME", NewUser.newUserStr[i][2]);
+			pd.put("ROLE_ID", NewUser.newUserStr[i][3]);
+			pd.put("UNIT_CODE", NewUser.newUserStr[i][4]);
+			pd.put("DEPARTMENT_ID", NewUser.newUserStr[i][5]);
+			pd.put("PHONE", NewUser.newUserStr[i][6]);
+			/***************************/
+			pd.put("LAST_LOGIN", "");				//最后登录时间
+			pd.put("IP", "");						//IP
+			pd.put("STATUS", "1");					//状态
+			pd.put("SKIN", "default");
+			pd.put("RIGHTS", "");		
+			pd.put("PASSWORD", new SimpleHash("SHA-1", pd.getString("USERNAME"), PW).toString());	//密码加密
+			
+			if(null == userService.findByUsername(pd)){	//判断用户名是否存在
+				userService.saveU(pd); 					//执行保存
+				//学员
+				PageData pd2 = new PageData();
+				pd2.put("DEPART_CODE", pd.getString("DEPARTMENT_ID"));
+				pd2.put("UNIT_CODE", pd.getString("UNIT_CODE"));
+				pd2.put("ACCOUNT", pd.getString("USERNAME"));
+				pd2.put("STATE", 1);
+				pd2.put("STUDENT_CODE", pd.getString("USERNAME"));
+				pd2.put("PASSWORD", new SimpleHash("SHA-1", pd.get("STUDENT_CODE")+"", PW).toString());	//密码加密
+				pd2.put("MEMO", "");
+				pd2.put("STUDENT_NAME", pd.getString("NAME"));
+				pd2.put("STUDENT_ID", pd.getString("USERNAME"));
+				pd2.put("ROLE_ID", studentRoldId);
+				
+				trainstudentService.save(pd2);
+			}
+		}
 	}
 	
 	/**判断用户名是否存在

@@ -49,6 +49,7 @@
 							<form name="Form" id="Form" method="post" enctype="multipart/form-data">
 								<div id="zhongxin">
 								<table style="width:95%;" >
+									<div style="padding-top: 10px;" <c:if test="${tip!='1'}">hidden</c:if>>温馨提示:支持某个指标的整体数据导入,不支持某个指标的部分导入</div>
 									<tr>
 										<td style="padding-top: 20px;"><input type="file" id="excel" name="excel" style="width:50px;" onchange="fileType(this)" /></td>
 									</tr>
@@ -119,12 +120,9 @@
 	    var ShowDataBillCode = '${ShowDataBillCode}';
 	    var ShowDataTypeCode = '${ShowDataTypeCode}';
 	    var ShowDataBusiDate = '${ShowDataBusiDate}';
-	    var SalaryOrBonus = '${SalaryOrBonus}';
 	    var SystemDateTime = '${SystemDateTime}';
 	    var KpiCode = '${KPI_CODE}';
 	    var tipfiles = "请选择xls格式的文件";
-	    
-		var StringDataRows = '${StringDataRows}';
 	    
 		$(document).ready(function () {
 			$(top.hangge());
@@ -133,7 +131,6 @@
                 +'&SelectedDepartCode='+SelectedDepartCode+'&SelectedCustCol7='+SelectedCustCol7+'&SelectedBillCode='+SelectedBillCode+'&SelectedTypeCode='+SelectedTypeCode+'&SelectedBusiDate='+SelectedBusiDate
                 +'&DepartTreeSource='+DepartTreeSource
                 +'&ShowDataDepartCode='+ShowDataDepartCode+'&ShowDataCustCol7='+ShowDataCustCol7+'&ShowDataBillCode='+ShowDataBillCode+'&ShowDataTypeCode='+ShowDataTypeCode+'&ShowDataBusiDate='+ShowDataBusiDate
-                +'&SalaryOrBonus='+SalaryOrBonus
                 +'&SystemDateTime='+SystemDateTime
                 +'&KPI_CODE='+KpiCode;
 			
@@ -175,10 +172,9 @@
 		    		                +'&SelectedDepartCode='+SelectedDepartCode+'&SelectedCustCol7='+SelectedCustCol7+'&SelectedBillCode='+SelectedBillCode+'&SelectedTypeCode='+SelectedTypeCode+'&SelectedBusiDate='+SelectedBusiDate
 		    		                +'&DepartTreeSource='+DepartTreeSource
 		    		                +'&ShowDataDepartCode='+ShowDataDepartCode+'&ShowDataCustCol7='+ShowDataCustCol7+'&ShowDataBillCode='+ShowDataBillCode+'&ShowDataTypeCode='+ShowDataTypeCode+'&ShowDataBusiDate='+ShowDataBusiDate
-		    		                +'&SalaryOrBonus='+SalaryOrBonus
 		    		                +'&SystemDateTime='+SystemDateTime
 		    		                +'&KPI_CODE='+KpiCode,
-		    				    	data: {StringDataRows:StringDataRows},
+		    				    	data: {StringDataRows:'${StringDataRows}'},
 		    						dataType:'json',
 		    						cache: false,
 		    						success: function(response){
@@ -242,7 +238,6 @@
                 +'&SelectedDepartCode='+SelectedDepartCode+'&SelectedCustCol7='+SelectedCustCol7+'&SelectedBillCode='+SelectedBillCode+'&SelectedTypeCode='+SelectedTypeCode+'&SelectedBusiDate='+SelectedBusiDate
                 +'&DepartTreeSource='+DepartTreeSource
                 +'&ShowDataDepartCode='+ShowDataDepartCode+'&ShowDataCustCol7='+ShowDataCustCol7+'&ShowDataBillCode='+ShowDataBillCode+'&ShowDataTypeCode='+ShowDataTypeCode+'&ShowDataBusiDate='+ShowDataBusiDate
-                +'&SalaryOrBonus='+SalaryOrBonus
                 +'&SystemDateTime='+SystemDateTime
                 +'&KPI_CODE='+KpiCode;
 			window.location.href = url;

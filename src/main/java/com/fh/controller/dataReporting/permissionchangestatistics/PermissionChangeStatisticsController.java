@@ -167,12 +167,19 @@ public class PermissionChangeStatisticsController extends BaseController {
 		mv.addObject("pd", pd);
 		mv.addObject("QX", Jurisdiction.getHC()); // 按钮权限
 
-		Map_SetColumnsList.put("COMPANY_NAME", new TmplConfigDetail("COMPANY_NAME", "单位", "1", false));
-		Map_SetColumnsList.put("ACCOUNT_DELAY", new TmplConfigDetail("AGENCY_OPER_NUM", "机关计算机运维数量", "1", false));
-		Map_SetColumnsList.put("ACCOUNT_DELAY", new TmplConfigDetail("NETWORK_OPER_NUM", "网络运维数量", "1", false));
-		Map_SetColumnsList.put("SECURITY_OPER_NUM", new TmplConfigDetail("SECURITY_OPER_NUM", "信息安全运维数量", "1", false));
-		Map_SetColumnsList.put("ERP_OPER_NUM", new TmplConfigDetail("ERP_OPER_NUM", "ERP运维数量", "1", false));
-		Map_SetColumnsList.put("TOTAL_OPER_NUM", new TmplConfigDetail("TOTAL_OPER_NUM", "合计", "1", false));
+		Map_SetColumnsList.clear();
+		Map_SetColumnsList.put("BUSI_DATE", new TmplConfigDetail("BUSI_DATE", "录入日期", "1", false));
+		Map_SetColumnsList.put("COMPANY_NAME", new TmplConfigDetail("COMPANY_NAME", "公司名称", "1", false));
+		Map_SetColumnsList.put("ACCOUNT_DELAY", new TmplConfigDetail("ACCOUNT_DELAY", "账号延期", "1", false));
+		Map_SetColumnsList.put("ACCOUNT_UNLOCK", new TmplConfigDetail("ACCOUNT_UNLOCK", "账号解除锁定", "1", false));
+		Map_SetColumnsList.put("NEW_ROLES", new TmplConfigDetail("NEW_ROLES", "新增角色", "1", false));
+		Map_SetColumnsList.put("DELETE_ROLES", new TmplConfigDetail("DELETE_ROLES", "删除角色", "1", false));
+		Map_SetColumnsList.put("NEW_ACCOUNTS", new TmplConfigDetail("NEW_ACCOUNTS", "账号新增", "1", false));
+		Map_SetColumnsList.put("DELETE_ACCOUNTS", new TmplConfigDetail("DELETE_ACCOUNTS", "账号删除", "1", false));
+		Map_SetColumnsList.put("NEW_FMIS_ROLES", new TmplConfigDetail("NEW_FMIS_ROLES", "增加FMIS角色", "1", false));
+		Map_SetColumnsList.put("DELETE_FMIS_ROLES", new TmplConfigDetail("DELETE_FMIS_ROLES", "删除FMIS角色", "1", false));
+		Map_SetColumnsList.put("CHANGE_USER_GROUP", new TmplConfigDetail("CHANGE_USER_GROUP", "变更用户组", "1", false));
+		Map_SetColumnsList.put("CHANGE_PERSON_COUNT", new TmplConfigDetail("CHANGE_PERSON_COUNT", "变更人次", "1", false));
 
 		return mv;
 	}
@@ -421,11 +428,11 @@ public class PermissionChangeStatisticsController extends BaseController {
 			pd.put("YEAR_MONTH", pd.getString("YEAR_MONTH").replace("-", ""));
 		}
 		if (null != pd.getString("WEEKSTEXT") && !"".equals(pd.getString("WEEKSTEXT"))) {
-			//从字符串中获取出日期
+			// 从字符串中获取出日期
 			String[] strArr1 = pd.getString("WEEKSTEXT").split("\\(");
 			String[] strArr2 = strArr1[1].split("/");
 			String[] strArr3 = strArr2[1].split("\\)");
-			
+
 			String startDate = strArr2[0];
 			String endDate = strArr3[0];
 			pd.put("START_DATE", startDate.replace("-", ""));
@@ -490,7 +497,6 @@ public class PermissionChangeStatisticsController extends BaseController {
 	 */
 	@RequestMapping(value = "/qxStatisticExcel")
 	public ModelAndView listStatisticExcel(Page page) throws Exception {
-		ModelAndView mv = this.getModelAndView();
 		PageData pd = this.getPageData();
 		page.setPd(pd);
 		if (null != pd.getString("YEAR_MONTH") && !"".equals(pd.getString("YEAR_MONTH"))) {
@@ -504,41 +510,21 @@ public class PermissionChangeStatisticsController extends BaseController {
 			// 当选择"周"时，按周查询，不按期间查询
 			pd.put("YEAR_MONTH", "");
 		}
-		Map<String, Object> dataMap = new HashMap<String, Object>();
-		List<String> titles = new ArrayList<String>();
-		titles.add("公司名称"); // 1
-		titles.add("帐号延期"); // 2
-		titles.add("帐号解除锁定"); // 3
-		titles.add("新增角色"); // 4
-		titles.add("删除角色"); // 5
-		titles.add("帐号新增"); // 6
-		titles.add("帐号删除"); // 7
-		titles.add("增加FMIS角色"); // 8
-		titles.add("删除FMIS角色"); // 9
-		titles.add("变更用户组"); // 10
-		titles.add("变更人次"); // 11
-		dataMap.put("titles", titles);
 		List<PageData> varOList = permissionchangestatisticsService.listByUnit(page);
-		List<PageData> varList = new ArrayList<PageData>();
-		for (int i = 0; i < varOList.size(); i++) {
-			PageData vpd = new PageData();
-			vpd.put("var1", varOList.get(i).getString("COMPANY_NAME")); // 1
-			vpd.put("var2", varOList.get(i).get("ACCOUNT_DELAY").toString()); // 2
-			vpd.put("var3", varOList.get(i).get("ACCOUNT_UNLOCK").toString()); // 3
-			vpd.put("var4", varOList.get(i).get("NEW_ROLES").toString()); // 4
-			vpd.put("var5", varOList.get(i).get("DELETE_ROLES").toString()); // 5
-			vpd.put("var6", varOList.get(i).get("NEW_ACCOUNTS").toString()); // 6
-			vpd.put("var7", varOList.get(i).get("DELETE_ACCOUNTS").toString()); // 7
-			vpd.put("var8", varOList.get(i).get("NEW_FMIS_ROLES").toString()); // 8
-			vpd.put("var9", varOList.get(i).get("DELETE_FMIS_ROLES").toString()); // 9
-			vpd.put("var10", varOList.get(i).get("CHANGE_USER_GROUP").toString()); // 10
-			vpd.put("var11", varOList.get(i).get("CHANGE_PERSON_COUNT").toString()); // 11
-			varList.add(vpd);
-		}
-		dataMap.put("varList", varList);
-		ObjectExcelView erv = new ObjectExcelView();
-		mv = new ModelAndView(erv, dataMap);
-		return mv;
-
+		
+		//这里重新定义，是因为不想要BUSI_DATE字段
+		Map_SetColumnsList.clear();
+		Map_SetColumnsList.put("COMPANY_NAME", new TmplConfigDetail("COMPANY_NAME", "公司名称", "1", false));
+		Map_SetColumnsList.put("ACCOUNT_DELAY", new TmplConfigDetail("ACCOUNT_DELAY", "账号延期", "1", false));
+		Map_SetColumnsList.put("ACCOUNT_UNLOCK", new TmplConfigDetail("ACCOUNT_UNLOCK", "账号解除锁定", "1", false));
+		Map_SetColumnsList.put("NEW_ROLES", new TmplConfigDetail("NEW_ROLES", "新增角色", "1", false));
+		Map_SetColumnsList.put("DELETE_ROLES", new TmplConfigDetail("DELETE_ROLES", "删除角色", "1", false));
+		Map_SetColumnsList.put("NEW_ACCOUNTS", new TmplConfigDetail("NEW_ACCOUNTS", "账号新增", "1", false));
+		Map_SetColumnsList.put("DELETE_ACCOUNTS", new TmplConfigDetail("DELETE_ACCOUNTS", "账号删除", "1", false));
+		Map_SetColumnsList.put("NEW_FMIS_ROLES", new TmplConfigDetail("NEW_FMIS_ROLES", "增加FMIS角色", "1", false));
+		Map_SetColumnsList.put("DELETE_FMIS_ROLES", new TmplConfigDetail("DELETE_FMIS_ROLES", "删除FMIS角色", "1", false));
+		Map_SetColumnsList.put("CHANGE_USER_GROUP", new TmplConfigDetail("CHANGE_USER_GROUP", "变更用户组", "1", false));
+		Map_SetColumnsList.put("CHANGE_PERSON_COUNT", new TmplConfigDetail("CHANGE_PERSON_COUNT", "变更人次", "1", false));
+		return export(varOList, "", Map_SetColumnsList);
 	}
 }

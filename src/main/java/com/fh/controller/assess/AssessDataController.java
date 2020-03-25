@@ -39,7 +39,6 @@ import com.fh.util.Const;
 import com.fh.util.ObjectExcelView;
 import com.fh.util.PageData;
 import com.fh.util.SqlTools;
-import com.fh.util.enums.SysConfigKeyCode;
 import com.fh.util.enums.TmplType;
 import com.fh.util.Jurisdiction;
 import com.fh.util.excel.LeadingInExcelToPageData;
@@ -124,7 +123,19 @@ public class AssessDataController extends BaseController {
 		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 
 		List<PageData> listKpi = kpiService.listAll(null);
-		mv.addObject("listKPI", listKpi);
+		List<PageData> listKpiAll = new ArrayList<PageData>();
+		for (PageData pdItem : listKpi) {
+			PageData pdTotal = new PageData();
+			pdTotal.put("KPI_CODE", "total-"+pdItem.getString("KPI_CODE"));
+			pdTotal.put("KPI_NAME", pdItem.getString("KPI_NAME") + "/" + "指标总数");
+
+			pdItem.put("KPI_NAME", pdItem.getString("KPI_NAME") + "/" + "扣分明细");
+
+			listKpiAll.add(pdItem);
+			listKpiAll.add(pdTotal);
+		}
+
+		mv.addObject("listKPI", listKpiAll);
 
 		PageData pdCode = new PageData();
 		if (getPd.get("KPI_CODE") != null) {
@@ -151,27 +162,27 @@ public class AssessDataController extends BaseController {
 			break;
 		case "Z1FI1":
 			// 获取带__的列，后续删除之类的有用
-			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE","VOUCHER_NO");
+			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "VOUCHER_NO");
 			// 设置必定不为空的列
-			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE","VOUCHER_NO");
+			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "VOUCHER_NO");
 			break;
 		case "Z1MM1":
 			// 获取带__的列，后续删除之类的有用
-			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE","FACTORY_CODE");
+			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "FACTORY_CODE");
 			// 设置必定不为空的列
-			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE","FACTORY_CODE");
+			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "FACTORY_CODE");
 			break;
 		case "Z1MM2":
 			// 获取带__的列，后续删除之类的有用
-			keyListBase = Arrays.asList("BUSI_DATE", "POSITION_NO","TO_NO");
+			keyListBase = Arrays.asList("BUSI_DATE", "POSITION_NO", "TO_NO");
 			// 设置必定不为空的列
-			MustInputList = Arrays.asList("BUSI_DATE", "POSITION_NO","TO_NO");
+			MustInputList = Arrays.asList("BUSI_DATE", "POSITION_NO", "TO_NO");
 			break;
 		case "Z1PS1":
 			// 获取带__的列，后续删除之类的有用
-			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE","FACTORY_CODE");
+			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "FACTORY_CODE");
 			// 设置必定不为空的列
-			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE","FACTORY_CODE");
+			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "FACTORY_CODE");
 			break;
 		case "Z2AM1":
 			// 获取带__的列，后续删除之类的有用
@@ -187,35 +198,97 @@ public class AssessDataController extends BaseController {
 			break;
 		case "Z2PM1":
 			// 获取带__的列，后续删除之类的有用
-			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE","EQUIPMENT_CODE");
+			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "EQUIPMENT_CODE");
 			// 设置必定不为空的列
-			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE","EQUIPMENT_CODE");
+			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "EQUIPMENT_CODE");
 			break;
 		case "Z2PS1":
 			// 获取带__的列，后续删除之类的有用
-			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE","WBS_INTER_CODE");
+			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "WBS_INTER_CODE");
 			// 设置必定不为空的列
-			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE","WBS_INTER_CODE");
+			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "WBS_INTER_CODE");
 			break;
 		case "Z3AM1":
 			// 获取带__的列，后续删除之类的有用
-			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE","VOUCHER_NO");
+			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "VOUCHER_NO");
 			// 设置必定不为空的列
-			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE","VOUCHER_NO");
+			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "VOUCHER_NO");
 			break;
 		case "Z3FI2":
 			// 获取带__的列，后续删除之类的有用
-			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE","VOUCHER_NO");
+			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "VOUCHER_NO");
 			// 设置必定不为空的列
-			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE","VOUCHER_NO");
+			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "VOUCHER_NO");
 			break;
 		default:
 			// 获取带__的列，后续删除之类的有用
-			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE");
+			keyListBase = Arrays.asList("BUSI_DATE", "KPI_CODE","COMPANY_CODE");
 			// 设置必定不为空的列
-			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE");
+			MustInputList = Arrays.asList("BUSI_DATE", "KPI_CODE","COMPANY_CODE");
 			break;
 		}
+
+		String jqGridColModel = "";
+		SqlUserdata = new StringBuilder();
+		TmplUtil tmpl = new TmplUtil(tmplconfigService, tmplconfigdictService, dictionariesService, departmentService,
+				userService, keyListBase, null, "", MustInputList, null);
+		if (kpi.getString("KPI_CODE").contains("total")) {
+			this.map_SetColumnsList = Common.GetSetColumnsListByTableName("tb_kh_total", "", "9870",
+					tmplconfigService);
+			this.map_HaveColumnsList = Common.GetHaveColumnsMapByTableName("tb_kh_total", tmplconfigService);
+
+			/*this.map_SetColumnsList.clear();
+			this.map_SetColumnsList.put("BUSI_DATE", new TmplConfigDetail("BUSI_DATE", "业务期间", "0", false));
+			this.map_SetColumnsList.put("KPI_CODE", new TmplConfigDetail("KPI_CODE", "指标代码", "0", false));
+			this.map_SetColumnsList.put("COMPANY_CODE", new TmplConfigDetail("COMPANY_CODE", "公司代码", "1", false));
+			this.map_SetColumnsList.put("COMPANY_NAME", new TmplConfigDetail("COMPANY_NAME", "公司代码描述", "1", false));
+			this.map_SetColumnsList.put("KH_TOTAL_NUM", new TmplConfigDetail("KH_TOTAL_NUM", "考核项总数", "1", true));*/
+
+			jqGridColModel = tmpl.generateStructureByTableCode("tb_kh_total", "", "9870", 3, MustNotEditList);
+		} else {
+			this.map_SetColumnsList = Common.GetSetColumnsList(getPd.getString("KPI_CODE"), "", "9870",
+					tmplconfigService);
+			this.map_HaveColumnsList = Common.GetHaveColumnsList(getPd.getString("KPI_CODE"), tmplconfigService);
+			/*this.map_DicList = Common.GetDicList(getPd.getString("KPI_CODE"), "", "9870", tmplconfigService,
+					tmplconfigdictService, dictionariesService, departmentService, userService, "");*/
+			jqGridColModel = tmpl.generateStructure(getPd.getString("KPI_CODE"), "", "9870", 3, MustNotEditList);
+		}
+		mv.addObject("jqGridColModel", jqGridColModel);
+		mv.addObject("pd", getPd);
+		return mv;
+	}
+
+	/**
+	 * 考核查询
+	 * 
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/assessQuery")
+	public ModelAndView assessQuery(Page page) throws Exception {
+		PageData getPd = this.getPageData();
+		ModelAndView mv = this.getModelAndView();
+		mv.setViewName("assess/assessData/assessData_query");
+		mv.addObject("jqGridColModel", "[]");
+		mv.addObject("jqGridColModelMessage", "");
+
+		// 当前期间,取自tb_system_config的SystemDateTime字段
+		String SystemDateTime = sysConfigManager.currentSection(getPd);
+		mv.addObject("SystemDateTime", SystemDateTime.trim());
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+
+		List<PageData> listKpi = kpiService.listAll(null);
+		mv.addObject("listKPI", listKpi);
+
+		PageData pdCode = new PageData();
+		if (getPd.get("KPI_CODE") != null) {
+			pdCode.put("KPI_CODE", getPd.getString("KPI_CODE"));
+		} else {
+			pdCode.put("KPI_CODE", listKpi.get(0).getString("KPI_CODE"));
+			getPd.put("KPI_CODE", listKpi.get(0).getString("KPI_CODE"));
+		}
+		PageData kpi = kpiService.findByCode(pdCode);
+		mv.addObject("KPI", kpi);
 
 		this.map_SetColumnsList = Common.GetSetColumnsList(getPd.getString("KPI_CODE"), "", "9870", tmplconfigService);
 		this.map_HaveColumnsList = Common.GetHaveColumnsList(getPd.getString("KPI_CODE"), tmplconfigService);
@@ -227,6 +300,37 @@ public class AssessDataController extends BaseController {
 		TmplUtil tmpl = new TmplUtil(tmplconfigService, tmplconfigdictService, dictionariesService, departmentService,
 				userService, keyListBase, null, "", MustInputList, null);
 		String jqGridColModel = tmpl.generateStructure(getPd.getString("KPI_CODE"), "", "9870", 3, MustNotEditList);
+
+		mv.addObject("jqGridColModel", jqGridColModel);
+		mv.addObject("pd", getPd);
+		return mv;
+	}
+	
+	/**
+	 * 考核排行榜
+	 * 
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/assessRank")
+	public ModelAndView assessRank(Page page) throws Exception {
+		PageData getPd = this.getPageData();
+		ModelAndView mv = this.getModelAndView();
+		mv.setViewName("assess/assessData/assessData_rank");
+		mv.addObject("jqGridColModel", "[]");
+		mv.addObject("jqGridColModelMessage", "");
+
+		// 当前期间,取自tb_system_config的SystemDateTime字段
+		String SystemDateTime = sysConfigManager.currentSection(getPd);
+		mv.addObject("SystemDateTime", SystemDateTime.trim());
+		
+		TmplUtil tmpl = new TmplUtil(tmplconfigService, tmplconfigdictService, dictionariesService, 
+				departmentService,userService);
+		this.map_SetColumnsList = Common.GetSetColumnsListByTableName("tb_kh_rank", "", "9870",
+				tmplconfigService);
+		String jqGridColModel = tmpl.generateStructureNoEditByTableCode("tb_kh_rank", "","9870");
+		/*this.map_DicList = Common.GetDicList(getPd.getString("KPI_CODE"), "", "9870", tmplconfigService,
+				tmplconfigdictService, dictionariesService, departmentService, userService, "");*/
 
 		mv.addObject("jqGridColModel", jqGridColModel);
 		mv.addObject("pd", getPd);
@@ -275,27 +379,27 @@ public class AssessDataController extends BaseController {
 			break;
 		case "Z1FI1":
 			// 获取带__的列，后续删除之类的有用
-			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE","VOUCHER_NO");
+			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "VOUCHER_NO");
 			// 设置必定不为空的列
-			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE","VOUCHER_NO");
+			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "VOUCHER_NO");
 			break;
 		case "Z1MM1":
 			// 获取带__的列，后续删除之类的有用
-			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE","FACTORY_CODE");
+			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "FACTORY_CODE");
 			// 设置必定不为空的列
-			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE","FACTORY_CODE");
+			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "FACTORY_CODE");
 			break;
 		case "Z1MM2":
 			// 获取带__的列，后续删除之类的有用
-			keyListBase = Arrays.asList("BUSI_DATE", "POSITION_NO","TO_NO");
+			keyListBase = Arrays.asList("BUSI_DATE", "POSITION_NO", "TO_NO");
 			// 设置必定不为空的列
-			MustInputList = Arrays.asList("BUSI_DATE", "POSITION_NO","TO_NO");
+			MustInputList = Arrays.asList("BUSI_DATE", "POSITION_NO", "TO_NO");
 			break;
 		case "Z1PS1":
 			// 获取带__的列，后续删除之类的有用
-			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE","FACTORY_CODE");
+			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "FACTORY_CODE");
 			// 设置必定不为空的列
-			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE","FACTORY_CODE");
+			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "FACTORY_CODE");
 			break;
 		case "Z2AM1":
 			// 获取带__的列，后续删除之类的有用
@@ -311,45 +415,61 @@ public class AssessDataController extends BaseController {
 			break;
 		case "Z2PM1":
 			// 获取带__的列，后续删除之类的有用
-			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE","EQUIPMENT_CODE");
+			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "EQUIPMENT_CODE");
 			// 设置必定不为空的列
-			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE","EQUIPMENT_CODE");
+			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "EQUIPMENT_CODE");
 			break;
 		case "Z2PS1":
 			// 获取带__的列，后续删除之类的有用
-			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE","WBS_INTER_CODE");
+			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "WBS_INTER_CODE");
 			// 设置必定不为空的列
-			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE","WBS_INTER_CODE");
+			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "WBS_INTER_CODE");
 			break;
 		case "Z3AM1":
 			// 获取带__的列，后续删除之类的有用
-			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE","VOUCHER_NO");
+			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "VOUCHER_NO");
 			// 设置必定不为空的列
-			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE","VOUCHER_NO");
+			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "VOUCHER_NO");
 			break;
 		case "Z3FI2":
 			// 获取带__的列，后续删除之类的有用
-			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE","VOUCHER_NO");
+			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "VOUCHER_NO");
 			// 设置必定不为空的列
-			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE","VOUCHER_NO");
+			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "VOUCHER_NO");
 			break;
 		default:
 			// 获取带__的列，后续删除之类的有用
-			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE");
+			keyListBase = Arrays.asList("BUSI_DATE", "KPI_CODE","COMPANY_CODE");
 			// 设置必定不为空的列
-			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE");
+			MustInputList = Arrays.asList("BUSI_DATE", "KPI_CODE","COMPANY_CODE");
 			break;
 		}
-		
-		this.map_SetColumnsList = Common.GetSetColumnsList(getPd.getString("KPI_CODE"), "", "9870", tmplconfigService);
-		this.map_HaveColumnsList = Common.GetHaveColumnsList(getPd.getString("KPI_CODE"), tmplconfigService);
-		this.map_DicList = Common.GetDicList(getPd.getString("KPI_CODE"), "", "9870", tmplconfigService,
-				tmplconfigdictService, dictionariesService, departmentService, userService, "");
+		String jqGridColModel = "";
+		TmplUtil tmpl = new TmplUtil(tmplconfigService, tmplconfigdictService, dictionariesService,
+				departmentService, userService, keyListBase, null, "", MustInputList, null);
+		if (getPd.getString("KPI_CODE").contains("total")) {
+			this.map_SetColumnsList = Common.GetSetColumnsListByTableName("tb_kh_total", "", "9870",
+					tmplconfigService);
+			this.map_HaveColumnsList = Common.GetHaveColumnsMapByTableName("tb_kh_total", tmplconfigService);
+			/*this.map_SetColumnsList.clear();
+			
+			this.map_SetColumnsList.put("BUSI_DATE", new TmplConfigDetail("BUSI_DATE", "业务期间", "0", false));
+			this.map_SetColumnsList.put("KPI_CODE", new TmplConfigDetail("KPI_CODE", "指标代码", "0", false));
+			this.map_SetColumnsList.put("COMPANY_CODE", new TmplConfigDetail("COMPANY_CODE", "公司代码", "1", false));
+			this.map_SetColumnsList.put("COMPANY_NAME", new TmplConfigDetail("COMPANY_NAME", "公司代码描述", "1", false));
+			this.map_SetColumnsList.put("KH_TOTAL_NUM", new TmplConfigDetail("KH_TOTAL_NUM", "考核项总数", "1", true));*/
 
-		TmplUtil tmpl = new TmplUtil(tmplconfigService, tmplconfigdictService, dictionariesService, departmentService,
-				userService, keyListBase, null, "", MustInputList, null);
-		String jqGridColModel = tmpl.generateStructure(getPd.getString("KPI_CODE"), "", "9870", 3, MustNotEditList);
+			jqGridColModel = tmpl.generateStructureByTableCode("tb_kh_total", "", "9870", 3, MustNotEditList);
+		} else {
 
+			this.map_SetColumnsList = Common.GetSetColumnsList(getPd.getString("KPI_CODE"), "", "9870",
+					tmplconfigService);
+			this.map_HaveColumnsList = Common.GetHaveColumnsList(getPd.getString("KPI_CODE"), tmplconfigService);
+			/*this.map_DicList = Common.GetDicList(getPd.getString("KPI_CODE"), "", "9870", tmplconfigService,
+					tmplconfigdictService, dictionariesService, departmentService, userService, "");*/
+
+			jqGridColModel = tmpl.generateStructure(getPd.getString("KPI_CODE"), "", "9870", 3, MustNotEditList);
+		}
 		commonBase.setCode(0);
 		commonBase.setMessage(jqGridColModel);
 
@@ -395,6 +515,37 @@ public class AssessDataController extends BaseController {
 
 		return result;
 	}
+	
+	/**
+	 * 列表
+	 * 
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/getRankList")
+	public @ResponseBody PageResult<PageData> getRankList(JqPage page) throws Exception {
+		PageData getPd = this.getPageData();
+		// 页面选择区间
+		//String SelectedBusiDate = getPd.getString("SelectedBusiDate");
+
+		// 多条件过滤条件
+		String filters = getPd.getString("filters");
+		if (null != filters && !"".equals(filters)) {
+			getPd.put("filterWhereResult", SqlTools.constructWhere(filters, null));
+		}
+
+		page.setPd(getPd);
+		List<PageData> varList = assessDataService.JqPage(page);
+		int records = assessDataService.countJqGridExtend(page);
+
+		PageResult<PageData> result = new PageResult<PageData>();
+		result.setRows(varList);
+		result.setRowNum(page.getRowNum());
+		result.setRecords(records);
+		result.setPage(page.getPage());
+
+		return result;
+	}
 
 	/**
 	 * 修改
@@ -411,7 +562,7 @@ public class AssessDataController extends BaseController {
 		// 当前区间
 		String SelectedBusiDate = getPd.getString("SelectedBusiDate");
 		String ShowDataBusiDate = getPd.getString("ShowDataBusiDate");
-		String kpiCode = getPd.getString("KPI_CODE");
+		String kpiCode = getPd.getString("KPI_CODE_SELECT");
 		// 操作
 		String oper = getPd.getString("oper");
 		List<PageData> listData = new ArrayList<PageData>();
@@ -441,7 +592,7 @@ public class AssessDataController extends BaseController {
 		 * !checkState.trim().equals("")){ commonBase.setCode(2);
 		 * commonBase.setMessage(checkState); return commonBase; }
 		 */
-		assessDataService.batchUpdateDatabase(listData,kpiCode);
+		assessDataService.batchUpdateDatabase(listData, kpiCode);
 		commonBase.setCode(0);
 		return commonBase;
 	}
@@ -477,7 +628,7 @@ public class AssessDataController extends BaseController {
 			 * !checkState.trim().equals("")){ commonBase.setCode(2);
 			 * commonBase.setMessage(checkState); return commonBase; }
 			 */
-			assessDataService.batchUpdateDatabase(listData,kpiCode);
+			assessDataService.batchUpdateDatabase(listData, kpiCode);
 			commonBase.setCode(0);
 		}
 		return commonBase;
@@ -504,7 +655,7 @@ public class AssessDataController extends BaseController {
 		JSONArray array = JSONArray.fromObject(json);
 		List<PageData> listData = (List<PageData>) JSONArray.toCollection(array, PageData.class);
 		if (null != listData && listData.size() > 0) {
-			assessDataService.deleteAll(listData,kpiCode);
+			assessDataService.deleteAll(listData, kpiCode);
 			commonBase.setCode(0);
 		}
 		return commonBase;
@@ -538,7 +689,8 @@ public class AssessDataController extends BaseController {
 
 		ModelAndView mv = this.getModelAndView();
 		mv.setViewName("common/uploadExcel");
-		mv.addObject("local", "taxStaffDetail");
+		mv.addObject("tip", "1");
+		mv.addObject("local", "assessData");
 		mv.addObject("SelectedBusiDate", SelectedBusiDate);
 		mv.addObject("ShowDataBusiDate", ShowDataBusiDate);
 		mv.addObject("KPI_CODE", kpiCode);
@@ -574,6 +726,7 @@ public class AssessDataController extends BaseController {
 			commonBase.setCode(2);
 			commonBase.setMessage(strGetCheckMustSelected);
 		}
+		List<PageData> listAdd = new ArrayList<PageData>();
 		if (commonBase.getCode() == -1) {
 			// 局部变量
 			LeadingInExcelToPageData<PageData> testExcel = null;
@@ -613,7 +766,7 @@ public class AssessDataController extends BaseController {
 			Map<String, String> returnErrorMust = (Map<String, String>) uploadAndReadMap.get(3);
 
 			List<PageData> listUploadAndRead = (List<PageData>) uploadAndReadMap.get(1);
-			List<PageData> listAdd = new ArrayList<PageData>();
+			
 			if (listUploadAndRead != null && !"[]".equals(listUploadAndRead.toString())
 					&& listUploadAndRead.size() >= 1) {
 				judgement = true;
@@ -635,6 +788,10 @@ public class AssessDataController extends BaseController {
 						if (!(getBUSI_DATE != null && !getBUSI_DATE.trim().equals(""))) {
 							pdAdd.put("BUSI_DATE", ShowDataBusiDate);
 							getBUSI_DATE = ShowDataBusiDate;
+						}
+						if(kpiCode.contains("total")){
+							String [] kpiCodes=kpiCode.split("-");
+							pdAdd.put("KPI_CODE", kpiCodes[1]);
 						}
 						if (!ShowDataBusiDate.equals(getBUSI_DATE)) {
 							if (!sbRetFeild.contains("导入区间和当前区间必须一致！")) {
@@ -671,20 +828,26 @@ public class AssessDataController extends BaseController {
 									commonBase.setCode(2);
 									commonBase.setMessage("请导入符合条件的数据！");
 								} else {
+									PageData pdCheck = assessDataService.checkRepeat(kpiCode, SelectedBusiDate);
 									/*
 									 * String checkRepeat =
-									 * CheckRepeat(listAdd);
-									 * if(checkRepeat!=null &&
-									 * !checkRepeat.trim().equals("")){
-									 * //重复数据，要在界面提示是否覆盖 commonBase.setCode(9);
+									 * CheckRepeat(listAdd); if (checkRepeat !=
+									 * null && !checkRepeat.trim().equals("")) {
+									 * // 重复数据，要在界面提示是否覆盖 //
+									 * commonBase.setCode(9);
 									 * commonBase.setMessage(checkRepeat); }
-									 * else {
 									 */
-									// 此处执行集合添加
-									assessDataService.batchUpdateDatabase(listAdd,kpiCode);
-									commonBase.setCode(0);
-									commonBase.setMessage(strErrorMessage);
-									// }
+									if (pdCheck != null) {
+										// 重复数据，要在界面提示是否覆盖
+										commonBase.setCode(9);
+										commonBase.setMessage("本月已经上传过考核数据，是否继续导入？继续会将当前指标本月数据清空！");
+									} else {
+
+										// 此处执行集合添加
+										assessDataService.batchUpdateDatabase(listAdd, kpiCode);
+										commonBase.setCode(0);
+										commonBase.setMessage(strErrorMessage);
+									}
 								}
 							}
 						}
@@ -698,12 +861,41 @@ public class AssessDataController extends BaseController {
 
 		ModelAndView mv = this.getModelAndView();
 		mv.setViewName("common/uploadExcel");
-		mv.addObject("local", "taxStaffDetail");
+		mv.addObject("tip", "1");
+		mv.addObject("local", "assessData");
+		mv.addObject("KPI_CODE", kpiCode);
 		mv.addObject("SelectedBusiDate", SelectedBusiDate);
 		mv.addObject("ShowDataBusiDate", ShowDataBusiDate);
 		mv.addObject("commonBaseCode", commonBase.getCode());
 		mv.addObject("commonMessage", commonBase.getMessage());
+		mv.addObject("StringDataRows", JSONArray.fromObject(listAdd).toString().replaceAll("'", "%"));//
 		return mv;
+	}
+	
+	/**覆盖添加
+	 * @param
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/coverAdd")
+	public @ResponseBody CommonBase coverAdd() throws Exception{
+		CommonBase commonBase = new CommonBase();
+		commonBase.setCode(-1);
+
+		PageData getPd = this.getPageData();
+		
+	    Object DATA_ROWS = getPd.get("StringDataRows");
+	    String json = DATA_ROWS.toString();  
+	    json=json.replaceAll("%", "'");
+        JSONArray array = JSONArray.fromObject(json);  
+        List<PageData> listData = (List<PageData>) JSONArray.toCollection(array,PageData.class);
+		if(null != listData && listData.size() > 0){
+			String kpiCode=getPd.getString("KPI_CODE");
+	        //直接删除添加，不判断重复数据
+			assessDataService.batchCoverAdd(listData, kpiCode);
+			commonBase.setCode(0);
+		}
+		return commonBase;
 	}
 
 	/**
@@ -736,7 +928,7 @@ public class AssessDataController extends BaseController {
 	@RequestMapping(value = "/excel")
 	public ModelAndView exportExcel(JqPage page) throws Exception {
 		PageData getPd = this.getPageData();
-		
+
 		// 页面选择区间
 		String SelectedBusiDate = getPd.getString("SelectedBusiDate");
 		// 多条件过滤条件
@@ -798,16 +990,39 @@ public class AssessDataController extends BaseController {
 	}
 
 	/**
+	 * 导出到excel
+	 * 
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/excelRank")
+	public ModelAndView exportExcelRank(JqPage page) throws Exception {
+		PageData getPd = this.getPageData();
+
+		// 页面选择区间
+		String SelectedBusiDate = getPd.getString("SelectedBusiDate");
+		// 多条件过滤条件
+		String filters = getPd.getString("filters");
+		if (null != filters && !"".equals(filters)) {
+			getPd.put("filterWhereResult", SqlTools.constructWhere(filters, null));
+		}
+		TransferPd(getPd, SelectedBusiDate);
+		page.setPd(getPd);
+		List<PageData> varOList = assessDataService.exportList(page);
+		return export(varOList, "", map_SetColumnsList, map_DicList);
+	}
+
+	/**
 	 * 查询重复数据
 	 * 
 	 * @param response
 	 * @throws Exception
 	 */
 	/*
-	 * private String CheckRepeat(List<PageData> listData) throws Exception{
+	 * private String CheckRepeat(List<PageData> listData) throws Exception {
 	 * String strRut = ""; List<PageData> listRepeat =
-	 * taxStaffDetailService.getRepeat(listData); if(listRepeat!=null &&
-	 * listRepeat.size()>0){ for(PageData each : listRepeat){ strRut +=
+	 * assessDataService.getRepeat(listData); if (listRepeat != null &&
+	 * listRepeat.size() > 0) { for (PageData each : listRepeat) { strRut +=
 	 * each.getString("STAFF_IDENT") + Message.HaveRepeatRecord; } } return
 	 * strRut; }
 	 */

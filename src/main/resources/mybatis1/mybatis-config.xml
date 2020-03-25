@@ -18,6 +18,7 @@
 		<typeAlias type="com.fh.entity.system.Department" alias="Department"/>
 		<typeAlias type="com.fh.entity.ProblemType" alias="ProblemType"/>
 		<typeAlias type="com.fh.entity.TrainDepart" alias="TrainDepart"/>
+		<typeAlias type="com.fh.entity.AssessDepart" alias="AssessDepart"/>
 		<typeAlias type="com.fh.entity.CourseType" alias="CourseType"/>
 		<typeAlias type="com.fh.entity.coursebase.CourseTree" alias="CourseTree"/>
 		<typeAlias type="com.fh.entity.coursebase.CourseDetail" alias="CourseDetail"/>

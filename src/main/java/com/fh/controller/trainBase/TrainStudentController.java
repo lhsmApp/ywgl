@@ -24,6 +24,7 @@ import com.fh.controller.base.BaseController;
 import com.fh.controller.common.DictsUtil;
 import com.fh.entity.Page;
 import com.fh.entity.system.Role;
+import com.fh.service.sysConfig.sysconfig.SysConfigManager;
 import com.fh.service.system.role.RoleManager;
 import com.fh.service.system.user.UserManager;
 import com.fh.service.trainBase.TrainDepartManager;
@@ -50,6 +51,9 @@ public class TrainStudentController extends BaseController {
 	@Resource(name="traindepartService")
 	private TrainDepartManager trainDepartService;
 	
+	@Resource(name = "sysconfigService")
+	private SysConfigManager sysconfigService;
+	
 	/*@Resource(name = "userService")
 	private UserManager userService;*/
 	
@@ -66,10 +70,15 @@ public class TrainStudentController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
+		//获取系统配置中的学员id
+		pd.put("KEY_CODE", "studentRoldId");
+		String studentRoldId = sysconfigService.getSysConfigByKey(pd);
 		if(pd.getString("PASSWORD") != null && !"".equals(pd.getString("PASSWORD"))){
 			pd.put("PASSWORD", new SimpleHash("SHA-1", pd.getString("STUDENT_CODE"), pd.getString("PASSWORD")).toString());
 		}
 		pd.put("ACCOUNT", pd.get("STUDENT_CODE"));
+		pd.put("STUDENT_ID", pd.get("STUDENT_CODE"));
+		pd.put("ROLE_ID", studentRoldId);
 		trainstudentService.save(pd);
 		mv.addObject("msg","success");
 		mv.setViewName("save_result");

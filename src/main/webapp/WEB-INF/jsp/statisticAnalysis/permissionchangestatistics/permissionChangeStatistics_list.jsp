@@ -178,14 +178,22 @@
 				var date = new Date();	
 				var year=date.getFullYear(); //获取完整的年份(4位)
 				var month=date.getMonth()+1; //获取当前月份
+				if(month<10){
+					month = '0' + month
+				}
 				$("#YEAR_MONTH").val(year+'-'+month);
 				getWeeks();
 			})
+			
+			var lastDate = ''//因为日历插件有问题，每次切换日期都会连续3次触发下面的事件，所以我这里用一个变量来控制向后台的请求次数
 			$("#YEAR_MONTH").unbind('change').bind("change",function(){
-				getWeeks();
+				var currDate = $(this).val()
+				if(currDate != lastDate){
+					lastDate = currDate;
+					getWeeks();
+				}
 			});
 			function getWeeks(){
-				$('#WEEKS').empty();
 				$.ajax({
 					   type: "POST",
 					   url: '<%=basePath%>permissionchangestatistics/getWeeks.do',
@@ -193,6 +201,7 @@
 					   dataType:'json',
 					   cache: false,
 					   success: function (data) {
+						   $('#WEEKS').empty();
 					                $('#WEEKS').append("<option value='0'></option>");
 					                //遍历成功返回的数据
 					                $.each(data, function (index,item) {

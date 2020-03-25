@@ -55,8 +55,8 @@
 									<a class="btn btn-white btn-info btn-bold" onclick="save()"><i class="ace-icon fa fa-floppy-o bigger-120 blue"></i>保存</a>
 									<a class="btn btn-white btn-info btn-bold" onclick="makeAll('确定要删除选中的数据吗?');" title="批量删除" ><i class="ace-icon fa fa-trash-o bigger-120 orange"></i>删除</a>
 									<a class="btn btn-white btn-info btn-bold" onclick="importExcel()"><span class="ace-icon fa fa-cloud-upload"></span>导入</a>
-									<a class="btn btn-white btn-info btn-bold" onclick="toExcel()"><span class="ace-icon fa fa-cloud-download"></span>导出</a>
 									</c:if>
+									<a class="btn btn-white btn-info btn-bold" onclick="toExcel()"><span class="ace-icon fa fa-cloud-download"></span>导出</a>
 								</td>
 							</tr>
 						</table>
@@ -474,7 +474,7 @@ $(top.hangge());//关闭加载状态
 		
 	//导出excel
 	function toExcel(){
-		window.location.href='<%=basePath%>permissionchangestatistics/excel.do';
+		window.location.href='<%=basePath%>permissionchangestatistics/excel.do?BUSI_DATE='+$("#busiDate").val();
 	}
 	</script>
 

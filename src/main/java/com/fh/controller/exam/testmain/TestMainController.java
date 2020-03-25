@@ -124,9 +124,9 @@ public class TestMainController extends BaseController {
 		
 		pd = this.getPageData();
 		String keywords = pd.getString("keywords"); // 关键词检索条件
-		String userId = user.getUSER_ID();
+		String userName = user.getUSERNAME();
 		String nowDate = DateUtil.getDays();
-		pd.put("STUDENT_ID", userId);
+		pd.put("STUDENT_ID", userName);
 		if (null != keywords && !"".equals(keywords)) {
 			pd.put("keywords", keywords.trim());
 		}
@@ -138,7 +138,7 @@ public class TestMainController extends BaseController {
 			String endDate = pageData.getString("END_DATE");
 			String startDate = pageData.getString("START_DATE");
 			if (DateUtil.compareDates(endDate, nowDate) && DateUtil.compareDates(nowDate, startDate)) {
-				pageData.put("TEST_USER", userId);
+				pageData.put("TEST_USER", userName);
 				List<PageData> userExamList = testmainService.listByUser(pageData);
 				if (null == userExamList || userExamList.size() == 0) {
 					paperPage.add(pageData);

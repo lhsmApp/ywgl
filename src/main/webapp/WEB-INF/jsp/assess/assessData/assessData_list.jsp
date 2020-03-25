@@ -236,7 +236,7 @@
 
 	    //页面显示的数据的责任中心，在tosearch()里赋值
 	    var ShowDataBusiDate = "";
-		
+	    var StringDataRows = '[{"COMPANY_NAME":"1","InsertVale":"/1/,/1/,/2.0/,/202003/","BUSI_DATE__":"202003","COMPANY_CODE":"1","COMPANY_CODE__":"1","VOUCHER_NO__":"2.0","VOUCHER_NO":"2.0","BUSI_DATE":"202003","InsertField":"COMPANY_CODE,COMPANY_NAME,VOUCHER_NO,BUSI_DATE"}]';
         //前端数据表格界面字段,动态取自tb_tmpl_config_detail，根据当前单位编码及表名获取字段配置信息
         var jqGridColModel = "[]";
         var gridHeight;
@@ -667,7 +667,7 @@
     			editurl: '<%=basePath%>assessData/edit.do?'
             		+ 'SelectedBusiDate='+$("#SelectedBusiDate").val()
                     + '&ShowDataBusiDate='+ShowDataBusiDate
-                    + '&KPI_CODE='+$("#KPI_CODE").val(),
+                    + '&KPI_CODE_SELECT='+$("#KPI_CODE").val(),
     			
     			pager: pagerBase_selector,
     			footerrow: true,
