@@ -540,10 +540,17 @@
 			b.BILL_DATE
 		FROM
 			  tb_approval_detail a, tb_change_erp_xtbg b 
-		WHERE  a.ACTIVE_FLAG =#{pd.ACTIVE_FLAG}
-			  AND a.UNIT_CODE = #{pd.UNIT_CODE}
+		WHERE 
+<!-- 		 	  a.ACTIVE_FLAG =#{pd.ACTIVE_FLAG} -->
+			  a.UNIT_CODE = #{pd.UNIT_CODE}
 			  AND a.ROLE_CODE = #{pd.ROLE_CODE}
-			  AND a.APPROVAL_STATE = #{pd.APPROVAL_STATE}
+			   <if test="ACTIVE_FLAG!=null and ACTIVE_FLAG!=''"> 
+			 and a.ACTIVE_FLAG =#{pd.ACTIVE_FLAG}
+			 </if>
+			<if test="APPROVAL_STATE!=null and APPROVAL_STATE!=''"> 
+			 and a.APPROVAL_STATE = #{pd.APPROVAL_STATE}
+			 </if>
+<!-- 			  AND a.APPROVAL_STATE = #{pd.APPROVAL_STATE} -->
 			AND a.BILL_CODE = b.BILL_CODE ) AS T
 			LEFT JOIN tb_approval_main g
 			ON 
