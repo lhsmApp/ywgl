@@ -224,7 +224,9 @@ public class AssessDataController extends BaseController {
 			// 获取带__的列，后续删除之类的有用
 			keyListBase = Arrays.asList("BUSI_DATE", "KPI_CODE","COMPANY_CODE");
 			// 设置必定不为空的列
-			MustInputList = Arrays.asList("BUSI_DATE", "KPI_CODE","COMPANY_CODE");
+			MustInputList = Arrays.asList("BUSI_DATE", "KPI_CODE","COMPANY_CODE","TOTAL_SCORE","PROPORTION");
+			
+			MustNotEditList = Arrays.asList("BUSI_DATE", "KPI_CODE","COMPANY_CODE","TOTAL_SCORE","PROPORTION");
 			break;
 		}
 
@@ -278,7 +280,19 @@ public class AssessDataController extends BaseController {
 		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 
 		List<PageData> listKpi = kpiService.listAll(null);
-		mv.addObject("listKPI", listKpi);
+		List<PageData> listKpiAll = new ArrayList<PageData>();
+		for (PageData pdItem : listKpi) {
+			PageData pdTotal = new PageData();
+			pdTotal.put("KPI_CODE", "total-"+pdItem.getString("KPI_CODE"));
+			pdTotal.put("KPI_NAME", pdItem.getString("KPI_NAME") + "/" + "指标总数");
+
+			pdItem.put("KPI_NAME", pdItem.getString("KPI_NAME") + "/" + "扣分明细");
+
+			listKpiAll.add(pdItem);
+			listKpiAll.add(pdTotal);
+		}
+		mv.addObject("listKPI", listKpiAll);
+		
 
 		PageData pdCode = new PageData();
 		if (getPd.get("KPI_CODE") != null) {
@@ -290,7 +304,7 @@ public class AssessDataController extends BaseController {
 		PageData kpi = kpiService.findByCode(pdCode);
 		mv.addObject("KPI", kpi);
 
-		this.map_SetColumnsList = Common.GetSetColumnsList(getPd.getString("KPI_CODE"), "", "9870", tmplconfigService);
+		/*this.map_SetColumnsList = Common.GetSetColumnsList(getPd.getString("KPI_CODE"), "", "9870", tmplconfigService);
 		this.map_HaveColumnsList = Common.GetHaveColumnsList(getPd.getString("KPI_CODE"), tmplconfigService);
 		this.map_DicList = Common.GetDicList(getPd.getString("KPI_CODE"), "", "9870", tmplconfigService,
 				tmplconfigdictService, dictionariesService, departmentService, userService, "");
@@ -301,6 +315,26 @@ public class AssessDataController extends BaseController {
 				userService, keyListBase, null, "", MustInputList, null);
 		String jqGridColModel = tmpl.generateStructure(getPd.getString("KPI_CODE"), "", "9870", 3, MustNotEditList);
 
+		mv.addObject("jqGridColModel", jqGridColModel);
+		mv.addObject("pd", getPd);*/
+		
+		String jqGridColModel = "";
+		SqlUserdata = new StringBuilder();
+		TmplUtil tmpl = new TmplUtil(tmplconfigService, tmplconfigdictService, dictionariesService, departmentService,
+				userService, keyListBase, null, "", MustInputList, null);
+		if (kpi.getString("KPI_CODE").contains("total")) {
+			this.map_SetColumnsList = Common.GetSetColumnsListByTableName("tb_kh_total", "", "9870",
+					tmplconfigService);
+			this.map_HaveColumnsList = Common.GetHaveColumnsMapByTableName("tb_kh_total", tmplconfigService);
+			jqGridColModel = tmpl.generateStructureByTableCode("tb_kh_total", "", "9870", 3, MustNotEditList);
+		} else {
+			this.map_SetColumnsList = Common.GetSetColumnsList(getPd.getString("KPI_CODE"), "", "9870",
+					tmplconfigService);
+			this.map_HaveColumnsList = Common.GetHaveColumnsList(getPd.getString("KPI_CODE"), tmplconfigService);
+			/*this.map_DicList = Common.GetDicList(getPd.getString("KPI_CODE"), "", "9870", tmplconfigService,
+					tmplconfigdictService, dictionariesService, departmentService, userService, "");*/
+			jqGridColModel = tmpl.generateStructure(getPd.getString("KPI_CODE"), "", "9870", 3, MustNotEditList);
+		}
 		mv.addObject("jqGridColModel", jqGridColModel);
 		mv.addObject("pd", getPd);
 		return mv;
@@ -441,7 +475,8 @@ public class AssessDataController extends BaseController {
 			// 获取带__的列，后续删除之类的有用
 			keyListBase = Arrays.asList("BUSI_DATE", "KPI_CODE","COMPANY_CODE");
 			// 设置必定不为空的列
-			MustInputList = Arrays.asList("BUSI_DATE", "KPI_CODE","COMPANY_CODE");
+			MustInputList = Arrays.asList("BUSI_DATE", "KPI_CODE","COMPANY_CODE","TOTAL_SCORE","PROPORTION");
+			MustNotEditList = Arrays.asList("BUSI_DATE", "KPI_CODE","COMPANY_CODE","TOTAL_SCORE","PROPORTION");
 			break;
 		}
 		String jqGridColModel = "";
@@ -523,7 +558,7 @@ public class AssessDataController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/getRankList")
-	public @ResponseBody PageResult<PageData> getRankList(JqPage page) throws Exception {
+	public @ResponseBody PageResult<PageData> getRankList() throws Exception {
 		PageData getPd = this.getPageData();
 		// 页面选择区间
 		//String SelectedBusiDate = getPd.getString("SelectedBusiDate");
@@ -533,16 +568,14 @@ public class AssessDataController extends BaseController {
 		if (null != filters && !"".equals(filters)) {
 			getPd.put("filterWhereResult", SqlTools.constructWhere(filters, null));
 		}
-
-		page.setPd(getPd);
-		List<PageData> varList = assessDataService.JqPage(page);
-		int records = assessDataService.countJqGridExtend(page);
+		List<PageData> varList = assessDataService.JqPageRank(getPd);
+		//int records = assessDataService.countJqGridExtend(page);
 
 		PageResult<PageData> result = new PageResult<PageData>();
 		result.setRows(varList);
-		result.setRowNum(page.getRowNum());
-		result.setRecords(records);
-		result.setPage(page.getPage());
+		//result.setRowNum(page.getRowNum());
+		//result.setRecords(records);
+		//result.setPage(page.getPage());
 
 		return result;
 	}
@@ -566,6 +599,9 @@ public class AssessDataController extends BaseController {
 		// 操作
 		String oper = getPd.getString("oper");
 		List<PageData> listData = new ArrayList<PageData>();
+		PageData getKpi=new PageData();
+		getKpi.put("KPI_CODE", kpiCode);
+		PageData pdKpi= kpiService.findByCode(getKpi);
 		if (oper.equals("add")) {
 			// 判断选择为必须选择的
 			String strGetCheckMustSelected = CheckMustSelectedAndSame(SelectedBusiDate, ShowDataBusiDate);
@@ -575,6 +611,8 @@ public class AssessDataController extends BaseController {
 				return commonBase;
 			}
 			getPd.put("BUSI_DATE", SelectedBusiDate);
+			getPd.put("TOTAL_SCORE", pdKpi.get("TOTAL_SCORE"));
+			getPd.put("PROPORTION", pdKpi.get("PROPORTION"));
 			Common.setModelDefault(getPd, map_HaveColumnsList, map_SetColumnsList, MustNotEditList);
 			for (String strFeild : keyListBase) {
 				getPd.put(strFeild + TmplUtil.keyExtra, "");
@@ -584,6 +622,9 @@ public class AssessDataController extends BaseController {
 			for (String strFeild : MustNotEditList) {
 				getPd.put(strFeild, getPd.get(strFeild + TmplUtil.keyExtra));
 			}
+			
+			getPd.put("TOTAL_SCORE", pdKpi.get("TOTAL_SCORE"));
+			getPd.put("PROPORTION", pdKpi.get("PROPORTION"));
 			Common.setModelDefault(getPd, map_HaveColumnsList, map_SetColumnsList, MustNotEditList);
 			listData.add(getPd);
 		}
@@ -621,6 +662,10 @@ public class AssessDataController extends BaseController {
 				for (String strFeild : MustNotEditList) {
 					pdData.put(strFeild, pdData.get(strFeild + TmplUtil.keyExtra));
 				}
+				PageData pdKpi= kpiService.findByCode(getPd);
+				
+				pdData.put("TOTAL_SCORE", pdKpi.get("TOTAL_SCORE"));
+				pdData.put("PROPORTION", pdKpi.get("PROPORTION"));
 				Common.setModelDefault(pdData, map_HaveColumnsList, map_SetColumnsList, MustNotEditList);
 			}
 			/*
@@ -793,6 +838,11 @@ public class AssessDataController extends BaseController {
 							String [] kpiCodes=kpiCode.split("-");
 							pdAdd.put("KPI_CODE", kpiCodes[1]);
 						}
+						
+						PageData pdKpi= kpiService.findByCode(pdAdd);
+						
+						pdAdd.put("TOTAL_SCORE", pdKpi.get("TOTAL_SCORE"));
+						pdAdd.put("PROPORTION", pdKpi.get("PROPORTION"));
 						if (!ShowDataBusiDate.equals(getBUSI_DATE)) {
 							if (!sbRetFeild.contains("导入区间和当前区间必须一致！")) {
 								sbRetFeild.add("导入区间和当前区间必须一致！");
@@ -996,19 +1046,14 @@ public class AssessDataController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/excelRank")
-	public ModelAndView exportExcelRank(JqPage page) throws Exception {
+	public ModelAndView exportExcelRank() throws Exception {
 		PageData getPd = this.getPageData();
-
-		// 页面选择区间
-		String SelectedBusiDate = getPd.getString("SelectedBusiDate");
 		// 多条件过滤条件
 		String filters = getPd.getString("filters");
 		if (null != filters && !"".equals(filters)) {
 			getPd.put("filterWhereResult", SqlTools.constructWhere(filters, null));
 		}
-		TransferPd(getPd, SelectedBusiDate);
-		page.setPd(getPd);
-		List<PageData> varOList = assessDataService.exportList(page);
+		List<PageData> varOList = assessDataService.JqPageRank(getPd);
 		return export(varOList, "", map_SetColumnsList, map_DicList);
 	}
 

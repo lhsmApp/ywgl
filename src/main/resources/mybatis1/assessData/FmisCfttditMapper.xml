@@ -136,12 +136,10 @@
 	</update>
 	
 	<update id="batchCoverAdd" parameterType="pd">
+		 delete from 
+	    <include refid="tableName"></include> 
+	    where BUSI_DATE = #{item.BUSI_DATE__};
 		<foreach item="item" index="index" collection="list" open=" " separator=" " close=" ">
-		    delete from
-		    <include refid="tableName"></include>
-		    where BUSI_DATE = #{item.BUSI_DATE__};
-		    <!-- and COMPANY_CODE = #{item.COMPANY_CODE}
-	        and VOUCHER_NO = #{item.VOUCHER_NO} -->
 		    insert into
 		    <include refid="tableName"></include>
 		    (${item.InsertField}) values (${item.InsertVale});

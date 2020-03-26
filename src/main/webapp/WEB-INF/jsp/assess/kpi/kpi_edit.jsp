@@ -52,6 +52,14 @@
 								<td><input type="text" name="KPI_NAME" id="KPI_NAME" value="${pd.KPI_NAME}" maxlength="100" placeholder="这里输入指标名称" title="指标名称" style="width:98%;"/></td>
 							</tr>
 							<tr>
+								<td style="width:75px;text-align: right;padding-top: 13px;">总分:</td>
+								<td><input type="text" name="TOTAL_SCORE" id="TOTAL_SCORE" value="${pd.TOTAL_SCORE}" maxlength="100" placeholder="这里输入总分" title="总分" style="width:98%;"/></td>
+							</tr>
+							<tr>
+								<td style="width:75px;text-align: right;padding-top: 13px;">指标权重:</td>
+								<td><input type="text" name="PROPORTION" id="PROPORTION" value="${pd.PROPORTION}" maxlength="100" placeholder="这里输入指标权重" title="指标权重" style="width:98%;"/></td>
+							</tr>
+							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">判断标准:</td>
 								<td><input type="text" name="JUDGEMENT_STANDARD" id="JUDGEMENT_STANDARD" value="${pd.JUDGEMENT_STANDARD}" maxlength="200" placeholder="这里输入判断标准" title="判断标准" style="width:98%;"/></td>
 							</tr>

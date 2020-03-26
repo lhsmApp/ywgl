@@ -132,7 +132,8 @@
 		select
 		<include refid="Field"></include>
 		from 
-		<include refid="tableName"></include>
+		<include refid="tableName"></include> 
+		where depart_parent_code!='0'
 	</select>
 	
 	<!-- 通过ID获取其子级列表 -->

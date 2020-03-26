@@ -22,7 +22,7 @@ public interface AssessDataManager{
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public List<PageData> JqPageRank(JqPage page)throws Exception;
+	public List<PageData> JqPageRank(PageData pd)throws Exception;
 	/**获取记录数量
 	 * @param pd
 	 * @throws Exception

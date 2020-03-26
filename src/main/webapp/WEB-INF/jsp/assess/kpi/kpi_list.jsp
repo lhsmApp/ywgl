@@ -63,6 +63,8 @@
 									<th class="center">指标作用</th>
 									<th class="center">考核对象</th>
 									<th class="center">指标名称</th>
+									<th class="center">总分</th>
+									<th class="center">指标权重(各指标相加等于100%)</th>
 									<th class="center">判断标准</th>
 									<th class="center">计算公式</th>
 									
@@ -86,6 +88,8 @@
 											<td class='center'>${var.KPI_EFFECT}</td>
 											<td class='center'>${var.ASSESS_OBJECT}</td>
 											<td class='center'>${var.KPI_NAME}</td>
+											<td class='center'>${var.TOTAL_SCORE}</td>
+											<td class='center'>${var.PROPORTION}</td>
 											<td class='center'>${var.JUDGEMENT_STANDARD}</td>
 											<td class='center'>${var.FORMULA}</td>
 											

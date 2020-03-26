@@ -30,6 +30,9 @@
 		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
 		        ${pd.QueryFeild}
 		    </if>
+		    <if test="pd.KPI_CODE!= null and pd.KPI_CODE != ''">
+		        and KPI_CODE=#{pd.KPI_CODE}
+		    </if>
 		</where>
 		<if test="sidx != null and sidx.trim() != ''" >
 			order by ${sidx} ${sord} 
@@ -110,6 +113,7 @@
 			order by ${sidx} ${sord} 
     	</if>
 	</select>
+	
 	<!-- 导出模板 -->
 	<select id="exportModel" parameterType="pd" resultType="pd">
 		select * 
@@ -160,13 +164,11 @@
 	</update>
 	
 	<update id="batchCoverAdd" parameterType="pd">
+		delete from 
+		<include refid="tableName"></include>
+		where BUSI_DATE = #{item.BUSI_DATE__} 
+		and KPI_CODE = #{item.KPI_CODE__};
 		<foreach item="item" index="index" collection="list" open=" " separator=" " close=" ">
-		    delete from
-		    <include refid="tableName"></include>
-		    where BUSI_DATE = #{item.BUSI_DATE__} 
-		    and KPI_CODE = #{item.KPI_CODE__};
-		    <!-- and COMPANY_CODE = #{item.COMPANY_CODE} -->
-	        
 		    insert into
 		    <include refid="tableName"></include>
 		    (${item.InsertField}) values (${item.InsertVale});
@@ -175,17 +177,14 @@
 	
 	<!-- 列表 -->
 	<select id="getCountOfVoucherNum" parameterType="pd" resultType="pd">
-		<if test="KPI_CODE== 'Z1FI1'">
-			SELECT 'Z1FI1' KPI_CODE,COUNT(*) AS Z1FI1_DEDUCK_SCORE FROM tb_kh_fmis_cfttdit 
-		</if>
-		<if test="KPI_CODE== 'Z3FI2'">
-			SELECT 'Z3FI2' KPI_CODE,COUNT(*) AS Z3FI2_DEDUCK_SCORE FROM tb_kh_integrate_voucher_cx 
-		</if>
-		<where>
-		    <if test="BUSI_DATE!= null and BUSI_DATE!= != ''">
-		        and BUSI_DATE=#{BUSI_DATE}
-		    </if>
-		</where>
+		SELECT 'Z1FI1' KPI_CODE,COMPANY_CODE,COUNT(*) AS DEDUCK_SCORE FROM tb_kh_fmis_cfttdit 
+		where BUSI_DATE=#{BUSI_DATE} 
+		GROUP BY COMPANY_CODE
+		
+		UNION ALL
+
+		SELECT 'Z3FI2' KPI_CODE,COMPANY_CODE,COUNT(*) AS DEDUCK_SCORE FROM tb_kh_integrate_voucher_cx 
+		WHERE BUSI_DATE=#{BUSI_DATE} 
 		GROUP BY COMPANY_CODE
 	</select>
 	
@@ -193,12 +192,20 @@
 	<select id="getKhTotal" parameterType="pd" resultType="pd">
 		SELECT * FROM tb_kh_total 
 		<where>
-		    <if test="KPI_CODE!= null and KPI_CODE!= != ''">
+		    <!-- <if test="KPI_CODE!= null and KPI_CODE!= != ''">
 			    and KPI_CODE=#{KPI_CODE}
-		    </if>
-		    <if test="BUSI_DATE!= null and BUSI_DATE!= != ''">
+		    </if> -->
+		    <if test="BUSI_DATE!= null and BUSI_DATE!= ''">
 		        and BUSI_DATE=#{BUSI_DATE}
 		    </if>
 		</where>
 	</select>
+	
+	<!-- 根据业务日期、获取KPI配置的总分和权重 -->
+	<select id="listKpi" parameterType="pd" resultType="pd">
+		SELECT KPI_CODE,TOTAL_SCORE,PROPORTION FROM tb_kh_total 
+		WHERE BUSI_DATE=#{BUSI_DATE} 
+		GROUP BY KPI_CODE,TOTAL_SCORE,PROPORTION
+	</select>
+	
 </mapper>

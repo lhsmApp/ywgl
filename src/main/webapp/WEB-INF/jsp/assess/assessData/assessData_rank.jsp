@@ -90,12 +90,8 @@
 
 					<div class="row">
 						<div class="col-xs-12">
-							<div class="tab-content padding-8">
-								<div id="import-tab" class="tab-pane">
-								    <table id="jqGridBase"></table>
-								    <div id="jqGridBasePager"></div>
-							    </div>
-						    </div>
+						    <table id="jqGridBase"></table>
+						    <div id="jqGridBasePager"></div>
 						</div>
 					</div>
 				</div>
@@ -189,54 +185,17 @@
          */
         function exportItems(){
         	window.location.href='<%=basePath%>assessData/excelRank.do?'
-        		+ 'SelectedBusiDate='+$("#SelectedBusiDate").val();
+        		+ 'BUSI_DATE='+$("#SelectedBusiDate").val();
         }
 	
 	    //检索
 	    function tosearch() {
 			var selectDate=$("#SelectedBusiDate").val();
-	    	
-			$(gridBase_selector).jqGrid('GridUnload'); 
-			//前端数据表格界面字段,动态取自tb_tmpl_config_detail，根据当前单位编码及表名获取字段配置信息
-		    jqGridColModel = "[]";
-			
-			top.jzts();
-			$.ajax({
-				type: "POST",
-				url: '<%=basePath%>assessData/getShowColModel.do?SystemDateTime='+selectDate,
-				dataType:'json',
-				cache: false,
-				success: function(response){
-					if(response.code==0){
-						$(top.hangge());//关闭加载状态
-						var mes = response.message;
-						mes = mes.replace("[", "").replace("]", "");
-						if($.trim(mes)!=""){
-						    //前端数据表格界面字段,动态取自tb_tmpl_config_detail，根据当前单位编码及表名获取字段配置信息
-					        jqGridColModel = eval("(" + response.message + ")");//此处记得用eval()行数将string转为array
-						    SetStructure();
-						}
-					}else{
-						$(top.hangge());//关闭加载状态
-						$("#subTitle").tips({
-							side:3,
-				            msg:'获取显示结构失败：'+response.message,
-				            bg:'#cc0033',
-				            time:3
-				        });
-					}
-				},
-		    	error: function(response) {
-					$(top.hangge());//关闭加载状态
-					$("#subTitle").tips({
-						side:3,
-			            msg:'获取显示结构出错：'+response.responseJSON.message,
-			            bg:'#cc0033',
-			            time:3
-			        });
-		    	}
-			});
-			
+			$(gridBase_selector).jqGrid('setGridParam',{  // 重新加载数据
+			url:'<%=basePath%>assessData/getRankList.do?BUSI_DATE='+selectDate,
+							datatype : 'json',
+							page : 1
+				}).trigger("reloadGrid");
 		}  
     
         function SetStructure(){
@@ -244,28 +203,28 @@
     		$(window).on('resize.jqGrid', function () {
     			$(gridBase_selector).jqGrid( 'setGridWidth', $(".page-content").width());
     			//$(gridBase_selector).jqGrid( 'setGridHeight', $(window).height() - 240);
-    			gridHeight=240;
-    			resizeGridHeight($(gridBase_selector),gridHeight);
+    			//gridHeight=240;
+    			resizeGridHeight($(gridBase_selector));
     	    });
     		
     		$(gridBase_selector).jqGrid({
-    			<%-- url: '<%=basePath%>assessData/getRankList.do?'
-            		+ 'SelectedBusiDate='+$("#SelectedBusiDate").val(), --%>
+    			url: '<%=basePath%>assessData/getRankList.do?'
+            		+ 'BUSI_DATE='+$("#SelectedBusiDate").val(),
     			datatype: "json",
     			colModel: jqGridColModel,
     			reloadAfterSubmit: true, 
     			viewrecords: true, 
     			shrinkToFit:false,
-    			rowNum: 100,
+    			rowNum: -1,
     			//rowList: [100,200,500],
-                multiselect: true,
-                multiboxonly: true,
+                multiselect: false,
+                multiboxonly: false,
                 sortable: true,
     			altRows: true, //斑马条纹
     			editurl: '',
     			pager: pagerBase_selector,
-    			footerrow: true,
-    			userDataOnFooter: true,
+    			footerrow: false,
+    			//userDataOnFooter: true,
 
     			loadComplete : function() {
     				var table = this;
@@ -280,55 +239,55 @@
     	    
     		$(window).triggerHandler('resize.jqGrid');//trigger window resize to make the grid get the correct size
     		
-    			$(gridBase_selector).navGrid(pagerBase_selector, 
-    					{
-    			            //navbar options
-    				        edit: false,
-    			            editicon : 'ace-icon fa fa-pencil blue',
-    			            add: false,
-    			            addicon : 'ace-icon fa fa-plus-circle purple',
-    			            del: false,
-    			            delicon : 'ace-icon fa fa-trash-o red',
-    			            search: true,
-    			            searchicon : 'ace-icon fa fa-search orange',
-    			            refresh: true,
-    			            refreshicon : 'ace-icon fa fa-refresh green',
-    			            view: false,
-    			            viewicon : 'ace-icon fa fa-search-plus grey',
-    		        },
-    		        {
-    					//edit record form
-    				    
-    		        },
-    		        {
-    					//new record form 
-    		        },
-    		        { },
-    		        {
-    					//search form
-    					recreateForm: true,
-    					afterShowSearch: beforeSearchCallback,
-    					afterRedraw: function(){
-    						style_search_filters($(this));
-    					},
-    					multipleSearch: true,
-    					//multipleGroup:true,
-    					showQuery: false
-    		        },
-    		        {},{});
-    			
-   	        		$(gridBase_selector).navSeparatorAdd(pagerBase_selector, {
-   	        			sepclass : "ui-separator",
-   	        			sepcontent: ""
-   	        		});
-   					$(gridBase_selector).navButtonAdd(pagerBase_selector, {
-   			             caption : "导出",
-   			             buttonicon : "ace-icon fa fa-cloud-download",
-   			             onClickButton : exportItems,
-   			             position : "last",
-   			             title : "导出",
-   			             cursor : "pointer"
-   			         });
+   			$(gridBase_selector).navGrid(pagerBase_selector, 
+			{
+	            //navbar options
+		        edit: false,
+	            editicon : 'ace-icon fa fa-pencil blue',
+	            add: false,
+	            addicon : 'ace-icon fa fa-plus-circle purple',
+	            del: false,
+	            delicon : 'ace-icon fa fa-trash-o red',
+	            search: true,
+	            searchicon : 'ace-icon fa fa-search orange',
+	            refresh: true,
+	            refreshicon : 'ace-icon fa fa-refresh green',
+	            view: false,
+	            viewicon : 'ace-icon fa fa-search-plus grey',
+	        },
+	        {
+				//edit record form
+			    
+	        },
+	        {
+				//new record form 
+	        },
+	        { },
+	        {
+				//search form
+				recreateForm: true,
+				afterShowSearch: beforeSearchCallback,
+				afterRedraw: function(){
+					style_search_filters($(this));
+				},
+				multipleSearch: true,
+				//multipleGroup:true,
+				showQuery: false
+	        },
+	        {},{});
+  			
+       		$(gridBase_selector).navSeparatorAdd(pagerBase_selector, {
+       			sepclass : "ui-separator",
+       			sepcontent: ""
+       		});
+			$(gridBase_selector).navButtonAdd(pagerBase_selector, {
+	             caption : "导出",
+	             buttonicon : "ace-icon fa fa-cloud-download",
+	             onClickButton : exportItems,
+	             position : "last",
+	             title : "导出",
+	             cursor : "pointer"
+	         });
         }
 
  	</script>

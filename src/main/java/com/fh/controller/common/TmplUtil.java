@@ -722,9 +722,16 @@ public class TmplUtil {
 
 			int intLength = Common.getColumnLength(col.getColumn_type(), col.getData_type());
 			if (col.getData_type() != null && Common.IsNumFeild(col.getData_type())) {
-				model_name.append(" width: '150', ");
-				model_name.append(" align: 'right', search: false, sorttype: 'number', formatter: 'number', ");
-				model_group.append(" summaryTpl: '<b>{0}</b>', summaryType: 'sum', ");
+				if(col.getData_type().equals("INT")){
+					model_name.append(" width: '90', ");
+					model_name.append(" align: 'right', search: false, sorttype: 'number', ");
+					model_group.append(" summaryTpl: '<b>{0}</b>', summaryType: 'sum', ");
+				}else{
+					model_name.append(" width: '150', ");
+					model_name.append(" align: 'right', search: false, sorttype: 'number', formatter: 'number', ");
+					model_group.append(" summaryTpl: '<b>{0}</b>', summaryType: 'sum', ");
+				}
+				
 			} else {
 				if (intLength > 50) {
 					model_name.append(" width: '200', ");

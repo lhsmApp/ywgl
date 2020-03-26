@@ -2,6 +2,7 @@ package com.fh.service.assess.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,8 +16,11 @@ import com.fh.dao.DaoSupport;
 import com.fh.entity.JqPage;
 import com.fh.service.assess.AssessDataManager;
 import com.fh.util.PageData;
+import com.fh.util.StringUtil;
 import com.fh.util.base.ConvertUtils;
 import com.mysql.fabric.xmlrpc.base.Array;
+
+import cn.jpush.http.StringUtils;
 
 /**
  * 说明：考核数据导入 创建人：jiachao 创建时间：2019-12-07
@@ -74,7 +78,10 @@ public class AssessDataService implements AssessDataManager {
 			list = (List<PageData>) dao.findForList("IntegrateVoucherCxMapper.datalistJqPage", page);
 			break;
 		default:
+			PageData pageData=page.getPd();
+			pageData.put("KPI_CODE", pageData.getString("KPI_CODE").split("-")[1]);
 			list = (List<PageData>) dao.findForList("KhTotalMapper.datalistJqPage", page);
+			
 			break;
 		}
 		return list;
@@ -87,9 +94,23 @@ public class AssessDataService implements AssessDataManager {
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public List<PageData> JqPageRank(JqPage page) throws Exception {
-		List<PageData> list = (List<PageData>) dao.findForList("KhTotalMapper.datalistJqPageRank", page);
-		return list;
+	public List<PageData> JqPageRank(PageData pd) throws Exception {
+		//List<PageData> list = (List<PageData>) dao.findForList("KhTotalMapper.datalistJqPageRank", page);
+		List<PageData> listRank=generateRankData(pd.getString("BUSI_DATE"));
+		listRank.sort(new Comparator<PageData>() {
+			public int compare(PageData pd1,PageData pd2){
+				Double finalScore1=ConvertUtils.strToDouble(StringUtil.toString(pd1.get("FINAL_SCORE"), ""), 0);
+				Double finalScore2=ConvertUtils.strToDouble(StringUtil.toString(pd2.get("FINAL_SCORE"), ""), 0);
+				return finalScore2.compareTo(finalScore1);
+			}
+		});
+		int index=0;
+		for (PageData pageData : listRank) {
+			index++;
+			pageData.put("RANK_NUM", index);
+		}
+		return listRank;
+		
 	}
 
 	/**
@@ -477,8 +498,8 @@ public class AssessDataService implements AssessDataManager {
 			
 			dao.update("KhTotalMapper.batchDelAndIns", listData);
 			
-			List<PageData> listRank=generateRankData(listData.get(0).getString("BUSI_DATE"),kpiCode.split("-")[1]);
-			dao.update("KhTotalMapper.batchDelAndInsRank", listRank);
+			/*List<PageData> listRank=generateRankData(listData.get(0).getString("BUSI_DATE"),kpiCode.split("-")[1]);
+			dao.update("KhTotalMapper.batchDelAndInsRank", listRank);*/
 			break;
 		}
 
@@ -488,10 +509,11 @@ public class AssessDataService implements AssessDataManager {
 	 * 生成排行榜数据
 	 * @throws Exception 
 	 */
-	private List<PageData> generateRankData(String busiDate,String kpiCode) throws Exception{
+	@SuppressWarnings("unchecked")
+	private List<PageData> generateRankData(String busiDate) throws Exception{
 		PageData pdCondition = new PageData();
 		pdCondition.put("BUSI_DATE", busiDate);
-		pdCondition.put("KPI_CODE", kpiCode);
+		//pdCondition.put("KPI_CODE", kpiCode);
 		// **************获取各单位扣分数，即各单位产生的凭证条数***************//
 		List<PageData> listVoucherNumOfCompany = (List<PageData>) dao
 				.findForList("KhTotalMapper.getCountOfVoucherNum", pdCondition);
@@ -503,7 +525,7 @@ public class AssessDataService implements AssessDataManager {
 		// ***********************************************************//
 
 		// **************获取指标分值,指标权重*****************************//
-		List<PageData> listKpi = (List<PageData>) dao.findForList("KPIMapper.findByCode", pdCondition);
+		List<PageData> listKpi = (List<PageData>) dao.findForList("KhTotalMapper.listKpi", pdCondition);
 		// ***********************************************************//
 
 		// **************获取合并单位***********************************//
@@ -518,24 +540,27 @@ public class AssessDataService implements AssessDataManager {
 		for (PageData pdAssessDepart : listAssessDepart) {
 			if (pdAssessDepart.getString("IS_MERGE_DEPART").equals("0")) {
 				PageData pdRank = new PageData();
-				pdRank.put("COMPANY_CODE", pdAssessDepart.getString("COMPANY_CODE"));
-				pdRank.put("COMPANY_NAME", pdAssessDepart.getString("COMPANY_NAME"));
+				pdRank.put("COMPANY_CODE", pdAssessDepart.getString("DEPART_CODE"));
+				pdRank.put("COMPANY_NAME", pdAssessDepart.getString("DEPART_NAME"));
 				pdRank.put("BUSI_DATE", busiDate);
-
+				pdRank.put("Z1FI1_DEDUCK_SCORE",0);
+				pdRank.put("Z3FI2_DEDUCK_SCORE",0);
+				pdRank.put("Z1FI1_TOTAL_NUM",0);
+				pdRank.put("Z3FI2_TOTAL_NUM",0);
 				for (PageData pdVoucherNumOfCompany : listVoucherNumOfCompany) {
 					if (pdVoucherNumOfCompany.getString("COMPANY_CODE")
-							.equals(pdAssessDepart.getString("COMPANY_CODE"))) {
+							.equals(pdAssessDepart.getString("DEPART_CODE"))) {
 						if (pdVoucherNumOfCompany.getString("KPI_CODE").equals("Z1FI1")) {
-							pdRank.put("Z1FI1_DEDUCK_SCORE", pdVoucherNumOfCompany.get("Z1FI1_DEDUCK_SCORE"));
+							pdRank.put("Z1FI1_DEDUCK_SCORE", pdVoucherNumOfCompany.get("DEDUCK_SCORE"));
 						} else if (pdVoucherNumOfCompany.getString("KPI_CODE").equals("Z3FI2")) {
-							pdRank.put("Z3FI2_DEDUCK_SCORE", pdVoucherNumOfCompany.get("Z3FI2_DEDUCK_SCORE"));
+							pdRank.put("Z3FI2_DEDUCK_SCORE", pdVoucherNumOfCompany.get("DEDUCK_SCORE"));
 						}
 					}
 					break;
 				}
 				for (PageData pdTotalNumOfCompany : listTotalNumOfCompany) {
 					if (pdTotalNumOfCompany.getString("COMPANY_CODE")
-							.equals(pdAssessDepart.getString("COMPANY_CODE"))) {
+							.equals(pdAssessDepart.getString("DEPART_CODE"))) {
 						if (pdTotalNumOfCompany.getString("KPI_CODE").equals("Z1FI1")) {
 							pdRank.put("Z1FI1_TOTAL_NUM", pdTotalNumOfCompany.get("KH_TOTAL_NUM"));
 						} else if (pdTotalNumOfCompany.getString("KPI_CODE").equals("Z3FI2")) {
@@ -549,13 +574,14 @@ public class AssessDataService implements AssessDataManager {
 				// 分值
 				// Z1FI1得分=分值-扣分/总项*分值
 				BigDecimal scoreZ1FI1 = getScore(listKpi, "Z1FI1",
-						ConvertUtils.strToDouble(pdRank.get("Z1FI1_DEDUCK_SCORE").toString(), 0),
-						ConvertUtils.strToDouble(pdRank.get("Z1FI1_TOTAL_NUM").toString(), 0));
-
+						ConvertUtils.strToDouble(StringUtil.toString(pdRank.get("Z1FI1_DEDUCK_SCORE"), ""), 0),
+						ConvertUtils.strToDouble(StringUtil.toString(pdRank.get("Z1FI1_TOTAL_NUM"),""), 0));
+				pdRank.put("Z1FI1_SCORE", scoreZ1FI1);
 				// Z3FI2得分=分值-扣分/总项*分值
 				BigDecimal scoreZ3FI2 = getScore(listKpi, "Z3FI2",
-						ConvertUtils.strToDouble(pdRank.get("Z3FI2_DEDUCK_SCORE").toString(), 0),
-						ConvertUtils.strToDouble(pdRank.get("Z3FI2_TOTAL_NUM").toString(), 0));
+						ConvertUtils.strToDouble(StringUtil.toString(pdRank.get("Z3FI2_DEDUCK_SCORE"),""), 0),
+						ConvertUtils.strToDouble(StringUtil.toString(pdRank.get("Z3FI2_TOTAL_NUM"),""), 0));
+				pdRank.put("Z3FI2_SCORE", scoreZ3FI2);
 				// **********************************************************//
 
 				// ***************以指标配置为标准，计算总得分*********************//
@@ -571,7 +597,7 @@ public class AssessDataService implements AssessDataManager {
 					listMergeDepart.add(pdAssessDepart);
 					mapMergeDepart.put(parentDepart, listMergeDepart);
 				} else {// 存在
-					List<PageData> listMergeDepart = mapMergeDepart.get("parentDepart");
+					List<PageData> listMergeDepart = mapMergeDepart.get(parentDepart);
 					listMergeDepart.add(pdAssessDepart);
 				}
 
@@ -597,10 +623,10 @@ public class AssessDataService implements AssessDataManager {
 								.equals(item.getString("COMPANY_CODE"))) {
 							if (pdVoucherNumOfCompany.getString("KPI_CODE").equals("Z1FI1")) {
 								deduckScoreZ1FI1 = ConvertUtils
-										.strToDouble(pdVoucherNumOfCompany.getString("Z1FI1_DEDUCK_SCORE"), 0);
+										.strToDouble(pdVoucherNumOfCompany.getString("DEDUCK_SCORE"), 0);
 							} else if (pdVoucherNumOfCompany.getString("KPI_CODE").equals("Z3FI2")) {
 								deduckScoreZ3FI2 = ConvertUtils
-										.strToDouble(pdVoucherNumOfCompany.getString("Z3FI2_DEDUCK_SCORE"), 0);
+										.strToDouble(pdVoucherNumOfCompany.getString("DEDUCK_SCORE"), 0);
 							}
 						}
 						break;
@@ -667,15 +693,17 @@ public class AssessDataService implements AssessDataManager {
 		BigDecimal kpiScore = new BigDecimal(0);
 		for (PageData pdKpi : listKpi) {
 			if (pdKpi.getString("KPI_CODE").equals(kpiCode)) {
-				kpiScore = new BigDecimal(pdKpi.get("TOTAL_SCORE").toString());
+				kpiScore = new BigDecimal(StringUtil.toString(pdKpi.get("TOTAL_SCORE"),""));
 			}
 		}
 		// Z1FI1得分=分值-扣分/总项*分值
 		BigDecimal deduckScore = new BigDecimal(doubleDeduckScore);
 		BigDecimal totalNum = new BigDecimal(doubleTotalNum);
 		// Z1FI1得分
-		BigDecimal score = kpiScore.subtract(deduckScore.divide(totalNum)).multiply(kpiScore);
-
+		BigDecimal score=new BigDecimal(0);
+		if(totalNum.doubleValue()!=0){
+			score = kpiScore.subtract(deduckScore.divide(totalNum,6, BigDecimal.ROUND_HALF_UP).multiply(kpiScore));
+		}
 		return score;
 	}
 
@@ -686,9 +714,9 @@ public class AssessDataService implements AssessDataManager {
 		BigDecimal finalScore = new BigDecimal(0);
 		for (PageData pdKpi : listKpi) {
 			if (pdKpi.getString("KPI_CODE").equals("Z1FI1")) {
-				finalScoreZ1FI1 = scoreZ1FI1.multiply(new BigDecimal(pdKpi.get("PROPORTION").toString()));
+				finalScoreZ1FI1 = scoreZ1FI1.multiply(new BigDecimal(StringUtil.toString(pdKpi.get("PROPORTION"),"")).divide(new BigDecimal(100)));
 			} else if (pdKpi.getString("KPI_CODE").equals("Z3FI2")) {
-				finalScoreZ3FI2 = scoreZ3FI2.multiply(new BigDecimal(pdKpi.get("PROPORTION").toString()));
+				finalScoreZ3FI2 = scoreZ3FI2.multiply(new BigDecimal(StringUtil.toString(pdKpi.get("PROPORTION"),"")).divide(new BigDecimal(100)));
 			}
 		}
 		finalScore = finalScoreZ1FI1.add(finalScoreZ3FI2);
@@ -747,8 +775,8 @@ public class AssessDataService implements AssessDataManager {
 			
 			dao.update("KhTotalMapper.batchCoverAdd", listData);
 			
-			List<PageData> listRank=generateRankData(listData.get(0).getString("BUSI_DATE"),kpiCode.split("-")[1]);
-			dao.update("KhTotalMapper.batchDelAndInsRank", listRank);
+			/*List<PageData> listRank=generateRankData(listData.get(0).getString("BUSI_DATE"),kpiCode.split("-")[1]);
+			dao.update("KhTotalMapper.batchDelAndInsRank", listRank);*/
 			break;
 		}
 

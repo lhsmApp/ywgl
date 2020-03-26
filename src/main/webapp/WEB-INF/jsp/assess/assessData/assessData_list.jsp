@@ -566,6 +566,7 @@
 	
 	    //检索
 	    function tosearch() {
+	    	console.log('ccc');
 	    	var kpiCode=$("#KPI_CODE").val();
 			var selectDate=$("#SelectedBusiDate").val();
 	    	
