@@ -65,34 +65,36 @@
 								<c:choose>
 									<c:when test="${not empty varList}">
 										<c:forEach items="${varList}" var="var" varStatus="vs">	
-											<tr>
-											<td class='center' style="width: 30px;">${vs.index+1}</td>
-											<td class='center'style="width: 200px;">${var.BILL_CODE}</td>
-											<td class='center'style="width: 200px;">${var.BG_NAME}</td>
-											<td class='center'style="width: 200px;">${var.UNIT_NAME}</td>
-											<td class='center'style="width: 200px;">${var.DEPT_NAME}</td>
-											<td class='center'style="width: 200px;">${var.BG_REASON}</td>					
-											<td class='center'style="width: 200px;">${var.USERNAME}</td>
-											<td class='center'style="width: 200px;">${var.USER_DEPTNAME}</td>
-											<td class='center'style="width: 100px;">${var.USER_JOB}</td>
-											<td class='center'style="width: 100px;">${var.USER_CONTACT}</td>
-											<td class='center'style="width: 200px;">${var.ENTRY_DATE}</td>
+											<c:if test="${var.APPROVAL_STATE != null }">
+												<tr>
+												<td class='center' style="width: 30px;">${vs.index+1}</td>
+												<td class='center'style="width: 200px;">${var.BILL_CODE}</td>
+												<td class='center'style="width: 200px;">${var.BG_NAME}</td>
+												<td class='center'style="width: 200px;">${var.UNIT_NAME}</td>
+												<td class='center'style="width: 200px;">${var.DEPT_NAME}</td>
+												<td class='center'style="width: 200px;">${var.BG_REASON}</td>					
+												<td class='center'style="width: 200px;">${var.USERNAME}</td>
+												<td class='center'style="width: 200px;">${var.USER_DEPTNAME}</td>
+												<td class='center'style="width: 100px;">${var.USER_JOB}</td>
+												<td class='center'style="width: 100px;">${var.USER_CONTACT}</td>
+												<td class='center'style="width: 200px;">${var.ENTRY_DATE}</td>
 												<td style="width: 100px;" class="center">
-											<c:if test="${var.APPROVAL_STATE == '0' }"><span class="label blue">审批中</span></c:if>
-											<c:if test="${var.APPROVAL_STATE == '2' }"><span class="label orange">退回</span></c:if>
-											<c:if test="${var.APPROVAL_STATE == '1' }"><span class="label grey">已完成</span></c:if>
-											<c:if test="${var.APPROVAL_STATE == null }"><span class="label grey">未上报</span></c:if>
-												</td>
-												<td style="width: 60px;" class="center">
-													<c:if test="${var.BILL_STATE == '0' }"><span class="label label-important arrowed-in">停用</span></c:if>
-													<c:if test="${var.BILL_STATE == '1' }"><span class="label label-success arrowed">正常</span></c:if>
-												</td>
-												<td class="center">
-													<div class="hidden-sm hidden-xs btn-group">
-														<button class="btn btn-xs btn-yellow" onClick="showDetail('${var.BILL_CODE}')">详情</button>
-													</div>
-												</td>
-											</tr>
+												<c:if test="${var.APPROVAL_STATE == '0' }"><span class="label blue">审批中</span></c:if>
+												<c:if test="${var.APPROVAL_STATE == '2' }"><span class="label orange">退回</span></c:if>
+												<c:if test="${var.APPROVAL_STATE == '1' }"><span class="label grey">已完成</span></c:if>
+	<%-- 											<c:if test="${var.APPROVAL_STATE == null }"><span class="label grey">未上报</span></c:if> --%>
+													</td>
+													<td style="width: 60px;" class="center">
+														<c:if test="${var.BILL_STATE == '0' }"><span class="label label-important arrowed-in">停用</span></c:if>
+														<c:if test="${var.BILL_STATE == '1' }"><span class="label label-success arrowed">正常</span></c:if>
+													</td>
+													<td class="center">
+														<div class="hidden-sm hidden-xs btn-group">
+															<button class="btn btn-xs btn-yellow" onClick="showDetail('${var.BILL_CODE}')">详情</button>
+														</div>
+													</td>
+												</tr>
+											</c:if>
 										</c:forEach>
 									</c:when>
 									<c:otherwise>
