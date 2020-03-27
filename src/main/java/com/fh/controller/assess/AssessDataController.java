@@ -9,6 +9,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
+
+import org.omg.CosNaming.NamingContextExtPackage.StringNameHelper;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
@@ -126,7 +128,7 @@ public class AssessDataController extends BaseController {
 		List<PageData> listKpiAll = new ArrayList<PageData>();
 		for (PageData pdItem : listKpi) {
 			PageData pdTotal = new PageData();
-			pdTotal.put("KPI_CODE", "total-"+pdItem.getString("KPI_CODE"));
+			pdTotal.put("KPI_CODE", "total-" + pdItem.getString("KPI_CODE"));
 			pdTotal.put("KPI_NAME", pdItem.getString("KPI_NAME") + "/" + "指标总数");
 
 			pdItem.put("KPI_NAME", pdItem.getString("KPI_NAME") + "/" + "扣分明细");
@@ -222,11 +224,11 @@ public class AssessDataController extends BaseController {
 			break;
 		default:
 			// 获取带__的列，后续删除之类的有用
-			keyListBase = Arrays.asList("BUSI_DATE", "KPI_CODE","COMPANY_CODE");
+			keyListBase = Arrays.asList("BUSI_DATE", "KPI_CODE", "COMPANY_CODE");
 			// 设置必定不为空的列
-			MustInputList = Arrays.asList("BUSI_DATE", "KPI_CODE","COMPANY_CODE","TOTAL_SCORE","PROPORTION");
-			
-			MustNotEditList = Arrays.asList("BUSI_DATE", "KPI_CODE","COMPANY_CODE","TOTAL_SCORE","PROPORTION");
+			MustInputList = Arrays.asList("BUSI_DATE", "KPI_CODE", "COMPANY_CODE", "TOTAL_SCORE", "PROPORTION");
+
+			MustNotEditList = Arrays.asList("BUSI_DATE", "KPI_CODE", "COMPANY_CODE", "TOTAL_SCORE", "PROPORTION");
 			break;
 		}
 
@@ -235,27 +237,37 @@ public class AssessDataController extends BaseController {
 		TmplUtil tmpl = new TmplUtil(tmplconfigService, tmplconfigdictService, dictionariesService, departmentService,
 				userService, keyListBase, null, "", MustInputList, null);
 		if (kpi.getString("KPI_CODE").contains("total")) {
-			this.map_SetColumnsList = Common.GetSetColumnsListByTableName("tb_kh_total", "", "9870",
-					tmplconfigService);
+			this.map_SetColumnsList = Common.GetSetColumnsListByTableName("tb_kh_total", "", "9870", tmplconfigService);
 			this.map_HaveColumnsList = Common.GetHaveColumnsMapByTableName("tb_kh_total", tmplconfigService);
 
-			/*this.map_SetColumnsList.clear();
-			this.map_SetColumnsList.put("BUSI_DATE", new TmplConfigDetail("BUSI_DATE", "业务期间", "0", false));
-			this.map_SetColumnsList.put("KPI_CODE", new TmplConfigDetail("KPI_CODE", "指标代码", "0", false));
-			this.map_SetColumnsList.put("COMPANY_CODE", new TmplConfigDetail("COMPANY_CODE", "公司代码", "1", false));
-			this.map_SetColumnsList.put("COMPANY_NAME", new TmplConfigDetail("COMPANY_NAME", "公司代码描述", "1", false));
-			this.map_SetColumnsList.put("KH_TOTAL_NUM", new TmplConfigDetail("KH_TOTAL_NUM", "考核项总数", "1", true));*/
+			/*
+			 * this.map_SetColumnsList.clear();
+			 * this.map_SetColumnsList.put("BUSI_DATE", new
+			 * TmplConfigDetail("BUSI_DATE", "业务期间", "0", false));
+			 * this.map_SetColumnsList.put("KPI_CODE", new
+			 * TmplConfigDetail("KPI_CODE", "指标代码", "0", false));
+			 * this.map_SetColumnsList.put("COMPANY_CODE", new
+			 * TmplConfigDetail("COMPANY_CODE", "公司代码", "1", false));
+			 * this.map_SetColumnsList.put("COMPANY_NAME", new
+			 * TmplConfigDetail("COMPANY_NAME", "公司代码描述", "1", false));
+			 * this.map_SetColumnsList.put("KH_TOTAL_NUM", new
+			 * TmplConfigDetail("KH_TOTAL_NUM", "考核项总数", "1", true));
+			 */
 
 			jqGridColModel = tmpl.generateStructureByTableCode("tb_kh_total", "", "9870", 3, MustNotEditList);
 		} else {
 			this.map_SetColumnsList = Common.GetSetColumnsList(getPd.getString("KPI_CODE"), "", "9870",
 					tmplconfigService);
 			this.map_HaveColumnsList = Common.GetHaveColumnsList(getPd.getString("KPI_CODE"), tmplconfigService);
-			/*this.map_DicList = Common.GetDicList(getPd.getString("KPI_CODE"), "", "9870", tmplconfigService,
-					tmplconfigdictService, dictionariesService, departmentService, userService, "");*/
+			/*
+			 * this.map_DicList = Common.GetDicList(getPd.getString("KPI_CODE"),
+			 * "", "9870", tmplconfigService, tmplconfigdictService,
+			 * dictionariesService, departmentService, userService, "");
+			 */
 			jqGridColModel = tmpl.generateStructure(getPd.getString("KPI_CODE"), "", "9870", 3, MustNotEditList);
 		}
 		mv.addObject("jqGridColModel", jqGridColModel);
+		getPd.put("funcType", "import");
 		mv.addObject("pd", getPd);
 		return mv;
 	}
@@ -283,7 +295,7 @@ public class AssessDataController extends BaseController {
 		List<PageData> listKpiAll = new ArrayList<PageData>();
 		for (PageData pdItem : listKpi) {
 			PageData pdTotal = new PageData();
-			pdTotal.put("KPI_CODE", "total-"+pdItem.getString("KPI_CODE"));
+			pdTotal.put("KPI_CODE", "total-" + pdItem.getString("KPI_CODE"));
 			pdTotal.put("KPI_NAME", pdItem.getString("KPI_NAME") + "/" + "指标总数");
 
 			pdItem.put("KPI_NAME", pdItem.getString("KPI_NAME") + "/" + "扣分明细");
@@ -292,7 +304,6 @@ public class AssessDataController extends BaseController {
 			listKpiAll.add(pdTotal);
 		}
 		mv.addObject("listKPI", listKpiAll);
-		
 
 		PageData pdCode = new PageData();
 		if (getPd.get("KPI_CODE") != null) {
@@ -304,42 +315,53 @@ public class AssessDataController extends BaseController {
 		PageData kpi = kpiService.findByCode(pdCode);
 		mv.addObject("KPI", kpi);
 
-		/*this.map_SetColumnsList = Common.GetSetColumnsList(getPd.getString("KPI_CODE"), "", "9870", tmplconfigService);
-		this.map_HaveColumnsList = Common.GetHaveColumnsList(getPd.getString("KPI_CODE"), tmplconfigService);
-		this.map_DicList = Common.GetDicList(getPd.getString("KPI_CODE"), "", "9870", tmplconfigService,
-				tmplconfigdictService, dictionariesService, departmentService, userService, "");
+		/*
+		 * this.map_SetColumnsList =
+		 * Common.GetSetColumnsList(getPd.getString("KPI_CODE"), "", "9870",
+		 * tmplconfigService); this.map_HaveColumnsList =
+		 * Common.GetHaveColumnsList(getPd.getString("KPI_CODE"),
+		 * tmplconfigService); this.map_DicList =
+		 * Common.GetDicList(getPd.getString("KPI_CODE"), "", "9870",
+		 * tmplconfigService, tmplconfigdictService, dictionariesService,
+		 * departmentService, userService, "");
+		 * 
+		 * SqlUserdata = new StringBuilder();
+		 * 
+		 * TmplUtil tmpl = new TmplUtil(tmplconfigService,
+		 * tmplconfigdictService, dictionariesService, departmentService,
+		 * userService, keyListBase, null, "", MustInputList, null); String
+		 * jqGridColModel = tmpl.generateStructure(getPd.getString("KPI_CODE"),
+		 * "", "9870", 3, MustNotEditList);
+		 * 
+		 * mv.addObject("jqGridColModel", jqGridColModel); mv.addObject("pd",
+		 * getPd);
+		 */
 
-		SqlUserdata = new StringBuilder();
-
-		TmplUtil tmpl = new TmplUtil(tmplconfigService, tmplconfigdictService, dictionariesService, departmentService,
-				userService, keyListBase, null, "", MustInputList, null);
-		String jqGridColModel = tmpl.generateStructure(getPd.getString("KPI_CODE"), "", "9870", 3, MustNotEditList);
-
-		mv.addObject("jqGridColModel", jqGridColModel);
-		mv.addObject("pd", getPd);*/
-		
 		String jqGridColModel = "";
 		SqlUserdata = new StringBuilder();
 		TmplUtil tmpl = new TmplUtil(tmplconfigService, tmplconfigdictService, dictionariesService, departmentService,
 				userService, keyListBase, null, "", MustInputList, null);
 		if (kpi.getString("KPI_CODE").contains("total")) {
-			this.map_SetColumnsList = Common.GetSetColumnsListByTableName("tb_kh_total", "", "9870",
-					tmplconfigService);
+			this.map_SetColumnsList = Common.GetSetColumnsListByTableName("tb_kh_total", "", "9870", tmplconfigService);
 			this.map_HaveColumnsList = Common.GetHaveColumnsMapByTableName("tb_kh_total", tmplconfigService);
 			jqGridColModel = tmpl.generateStructureByTableCode("tb_kh_total", "", "9870", 3, MustNotEditList);
 		} else {
 			this.map_SetColumnsList = Common.GetSetColumnsList(getPd.getString("KPI_CODE"), "", "9870",
 					tmplconfigService);
 			this.map_HaveColumnsList = Common.GetHaveColumnsList(getPd.getString("KPI_CODE"), tmplconfigService);
-			/*this.map_DicList = Common.GetDicList(getPd.getString("KPI_CODE"), "", "9870", tmplconfigService,
-					tmplconfigdictService, dictionariesService, departmentService, userService, "");*/
+			/*
+			 * this.map_DicList = Common.GetDicList(getPd.getString("KPI_CODE"),
+			 * "", "9870", tmplconfigService, tmplconfigdictService,
+			 * dictionariesService, departmentService, userService, "");
+			 */
 			jqGridColModel = tmpl.generateStructure(getPd.getString("KPI_CODE"), "", "9870", 3, MustNotEditList);
 		}
 		mv.addObject("jqGridColModel", jqGridColModel);
+		getPd.put("funcType", "query");
 		mv.addObject("pd", getPd);
 		return mv;
 	}
-	
+
 	/**
 	 * 考核排行榜
 	 * 
@@ -357,14 +379,16 @@ public class AssessDataController extends BaseController {
 		// 当前期间,取自tb_system_config的SystemDateTime字段
 		String SystemDateTime = sysConfigManager.currentSection(getPd);
 		mv.addObject("SystemDateTime", SystemDateTime.trim());
-		
-		TmplUtil tmpl = new TmplUtil(tmplconfigService, tmplconfigdictService, dictionariesService, 
-				departmentService,userService);
-		this.map_SetColumnsList = Common.GetSetColumnsListByTableName("tb_kh_rank", "", "9870",
-				tmplconfigService);
-		String jqGridColModel = tmpl.generateStructureNoEditByTableCode("tb_kh_rank", "","9870");
-		/*this.map_DicList = Common.GetDicList(getPd.getString("KPI_CODE"), "", "9870", tmplconfigService,
-				tmplconfigdictService, dictionariesService, departmentService, userService, "");*/
+
+		TmplUtil tmpl = new TmplUtil(tmplconfigService, tmplconfigdictService, dictionariesService, departmentService,
+				userService);
+		this.map_SetColumnsList = Common.GetSetColumnsListByTableName("tb_kh_rank", "", "9870", tmplconfigService);
+		String jqGridColModel = tmpl.generateStructureNoEditByTableCode("tb_kh_rank", "", "9870");
+		/*
+		 * this.map_DicList = Common.GetDicList(getPd.getString("KPI_CODE"), "",
+		 * "9870", tmplconfigService, tmplconfigdictService,
+		 * dictionariesService, departmentService, userService, "");
+		 */
 
 		mv.addObject("jqGridColModel", jqGridColModel);
 		mv.addObject("pd", getPd);
@@ -473,26 +497,32 @@ public class AssessDataController extends BaseController {
 			break;
 		default:
 			// 获取带__的列，后续删除之类的有用
-			keyListBase = Arrays.asList("BUSI_DATE", "KPI_CODE","COMPANY_CODE");
+			keyListBase = Arrays.asList("BUSI_DATE", "KPI_CODE", "COMPANY_CODE");
 			// 设置必定不为空的列
-			MustInputList = Arrays.asList("BUSI_DATE", "KPI_CODE","COMPANY_CODE","TOTAL_SCORE","PROPORTION");
-			MustNotEditList = Arrays.asList("BUSI_DATE", "KPI_CODE","COMPANY_CODE","TOTAL_SCORE","PROPORTION");
+			MustInputList = Arrays.asList("BUSI_DATE", "KPI_CODE", "COMPANY_CODE", "TOTAL_SCORE", "PROPORTION");
+			MustNotEditList = Arrays.asList("BUSI_DATE", "KPI_CODE", "COMPANY_CODE", "TOTAL_SCORE", "PROPORTION");
 			break;
 		}
 		String jqGridColModel = "";
-		TmplUtil tmpl = new TmplUtil(tmplconfigService, tmplconfigdictService, dictionariesService,
-				departmentService, userService, keyListBase, null, "", MustInputList, null);
+		TmplUtil tmpl = new TmplUtil(tmplconfigService, tmplconfigdictService, dictionariesService, departmentService,
+				userService, keyListBase, null, "", MustInputList, null);
 		if (getPd.getString("KPI_CODE").contains("total")) {
-			this.map_SetColumnsList = Common.GetSetColumnsListByTableName("tb_kh_total", "", "9870",
-					tmplconfigService);
+			this.map_SetColumnsList = Common.GetSetColumnsListByTableName("tb_kh_total", "", "9870", tmplconfigService);
 			this.map_HaveColumnsList = Common.GetHaveColumnsMapByTableName("tb_kh_total", tmplconfigService);
-			/*this.map_SetColumnsList.clear();
-			
-			this.map_SetColumnsList.put("BUSI_DATE", new TmplConfigDetail("BUSI_DATE", "业务期间", "0", false));
-			this.map_SetColumnsList.put("KPI_CODE", new TmplConfigDetail("KPI_CODE", "指标代码", "0", false));
-			this.map_SetColumnsList.put("COMPANY_CODE", new TmplConfigDetail("COMPANY_CODE", "公司代码", "1", false));
-			this.map_SetColumnsList.put("COMPANY_NAME", new TmplConfigDetail("COMPANY_NAME", "公司代码描述", "1", false));
-			this.map_SetColumnsList.put("KH_TOTAL_NUM", new TmplConfigDetail("KH_TOTAL_NUM", "考核项总数", "1", true));*/
+			/*
+			 * this.map_SetColumnsList.clear();
+			 * 
+			 * this.map_SetColumnsList.put("BUSI_DATE", new
+			 * TmplConfigDetail("BUSI_DATE", "业务期间", "0", false));
+			 * this.map_SetColumnsList.put("KPI_CODE", new
+			 * TmplConfigDetail("KPI_CODE", "指标代码", "0", false));
+			 * this.map_SetColumnsList.put("COMPANY_CODE", new
+			 * TmplConfigDetail("COMPANY_CODE", "公司代码", "1", false));
+			 * this.map_SetColumnsList.put("COMPANY_NAME", new
+			 * TmplConfigDetail("COMPANY_NAME", "公司代码描述", "1", false));
+			 * this.map_SetColumnsList.put("KH_TOTAL_NUM", new
+			 * TmplConfigDetail("KH_TOTAL_NUM", "考核项总数", "1", true));
+			 */
 
 			jqGridColModel = tmpl.generateStructureByTableCode("tb_kh_total", "", "9870", 3, MustNotEditList);
 		} else {
@@ -500,8 +530,11 @@ public class AssessDataController extends BaseController {
 			this.map_SetColumnsList = Common.GetSetColumnsList(getPd.getString("KPI_CODE"), "", "9870",
 					tmplconfigService);
 			this.map_HaveColumnsList = Common.GetHaveColumnsList(getPd.getString("KPI_CODE"), tmplconfigService);
-			/*this.map_DicList = Common.GetDicList(getPd.getString("KPI_CODE"), "", "9870", tmplconfigService,
-					tmplconfigdictService, dictionariesService, departmentService, userService, "");*/
+			/*
+			 * this.map_DicList = Common.GetDicList(getPd.getString("KPI_CODE"),
+			 * "", "9870", tmplconfigService, tmplconfigdictService,
+			 * dictionariesService, departmentService, userService, "");
+			 */
 
 			jqGridColModel = tmpl.generateStructure(getPd.getString("KPI_CODE"), "", "9870", 3, MustNotEditList);
 		}
@@ -530,7 +563,9 @@ public class AssessDataController extends BaseController {
 		if (null != filters && !"".equals(filters)) {
 			getPd.put("filterWhereResult", SqlTools.constructWhere(filters, null));
 		}
-
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		String departCode = user.getDEPARTMENT_ID();
+		getPd.put("DEPART_CODE", departCode);
 		page.setPd(getPd);
 		List<PageData> varList = assessDataService.JqPage(page);
 		int records = assessDataService.countJqGridExtend(page);
@@ -550,7 +585,7 @@ public class AssessDataController extends BaseController {
 
 		return result;
 	}
-	
+
 	/**
 	 * 列表
 	 * 
@@ -561,7 +596,7 @@ public class AssessDataController extends BaseController {
 	public @ResponseBody PageResult<PageData> getRankList() throws Exception {
 		PageData getPd = this.getPageData();
 		// 页面选择区间
-		//String SelectedBusiDate = getPd.getString("SelectedBusiDate");
+		// String SelectedBusiDate = getPd.getString("SelectedBusiDate");
 
 		// 多条件过滤条件
 		String filters = getPd.getString("filters");
@@ -569,13 +604,13 @@ public class AssessDataController extends BaseController {
 			getPd.put("filterWhereResult", SqlTools.constructWhere(filters, null));
 		}
 		List<PageData> varList = assessDataService.JqPageRank(getPd);
-		//int records = assessDataService.countJqGridExtend(page);
+		// int records = assessDataService.countJqGridExtend(page);
 
 		PageResult<PageData> result = new PageResult<PageData>();
 		result.setRows(varList);
-		//result.setRowNum(page.getRowNum());
-		//result.setRecords(records);
-		//result.setPage(page.getPage());
+		// result.setRowNum(page.getRowNum());
+		// result.setRecords(records);
+		// result.setPage(page.getPage());
 
 		return result;
 	}
@@ -599,9 +634,9 @@ public class AssessDataController extends BaseController {
 		// 操作
 		String oper = getPd.getString("oper");
 		List<PageData> listData = new ArrayList<PageData>();
-		PageData getKpi=new PageData();
+		PageData getKpi = new PageData();
 		getKpi.put("KPI_CODE", kpiCode);
-		PageData pdKpi= kpiService.findByCode(getKpi);
+		PageData pdKpi = kpiService.findByCode(getKpi);
 		if (oper.equals("add")) {
 			// 判断选择为必须选择的
 			String strGetCheckMustSelected = CheckMustSelectedAndSame(SelectedBusiDate, ShowDataBusiDate);
@@ -611,8 +646,10 @@ public class AssessDataController extends BaseController {
 				return commonBase;
 			}
 			getPd.put("BUSI_DATE", SelectedBusiDate);
-			getPd.put("TOTAL_SCORE", pdKpi.get("TOTAL_SCORE"));
-			getPd.put("PROPORTION", pdKpi.get("PROPORTION"));
+			if (pdKpi != null) {
+				getPd.put("TOTAL_SCORE", pdKpi.get("TOTAL_SCORE"));
+				getPd.put("PROPORTION", pdKpi.get("PROPORTION"));
+			}
 			Common.setModelDefault(getPd, map_HaveColumnsList, map_SetColumnsList, MustNotEditList);
 			for (String strFeild : keyListBase) {
 				getPd.put(strFeild + TmplUtil.keyExtra, "");
@@ -622,9 +659,10 @@ public class AssessDataController extends BaseController {
 			for (String strFeild : MustNotEditList) {
 				getPd.put(strFeild, getPd.get(strFeild + TmplUtil.keyExtra));
 			}
-			
-			getPd.put("TOTAL_SCORE", pdKpi.get("TOTAL_SCORE"));
-			getPd.put("PROPORTION", pdKpi.get("PROPORTION"));
+			if (pdKpi != null) {
+				getPd.put("TOTAL_SCORE", pdKpi.get("TOTAL_SCORE"));
+				getPd.put("PROPORTION", pdKpi.get("PROPORTION"));
+			}
 			Common.setModelDefault(getPd, map_HaveColumnsList, map_SetColumnsList, MustNotEditList);
 			listData.add(getPd);
 		}
@@ -662,10 +700,11 @@ public class AssessDataController extends BaseController {
 				for (String strFeild : MustNotEditList) {
 					pdData.put(strFeild, pdData.get(strFeild + TmplUtil.keyExtra));
 				}
-				PageData pdKpi= kpiService.findByCode(getPd);
-				
-				pdData.put("TOTAL_SCORE", pdKpi.get("TOTAL_SCORE"));
-				pdData.put("PROPORTION", pdKpi.get("PROPORTION"));
+				PageData pdKpi = kpiService.findByCode(getPd);
+				if (pdKpi != null) {
+					pdData.put("TOTAL_SCORE", pdKpi.get("TOTAL_SCORE"));
+					pdData.put("PROPORTION", pdKpi.get("PROPORTION"));
+				}
 				Common.setModelDefault(pdData, map_HaveColumnsList, map_SetColumnsList, MustNotEditList);
 			}
 			/*
@@ -811,7 +850,7 @@ public class AssessDataController extends BaseController {
 			Map<String, String> returnErrorMust = (Map<String, String>) uploadAndReadMap.get(3);
 
 			List<PageData> listUploadAndRead = (List<PageData>) uploadAndReadMap.get(1);
-			
+
 			if (listUploadAndRead != null && !"[]".equals(listUploadAndRead.toString())
 					&& listUploadAndRead.size() >= 1) {
 				judgement = true;
@@ -834,13 +873,15 @@ public class AssessDataController extends BaseController {
 							pdAdd.put("BUSI_DATE", ShowDataBusiDate);
 							getBUSI_DATE = ShowDataBusiDate;
 						}
-						if(kpiCode.contains("total")){
-							String [] kpiCodes=kpiCode.split("-");
+						if (kpiCode.contains("total")) {
+							String[] kpiCodes = kpiCode.split("-");
 							pdAdd.put("KPI_CODE", kpiCodes[1]);
+						} else {
+							pdAdd.put("KPI_CODE", kpiCode);
 						}
-						
-						PageData pdKpi= kpiService.findByCode(pdAdd);
-						
+
+						PageData pdKpi = kpiService.findByCode(pdAdd);
+
 						pdAdd.put("TOTAL_SCORE", pdKpi.get("TOTAL_SCORE"));
 						pdAdd.put("PROPORTION", pdKpi.get("PROPORTION"));
 						if (!ShowDataBusiDate.equals(getBUSI_DATE)) {
@@ -921,27 +962,29 @@ public class AssessDataController extends BaseController {
 		mv.addObject("StringDataRows", JSONArray.fromObject(listAdd).toString().replaceAll("'", "%"));//
 		return mv;
 	}
-	
-	/**覆盖添加
+
+	/**
+	 * 覆盖添加
+	 * 
 	 * @param
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/coverAdd")
-	public @ResponseBody CommonBase coverAdd() throws Exception{
+	@RequestMapping(value = "/coverAdd")
+	public @ResponseBody CommonBase coverAdd() throws Exception {
 		CommonBase commonBase = new CommonBase();
 		commonBase.setCode(-1);
 
 		PageData getPd = this.getPageData();
-		
-	    Object DATA_ROWS = getPd.get("StringDataRows");
-	    String json = DATA_ROWS.toString();  
-	    json=json.replaceAll("%", "'");
-        JSONArray array = JSONArray.fromObject(json);  
-        List<PageData> listData = (List<PageData>) JSONArray.toCollection(array,PageData.class);
-		if(null != listData && listData.size() > 0){
-			String kpiCode=getPd.getString("KPI_CODE");
-	        //直接删除添加，不判断重复数据
+
+		Object DATA_ROWS = getPd.get("StringDataRows");
+		String json = DATA_ROWS.toString();
+		json = json.replaceAll("%", "'");
+		JSONArray array = JSONArray.fromObject(json);
+		List<PageData> listData = (List<PageData>) JSONArray.toCollection(array, PageData.class);
+		if (null != listData && listData.size() > 0) {
+			String kpiCode = getPd.getString("KPI_CODE");
+			// 直接删除添加，不判断重复数据
 			assessDataService.batchCoverAdd(listData, kpiCode);
 			commonBase.setCode(0);
 		}

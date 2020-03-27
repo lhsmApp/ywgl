@@ -555,8 +555,9 @@ public class AssessDataService implements AssessDataManager {
 						} else if (pdVoucherNumOfCompany.getString("KPI_CODE").equals("Z3FI2")) {
 							pdRank.put("Z3FI2_DEDUCK_SCORE", pdVoucherNumOfCompany.get("DEDUCK_SCORE"));
 						}
+						break;
 					}
-					break;
+					
 				}
 				for (PageData pdTotalNumOfCompany : listTotalNumOfCompany) {
 					if (pdTotalNumOfCompany.getString("COMPANY_CODE")
@@ -566,8 +567,8 @@ public class AssessDataService implements AssessDataManager {
 						} else if (pdTotalNumOfCompany.getString("KPI_CODE").equals("Z3FI2")) {
 							pdRank.put("Z3FI2_TOTAL_NUM", pdTotalNumOfCompany.get("KH_TOTAL_NUM"));
 						}
+						break;
 					}
-					break;
 				}
 				// ****************得分=分值-扣分/总项*分值**************************//
 				// 得分=分值-扣分/总项*分值
@@ -703,6 +704,8 @@ public class AssessDataService implements AssessDataManager {
 		BigDecimal score=new BigDecimal(0);
 		if(totalNum.doubleValue()!=0){
 			score = kpiScore.subtract(deduckScore.divide(totalNum,6, BigDecimal.ROUND_HALF_UP).multiply(kpiScore));
+		}else{
+			score=kpiScore;
 		}
 		return score;
 	}

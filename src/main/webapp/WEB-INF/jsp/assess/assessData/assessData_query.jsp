@@ -374,7 +374,8 @@
     			url: '<%=basePath%>assessData/getPageList.do?'
             		+ 'SelectedBusiDate='+$("#SelectedBusiDate").val()
                     + '&ShowDataBusiDate='+ShowDataBusiDate
-                    + '&KPI_CODE='+$("#KPI_CODE").val(),
+                    + '&KPI_CODE='+$("#KPI_CODE").val()
+                    + '&funcType='+'${pd.funcType}',
     			datatype: "json",
     			colModel: jqGridColModel,
     			reloadAfterSubmit: true, 
