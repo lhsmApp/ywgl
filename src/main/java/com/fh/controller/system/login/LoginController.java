@@ -555,7 +555,8 @@ public class LoginController extends BaseController {
 			if ("admin".equals(USERNAME)) {
 				buttonQXnamelist = fhbuttonService.listAll(pd); // admin用户拥有所有按钮权限
 			} else {
-				buttonQXnamelist = buttonrightsService.listAllBrAndQxname(pd); // 此角色拥有的按钮权限标识列表
+				//2020年3月25日 报错，我给注释掉了 yijche
+				//buttonQXnamelist = buttonrightsService.listAllBrAndQxname(pd); // 此角色拥有的按钮权限标识列表
 			}
 			for (int i = 0; i < buttonQXnamelist.size(); i++) {
 				map.put(buttonQXnamelist.get(i).getString("QX_NAME"), "1"); // 按钮权限
