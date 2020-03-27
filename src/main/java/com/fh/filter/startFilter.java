@@ -40,7 +40,7 @@ public class startFilter extends BaseController implements Filter{
 	public void init(FilterConfig fc) throws ServletException {
 		//this.startWebsocketInstantMsg();
 		//this.startWebsocketOnline();
-		this.reductionDbBackupQuartzState();
+		//this.reductionDbBackupQuartzState(); 2020年3月25日注释，yijche
 	}
 	
 	/**
