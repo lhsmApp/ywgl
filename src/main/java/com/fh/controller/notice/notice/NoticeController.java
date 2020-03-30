@@ -187,6 +187,7 @@ public class NoticeController extends BaseController {
 			pd2.put("sDetails", pd.getString("NOTICE_CONTENT"));
 			pd2.put("dtBeginTime", pd.getString("START_TIME"));
 			pd2.put("dtOverTime", pd.getString("END_TIME"));
+			pd2.put("sCanClickUrl", "notice/list.do?NOTICE_CONTENT="+pd.getString("NOTICE_CONTENT"));
 			com.alibaba.fastjson.JSONObject json2 = myPushService.editSend(pd2);// 新建成功后推送消息 用json格式
 			System.out.println(json2);// test
 		}else {
