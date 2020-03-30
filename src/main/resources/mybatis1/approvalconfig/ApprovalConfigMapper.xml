@@ -544,10 +544,10 @@
 <!-- 		 	  a.ACTIVE_FLAG =#{pd.ACTIVE_FLAG} -->
 			  a.UNIT_CODE = #{pd.UNIT_CODE}
 			  AND a.ROLE_CODE = #{pd.ROLE_CODE}
-			   <if test="ACTIVE_FLAG!=null and ACTIVE_FLAG!=''"> 
+			   <if test="pd.ACTIVE_FLAG!=null and pd.ACTIVE_FLAG!=''"> 
 			 and a.ACTIVE_FLAG =#{pd.ACTIVE_FLAG}
 			 </if>
-			<if test="APPROVAL_STATE!=null and APPROVAL_STATE!=''"> 
+			<if test="pd.APPROVAL_STATE!=null and pd.APPROVAL_STATE!=''"> 
 			 and a.APPROVAL_STATE = #{pd.APPROVAL_STATE}
 			 </if>
 <!-- 			  AND a.APPROVAL_STATE = #{pd.APPROVAL_STATE} -->
