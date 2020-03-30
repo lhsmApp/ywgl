@@ -61,4 +61,6 @@ public interface MyPushManager {
 	public List<PageData> getMySelfUnRead(PageData pd) throws Exception;
 
 	public List<PageData> markRead(PageData pd) throws Exception;
+	
+	public JSONObject editSend(PageData pd)throws Exception;
 }

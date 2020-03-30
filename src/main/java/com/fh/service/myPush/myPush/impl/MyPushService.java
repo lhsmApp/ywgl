@@ -44,8 +44,8 @@ public class MyPushService implements MyPushManager {
 	public JSONObject saveSend(PageData noticePd) throws Exception {
 		// 初始化返回信息
 		JSONObject reData = new JSONObject();
-		reData.put("ret", 0);
-		reData.put("msg", "");
+		reData.put("iRet", 0);
+		reData.put("sMsg", "");
 
 		// 读取配置文件(假装有配置文件)
 		Map<String, String> configMap = this.loadConfig();
@@ -73,15 +73,15 @@ public class MyPushService implements MyPushManager {
 		noticePd.put("iStatus", 1);
 
 		if (noticePd.get("sDetails") == null) {
-			reData.put("ret", 100002);
-			reData.put("msg", "推送失败，内容未设置");
+			reData.put("iRet", 100002);
+			reData.put("sMsg", "推送失败，内容未设置");
 			return reData;
 		}
 		// 有方案就取方案的值，没有则查看前端是否传值，都没有则退出
 		List<Map<String, String[]>> scopeList = new ArrayList<Map<String, String[]>>();
 		// 如果未使用方案
 		if (noticePd.get("iGroupId") == null) {
-			noticePd.remove(CUSTOM_GROUP);// 防止误操作，传入该值。这个值是标记自定义字段的，不能给其他事务使用
+			noticePd.remove(CUSTOM_GROUP);// 防止误操作，删除该值。这个值是标记自定义字段的，不能给其他事务使用
 			boolean hasVal = false;
 			for (String key : cfgScopekey) {
 				PageData scopeListPd = new PageData();
@@ -101,16 +101,16 @@ public class MyPushService implements MyPushManager {
 				hasVal = true;
 			}
 			if (!hasVal) {
-				reData.put("ret", 100003);
-				reData.put("msg", "推送失败，推送范围未设置");
+				reData.put("iRet", 100003);
+				reData.put("sMsg", "推送失败，推送范围未设置");
 				return reData;
 			}
 		} else {
 			// iGroupId= 0推送给全员
 			if (!noticePd.get("iGroupId").equals("0")) {
 				if (dao.findForObject("MyPushMapper.checkGroupById", noticePd) == null) {
-					reData.put("ret", 100004);
-					reData.put("msg", "推送失败，该方案不存在或者没有使用权限");
+					reData.put("iRet", 100004);
+					reData.put("sMsg", "推送失败，该方案不存在或者没有使用权限");
 					return reData;
 				}
 			}
@@ -155,6 +155,14 @@ public class MyPushService implements MyPushManager {
 			Object obj = dao.findForObject("MyPushMapper.getLastForkIdById", noticePd);
 			int lastfId = obj == null ? 0 : (int) obj;
 			noticePd.put("iForkId", ++lastfId);
+		} else {
+			// 查看该分支是否存在
+			List<PageData> list = (List<PageData>) dao.findForList("MyPushMapper.getNoticeById", noticePd);
+			if (list.size() > 0) {
+				reData.put("iRet", 100504);
+				reData.put("sMsg", "失败，通告id已存在");
+				return reData;
+			}
 		}
 
 		// 开始插入
@@ -167,6 +175,16 @@ public class MyPushService implements MyPushManager {
 		dao.save("MyPushMapper.saveNotice", noticePd);
 		dao.save("MyPushMapper.saveBatchScope", scopePd);
 
+		// 推送消息
+		JSONObject json = new JSONObject();
+		json.put("level", noticePd.get("iLevel"));
+		json.put("id", noticePd.get("iModuleId") + ":" + noticePd.get("iModuleSubId") + ":" + noticePd.get("iForkId"));
+		json.put("from", configMap.get("from"));
+		sendMsg(json.toString());
+		return reData;
+	}
+
+	private void sendMsg(String str) throws Exception {
 		// 获取websocket配置
 		Map<String, Object> map = new HashMap<String, Object>();
 		String strWEBSOCKET = Tools.readTxtFile(Const.WEBSOCKET);// 读取WEBSOCKET配置
@@ -178,13 +196,8 @@ public class MyPushService implements MyPushManager {
 				map.put("FHsmsSound", strIW[4]); // 站内信提示音效配置
 			}
 		}
-		// 推送消息
-		JSONObject json = new JSONObject();
-		json.put("level", noticePd.get("iLevel"));
-		json.put("id", noticePd.get("iModuleId") + ":" + noticePd.get("iModuleSubId") + ":" + noticePd.get("iForkId"));
-		json.put("from", configMap.get("from"));
-		NetCommBase.execPostCurl(map.get("oladress").toString(), json.toString());
-		return reData;
+
+		NetCommBase.execPostCurl(map.get("oladress").toString(), str);
 	}
 
 	/**
@@ -270,7 +283,7 @@ public class MyPushService implements MyPushManager {
 		return outputList;
 	}
 
-	public String getMyIdentityToString() throws Exception{
+	public String getMyIdentityToString() throws Exception {
 		Map<String, List<PageData>> myIdentity = this.getMyIdentity();
 		// 根据身份信息获取公告
 		List<String> l1 = new ArrayList<String>();
@@ -288,7 +301,7 @@ public class MyPushService implements MyPushManager {
 		}
 		return String.join("OR", l1);
 	}
-	
+
 	/**
 	 * 说明：获取当前用户涉及到的身份信息（包括单位、角色以及自定义的组）
 	 */
@@ -334,9 +347,9 @@ public class MyPushService implements MyPushManager {
 		PageData pd = new PageData();
 		pd.put("userSysinfo", userSysList);
 		List<PageData> userGroupList = (List<PageData>) dao.findForList("MyPushMapper.getMyGroupByAttr", pd);
-		//用户的自定义组id等于0时，表示全体用户可见
+		// 用户的自定义组id等于0时，表示全体用户可见
 		PageData allUserKey = new PageData();
-		allUserKey.put("iGroupId","0");
+		allUserKey.put("iGroupId", "0");
 		userGroupList.add(allUserKey);
 
 		Map<String, List<PageData>> mergeMap = new HashMap<String, List<PageData>>();
@@ -372,6 +385,119 @@ public class MyPushService implements MyPushManager {
 	@Override
 	public List<PageData> markRead(PageData pd) throws Exception {
 		return (List<PageData>) dao.findForList("MyPushMapper.markRead", pd);
+	}
+
+	/**
+	 * 修改通告内容和范围（可以选择是否删除已读信息）
+	 * 
+	 * pd.doCleanMark 是否清理已读用户标记 pd.doSend 是否再次推送通知
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject editSend(PageData noticePd) throws Exception {
+		// 初始化返回信息
+		JSONObject reData = new JSONObject();
+		reData.put("iRet", 0);
+
+		if (noticePd.get("iModuleId") == null || noticePd.get("iModuleSubId") == null
+				|| noticePd.get("iForkId") == null) {
+			reData.put("iRet", 100021);
+			reData.put("sMsg", "失败，通告id未设置");
+			return reData;
+		}
+
+		// 读取配置文件(假装有配置文件)
+		Map<String, String> configMap = this.loadConfig();
+
+		/* key和value的数量一定要保证一样 */
+		String[] cfgScopekey = configMap.get("key").toString().split(",");
+		String[] cfgScopeValue = configMap.get("value").toString().split(",");
+
+		Map<String, String> cfgScopeMap = new HashMap<String, String>();// 通过cfgScopeMap可知key、value的对应关系
+		for (int i = 0; i < cfgScopekey.length; i++) {
+			cfgScopeMap.put(cfgScopekey[i], cfgScopeValue[i]);
+		}
+
+		// 未赋值的字段走默认配置
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		String userName = user.getUSERNAME();
+		String userId = user.getUSER_ID();
+		noticePd.put("sLastEditors", userName);
+		noticePd.put("iLastEditorsId", userId);
+		// 有方案就取方案的值，没有则查看前端是否传值，都没有则退出
+		List<Map<String, String[]>> scopeList = new ArrayList<Map<String, String[]>>();
+		// 如果未使用方案
+		if (noticePd.get("iGroupId") == null) {
+			noticePd.remove(CUSTOM_GROUP);// 防止误操作，删除该值。这个值是标记自定义字段的，不能给其他事务使用
+			for (String key : cfgScopekey) {
+				PageData scopeListPd = new PageData();
+				Object obj = noticePd.get(key);
+				if (obj == null) {
+					continue;
+				}
+				scopeListPd.put("name", key);
+				String[] strs = obj.toString().split(",");
+				List<String> distinctList = new ArrayList<String>();
+				for (String str : strs) {
+					if (!distinctList.contains(str))
+						distinctList.add(str);
+				}
+				scopeListPd.put("content", distinctList);
+				scopeList.add(scopeListPd);
+			}
+		} else {
+			// iGroupId= 0推送给全员
+			if (!noticePd.get("iGroupId").equals("0")) {
+				if (dao.findForObject("MyPushMapper.checkGroupById", noticePd) == null) {
+					reData.put("iRet", 100104);
+					reData.put("sMsg", "失败，该方案不存在或者没有使用权限");
+					return reData;
+				}
+			}
+			PageData scopePd = new PageData();
+			scopePd.put("name", CUSTOM_GROUP);
+			List<String> distinctList = new ArrayList<String>();
+			distinctList.add(noticePd.get("iGroupId") + "");
+			scopePd.put("content", distinctList);
+			scopeList.add(scopePd);
+		}
+
+		// 开始修改
+		if (scopeList.size() > 0) {
+			PageData scopePd = new PageData();
+			scopePd.put("scopeList", scopeList);
+			scopePd.put("iModuleId", noticePd.get("iModuleId"));
+			scopePd.put("iModuleSubId", noticePd.get("iModuleSubId"));
+			scopePd.put("iForkId", noticePd.get("iForkId"));
+
+			dao.delete("MyPushMapper.deleteScopeByNoticeId", scopePd);
+			dao.save("MyPushMapper.saveBatchScope", scopePd);
+		}
+
+		// 至少要修改一个内容
+		String[] atLeastOne = { "iLevel", "iStatus", "dtBeginTime", "dtOverTime", "sTitle", "sDetails", "sCanClickTile",
+				"sCanClickUrl", "sImgUrl", "iIsForward" };
+		for (String s : atLeastOne) {
+			if (noticePd.get(s) != null) {
+				dao.update("MyPushMapper.editNotice", noticePd);
+				break;
+			}
+		}
+
+		if (noticePd.get("doCleanMark") != null && noticePd.get("doCleanMark").equals("1")) {// 是否清空已读
+			dao.delete("MyPushMapper.deleteMarkByNoticeId", noticePd);
+		}
+
+		if (noticePd.get("doSend") != null && noticePd.get("doSend").equals("1")) {// 是否需要推送
+			// 推送消息
+			JSONObject json = new JSONObject();
+			json.put("level", "1");
+			json.put("id",
+					noticePd.get("iModuleId") + ":" + noticePd.get("iModuleSubId") + ":" + noticePd.get("iForkId"));
+			json.put("from", configMap.get("from"));
+			sendMsg(json.toString());
+		}
+		return reData;
 	}
 
 }

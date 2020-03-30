@@ -170,19 +170,41 @@ public class NoticeController extends BaseController {
 
 		out.write("{\"ret\":\"0\",\"sMsg\":\"success\"}");
 		out.close();
-		// 新建成功后推送消息
+		
 		PageData pd2 = new PageData();
-		pd2.put("iModuleId", 236);
-		pd2.put("iModuleSubId", nId);
-		pd2.put("sDetails", pd.getString("NOTICE_CONTENT"));
-		if (pd.getString("NOTICE_TYPE").equals("0")) {
-			pd2.put("iGroupId", "0");
-		} else {
-			pd2.put("UserList", scoStr);
+		if (isNumericzidai(pd.get("NOTICE_ID").toString())) {
+			pd2.put("iModuleId", 1);
+			pd2.put("iModuleSubId", 6);
+			pd2.put("iForkId", 1);
+			pd2.put("iGroupId", "1");
+			pd2.put("doCleanMark", "1");
+			pd2.put("doSend", "1");
+			if (pd.getString("NOTICE_TYPE").equals("0")) {
+				pd2.put("iGroupId", "0");
+			} else {
+				pd2.put("UserList", scoStr);
+			}
+			pd2.put("sDetails", pd.getString("NOTICE_CONTENT"));
+			pd2.put("dtBeginTime", pd.getString("START_TIME"));
+			pd2.put("dtOverTime", pd.getString("END_TIME"));
+			com.alibaba.fastjson.JSONObject json2 = myPushService.editSend(pd2);// 新建成功后推送消息 用json格式
+			System.out.println(json2);// test
+		}else {
+			// 新建成功后推送消息
+			pd2.put("iModuleId", 236);
+			pd2.put("iModuleSubId", nId);
+			pd2.put("iForkId", 1);
+			pd2.put("sDetails", pd.getString("NOTICE_CONTENT"));
+			if (pd.getString("NOTICE_TYPE").equals("0")) {
+				pd2.put("iGroupId", "0");
+			} else {
+				pd2.put("UserList", scoStr);
+			}
+			pd2.put("sCanClickUrl", "mypush/tagRead.do");
+			pd2.put("dtBeginTime", pd.getString("START_TIME"));
+			pd2.put("dtOverTime", pd.getString("END_TIME"));
 		}
-		pd2.put("sCanClickUrl", "mypush/tagRead.do");
-		pd2.put("dtBeginTime", pd.getString("START_TIME"));
-		pd2.put("dtOverTime", pd.getString("END_TIME"));
+		
 
 		com.alibaba.fastjson.JSONObject json2 = myPushService.saveSend(pd2);// 新建成功后推送消息 用json格式
 		System.out.println(json2);// test
@@ -288,19 +310,6 @@ public class NoticeController extends BaseController {
 	@RequestMapping(value = "/list")
 	public ModelAndView list(Page page) throws Exception {
 		logBefore(logger, Jurisdiction.getUsername() + "列表Notice1");
-		// test
-		PageData pd = new PageData();
-		pd.put("iModuleId", 1);
-		pd.put("iModuleSubId", 6);
-		pd.put("sDetails", "解决事实上iii");
-		pd.put("aat", "12");
-//		pd.put("UserList", "12");
-//		pd.put("RoleList", "223,1f");
-//		pd.put("DepartmentList", "sadFF,sadFF");
-		
-		//myPushService.saveSend(pd);//新建成功后推送消息 用json格式
-		//myPushService.getMySelfUnRead(pd);//测试 获取功能
-		// test
 		return this.listComm(page, 2);
 	}
 

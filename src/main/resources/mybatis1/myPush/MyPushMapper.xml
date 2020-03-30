@@ -202,6 +202,74 @@
 		<include refid="tb_push_mark_value"></include>
 		)
 	</insert>
+	<!-- 清空某个通告的已读内容 -->
+	<delete id="deleteMarkByNoticeId">
+		delete from
+		<include refid="tb_push_mark"></include>
+		<where>
+			iModuleId=#{iModuleId}
+			AND
+			iModuleSubId=#{iModuleSubId} AND iForkId=#{iForkId}
+		</where>
+	</delete>
+	<!-- 清空某个通告的范围 -->
+	<delete id="deleteScopeByNoticeId">
+		delete from
+		<include refid="tb_push_scope"></include>
+		<where>
+			iModuleId=#{iModuleId}
+			AND
+			iModuleSubId=#{iModuleSubId} AND iForkId=#{iForkId}
+		</where>
+	</delete>
+	<!-- 修改通告内容 -->
+	<update id="editNotice" parameterType="pd">
+		update
+		<include refid="tb_push_notice"></include>
+		<set>
+			<if test="iLevel!='' and iLevel!=null">
+				iLevel=#{iLevel},
+			</if>
+			<if test="iStatus!='' and iStatus!=null">
+				iStatus=#{iStatus},
+			</if>
+			<if test="dtBeginTime!='' and dtBeginTime!=null">
+				dtBeginTime=#{dtBeginTime},
+			</if>
+			<if test="dtOverTime!='' and dtOverTime!=null">
+				dtOverTime=#{dtOverTime},
+			</if>
+			<if test="sLastEditors!='' and sLastEditors!=null">
+				sLastEditors=#{sLastEditors},
+			</if>
+			<if test="iLastEditorsId!='' and iLastEditorsId!=null">
+				iLastEditorsId=#{iLastEditorsId},
+			</if>
+			<if test="sTitle!='' and sTitle!=null">
+				sTitle=#{sTitle},
+			</if>
+			<if test="sDetails!='' and sDetails!=null">
+				sDetails=#{sDetails},
+			</if>
+			<if test="sCanClickTile!='' and sCanClickTile!=null">
+				sCanClickTile=#{sCanClickTile},
+			</if>
+			<if test="sCanClickUrl!='' and sCanClickUrl!=null">
+				sCanClickUrl=#{sCanClickUrl},
+			</if>
+			<if test="sImgUrl!='' and sImgUrl!=null">
+				sDetails=#{sDetails},
+			</if>
+			<if test="iIsForward!='' and iIsForward!=null">
+				sDetails=#{sDetails},
+			</if>
+		</set>
+		<where>
+			iModuleId=#{iModuleId}
+			AND
+			iModuleSubId=#{iModuleSubId} AND iForkId=#{iForkId}
+		</where>
+	</update>
 	<!-- 批量设置通告状态 -->
 	<update id="setBatchNoticeStatus" parameterType="pd">
 		<foreach item="items" index="index" collection="noticeList"
@@ -220,6 +288,7 @@
 			;
 		</foreach>
 	</update>
+
 	<!-- 查询自定义组是否可用，如果返回值不为null 则表示可用 -->
 	<select id="checkGroupById" parameterType="pd"
 		resultType="Integer">
@@ -316,7 +385,7 @@
 		tb_push_notice.iModuleSubId
 		AND t1.iForkId = tb_push_notice.iForkId
 
-		where 
+		where
 		<!-- tb_push_notice.iCreaterId!=#{iUserId} AND -->
 		tb_push_notice.iStatus=1
 		)
