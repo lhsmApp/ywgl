@@ -173,8 +173,8 @@ public class NoticeController extends BaseController {
 		
 		PageData pd2 = new PageData();
 		if (isNumericzidai(pd.get("NOTICE_ID").toString())) {
-			pd2.put("iModuleId", 1);
-			pd2.put("iModuleSubId", 6);
+			pd2.put("iModuleId", 243);
+			pd2.put("iModuleSubId", pd.get("NOTICE_ID").toString());
 			pd2.put("iForkId", 1);
 			pd2.put("iGroupId", "1");
 			pd2.put("doCleanMark", "1");
@@ -191,7 +191,7 @@ public class NoticeController extends BaseController {
 			System.out.println(json2);// test
 		}else {
 			// 新建成功后推送消息
-			pd2.put("iModuleId", 236);
+			pd2.put("iModuleId", 243);
 			pd2.put("iModuleSubId", nId);
 			pd2.put("iForkId", 1);
 			pd2.put("sDetails", pd.getString("NOTICE_CONTENT"));
@@ -200,9 +200,10 @@ public class NoticeController extends BaseController {
 			} else {
 				pd2.put("UserList", scoStr);
 			}
-			pd2.put("sCanClickUrl", "mypush/tagRead.do");
 			pd2.put("dtBeginTime", pd.getString("START_TIME"));
 			pd2.put("dtOverTime", pd.getString("END_TIME"));
+			pd2.put("sCanClickUrl", "notice/list.do?NOTICE_CONTENT="+pd.getString("NOTICE_CONTENT"));
+			pd2.put("iIsForward", "1");
 		}
 		
 

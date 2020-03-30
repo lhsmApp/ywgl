@@ -295,18 +295,22 @@ function bubblesPopup(rd,bubblesId){
 	var aLabel = '';
 	switch(rd['iIsForward']){
 		case "0"://不跳
-			aLabel = '【<a href="javascript:void(0)" onclick="tagRead(this,\''+rd['sCanClickUrl']+'\',\''+rd['iModuleId']+':'+rd['iModuleSubId']+':'+rd['iForkId']+'\')" class="red">'+rd['sCanClickTile']+'</a>】'
+			aLabel = '【<a href="javascript:void(0)" onclick="tagRead(this,\''+rd['iModuleId']+':'+rd['iModuleSubId']+':'+rd['iForkId']+'\')" class="red">'+rd['sCanClickTile']+'</a>】'
 			break;
 		case "1"://跳
-			aLabel = '【<a href="'+rd['sCanClickUrl']+'" onclick="javascript:$.gritter.remove('+bubblesId+')">'+rd['sCanClickTile']+'</a>】'
+			console.log(menuIdName[rd['iModuleId']],rd['iModuleId'])
+			aLabel = '【<a href="javascript:void(0)" onclick="siMenu(\'z'+rd['iModuleSubId']+'\',\'lm'+rd['iModuleId']+'\',\''+menuIdName[rd['iModuleId']]+'\',\''+rd['sCanClickUrl']+'\','+bubblesId+');tagRead(this,\''+rd['iModuleId']+':'+rd['iModuleSubId']+':'+rd['iForkId']+'\')" class="red">'+rd['sCanClickTile']+'</a>】'
 			break;
-		case "2"://新页面
-			aLabel = '【<a href="javascript:void(0)" onclick="siMenu(\'z'+rd['iModuleSubId']+'\',\'lm'+rd['iModuleId']+'\',\''+menuIdName[rd['iModuleSubId']]+'\',\''+rd['sCanClickUrl']+'\','+bubblesId+')" class="red">'+rd['sCanClickTile']+'</a>】'
+		case "2"://新窗口
+			//aLabel = '【<a href="'+rd['sCanClickUrl']+'" onclick="javascript:$.gritter.remove('+bubblesId+')">'+rd['sCanClickTile']+'</a>】'
+			aLabel = '【<a href="javascript:void(0)" onclick="javascript:openDiagFromNotice(\''+rd['sCanClickUrl']+'\');tagRead(this,\''+rd['iModuleId']+':'+rd['iModuleSubId']+':'+rd['iForkId']+'\')" class="red">'+rd['sCanClickTile']+'</a>】'
 			break;
 	}
+	
     var unique_id = $.gritter.add({
 		title: rd['sTitle']+aLabel,
 		text: rd['sDetails'],
+		image:rd['sImgUrl'],
 		//image: 'static/ace/avatars/user.jpg',
 		sticky: true,
 		time: '',
@@ -314,18 +318,35 @@ function bubblesPopup(rd,bubblesId){
 	});
 //    console.log(unique_id)
 };
+//开发新窗口
+function openDiagFromNotice(url){
+//	 top.jzts();
+     var diag = new top.Dialog();
+     diag.Drag=true;
+     diag.Title ="";
+     diag.URL = location.origin+'/'+location.pathname.split("/")[1]+'/'+url;
+     diag.Width = 700;
+     diag.Height = 400;
+     diag.Modal = true;             //有无遮罩窗口
+     diag. ShowMaxButton = true;    //最大化按钮
+     diag.ShowMinButton = true;     //最小化按钮
+     diag.CancelEvent = function(){ //关闭事件
+ 		diag.close();
+     };
+     diag.show();
+}
 //标记为已读
-function tagRead(event,url,id){
+function tagRead(event,id){
     //console.log(event.target.tag)//id
     $(event).html("提交中..").attr("disabled",true).css("pointer-events","none");
 	$.ajax({
         type: "POST",
-        url: url+'?tm='+new Date().getTime(),
+        url: 'mypush/tagRead.do?tm='+new Date().getTime(),
         data: {findById:id},
         cache: false,
         success: function(json){
             console.log(json)
-            $(event).parent().parent().prev(".gritter-close").trigger("click");
+            $(event).parent().parent().prevAll(".gritter-close").trigger("click");
         },error:function(){
         	//$(event).html("点击表示已读").attr("disabled",null).css("pointer-events",'');
         	$(event).html("标记失败")
