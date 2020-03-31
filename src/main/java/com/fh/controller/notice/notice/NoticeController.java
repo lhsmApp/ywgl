@@ -182,7 +182,7 @@ public class NoticeController extends BaseController {
 			if (pd.getString("NOTICE_TYPE").equals("0")) {
 				pd2.put("iGroupId", "0");
 			} else {
-				pd2.put("UserList", scoStr);
+				pd2.put("ul", scoStr);
 			}
 			pd2.put("sDetails", pd.getString("NOTICE_CONTENT"));
 			pd2.put("dtBeginTime", pd.getString("START_TIME"));
@@ -199,7 +199,7 @@ public class NoticeController extends BaseController {
 			if (pd.getString("NOTICE_TYPE").equals("0")) {
 				pd2.put("iGroupId", "0");
 			} else {
-				pd2.put("UserList", scoStr);
+				pd2.put("ul", scoStr);
 			}
 			pd2.put("dtBeginTime", pd.getString("START_TIME"));
 			pd2.put("dtOverTime", pd.getString("END_TIME"));

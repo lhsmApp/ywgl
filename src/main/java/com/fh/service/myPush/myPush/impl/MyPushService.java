@@ -364,7 +364,7 @@ public class MyPushService implements MyPushManager {
 		configMap.put("userTable", "sys_user");// 用户表名称
 		configMap.put("userIdField", "USER_ID");// USER_ID根据平台修改
 		configMap.put("where", " AND STATUS=1");// 补充where条件，可以为空
-		configMap.put("key", "UserList,RoleList,DepartmentList");// 自定义类型英文名；“CUSTOM_GROUP”已被占用，请不要再次使用！
+		configMap.put("key", "ul,rl,dl");// 自定义类型英文名；“CUSTOM_GROUP”已被占用，请不要再次使用！
 		configMap.put("value", "USER_ID,ROLE_ID,UNIT_CODE");// 根据userTable中配置的内容调整
 		return configMap;
 	}
