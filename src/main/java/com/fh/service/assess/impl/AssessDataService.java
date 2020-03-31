@@ -78,10 +78,10 @@ public class AssessDataService implements AssessDataManager {
 			list = (List<PageData>) dao.findForList("IntegrateVoucherCxMapper.datalistJqPage", page);
 			break;
 		default:
-			PageData pageData=page.getPd();
+			PageData pageData = page.getPd();
 			pageData.put("KPI_CODE", pageData.getString("KPI_CODE").split("-")[1]);
 			list = (List<PageData>) dao.findForList("KhTotalMapper.datalistJqPage", page);
-			
+
 			break;
 		}
 		return list;
@@ -95,22 +95,23 @@ public class AssessDataService implements AssessDataManager {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<PageData> JqPageRank(PageData pd) throws Exception {
-		//List<PageData> list = (List<PageData>) dao.findForList("KhTotalMapper.datalistJqPageRank", page);
-		List<PageData> listRank=generateRankData(pd.getString("BUSI_DATE"));
+		// List<PageData> list = (List<PageData>)
+		// dao.findForList("KhTotalMapper.datalistJqPageRank", page);
+		List<PageData> listRank = generateRankData(pd.getString("BUSI_DATE"));
 		listRank.sort(new Comparator<PageData>() {
-			public int compare(PageData pd1,PageData pd2){
-				Double finalScore1=ConvertUtils.strToDouble(StringUtil.toString(pd1.get("FINAL_SCORE"), ""), 0);
-				Double finalScore2=ConvertUtils.strToDouble(StringUtil.toString(pd2.get("FINAL_SCORE"), ""), 0);
+			public int compare(PageData pd1, PageData pd2) {
+				Double finalScore1 = ConvertUtils.strToDouble(StringUtil.toString(pd1.get("FINAL_SCORE"), ""), 0);
+				Double finalScore2 = ConvertUtils.strToDouble(StringUtil.toString(pd2.get("FINAL_SCORE"), ""), 0);
 				return finalScore2.compareTo(finalScore1);
 			}
 		});
-		int index=0;
+		int index = 0;
 		for (PageData pageData : listRank) {
 			index++;
 			pageData.put("RANK_NUM", index);
 		}
 		return listRank;
-		
+
 	}
 
 	/**
@@ -495,28 +496,33 @@ public class AssessDataService implements AssessDataManager {
 			dao.update("IntegrateVoucherCxMapper.batchDelAndIns", listData);
 			break;
 		default:
-			
+
 			dao.update("KhTotalMapper.batchDelAndIns", listData);
-			
-			/*List<PageData> listRank=generateRankData(listData.get(0).getString("BUSI_DATE"),kpiCode.split("-")[1]);
-			dao.update("KhTotalMapper.batchDelAndInsRank", listRank);*/
+
+			/*
+			 * List<PageData>
+			 * listRank=generateRankData(listData.get(0).getString("BUSI_DATE"),
+			 * kpiCode.split("-")[1]);
+			 * dao.update("KhTotalMapper.batchDelAndInsRank", listRank);
+			 */
 			break;
 		}
 
 	}
-	
+
 	/**
 	 * 生成排行榜数据
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	private List<PageData> generateRankData(String busiDate) throws Exception{
+	private List<PageData> generateRankData(String busiDate) throws Exception {
 		PageData pdCondition = new PageData();
 		pdCondition.put("BUSI_DATE", busiDate);
-		//pdCondition.put("KPI_CODE", kpiCode);
+		// pdCondition.put("KPI_CODE", kpiCode);
 		// **************获取各单位扣分数，即各单位产生的凭证条数***************//
-		List<PageData> listVoucherNumOfCompany = (List<PageData>) dao
-				.findForList("KhTotalMapper.getCountOfVoucherNum", pdCondition);
+		List<PageData> listVoucherNumOfCompany = (List<PageData>) dao.findForList("KhTotalMapper.getCountOfVoucherNum",
+				pdCondition);
 		// ***********************************************************//
 
 		// **************获取各单位考核项总数,即集成凭证总数******************//
@@ -529,8 +535,7 @@ public class AssessDataService implements AssessDataManager {
 		// ***********************************************************//
 
 		// **************获取合并单位***********************************//
-		List<PageData> listAssessDepart = (List<PageData>) dao.findForList("AssessDepartMapper.listAll",
-				pdCondition);
+		List<PageData> listAssessDepart = (List<PageData>) dao.findForList("AssessDepartMapper.listAll", pdCondition);
 		// ***********************************************************//
 
 		// ***************以合并单位为标准，生成总条数*********************//
@@ -543,10 +548,10 @@ public class AssessDataService implements AssessDataManager {
 				pdRank.put("COMPANY_CODE", pdAssessDepart.getString("DEPART_CODE"));
 				pdRank.put("COMPANY_NAME", pdAssessDepart.getString("DEPART_NAME"));
 				pdRank.put("BUSI_DATE", busiDate);
-				pdRank.put("Z1FI1_DEDUCK_SCORE",0);
-				pdRank.put("Z3FI2_DEDUCK_SCORE",0);
-				pdRank.put("Z1FI1_TOTAL_NUM",0);
-				pdRank.put("Z3FI2_TOTAL_NUM",0);
+				pdRank.put("Z1FI1_DEDUCK_SCORE", 0);
+				pdRank.put("Z3FI2_DEDUCK_SCORE", 0);
+				pdRank.put("Z1FI1_TOTAL_NUM", 0);
+				pdRank.put("Z3FI2_TOTAL_NUM", 0);
 				for (PageData pdVoucherNumOfCompany : listVoucherNumOfCompany) {
 					if (pdVoucherNumOfCompany.getString("COMPANY_CODE")
 							.equals(pdAssessDepart.getString("DEPART_CODE"))) {
@@ -555,19 +560,18 @@ public class AssessDataService implements AssessDataManager {
 						} else if (pdVoucherNumOfCompany.getString("KPI_CODE").equals("Z3FI2")) {
 							pdRank.put("Z3FI2_DEDUCK_SCORE", pdVoucherNumOfCompany.get("DEDUCK_SCORE"));
 						}
-						break;
+						// break;
 					}
-					
+
 				}
 				for (PageData pdTotalNumOfCompany : listTotalNumOfCompany) {
-					if (pdTotalNumOfCompany.getString("COMPANY_CODE")
-							.equals(pdAssessDepart.getString("DEPART_CODE"))) {
+					if (pdTotalNumOfCompany.getString("COMPANY_CODE").equals(pdAssessDepart.getString("DEPART_CODE"))) {
 						if (pdTotalNumOfCompany.getString("KPI_CODE").equals("Z1FI1")) {
 							pdRank.put("Z1FI1_TOTAL_NUM", pdTotalNumOfCompany.get("KH_TOTAL_NUM"));
 						} else if (pdTotalNumOfCompany.getString("KPI_CODE").equals("Z3FI2")) {
 							pdRank.put("Z3FI2_TOTAL_NUM", pdTotalNumOfCompany.get("KH_TOTAL_NUM"));
 						}
-						break;
+						// break;
 					}
 				}
 				// ****************得分=分值-扣分/总项*分值**************************//
@@ -576,17 +580,17 @@ public class AssessDataService implements AssessDataManager {
 				// Z1FI1得分=分值-扣分/总项*分值
 				BigDecimal scoreZ1FI1 = getScore(listKpi, "Z1FI1",
 						ConvertUtils.strToDouble(StringUtil.toString(pdRank.get("Z1FI1_DEDUCK_SCORE"), ""), 0),
-						ConvertUtils.strToDouble(StringUtil.toString(pdRank.get("Z1FI1_TOTAL_NUM"),""), 0));
+						ConvertUtils.strToDouble(StringUtil.toString(pdRank.get("Z1FI1_TOTAL_NUM"), ""), 0));
 				pdRank.put("Z1FI1_SCORE", scoreZ1FI1);
 				// Z3FI2得分=分值-扣分/总项*分值
 				BigDecimal scoreZ3FI2 = getScore(listKpi, "Z3FI2",
-						ConvertUtils.strToDouble(StringUtil.toString(pdRank.get("Z3FI2_DEDUCK_SCORE"),""), 0),
-						ConvertUtils.strToDouble(StringUtil.toString(pdRank.get("Z3FI2_TOTAL_NUM"),""), 0));
+						ConvertUtils.strToDouble(StringUtil.toString(pdRank.get("Z3FI2_DEDUCK_SCORE"), ""), 0),
+						ConvertUtils.strToDouble(StringUtil.toString(pdRank.get("Z3FI2_TOTAL_NUM"), ""), 0));
 				pdRank.put("Z3FI2_SCORE", scoreZ3FI2);
 				// **********************************************************//
 
 				// ***************以指标配置为标准，计算总得分*********************//
-				BigDecimal finalScore = getFinalScore(listKpi,scoreZ1FI1,scoreZ3FI2);
+				BigDecimal finalScore = getFinalScore(listKpi, scoreZ1FI1, scoreZ3FI2);
 				pdRank.put("FINAL_SCORE", finalScore);
 				// *********************************************************//
 				listRank.add(pdRank);
@@ -603,90 +607,87 @@ public class AssessDataService implements AssessDataManager {
 				}
 
 			}
-			for (Map.Entry<String, List<PageData>> entry : mapMergeDepart.entrySet()) {
-				double deduckScoreZ1FI1Sum = 0;
-				double deduckScoreZ3FI2Sum = 0;
+		}
+		for (Map.Entry<String, List<PageData>> entry : mapMergeDepart.entrySet()) {
+			double deduckScoreZ1FI1Sum = 0;
+			double deduckScoreZ3FI2Sum = 0;
 
-				double totalNumZ1FI1Sum = 0;
-				double totalNumZ3FI2Sum = 0;
-				
-				BigDecimal scoreZ1FI1=new BigDecimal(0);
-				BigDecimal scoreZ3FI2=new BigDecimal(0);
-				
-				BigDecimal finalScore=new BigDecimal(0);
-				for (PageData item : entry.getValue()) {
-					double deduckScoreZ1FI1 = 0;
-					double deduckScoreZ3FI2 = 0;
-					double totalNumZ1FI1 = 0;
-					double totalNumZ3FI2 = 0;
-					for (PageData pdVoucherNumOfCompany : listVoucherNumOfCompany) {
-						if (pdVoucherNumOfCompany.getString("COMPANY_CODE")
-								.equals(item.getString("COMPANY_CODE"))) {
-							if (pdVoucherNumOfCompany.getString("KPI_CODE").equals("Z1FI1")) {
-								deduckScoreZ1FI1 = ConvertUtils
-										.strToDouble(pdVoucherNumOfCompany.getString("DEDUCK_SCORE"), 0);
-							} else if (pdVoucherNumOfCompany.getString("KPI_CODE").equals("Z3FI2")) {
-								deduckScoreZ3FI2 = ConvertUtils
-										.strToDouble(pdVoucherNumOfCompany.getString("DEDUCK_SCORE"), 0);
-							}
+			double totalNumZ1FI1Sum = 0;
+			double totalNumZ3FI2Sum = 0;
+
+			BigDecimal scoreZ1FI1 = new BigDecimal(0);
+			BigDecimal scoreZ3FI2 = new BigDecimal(0);
+
+			BigDecimal finalScore = new BigDecimal(0);
+			for (PageData item : entry.getValue()) {
+				double deduckScoreZ1FI1 = 0;
+				double deduckScoreZ3FI2 = 0;
+				double totalNumZ1FI1 = 0;
+				double totalNumZ3FI2 = 0;
+				for (PageData pdVoucherNumOfCompany : listVoucherNumOfCompany) {
+					if (pdVoucherNumOfCompany.getString("COMPANY_CODE").equals(item.getString("DEPART_CODE"))) {
+						if (pdVoucherNumOfCompany.getString("KPI_CODE").equals("Z1FI1")) {
+							deduckScoreZ1FI1 = ConvertUtils.strToDouble(StringUtil.toString(pdVoucherNumOfCompany.get("DEDUCK_SCORE"), ""),
+									0);
+						} else if (pdVoucherNumOfCompany.getString("KPI_CODE").equals("Z3FI2")) {
+							deduckScoreZ3FI2 = ConvertUtils.strToDouble(StringUtil.toString(pdVoucherNumOfCompany.get("DEDUCK_SCORE"),""),
+									0);
 						}
-						break;
 					}
-					for (PageData pdTotalNumOfCompany : listTotalNumOfCompany) {
-						if (pdTotalNumOfCompany.getString("COMPANY_CODE").equals(item.getString("COMPANY_CODE"))) {
-							if (pdTotalNumOfCompany.getString("KPI_CODE").equals("Z1FI1")) {
-								totalNumZ1FI1 = ConvertUtils
-										.strToDouble(pdTotalNumOfCompany.getString("KH_TOTAL_NUM"), 0);
-							} else if (pdTotalNumOfCompany.getString("KPI_CODE").equals("Z3FI2")) {
-								totalNumZ3FI2 = ConvertUtils
-										.strToDouble(pdTotalNumOfCompany.getString("KH_TOTAL_NUM"), 0);
-							}
+					// break;
+				}
+				for (PageData pdTotalNumOfCompany : listTotalNumOfCompany) {
+					if (pdTotalNumOfCompany.getString("COMPANY_CODE").equals(item.getString("DEPART_CODE"))) {
+						if (pdTotalNumOfCompany.getString("KPI_CODE").equals("Z1FI1")) {
+							totalNumZ1FI1 = ConvertUtils.strToDouble(StringUtil.toString(pdTotalNumOfCompany.get("KH_TOTAL_NUM"),""), 0);
+						} else if (pdTotalNumOfCompany.getString("KPI_CODE").equals("Z3FI2")) {
+							totalNumZ3FI2 = ConvertUtils.strToDouble(StringUtil.toString(pdTotalNumOfCompany.get("KH_TOTAL_NUM"),""), 0);
 						}
-						break;
 					}
-					// Z1FI1扣分
-					deduckScoreZ1FI1Sum += deduckScoreZ1FI1;
-					// Z3FI2扣分
-					deduckScoreZ3FI2Sum += deduckScoreZ3FI2;
-
-					// Z1FI1总项
-					totalNumZ1FI1Sum += totalNumZ1FI1;
-					// Z3FI2总项
-					totalNumZ3FI2Sum += totalNumZ3FI2;
-
-					// ****************得分=分值-扣分/总项*分值**************************//
-					// 得分=分值-扣分/总项*分值
-					// 分值
-
-					// Z1FI1得分=分值-扣分/总项*分值
-					scoreZ1FI1 = getScore(listKpi, "Z1FI1", deduckScoreZ1FI1Sum, totalNumZ1FI1Sum);
-
-					// Z3FI2得分=分值-扣分/总项*分值
-					scoreZ3FI2 = getScore(listKpi, "Z3FI2", deduckScoreZ3FI2Sum, totalNumZ3FI2Sum);
-					// **********************************************************//
-					
-					finalScore = getFinalScore(listKpi,scoreZ1FI1,scoreZ3FI2);
-					//pdRank.put("FINAL_SCORE", finalScore);
+					// break;
 				}
-				
-				for (PageData pdDepartMerge : listRank) {
-					if(entry.getKey().equals(pdDepartMerge.get("COMPANY_CODE"))){
-						pdDepartMerge.put("Z1FI1_DEDUCK_SCORE", deduckScoreZ1FI1Sum);
-						pdDepartMerge.put("Z1FI1_TOTAL_NUM", totalNumZ1FI1Sum);
-						pdDepartMerge.put("Z1FI1_SCORE", scoreZ1FI1);
-						pdDepartMerge.put("Z3FI2_DEDUCK_SCORE", deduckScoreZ3FI2Sum);
-						pdDepartMerge.put("Z3FI2_TOTAL_NUM", totalNumZ3FI2Sum);
-						pdDepartMerge.put("Z3FI2_SCORE", scoreZ3FI2);
-						pdDepartMerge.put("FINAL_SCORE", finalScore);
-					}
-				}
+				// Z1FI1扣分
+				deduckScoreZ1FI1Sum += deduckScoreZ1FI1;
+				// Z3FI2扣分
+				deduckScoreZ3FI2Sum += deduckScoreZ3FI2;
+
+				// Z1FI1总项
+				totalNumZ1FI1Sum += totalNumZ1FI1;
+				// Z3FI2总项
+				totalNumZ3FI2Sum += totalNumZ3FI2;
+
+				// ****************得分=分值-扣分/总项*分值**************************//
+				// 得分=分值-扣分/总项*分值
+				// 分值
+
+				// Z1FI1得分=分值-扣分/总项*分值
+				scoreZ1FI1 = getScore(listKpi, "Z1FI1", deduckScoreZ1FI1Sum, totalNumZ1FI1Sum);
+
+				// Z3FI2得分=分值-扣分/总项*分值
+				scoreZ3FI2 = getScore(listKpi, "Z3FI2", deduckScoreZ3FI2Sum, totalNumZ3FI2Sum);
+				// **********************************************************//
+
+				finalScore = getFinalScore(listKpi, scoreZ1FI1, scoreZ3FI2);
+				// pdRank.put("FINAL_SCORE", finalScore);
 			}
 
+			for (PageData pdDepartMerge : listRank) {
+				if (entry.getKey().equals(pdDepartMerge.get("COMPANY_CODE"))) {
+					pdDepartMerge.put("Z1FI1_DEDUCK_SCORE", deduckScoreZ1FI1Sum);
+					pdDepartMerge.put("Z1FI1_TOTAL_NUM", totalNumZ1FI1Sum);
+					pdDepartMerge.put("Z1FI1_SCORE", scoreZ1FI1);
+					pdDepartMerge.put("Z3FI2_DEDUCK_SCORE", deduckScoreZ3FI2Sum);
+					pdDepartMerge.put("Z3FI2_TOTAL_NUM", totalNumZ3FI2Sum);
+					pdDepartMerge.put("Z3FI2_SCORE", scoreZ3FI2);
+					pdDepartMerge.put("FINAL_SCORE", finalScore);
+				}
+			}
 		}
+
 		// *********************************************************//
 		return listRank;
 	}
-	
+
 	private BigDecimal getScore(List<PageData> listKpi, String kpiCode, double doubleDeduckScore,
 			double doubleTotalNum) {
 		// 得分=分值-扣分/总项*分值
@@ -694,32 +695,34 @@ public class AssessDataService implements AssessDataManager {
 		BigDecimal kpiScore = new BigDecimal(0);
 		for (PageData pdKpi : listKpi) {
 			if (pdKpi.getString("KPI_CODE").equals(kpiCode)) {
-				kpiScore = new BigDecimal(StringUtil.toString(pdKpi.get("TOTAL_SCORE"),""));
+				kpiScore = new BigDecimal(StringUtil.toString(pdKpi.get("TOTAL_SCORE"), ""));
 			}
 		}
 		// Z1FI1得分=分值-扣分/总项*分值
 		BigDecimal deduckScore = new BigDecimal(doubleDeduckScore);
 		BigDecimal totalNum = new BigDecimal(doubleTotalNum);
 		// Z1FI1得分
-		BigDecimal score=new BigDecimal(0);
-		if(totalNum.doubleValue()!=0){
-			score = kpiScore.subtract(deduckScore.divide(totalNum,6, BigDecimal.ROUND_HALF_UP).multiply(kpiScore));
-		}else{
-			score=kpiScore;
+		BigDecimal score = new BigDecimal(0);
+		if (totalNum.doubleValue() != 0) {
+			score = kpiScore.subtract(deduckScore.divide(totalNum, 6, BigDecimal.ROUND_HALF_UP).multiply(kpiScore));
+		} else {
+			score = kpiScore;
 		}
 		return score;
 	}
 
-	private BigDecimal getFinalScore(List<PageData> listKpi, BigDecimal scoreZ1FI1,BigDecimal scoreZ3FI2) {
+	private BigDecimal getFinalScore(List<PageData> listKpi, BigDecimal scoreZ1FI1, BigDecimal scoreZ3FI2) {
 		// ***************以指标配置为标准，计算总得分*********************//
 		BigDecimal finalScoreZ1FI1 = new BigDecimal(0);
 		BigDecimal finalScoreZ3FI2 = new BigDecimal(0);
 		BigDecimal finalScore = new BigDecimal(0);
 		for (PageData pdKpi : listKpi) {
 			if (pdKpi.getString("KPI_CODE").equals("Z1FI1")) {
-				finalScoreZ1FI1 = scoreZ1FI1.multiply(new BigDecimal(StringUtil.toString(pdKpi.get("PROPORTION"),"")).divide(new BigDecimal(100)));
+				finalScoreZ1FI1 = scoreZ1FI1.multiply(
+						new BigDecimal(StringUtil.toString(pdKpi.get("PROPORTION"), "")).divide(new BigDecimal(100)));
 			} else if (pdKpi.getString("KPI_CODE").equals("Z3FI2")) {
-				finalScoreZ3FI2 = scoreZ3FI2.multiply(new BigDecimal(StringUtil.toString(pdKpi.get("PROPORTION"),"")).divide(new BigDecimal(100)));
+				finalScoreZ3FI2 = scoreZ3FI2.multiply(
+						new BigDecimal(StringUtil.toString(pdKpi.get("PROPORTION"), "")).divide(new BigDecimal(100)));
 			}
 		}
 		finalScore = finalScoreZ1FI1.add(finalScoreZ3FI2);
@@ -774,12 +777,15 @@ public class AssessDataService implements AssessDataManager {
 			dao.update("IntegrateVoucherCxMapper.batchCoverAdd", listData);
 			break;
 		default:
-			
-			
+
 			dao.update("KhTotalMapper.batchCoverAdd", listData);
-			
-			/*List<PageData> listRank=generateRankData(listData.get(0).getString("BUSI_DATE"),kpiCode.split("-")[1]);
-			dao.update("KhTotalMapper.batchDelAndInsRank", listRank);*/
+
+			/*
+			 * List<PageData>
+			 * listRank=generateRankData(listData.get(0).getString("BUSI_DATE"),
+			 * kpiCode.split("-")[1]);
+			 * dao.update("KhTotalMapper.batchDelAndInsRank", listRank);
+			 */
 			break;
 		}
 

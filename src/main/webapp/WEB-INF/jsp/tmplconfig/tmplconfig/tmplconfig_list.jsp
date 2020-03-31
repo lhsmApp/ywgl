@@ -234,7 +234,7 @@
 				viewicon : 'ace-icon fa fa-search-plus grey',
 			},
 			{
-				//edit record form
+				//edit record formx
 				//closeAfterEdit: true,
 				//width: 700,
 				recreateForm: true,
