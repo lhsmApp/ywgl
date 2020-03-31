@@ -759,15 +759,15 @@
 		        + '</span></label></div><div><label class="inline"><span class="list-item-info">单号:&nbsp;</span><span class="list-item-value">'
 		        + item.BILL_CODE
 		        +'</span></label><label class="inline pull-right"><span class="list-item-info">科室：</span><span class="list-item-value">'
-		        + item.DEPT_NAME
+		        + (item.DEPT_NAME==undefined ?"":item.DEPT_NAME)
 		        +'</span></label></div><div><label class="inline"><span class="list-item-info">状态:&nbsp;</span><span class="list-item-value">'
-		        + item.APPROVAL_STATE
+		        + (item.APPROVAL_STATE==undefined ?"":item.APPROVAL_STATE)
 		        +'</span></label><label class="inline pull-right"><span class="list-item-info">单位:&nbsp;</span><span class="list-item-value">'
-		        + item.UNIT_NAME
+		        + (item.UNIT_NAME==undefined ?"":item.UNIT_NAME)
 		        +'</span></label></div><div><label class="inline"><span class="list-item-info">新增帐号原因:&nbsp;</span><span class="list-item-value">'
-		        + item.ACCOUNT_REASON
+		        + (item.ACCOUNT_REASON==undefined ?"":item.ACCOUNT_REASON)
 		        +'</span></label><label class="inline pull-right"><span class="list-item-info">申请日期:&nbsp;'
-		        + item.ENTRY_DATE
+		        + (item.ENTRY_DATE==undefined ?"":item.ENTRY_DATE)
 		        +'</span></label></div></li>';
 		    return div;
 		}
@@ -899,31 +899,31 @@
 		    var div = '<div class="profile-user-info"><div class="profile-info-row"><div class="profile-info-name">申请单号：</div><div class="profile-info-value"><i class="fa fa-map-marker light-orange bigger-110"></i><span>'
 			        + item.BILL_CODE		       
 			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请单位： </div><div class="profile-info-value"><span>'
-			        + item.UNIT_NAME
+			        + (item.UNIT_NAME==undefined ?"":item.UNIT_NAME)
 			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请部门： </div><div class="profile-info-value"><span>'
-			        +item.DEPT_NAME
+			        +(item.DEPT_NAME==undefined ?"":item.DEPT_NAME)
 			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 新增帐号原因 ：</div><div class="profile-info-value"><span>'
-			        +item.ACCOUNT_REASON
+			        +(item.ACCOUNT_REASON==undefined ?"":item.ACCOUNT_REASON)
 			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 新增帐号 ：</div><div class="profile-info-value"><span>'
-			        +item.ACCOUNT_NEW
+			        +(item.ACCOUNT_NEW==undefined ?"":item.ACCOUNT_NEW)
 			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 帐号有效期：</div><div class="profile-info-value"><span>'
-			        +item.ACCOUNT_VALIDITY
+			        +(item.ACCOUNT_VALIDITY==undefined ?"":item.ACCOUNT_VALIDITY)
 			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 帐号角色 ：</div><div class="profile-info-value"><span>'
-			        +item.ACCOUNT_ROLES
+			        +(item.ACCOUNT_ROLES==undefined ?"":item.ACCOUNT_ROLES)
 			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人部门： </div><div class="profile-info-value"><span>'
-			        +item.USER_DEPTNAME
+			        +(item.USER_DEPTNAME==undefined ?"":item.USER_DEPTNAME)
 			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人： </div><div class="profile-info-value"><span>'
-			        +item.USERNAME
+			        +(item.USERNAME==undefined ?"":item.USERNAME)
 			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人岗位： </div><div class="profile-info-value"><span>'
-			        +item.USER_JOB
+			        +(item.USER_JOB==undefined ?"":item.USER_JOB)
 			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 邮箱： </div><div class="profile-info-value"><span>'
-			        +item.USER_EMAIL
+			        +(item.USER_EMAIL==undefined ?"":item.USER_EMAIL)
 			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 电话： </div><div class="profile-info-value"><span>'
-			        +item.USER_TEL
+			        +(item.USER_TEL==undefined ?"":item.USER_TEL)
 			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请生效日期： </div><div class="profile-info-value"><span>'
-			        +item.EFFECTIVE_DATE
+			        +(item.EFFECTIVE_DATE==undefined ?"":item.EFFECTIVE_DATE)
 			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请日期： </div><div class="profile-info-value"><span>'
-			        +item.ENTRY_DATE
+			        +(item.ENTRY_DATE==undefined ?"":item.ENTRY_DATE)
 			        +'</span></div></div>'
 		    return div;	
 		}	
