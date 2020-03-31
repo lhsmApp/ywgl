@@ -163,20 +163,12 @@
 														<input type="hidden" name="UNIT_CODE" id="UNIT_CODE"/> 
 														<input type="text" name="UNIT_NAME" id="UNIT_NAME" class="form-control" readonly="readonly" placeholder="请输入单位" /> 
 													</div>
-<!-- 													 <div style="margin:10px 0px;"> -->
-<!-- 														<label for="form-field-xtbg-report-dept">部门</label> -->
-<!-- 														<input type="hidden" name="DEPT_CODE" id="DEPT_CODE"/> -->
-<!-- 														<input type="text" name="DEPT_NAME" id="DEPT_NAME" class="form-control" placeholder="请输入部门"/> -->
-<!-- 													</div> -->
-		 											<div style="margin:10px 0px;">
+													 <div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-dept">部门</label>
-														<select class="form-control" name="DEPT_CODE" id="DEPT_CODE">
-															<option value=""></option>
-															<c:forEach items="${userDeptList}" var="dept">
-															<option value="${dept.DEPARTMENT_CODE}">${dept.NAME}</option>
-															</c:forEach>
-														</select>
+														<input type="hidden" name="DEPT_CODE" id="DEPT_CODE"/>
+														<input type="text" name="DEPT_NAME" id="DEPT_NAME" class="form-control" readonly="readonly" placeholder="请输入部门"/>
 													</div>
+
 <!-- 													<div style="margin:10px 0px;"> -->
 <!-- 														<label for="form-field-jsbg-report-user">申请人</label> -->
 <!-- 															<select class="form-control" name="USER_CODE" id="USER_CODE"> -->
@@ -191,10 +183,6 @@
 														<input type="hidden" name="USER_CODE" id="USER_CODE"/> 
 														<input type="text" name="USER_NAME" id="USER_NAME" class="form-control" readonly="readonly" placeholder="请输入申请人"/> 
 													</div>
-<!-- 												    <div style="margin:10px 0px;"> -->
-<!-- 														<label for="form-field-jsbg-report-depart">申请人部门</label> -->
-<!-- 														<input type="text" name="USER_DEPT" id="USER_DEPT" class="form-control" placeholder="请输入申请人单位"/> -->
-<!-- 													</div> -->
 													<div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-depart">申请人部门</label>
 														<input type="hidden" name="USER_DEPT" id="USER_DEPT" />
@@ -612,6 +600,7 @@
 // 			$("#selectTree2_input").val(datas.depnameUnit);			
 			$("#UNIT_NAME").val(datas.UNIT_NAME);
 			$("#DEPT_CODE").val(datas.DEPT_CODE);//部门
+			$("#DEPT_NAME").val(datas.DEPT_NAME);//申请部门
 			$("#USER_CODE").val(datas.USER_CODE);//申请人
 			$("#USER_NAME").val(datas.USERNAME);//申请人
 			$("#USER_DEPT").val(datas.USER_DEPT);//申请人部门

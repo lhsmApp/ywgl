@@ -167,20 +167,20 @@
 <!-- 														<input type="text" name="DEPT_CODE" id="DEPT_CODE" class="form-control" placeholder="请输入申请人部门"/> -->
 <!-- 													</div>	
 										 -->
-<!-- 										  			<div style="margin:10px 0px;"> -->
-<!-- 														<label for="form-field-xtbg-report-dept">部门</label> -->
-<!-- 														<input type="hidden" name="DEPT_CODE" id="DEPT_CODE"/> -->
-<!-- 														<input type="text" name="DEPT_NAME" id="DEPT_NAME" class="form-control" placeholder="请输入部门"/> -->
-<!-- 													</div> -->
-													<div style="margin:10px 0px;">
+										  			<div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-dept">部门</label>
-														<select class="form-control" name="DEPT_CODE" id="DEPT_CODE">
-															<option value=""></option>
-															<c:forEach items="${userDeptList}" var="dept">
-															<option value="${dept.DEPARTMENT_CODE}">${dept.NAME}</option>
-															</c:forEach>
-														</select>
+														<input type="hidden" name="DEPT_CODE" id="DEPT_CODE"/>
+														<input type="text" name="DEPT_NAME" id="DEPT_NAME" class="form-control" readonly="readonly" placeholder="请输入部门"/>
 													</div>
+<!-- 													<div style="margin:10px 0px;"> -->
+<!-- 														<label for="form-field-xtbg-report-dept">部门</label> -->
+<!-- 														<select class="form-control" name="DEPT_CODE" id="DEPT_CODE"> -->
+<!-- 															<option value=""></option> -->
+<%-- 															<c:forEach items="${userDeptList}" var="dept"> --%>
+<%-- 															<option value="${dept.DEPARTMENT_CODE}">${dept.NAME}</option> --%>
+<%-- 															</c:forEach> --%>
+<!-- 														</select> -->
+<!-- 													</div> -->
 <!-- 													<div style="margin:10px 0px;"> -->
 <!-- 														<label for="form-field-xtbg-report-user">申请人</label> -->
 <!-- 															<select class="form-control" name="USER_CODE" id="USER_CODE"> -->
@@ -619,6 +619,7 @@
         	$("#UNIT_CODE").val(datas.UNIT_CODE);//单位
         	$("#UNIT_NAME").val(datas.depnameUnit);
 			$("#DEPT_CODE").val(datas.DEPT_CODE);//部门
+			$("#DEPT_NAME").val(datas.DEPT_NAME);//部门
 			$("#USER_CODE").val(datas.USER_CODE);//申请人
 			$("#USER_NAME").val(datas.USERNAME);//申请人
 			$("#USER_DEPT").val(datas.USER_DEPT);//申请人部门

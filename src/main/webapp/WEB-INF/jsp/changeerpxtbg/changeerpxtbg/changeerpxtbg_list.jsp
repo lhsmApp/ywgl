@@ -143,7 +143,6 @@
 												<input type="hidden" name="BILL_USER" id="BILL_USER"/>	
 												<input type="hidden" name="ENTRY_DATE" id="ENTRY_DATE"/>
 												<input type="hidden" name="SERIAL_NUM" id="SERIAL_NUM"/>	
-<!-- 												<input type="hidden" name="USER_DEPT" id="USER_DEPT"/> -->
 												<input type="hidden" name="SYSTEM" id="SYSTEM"/>	
 												<input type="hidden" name="BG_TYPE" id="BG_TYPE"/>
 												<input type="hidden" name="BILL_STATE" id="BILL_STATE"/>	
@@ -174,17 +173,22 @@
 														<input type="hidden" name="UNIT_CODE" id="UNIT_CODE"/> 
 														<input type="text" name="UNIT_NAME" id="UNIT_NAME" class="form-control" readonly="readonly" placeholder="请输入单位" /> 
 													</div>
-													 <div style="margin:10px 0px;">
-														<label for="form-field-xtbg-report-dept">部门</label>
-<!-- 														<input type="hidden" name="DEPT_CODE" id="DEPT_CODE"/> -->
-<!-- 														<input type="text" name="DEPT_NAME" id="DEPT_NAME" class="form-control" placeholder="请输入部门"/> -->
-														<select class="form-control" name="DEPT_CODE" id="DEPT_CODE">
-															<option value=""></option>
-															<c:forEach items="${userDeptList}" var="dept">
-															<option value="${dept.DEPARTMENT_CODE}">${dept.NAME}</option>
-															</c:forEach>
-														</select>
+													<div style="margin:10px 0px;">
+														<label for="form-field-xtbg-report-user">部门</label>
+														<input type="hidden" name="DEPT_CODE" id="DEPT_CODE"/> 
+														<input type="text" name="DEPT_NAME" id="DEPT_NAME" class="form-control" readonly="readonly" placeholder="请输入部门" /> 
 													</div>
+<!-- 													 <div style="margin:10px 0px;"> -->
+<!-- 														<label for="form-field-xtbg-report-dept">部门</label> -->
+<!-- <!-- 														<input type="hidden" name="DEPT_CODE" id="DEPT_CODE"/> --> 
+<!-- <!-- 														<input type="text" name="DEPT_NAME" id="DEPT_NAME" class="form-control" placeholder="请输入部门"/> --> 
+<!-- 														<select class="form-control" name="DEPT_CODE" id="DEPT_CODE"> -->
+<!-- 															<option value=""></option> -->
+<%-- 															<c:forEach items="${userDeptList}" var="dept"> --%>
+<%-- 															<option value="${dept.DEPARTMENT_CODE}">${dept.NAME}</option> --%>
+<%-- 															</c:forEach> --%>
+<!-- 														</select> -->
+<!-- 													</div> -->
 <!-- 								 					<div style="margin:10px 0px;"> -->
 <!-- 														<label for="form-field-xtbg-report-user">申请人</label> -->
 <!-- 															<select class="form-control" name="USER_CODE" id="USER_CODE"> -->
@@ -200,15 +204,9 @@
 														<input type="text" name="USER_NAME" id="USER_NAME" class="form-control" readonly="readonly" placeholder="请输入申请人" /> 
 													</div>
 												    <div style="margin:10px 0px;">
-														<label for="form-field-xtbg-report-userdept">申请人部门</label>
-														<select class="form-control" name="USER_DEPT" id="USER_DEPT">
-																	<option value=""></option>
-																	<c:forEach items="${userDeptList}" var="dept">
-																	<option value="${dept.DEPARTMENT_CODE}">${dept.NAME}</option>
-																	</c:forEach>
-																</select>
-<!-- 														<input type="hidden" name="USER_DEPT" id="USER_DEPT" /> -->
-<!-- 														<input type="text" name="USER_DEPTNAME" id="USER_DEPTNAME" class="form-control" placeholder="请输入申请人部门"/> -->
+														<label for="form-field-xtbg-report-userdept">申请人部门</label>											
+														<input type="hidden" name="USER_DEPT" id="USER_DEPT" />
+														<input type="text" name="USER_DEPTNAME" id="USER_DEPTNAME" class="form-control" readonly="readonly" placeholder="请输入申请人部门"/>
 													</div>
 										   			<div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-job">申请人岗位</label>
@@ -561,12 +559,14 @@
 // 			$("#selectTree2_input").val(datas.depnameUnit);
 			$("#UNIT_NAME").val(datas.UNIT_NAME);
 			$("#DEPT_CODE").val(datas.DEPT_CODE);//申请部门
+			$("#DEPT_NAME").val(datas.DEPT_NAME);//申请部门
 			$("#USER_JOB").val(datas.USER_JOB);//申请人岗位
 			$("#USER_CONTACT").val(datas.USER_CONTACT);//联系方式
 			$("#EFFECTIVE_DATE").val(datas.EFFECTIVE_DATE);//变更预期时间
 			$("#ENTRY_DATE").val(datas.ENTRY_DATE);
 			$("#SERIAL_NUM").val(datas.SERIAL_NUM);
 			$("#USER_DEPT").val(datas.USER_DEPT);//申请人部门
+			$("#USER_DEPTNAME").val(datas.USER_DEPTNAME);//申请人部门名称			
 			$("#SYSTEM").val(datas.SYSTEM);
 			$("#BG_TYPE").val(datas.BG_TYPE);
 			$("#BILL_STATE").val(datas.BILL_STATE);
@@ -586,12 +586,14 @@
 			$("#UNIT_CODE").attr("disabled","disabled");//申请人单位
 			$("#UNIT_NAME").attr("disabled","disabled");
 			$("#DEPT_CODE").attr("disabled","disabled");//申请部门
+			$("#DEPT_NAME").attr("disabled","disabled");//申请部门
 			$("#USER_JOB").attr("disabled","disabled");//申请人岗位
 			$("#USER_CONTACT").attr("disabled","disabled");//联系方式
 			$("#EFFECTIVE_DATE").attr("disabled","disabled");//变更预期时间
 			$("#ENTRY_DATE").attr("disabled","disabled");
 			$("#SERIAL_NUM").attr("disabled","disabled");
 			$("#USER_DEPT").attr("disabled","disabled");//申请人部门
+			$("#USER_DEPTNAME").attr("disabled","disabled");//申请人部门名称
 			$("#SYSTEM").attr("disabled","disabled");
 			$("#BG_TYPE").attr("disabled","disabled");
 			$("#BILL_STATE").attr("disabled","disabled");
@@ -611,12 +613,14 @@
 			$("#UNIT_CODE").removeAttr("disabled");//申请人单位
 			$("#UNIT_NAME").removeAttr("disabled");
 			$("#DEPT_CODE").removeAttr("disabled");//申请部门
+			$("#DEPT_NAME").removeAttr("disabled");//申请部门
 			$("#USER_JOB").removeAttr("disabled");//申请人岗位
 			$("#USER_CONTACT").removeAttr("disabled");//联系方式
 			$("#EFFECTIVE_DATE").removeAttr("disabled");//变更预期时间
 			$("#ENTRY_DATE").removeAttr("disabled");
 			$("#SERIAL_NUM").removeAttr("disabled");
 			$("#USER_DEPT").removeAttr("disabled");//申请人部门
+			$("#USER_DEPTNAME").removeAttr("disabled");//申请人部门名称
 			$("#SYSTEM").removeAttr("disabled");
 			$("#BG_TYPE").removeAttr("disabled");
 			$("#BILL_STATE").removeAttr("disabled");
@@ -683,29 +687,6 @@
 		//搜索
 		function tosearch(){
 			initList('<%=basePath%>changeerpxtbg/getPageList.do');
-// 			$("#tasks li").remove(); 
-// 			top.jzts();
-// 			var keywords = $("#SelectedBillCode").val();
-// 			$.ajax({
-// 					type: "POST",
-<%-- 					url: '<%=basePath%>changeerpxtbg/getPageList.do', --%>
-// 			    	data: {keywords:keywords},
-// 					dataType:'json',
-// 					cache: false,
-// 					success: function(data){
-// 						if(data.length>0){
-// 							$.each(data, function(i, item){
-// 							    var html = '';
-// 							        html += setDiv(item);
-// 								$("#tasks").append(html);
-// 						 	});
-// 						}
-// 						else{
-// 							addEmpty();
-// 						}
-// 						top.hangge();
-// 					}
-// 			});
 		}
 		//上报
 		function report(billCode){

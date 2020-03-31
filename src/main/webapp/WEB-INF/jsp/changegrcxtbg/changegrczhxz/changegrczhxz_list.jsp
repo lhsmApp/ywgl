@@ -222,25 +222,22 @@
 														<input type="hidden" name="UNIT_CODE" id="UNIT_CODE"/> 
 														<input type="text" name="UNIT_NAME" id="UNIT_NAME" class="form-control" readonly="readonly" placeholder="请输入单位" /> 
 													</div>
-<!-- 													   <div style="margin:10px 0px;"> -->
+
+ 													 <div style="margin:10px 0px;">
+ 														<label for="form-field-xtbg-report-dept">部门</label>
+ 														<input type="hidden" name="DEPT_CODE" id="DEPT_CODE"/>
+ 														<input type="text" name="DEPT_NAME" id="DEPT_NAME" class="form-control" readonly="readonly"placeholder="请输入部门"/>
+													</div>		
+
+<!-- 							 						<div style="margin:10px 0px;"> -->
 <!-- 														<label for="form-field-xtbg-report-dept">部门</label> -->
-<!-- 														<input type="text" name="DEPT_CODE" id="DEPT_CODE" class="form-control" placeholder="请输入申请人部门"/> -->
-<!-- 													</div>		 -->
-<!-- 													 <div style="margin:10px 0px;"> -->
-<!-- 														<label for="form-field-xtbg-report-dept">部门</label> -->
-<!-- 														<input type="hidden" name="DEPT_CODE" id="DEPT_CODE"/> -->
-<!-- 														<input type="text" name="DEPT_NAME" id="DEPT_NAME" class="form-control" placeholder="请输入部门"/> -->
-<!-- 													</div>		
-							 -->		
-							 						<div style="margin:10px 0px;">
-														<label for="form-field-xtbg-report-dept">部门</label>
-														<select class="form-control" name="DEPT_CODE" id="DEPT_CODE">
-															<option value=""></option>
-															<c:forEach items="${userDeptList}" var="dept">
-															<option value="${dept.DEPARTMENT_CODE}">${dept.NAME}</option>
-															</c:forEach>
-														</select>
-													</div>
+<!-- 														<select class="form-control" name="DEPT_CODE" id="DEPT_CODE"> -->
+<!-- 															<option value=""></option> -->
+<%-- 															<c:forEach items="${userDeptList}" var="dept"> --%>
+<%-- 															<option value="${dept.DEPARTMENT_CODE}">${dept.NAME}</option> --%>
+<%-- 															</c:forEach> --%>
+<!-- 														</select> -->
+<!-- 													</div> -->
 <!-- 													<div style="margin:10px 0px;"> -->
 <!-- 														<label for="form-field-xtbg-report-user">申请人</label> -->
 <!-- 															<select class="form-control" name="USER_CODE" id="USER_CODE"> -->
@@ -299,7 +296,7 @@
 																<i class="ace-icon fa fa-calendar" ></i>
 															</span>
 														</div>
-																											<div style="margin:10px 0px;">
+														<div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-contact">Email</label>
 														<input type="text" name="USER_EMAIL" id="USER_EMAIL" class="form-control" placeholder="请输入联系方式"/>
 													</div>
