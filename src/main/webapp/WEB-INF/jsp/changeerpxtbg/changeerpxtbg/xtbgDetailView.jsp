@@ -81,7 +81,7 @@
 							</tr>
 							<tr>
 								<td style="width:115px;text-align: right;padding-top: 13px;">创建人:</td>
-								<td><input type="text" name="BILL_USER" id="BILL_USER" value="${pd.BILL_USER}" maxlength="20"  title="创建人" style="width:98%;"/></td>
+								<td><input type="text" name="BILL_USER" id="BILL_USER" value="${pd.USERNAME}" maxlength="20"  title="创建人" style="width:98%;"/></td>
 								<td style="width:115px;text-align: right;padding-top: 13px;">创建日期:</td>
 								<td><input type="text" name="BILL_DATE" id="BILL_DATE" value="${pd.BILL_DATE}" maxlength="30" title="创建日期" style="width:98%;"/></td>
 							</tr>
