@@ -61,7 +61,7 @@
   </tr>
   <tr>
         <td height="40" align="center" bgcolor="EFEFFF">联系方式</br>(Email,电话)</td>
-        <td align="center" bgcolor="#FFFFFF">${pd.USER_EMAIL},${pd.USER_TEL}</td>
+        <td align="center" bgcolor="#FFFFFF">${pd.CONTACT}</td>
         <td align="center" bgcolor="EFEFFF">申请生效日期</td>
         <td align="center" bgcolor="#FFFFFF">${pd.EFFECTIVE_DATE}</td>
   </tr>	

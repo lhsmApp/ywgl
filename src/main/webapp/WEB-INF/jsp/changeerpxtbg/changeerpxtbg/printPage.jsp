@@ -62,7 +62,7 @@
         <td height="40" align="center" bgcolor="EFEFFF">变更名称</td>
         <td align="center" bgcolor="#FFFFFF">${pd.BG_NAME}</td>
         <td align="center" bgcolor="EFEFFF">联系方式</br>(Email,电话)</td>
-        <td align="center" bgcolor="#FFFFFF">${pd.USER_EMAIL},${pd.USER_TEL}</td>
+        <td align="center" bgcolor="#FFFFFF">${pd.CONTACT}</td>
   </tr>	
     <tr>
         <td height="40" align="center" bgcolor="EFEFFF">ERP系统名称</td>

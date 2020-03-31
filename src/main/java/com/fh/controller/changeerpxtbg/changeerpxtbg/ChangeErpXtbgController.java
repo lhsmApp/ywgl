@@ -394,6 +394,14 @@ public class ChangeErpXtbgController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd = changeerpxtbgService.findById(pd);	//根据ID读取
+		//判断邮箱和电话是否为空
+		if("".equals(pd.get("USER_EMAIL")) || null==pd.get("USER_EMAIL")){
+			pd.put("CONTACT", pd.get("USER_TEL"));
+		}else if("".equals(pd.get("USER_TEL")) || null==pd.get("USER_TEL")){
+			pd.put("CONTACT", pd.get("USER_EMAIL"));
+		}else{
+			pd.put("CONTACT", pd.get("USER_EMAIL")+","+pd.get("USER_TEL"));
+		}	
 		JSONArray json = JSONArray.fromObject(pd); 
 		mv.setViewName("changeerpxtbg/changeerpxtbg/printPage");
 		mv.addObject("pd", pd);
