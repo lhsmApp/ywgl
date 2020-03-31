@@ -564,7 +564,7 @@ public class AssessDataController extends BaseController {
 			getPd.put("filterWhereResult", SqlTools.constructWhere(filters, null));
 		}
 		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
-		String departCode = user.getDEPARTMENT_ID();
+		String departCode = user.getUNIT_CODE();
 		getPd.put("DEPART_CODE", departCode);
 		page.setPd(getPd);
 		List<PageData> varList = assessDataService.JqPage(page);
