@@ -120,7 +120,7 @@
 										<c:forEach items="${varList}" var="var" varStatus="vs">	
 										<tr>
 											<td class='center'>${vs.index+1}</td>
-											<td class='center'>${var.TYPE}</td>
+											<td class='center'>${var.TYPENAME}</td>
 											<td class='center'>${var.NOWWEEK}</td>
 											<td class='center'>${var.NOWWEEKSOLVE}</td>
 											<td class='center'>${var.NOWWEEKNOTSOLVE}</td>
@@ -261,7 +261,7 @@
 				rows='<tr><td class="center" style="width: 30px;">'
 					+i 
 					+"</td><td class='center'>"
-					+item.TYPE
+					+item.TYPENAME
 					+"</td><td class='center'>"
 					+item.NOWWEEK
 					+"</td><td class='center'>"
