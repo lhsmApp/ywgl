@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONObject;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -29,13 +30,12 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSON;
 import com.fh.controller.base.BaseController;
 import com.fh.entity.Page;
-import com.fh.entity.system.Department;
 import com.fh.entity.system.User;
 import com.fh.service.fhoa.department.DepartmentManager;
+import com.fh.service.myPush.myPush.MyPushManager;
 import com.fh.service.notice.notice.NoticeDetailManager;
 import com.fh.service.notice.notice.NoticeItemManager;
 import com.fh.service.notice.notice.NoticeManager;
-import com.fh.service.system.dictionaries.DictionariesManager;
 import com.fh.service.trainBase.CourseTypeManager;
 import com.fh.util.AppUtil;
 import com.fh.util.Const;
@@ -44,7 +44,6 @@ import com.fh.util.FileUpload;
 import com.fh.util.Jurisdiction;
 import com.fh.util.PageData;
 import com.fh.util.PathUtil;
-import com.fh.util.base.ConvertUtils;
 
 import net.sf.json.JSONArray;
 
@@ -71,6 +70,9 @@ public class NoticeController extends BaseController {
 	@Resource(name = "departmentService")
 	private DepartmentManager departmentService;
 
+	@Resource(name = "myPushService")
+	private MyPushManager myPushService;
+
 	/**
 	 * 保存
 	 * 
@@ -94,8 +96,8 @@ public class NoticeController extends BaseController {
 
 		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 		pd.put("NOTICE_USER", user.getUSER_ID());
-		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		pd.put("CREATE_DATE", format.format(new Date()));
+		String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+		pd.put("CREATE_DATE", date);
 		pd.put("USER_DEPART", user.getUNIT_CODE());
 		pd.put("CREATE_USER", user.getUSER_ID());
 		pd.put("STATE", 1);
@@ -125,14 +127,17 @@ public class NoticeController extends BaseController {
 		JSONArray json = JSONArray.fromObject(scope_Arr);
 		Object nId = isNumericzidai(pd.get("NOTICE_ID").toString()) ? pd.get("NOTICE_ID") : pd.get("id");
 
+		List<String> scoList = new ArrayList<String>();
 		for (int i = 0; i < json.size(); i++) {
 			net.sf.json.JSONObject job = json.getJSONObject(i);
 			PageData p = new PageData();
 			p.put("NOTICE_ID", nId);
 			p.put("USER_ID", job.get("id"));
+			scoList.add(job.get("id").toString());
 			p.put("STATE", 0);
 			detailArray.add(p);
 		}
+		String scoStr = StringUtils.join(scoList, ",");
 		if (!pd.get("NOTICE_TYPE").equals("0")) {
 			for (int i = 0; i < json.size(); i++) {
 				net.sf.json.JSONObject job = json.getJSONObject(i);
@@ -165,9 +170,48 @@ public class NoticeController extends BaseController {
 
 		out.write("{\"ret\":\"0\",\"sMsg\":\"success\"}");
 		out.close();
+		
+		PageData pd2 = new PageData();
+		if (isNumericzidai(pd.get("NOTICE_ID").toString())) {
+			pd2.put("iModuleId", 243);
+			pd2.put("iModuleSubId", pd.get("NOTICE_ID").toString());
+			pd2.put("iForkId", 1);
+			pd2.put("iGroupId", "1");
+			pd2.put("doCleanMark", "1");
+			pd2.put("doSend", "1");
+			if (pd.getString("NOTICE_TYPE").equals("0")) {
+				pd2.put("iGroupId", "0");
+			} else {
+				pd2.put("UserList", scoStr);
+			}
+			pd2.put("sDetails", pd.getString("NOTICE_CONTENT"));
+			pd2.put("dtBeginTime", pd.getString("START_TIME"));
+			pd2.put("dtOverTime", pd.getString("END_TIME"));
+			pd2.put("sCanClickUrl", "notice/list.do?NOTICE_CONTENT="+pd.getString("NOTICE_CONTENT"));
+			com.alibaba.fastjson.JSONObject json2 = myPushService.editSend(pd2);// 新建成功后推送消息 用json格式
+			System.out.println(json2);// test
+		}else {
+			// 新建成功后推送消息
+			pd2.put("iModuleId", 243);
+			pd2.put("iModuleSubId", nId);
+			pd2.put("iForkId", 1);
+			pd2.put("sDetails", pd.getString("NOTICE_CONTENT"));
+			if (pd.getString("NOTICE_TYPE").equals("0")) {
+				pd2.put("iGroupId", "0");
+			} else {
+				pd2.put("UserList", scoStr);
+			}
+			pd2.put("dtBeginTime", pd.getString("START_TIME"));
+			pd2.put("dtOverTime", pd.getString("END_TIME"));
+			pd2.put("sCanClickUrl", "notice/list.do?NOTICE_CONTENT="+pd.getString("NOTICE_CONTENT"));
+			pd2.put("iIsForward", "1");
+		}
+		
+
+		com.alibaba.fastjson.JSONObject json2 = myPushService.saveSend(pd2);// 新建成功后推送消息 用json格式
+		System.out.println(json2);// test
 	}
 
-	@SuppressWarnings("unused")
 	private boolean isNumericzidai(String str) throws Exception {
 		Pattern pattern = Pattern.compile("[0-9]+");
 		Matcher isNum = pattern.matcher(str);

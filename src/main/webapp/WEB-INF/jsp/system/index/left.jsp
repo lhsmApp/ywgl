@@ -128,5 +128,15 @@
 			ace.settings.check('sidebar', 'collapsed')
 		} catch (e) {
 		}
+		var menuIdName = {}
+		<c:forEach items="${menuList}" var="menu1">
+			<c:if test="${menu1.hasMenu && '1' == menu1.MENU_STATE}">
+				<c:forEach items="${menu1.subMenu}" var="menu2">
+					<c:if test="${menu2.hasMenu && '1' == menu2.MENU_STATE}">
+					menuIdName[${menu2.MENU_ID}] = '${menu2.MENU_NAME}'
+					</c:if>
+				</c:forEach>
+			</c:if>
+		</c:forEach>
 	</script>
 </div>

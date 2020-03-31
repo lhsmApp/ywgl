@@ -58,9 +58,34 @@ function getHeadMsg(){
 			 wimadress = data.wimadress;				//即时聊天服务器IP和端口
 			 oladress = data.oladress;					//在线管理和站内信服务器IP和端口
 			 online();									//连接在线
+			 getMyNotice();								//获取未读消息
 		}
 	});
 }
+
+//获取所有未读的消息
+function getMyNotice(id=''){
+	var pathName = 'getMyNotice'
+	if(id!=''){
+		pathName = 'newPushHousekeeper'
+	}
+	$.ajax({
+		type: "POST",
+		url: locat+'/mypush/'+pathName+'.do?tm='+new Date().getTime(),
+    	data: {findById:id},
+		dataType:'json',
+		cache: false,
+		success: function(data){
+			 var reData = data.reData;
+			 for(var rd in reData){
+				 if("function" != typeof(reData[rd])){
+					 bubblesPopup(reData[rd],rd+1);
+				 }
+			 }
+		}
+	});
+}
+
 
 //获取站内信未读总数(在站内信删除未读新信件时调用此函数更新未读数)
 function getFhsmsCount(){
@@ -79,11 +104,18 @@ function getFhsmsCount(){
 
 //加入在线列表
 function online(){
+	if ('WebSocket' in window) {
+		websocket = new WebSocket(encodeURI('ws://'+oladress+'/socketServer/'+USER_ID)); //oladress在main.jsp页面定义
+	} else if ('MozWebSocket' in window) {
+		websocket = new MozWebSocket(encodeURI('ws://'+oladress+'/socketServer/'+USER_ID)); //oladress在main.jsp页面定义
+	} else {
+		alert("该浏览器不支持websocket");
+	}
+	
 	if (window.WebSocket) {
-		websocket = new WebSocket(encodeURI('ws://'+oladress)); //oladress在main.jsp页面定义
 		websocket.onopen = function() {
 			//连接成功
-			websocket.send('[join]'+user);
+			websocket.send('[join]ywgl_'+user);
 		};
 		websocket.onerror = function() {
 			//连接失败
@@ -93,6 +125,9 @@ function online(){
 		};
 		//消息接收
 		websocket.onmessage = function(message) {
+			console.log(message)
+			setTimeout(getMyNotice(JSON.parse(message["data"])['id']),2000)//取太快容易取不到
+			return
 			var message = JSON.parse(message.data);
 			if(message.type == 'goOut'){
 				$("body").html("");
@@ -206,7 +241,8 @@ function fhsms(){
 		 //siMenu('118','117','政策法规','policy/list.do');
 //		 siMenu('10000','1000','政策法规浏览','policyCustom/listAllPolicyType.do');
 		 //siMenu('10005','1000','jqgridTest','jqgrid/listTest.do');
-		 siMenu('10005','1000','问题分配','mbp/list.do');
+		 siMenu('10005','1000','问题分配','knowledgetype/list.do');
+//	 siMenu('10005','1000','问题分配','mbp/list.do');
 }
 
 //组织机构
@@ -250,4 +286,70 @@ function jzts(){
 //刷新用户头像
 function updateUserPhoto(value){
 	$("#userPhoto").attr("src",value);//用户头像
+}
+
+
+//弹出气泡弹窗
+function bubblesPopup(rd,bubblesId){
+	console.log(rd)
+	var aLabel = '';
+	switch(rd['iIsForward']){
+		case "0"://不跳
+			aLabel = '【<a href="javascript:void(0)" onclick="tagRead(this,\''+rd['iModuleId']+':'+rd['iModuleSubId']+':'+rd['iForkId']+'\')" class="red">'+rd['sCanClickTile']+'</a>】'
+			break;
+		case "1"://跳
+			console.log(menuIdName[rd['iModuleId']],rd['iModuleId'])
+			aLabel = '【<a href="javascript:void(0)" onclick="siMenu(\'z'+rd['iModuleSubId']+'\',\'lm'+rd['iModuleId']+'\',\''+menuIdName[rd['iModuleId']]+'\',\''+rd['sCanClickUrl']+'\','+bubblesId+');tagRead(this,\''+rd['iModuleId']+':'+rd['iModuleSubId']+':'+rd['iForkId']+'\')" class="red">'+rd['sCanClickTile']+'</a>】'
+			break;
+		case "2"://新窗口
+			//aLabel = '【<a href="'+rd['sCanClickUrl']+'" onclick="javascript:$.gritter.remove('+bubblesId+')">'+rd['sCanClickTile']+'</a>】'
+			aLabel = '【<a href="javascript:void(0)" onclick="javascript:openDiagFromNotice(\''+rd['sCanClickUrl']+'\');tagRead(this,\''+rd['iModuleId']+':'+rd['iModuleSubId']+':'+rd['iForkId']+'\')" class="red">'+rd['sCanClickTile']+'</a>】'
+			break;
+	}
+	
+    var unique_id = $.gritter.add({
+		title: rd['sTitle']+aLabel,
+		text: rd['sDetails'],
+		image:rd['sImgUrl'],
+		//image: 'static/ace/avatars/user.jpg',
+		sticky: true,
+		time: '',
+		class_name:'gritter-info'+((new Date()).getHours()<18?' gritter-light':'')
+	});
+//    console.log(unique_id)
+};
+//开发新窗口
+function openDiagFromNotice(url){
+//	 top.jzts();
+     var diag = new top.Dialog();
+     diag.Drag=true;
+     diag.Title ="";
+     diag.URL = location.origin+'/'+location.pathname.split("/")[1]+'/'+url;
+     diag.Width = 700;
+     diag.Height = 400;
+     diag.Modal = true;             //有无遮罩窗口
+     diag. ShowMaxButton = true;    //最大化按钮
+     diag.ShowMinButton = true;     //最小化按钮
+     diag.CancelEvent = function(){ //关闭事件
+ 		diag.close();
+     };
+     diag.show();
+}
+//标记为已读
+function tagRead(event,id){
+    //console.log(event.target.tag)//id
+    $(event).html("提交中..").attr("disabled",true).css("pointer-events","none");
+	$.ajax({
+        type: "POST",
+        url: 'mypush/tagRead.do?tm='+new Date().getTime(),
+        data: {findById:id},
+        cache: false,
+        success: function(json){
+            console.log(json)
+            $(event).parent().parent().prevAll(".gritter-close").trigger("click");
+        },error:function(){
+        	//$(event).html("点击表示已读").attr("disabled",null).css("pointer-events",'');
+        	$(event).html("标记失败")
+        }
+    });
 }

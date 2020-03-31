@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MyPushMapper">
+	<!-- 表名 --><!-- 表名 --><!-- 表名 -->
+	<!-- 标记表 -->
+	<sql id="tb_push_mark">
+		tb_push_mark
+	</sql>
+	<!-- 通告表 -->
+	<sql id="tb_push_notice">
+		tb_push_notice
+	</sql>
+	<!-- 自定义组表 -->
+	<sql id="tb_push_group">
+		tb_push_group
+	</sql>
+	<!-- 自定义组配置表 -->
+	<sql id="tb_push_group_config">
+		tb_push_group_config
+	</sql>
+	<!-- 范围表 -->
+	<sql id="tb_push_scope">
+		tb_push_scope
+	</sql>
+
+
+	<!-- 字段 --><!-- 字段 --><!-- 字段 -->
+	<!-- 标记表 -->
+	<sql id="tb_push_mark_field">
+		`iModuleId`,
+		`iModuleSubId`,
+		`iForkId`,
+		`iUserId`,
+		`sUserName`,
+		`dtMarkTime`
+	</sql>
+	<!-- 通告表:插入 -->
+	<sql id="tb_push_notice_field_ins">
+		`iModuleId`,
+		`iModuleSubId`,
+		`iForkId`,
+		`iLevel`,
+		`iStatus`,
+		`dtCreateTime`,
+		`sCreater`,
+		`iCreaterId`,
+		`dtBeginTime`,
+		`dtOverTime`,
+		`sLastEditors`,
+		`iLastEditorsId`,
+		`sTitle`,
+		`sDetails`,
+		`sCanClickTile`,
+		`sCanClickUrl`,
+		`sImgUrl`,
+		`iIsForward`
+	</sql>
+	<!-- 通告表:查询 -->
+	<sql id="tb_push_notice_field_get">
+		`iModuleId`,
+		`iModuleSubId`,
+		`iForkId`,
+		`iLevel`,
+		`iStatus`,
+		DATE_FORMAT(dtCreateTime,'%Y-%m-%d %H:%i:%S')
+		`dtCreateTime`,
+		`sCreater`,
+		`iCreaterId`,
+		DATE_FORMAT(dtBeginTime,'%Y-%m-%d %H:%i:%S')
+		`dtBeginTime`,
+		DATE_FORMAT(dtOverTime,'%Y-%m-%d %H:%i:%S')
+		`dtOverTime`,
+		`sLastEditors`,
+		`iLastEditorsId`,
+		`sTitle`,
+		`sDetails`,
+		`sCanClickTile`,
+		`sCanClickUrl`,
+		`sImgUrl`,
+		`iIsForward`
+	</sql>
+	<!-- 自定义组 -->
+	<sql id="tb_push_group_field">
+		`iGroupId`,
+		`sCreater`,
+		`iCreaterId`,
+		`iStatus`,
+		`iLooseDegree`,
+		`sGroupName`,
+		`sLastEdits`
+	</sql>
+	<!-- 自定义组配置表 -->
+	<sql id="tb_push_group_config_field">
+		`iGroupId`,
+		`sType`,
+		`sAbout`
+	</sql>
+	<!-- 范围表 -->
+	<sql id="tb_push_scope_field">
+		`sType`,
+		`sAbout`,
+		`iModuleId`,
+		`iModuleSubId`,
+		`iForkId`
+	</sql>
+
+
+
+	<!-- 字段值 --><!-- 字段值 --><!-- 字段值 -->
+	<!-- 标记表 -->
+	<sql id="tb_push_mark_value">
+		#{iModuleId},
+		#{iModuleSubId},
+		#{iForkId},
+		#{iUserId},
+		#{sUserName},
+		#{dtMarkTime}
+	</sql>
+	<!-- 通告表 -->
+	<sql id="tb_push_notice_value">
+		#{iModuleId},
+		#{iModuleSubId},
+		#{iForkId},
+		#{iLevel},
+		#{iStatus},
+		#{dtCreateTime},
+		#{sCreater},
+		#{iCreaterId},
+		#{dtBeginTime},
+		#{dtOverTime},
+		#{sLastEditors},
+		#{iLastEditorsId},
+		#{sTitle},
+		#{sDetails},
+		#{sCanClickTile},
+		#{sCanClickUrl},
+		#{sImgUrl},
+		#{iIsForward}
+	</sql>
+
+	<!-- 自定义组表 -->
+	<sql id="tb_push_group_value">
+		#{iGroupId},
+		#{sCreater},
+		#{iCreaterId},
+		#{iStatus},
+		#{iLooseDegree},
+		#{sGroupName},
+		#{sLastEdits}
+	</sql>
+	<!-- 自定义组配置表 -->
+	<sql id="tb_push_group_config_value">
+		#{iGroupId},
+		#{sType},
+		#{sAbout}
+	</sql>
+	<!-- 范围表 -->
+	<sql id="tb_push_scope_value">
+		#{sType},
+		#{sAbout},
+		#{iModuleId},
+		#{iModuleSubId},
+		#{iForkId}
+	</sql>
+
+	<!-- SQL语句 --><!-- SQL语句 --><!-- SQL语句 -->
+	<!-- 通告表内新增一条数据 -->
+	<insert id="saveNotice" parameterType="pd">
+		<!-- <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer"> 
+			SELECT LAST_INSERT_ID() </selectKey> -->
+		insert into
+		<include refid="tb_push_notice"></include>
+		(
+		<include refid="tb_push_notice_field_ins"></include>
+		) values (
+		<include refid="tb_push_notice_value"></include>
+		)
+	</insert>
+	<!-- 范围表批量新增数据 -->
+	<insert id="saveBatchScope" parameterType="pd">
+		insert into
+		<include refid="tb_push_scope"></include>
+		(
+		<include refid="tb_push_scope_field"></include>
+		) values
+		<foreach item="items" index="index" collection="scopeList"
+			open="" close="" separator=",">
+			<foreach item="items2" index="index2"
+				collection="items.content" open="" close="" separator=",">
+				(#{items.name},#{items2},#{iModuleId},#{iModuleSubId},#{iForkId})
+			</foreach>
+		</foreach>
+	</insert>
+	<!-- 记录用户已读状态 -->
+	<insert id="markRead" parameterType="pd">
+		insert into
+		<include refid="tb_push_mark"></include>
+		(
+		<include refid="tb_push_mark_field"></include>
+		) values
+		(
+		<include refid="tb_push_mark_value"></include>
+		)
+	</insert>
+	<!-- 清空某个通告的已读内容 -->
+	<delete id="deleteMarkByNoticeId">
+		delete from
+		<include refid="tb_push_mark"></include>
+		<where>
+			iModuleId=#{iModuleId}
+			AND
+			iModuleSubId=#{iModuleSubId} AND iForkId=#{iForkId}
+		</where>
+	</delete>
+	<!-- 清空某个通告的范围 -->
+	<delete id="deleteScopeByNoticeId">
+		delete from
+		<include refid="tb_push_scope"></include>
+		<where>
+			iModuleId=#{iModuleId}
+			AND
+			iModuleSubId=#{iModuleSubId} AND iForkId=#{iForkId}
+		</where>
+	</delete>
+	<!-- 修改通告内容 -->
+	<update id="editNotice" parameterType="pd">
+		update
+		<include refid="tb_push_notice"></include>
+		<set>
+			<if test="iLevel!='' and iLevel!=null">
+				iLevel=#{iLevel},
+			</if>
+			<if test="iStatus!='' and iStatus!=null">
+				iStatus=#{iStatus},
+			</if>
+			<if test="dtBeginTime!='' and dtBeginTime!=null">
+				dtBeginTime=#{dtBeginTime},
+			</if>
+			<if test="dtOverTime!='' and dtOverTime!=null">
+				dtOverTime=#{dtOverTime},
+			</if>
+			<if test="sLastEditors!='' and sLastEditors!=null">
+				sLastEditors=#{sLastEditors},
+			</if>
+			<if test="iLastEditorsId!='' and iLastEditorsId!=null">
+				iLastEditorsId=#{iLastEditorsId},
+			</if>
+			<if test="sTitle!='' and sTitle!=null">
+				sTitle=#{sTitle},
+			</if>
+			<if test="sDetails!='' and sDetails!=null">
+				sDetails=#{sDetails},
+			</if>
+			<if test="sCanClickTile!='' and sCanClickTile!=null">
+				sCanClickTile=#{sCanClickTile},
+			</if>
+			<if test="sCanClickUrl!='' and sCanClickUrl!=null">
+				sCanClickUrl=#{sCanClickUrl},
+			</if>
+			<if test="sImgUrl!='' and sImgUrl!=null">
+				sDetails=#{sDetails},
+			</if>
+			<if test="iIsForward!='' and iIsForward!=null">
+				sDetails=#{sDetails},
+			</if>
+		</set>
+		<where>
+			iModuleId=#{iModuleId}
+			AND
+			iModuleSubId=#{iModuleSubId} AND iForkId=#{iForkId}
+		</where>
+	</update>
+	<!-- 批量设置通告状态 -->
+	<update id="setBatchNoticeStatus" parameterType="pd">
+		<foreach item="items" index="index" collection="noticeList"
+			open="" close="" separator="">
+			update
+			<include refid="tb_push_notice"></include>
+			<set>
+				iStatus = #{newStatus}
+			</set>
+			<where> iModuleId=#{items.iModuleId}
+				AND
+				iModuleSubId=#{items.iModuleSubId} AND iForkId=#{items.iForkId}
+				AND
+				iStatus=#{items.iStatus}
+			</where>
+			;
+		</foreach>
+	</update>
+
+	<!-- 查询自定义组是否可用，如果返回值不为null 则表示可用 -->
+	<select id="checkGroupById" parameterType="pd"
+		resultType="Integer">
+		select
+		`iGroupId`
+		from
+		<include refid="tb_push_group"></include>
+		<where>
+			iGroupId=#{iGroupId}
+			AND
+			(
+			(sCreater=#{sCreater}
+			AND
+			iLooseDegree&gt;=0)
+			OR
+			iLooseDegree&gt;0
+			)
+			AND
+			iStatus=1
+		</where>
+	</select>
+	<!-- 获取通告表最后一个分支id -->
+	<select id="getLastForkIdById" parameterType="pd"
+		resultType="Integer">
+		select `iForkId` from
+		<include refid="tb_push_notice"></include>
+		where iModuleId
+		= #{iModuleId} AND iModuleSubId=#{iModuleSubId} order
+		by `iForkId` DESC
+		limit
+		1
+	</select>
+	<!-- 根据用户属性获取跟本人相关的自定义组id（去重） -->
+	<select id="getMyGroupByAttr" parameterType="pd" resultType="pd">
+		select distinct tb_pgc.`iGroupId` from
+		<include refid="tb_push_group_config"></include>
+		as tb_pgc
+		INNER JOIN
+		<include refid="tb_push_group"></include>
+		as tb_pg
+		ON
+		tb_pgc.iGroupId=tb_pg.iGroupId AND
+		tb_pg.`iStatus`=1
+		AND
+		(
+		<foreach item="items" index="index" collection="userSysinfo"
+			open="" close="" separator="OR">
+			(sType=#{items.key} AND
+			sAbout=#{items.value})
+		</foreach>
+		)
+	</select>
+	<!-- -->
+	<!-- 获取人员信息 -->
+	<select id="getUserInfo" parameterType="pd" resultType="pd">
+		select
+		${value} from ${userTable}
+		<where> ${userIdField}=${userIdValue}${where} ${whereA} </where>
+	</select>
+	<!-- 获取我的公告 -->
+	<select id="getMyNotices" parameterType="pd" resultType="pd">
+		SELECT t2.*,tb_push_mark.iUserId from (SELECT
+		t1.iModuleId,
+		t1.iModuleSubId,
+		t1.iForkId,
+		tb_push_notice.`iStatus`,
+		DATE_FORMAT(tb_push_notice.`dtBeginTime`,'%Y-%m-%d %H:%i:%S')
+		as
+		`dtBeginTime`,
+		DATE_FORMAT(tb_push_notice.`dtOverTime`,'%Y-%m-%d %H:%i:%S') as
+		`dtOverTime`,
+		tb_push_notice.`sTitle`,
+		tb_push_notice.`sDetails`,
+		tb_push_notice.`sCanClickTile`,
+		tb_push_notice.`sCanClickUrl`,
+		tb_push_notice.`sImgUrl`,
+		tb_push_notice.`iIsForward`
+		FROM
+		(
+		SELECT
+		tb_push_scope.iModuleId,
+		tb_push_scope.iModuleSubId,
+		tb_push_scope.iForkId
+		FROM
+		tb_push_scope
+		<where>
+			${where}
+		</where>
+		) as t1
+
+		LEFT JOIN tb_push_notice ON t1.iModuleId =
+		tb_push_notice.iModuleId
+		AND t1.iModuleSubId =
+		tb_push_notice.iModuleSubId
+		AND t1.iForkId = tb_push_notice.iForkId
+
+		where
+		<!-- tb_push_notice.iCreaterId!=#{iUserId} AND -->
+		tb_push_notice.iStatus=1
+		)
+		as t2
+		left join tb_push_mark on
+		tb_push_mark.iModuleId=t2.iModuleId
+		AND
+		tb_push_mark.iModuleSubId=t2.iModuleSubId
+		AND
+		tb_push_mark.iForkId=t2.iForkId
+		AND tb_push_mark.iUserId=#{iUserId}
+		;
+	</select>
+	<!-- 查看通告id和当前用户标签是否匹配 -->
+	<select id="checkNoticeId" parameterType="pd" resultType="pd">
+		select
+		<include refid="tb_push_scope_field"></include>
+		from
+		<include refid="tb_push_scope"></include>
+		<where>
+			${where}
+			AND iModuleId=#{iModuleId}
+			AND
+			iModuleSubId=#{iModuleSubId}
+			AND iForkId=#{iForkId}
+		</where>
+	</select>
+	<!-- 根据id获取通告 -->
+	<select id="getNoticeById" parameterType="pd" resultType="pd">
+		select
+		<include refid="tb_push_notice_field_get"></include>
+		from
+		<include refid="tb_push_notice"></include>
+		<where>
+			iModuleId=#{iModuleId}
+			AND iModuleSubId=#{iModuleSubId}
+			AND
+			iForkId=#{iForkId}
+		</where>
+	</select>
+</mapper>
