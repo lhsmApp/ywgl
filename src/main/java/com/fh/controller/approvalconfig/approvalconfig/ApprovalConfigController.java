@@ -353,8 +353,8 @@ public class ApprovalConfigController extends BaseController {
 			p.put("APPROVAL_STATE","0");
 			p.put("NEXT_LEVEL", 0);
 			p.put("ACTIVE_FLAG",'1');
-			p.put("SCHEME_CODE","4ELHC1M0USRELHC1M0USR004");
 			p.put("UNIT_CODE","ELH130CUSR");
+			p.put("SCHEME_CODE",businessCode+""+p.get("UNIT_CODE"));
 			p.put("ROLE_CODE","68a2eb8394484984bb78338c05807533");
 			list.add(p);
 		}
