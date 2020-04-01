@@ -52,9 +52,9 @@
 									<label class="btn btn-sm btn-primary"> 
 										<input type="radio" class="level_select" name="level_select" value="2">类型统计
 									</label>
-									<label class="btn btn-sm btn-primary">
-										<input type="radio" class="level_select" name="level_select" value="3">运维情况统计
-									</label>																
+<!-- 									<label class="btn btn-sm btn-primary"> -->
+<!-- 										<input type="radio" class="level_select" name="level_select" value="3">运维情况统计 -->
+<!-- 									</label>																 -->
 								</div>
 						</div>
 					</div>
