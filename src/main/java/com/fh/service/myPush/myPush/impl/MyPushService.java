@@ -172,6 +172,15 @@ public class MyPushService implements MyPushManager {
 		scopePd.put("iModuleSubId", noticePd.get("iModuleSubId"));
 		scopePd.put("iForkId", noticePd.get("iForkId"));
 
+		
+		//如果因为某种原因通告表中的数据丢失了，需要重新插入的话，可以重置范围和已读
+		if (noticePd.get("rebootMark") != null && noticePd.get("rebootMark").equals("1")) {// 是否清空已读
+			dao.delete("MyPushMapper.deleteMarkByNoticeId", noticePd);
+		}
+		if (noticePd.get("rebootScope") != null && noticePd.get("rebootScope").equals("1")) {// 是否清空已读
+			dao.delete("MyPushMapper.deleteScopeByNoticeId", noticePd);
+		}
+		
 		dao.save("MyPushMapper.saveNotice", noticePd);
 		dao.save("MyPushMapper.saveBatchScope", scopePd);
 
@@ -479,7 +488,12 @@ public class MyPushService implements MyPushManager {
 				"sCanClickUrl", "sImgUrl", "iIsForward" };
 		for (String s : atLeastOne) {
 			if (noticePd.get(s) != null) {
-				dao.update("MyPushMapper.editNotice", noticePd);
+				Object obj = dao.update("MyPushMapper.editNotice", noticePd);
+				if(obj.equals(0)) {
+					reData.put("iRet", -132);
+					reData.put("sMsg", "失败，通告id不存在");
+					return reData;
+				}
 				break;
 			}
 		}

@@ -176,7 +176,6 @@ public class NoticeController extends BaseController {
 			pd2.put("iModuleId", 243);
 			pd2.put("iModuleSubId", pd.get("NOTICE_ID").toString());
 			pd2.put("iForkId", 1);
-//			pd2.put("iGroupId", "1");
 			pd2.put("doCleanMark", "1");
 			pd2.put("doSend", "1");
 			if (pd.getString("NOTICE_TYPE").equals("0")) {
@@ -189,6 +188,12 @@ public class NoticeController extends BaseController {
 			pd2.put("dtOverTime", pd.getString("END_TIME"));
 			pd2.put("sCanClickUrl", "notice/list2.do?NOTICE_CONTENT="+pd.getString("NOTICE_CONTENT"));
 			com.alibaba.fastjson.JSONObject json2 = myPushService.editSend(pd2);// 新建成功后推送消息 用json格式
+			if(json2.get("iRet").equals(-132)) {
+				pd2.put("rebootMark","1");
+				pd2.put("rebootScope","1");
+				pd2.put("iIsForward", "1");
+				myPushService.saveSend(pd2);
+			}
 			System.out.println(json2);// test
 		}else {
 			// 新建成功后推送消息
@@ -205,7 +210,7 @@ public class NoticeController extends BaseController {
 			pd2.put("dtOverTime", pd.getString("END_TIME"));
 			pd2.put("sCanClickUrl", "notice/list2.do?NOTICE_CONTENT="+pd.getString("NOTICE_CONTENT"));
 			pd2.put("iIsForward", "1");
-			com.alibaba.fastjson.JSONObject json2 = myPushService.saveSend(pd2);// 新建成功后推送消息 用json格式
+			com.alibaba.fastjson.JSONObject json2 = myPushService.saveSend(pd2);
 			System.out.println(json2);// test
 		}
 		
