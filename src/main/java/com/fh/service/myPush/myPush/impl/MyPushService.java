@@ -206,7 +206,7 @@ public class MyPushService implements MyPushManager {
 			}
 		}
 
-		NetCommBase.execPostCurl(map.get("oladress").toString(), str);
+		NetCommBase.execPostCurl(map.get("oladress").toString(), str,"POST");
 	}
 
 	/**

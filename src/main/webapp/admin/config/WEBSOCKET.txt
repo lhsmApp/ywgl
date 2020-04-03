@@ -1,1 +1,1 @@
-10.201.1.120,fh,8086,fh,10.201.1.120,fh,8086,fh,2
+erp.lhyt.petrochina,fh,8086,fh,erp.lhyt.petrochina,fh,8086,fh,2

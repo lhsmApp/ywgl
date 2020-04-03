@@ -1,11 +1,12 @@
 package com.fh.util.base;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * 说明：网络相关方法
+ * 
  * @author yijche
  * @Date 2020-03-18 3:34:22 PM
  *
@@ -13,30 +14,25 @@ import java.io.InputStreamReader;
 public class NetCommBase {
 	/**
 	 * 说明：以POST方式调用URL
+	 * 
 	 * @param host
 	 * @param msg
 	 * @return
 	 */
-	public static String execPostCurl(String host, String msg) throws Exception {
-		// 这要改成配置文件形式
-		String[] cmds = { "curl", "-XPOST", "http://" + host + "/sendAll", "-d", "msg=" + msg };// 必须分开写，不能有空格
-		ProcessBuilder process = new ProcessBuilder(cmds);
-		Process p;
-		try {
-			p = process.start();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-			StringBuilder builder = new StringBuilder();
-			String line = null;
-			while ((line = reader.readLine()) != null) {
-				builder.append(line);
-				builder.append(System.getProperty("line.separator"));
-			}
-			return builder.toString();
-
-		} catch (IOException e) {
-			System.out.print("error");
-			e.printStackTrace();
+	public static int execPostCurl(String host, String msg, String type) throws Exception {
+		String path = "http://" + host + "/sendAll";//
+		URL url = new URL(path);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestMethod(type); // 设置本次请求的方式 ， 默认是GET方式， 参数要求都是大写字母
+		conn.setConnectTimeout(5000);// 设置连接超时
+		conn.setDoInput(true);// 是否打开输入流 ， 此方法默认为true
+		conn.setDoOutput(true);// 是否打开输出流， 此方法默认为false
+		if (type.equals("POST")) {
+			OutputStream os = conn.getOutputStream();
+			os.write(("msg=" + msg).getBytes());
+			os.flush();
 		}
-		return null;
+		conn.connect();// 表示连接
+		return conn.getResponseCode();
 	}
 }
