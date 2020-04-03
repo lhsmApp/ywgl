@@ -242,6 +242,12 @@ public class NoticeController extends BaseController {
 		if (null != NOTICE_ID && !"".equals(NOTICE_ID)) {
 			pd.put("NOTICE_ID", NOTICE_ID);
 		}
+		PageData pd2 = new PageData();
+		pd2.put("iModuleId", 243);
+		pd2.put("iModuleSubId", pd.get("NOTICE_ID").toString());
+		pd2.put("iForkId", 1);
+		pd2.put("iStatus", "-2");
+		myPushService.editSend(pd2);
 		noticeService.delete(pd);
 		noticeDetailService.delete(pd);
 		noticeItemService.delete(pd);
