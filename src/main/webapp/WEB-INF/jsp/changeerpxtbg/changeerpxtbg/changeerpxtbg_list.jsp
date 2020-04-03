@@ -12,12 +12,12 @@
 			+ path + "/";
 	//String user=request.getUserPrincipal().getName();
 	User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
-    String userId=user.getUSER_ID();//用户ID 
-    String userName=user.getNAME();//用户姓名
-    String departId=user.getDEPARTMENT_ID();//部门ID
-    String departName=user.getDEPARTMENT_NAME();//部门名称
-    String unitCode=user.getUNIT_CODE();//单位ID
-    String unitName=user.getUNIT_NAME();//单位名称
+    String userId=user.getUSER_ID()==null ?"":user.getUSER_ID();//用户ID 
+    String userName=user.getNAME()==null ?"":user.getNAME();//用户姓名
+    String departId=user.getDEPARTMENT_ID()==null ?"":user.getDEPARTMENT_ID();//部门ID
+    String departName=user.getDEPARTMENT_NAME()==null ?"":user.getDEPARTMENT_NAME();//部门名称
+    String unitCode=user.getUNIT_CODE()==null ?"":user.getUNIT_CODE();//单位ID
+    String unitName=user.getUNIT_NAME()==null ?"":user.getUNIT_NAME();//单位名称
 %>
 
 <!DOCTYPE html>

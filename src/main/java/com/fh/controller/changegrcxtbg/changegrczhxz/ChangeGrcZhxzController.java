@@ -160,13 +160,13 @@ public class ChangeGrcZhxzController extends BaseController {
 			}		
 		} 	
 		mv.addObject("userList", DictsUtil.getSysUserDic(userService));//用户
-		pd.put("DEPARTMENT_CODE",  user.getUNIT_CODE());
+		//pd.put("DEPARTMENT_CODE",  user.getUNIT_CODE());
 		page.setPd(pd);
 		List<PageData> userDeptList= departmentService.list(page);
 		mv.addObject("userDeptList", userDeptList);//用户
-		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
-		JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0",zdepartmentPdList));
-		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
+		//List<PageData> zdepartmentPdList = new ArrayList<PageData>();
+		//JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0",zdepartmentPdList));
+		//mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
 		mv.setViewName("changegrcxtbg/changegrczhxz/changegrczhxz_list");
 		//mv.addObject("varList", varList);		
 		mv.addObject("varList", JSON.toJSONString(varList));

@@ -12,12 +12,12 @@
 			+ path + "/";
 	//String user=request.getUserPrincipal().getName();
 	User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
-    String userId=user.getUSER_ID();//用户ID 
-    String userName=user.getNAME();//用户姓名
-    String departId=user.getDEPARTMENT_ID();//部门ID
-    String departName=user.getDEPARTMENT_NAME();//部门名称
-    String unitCode=user.getUNIT_CODE();//单位ID
-    String unitName=user.getUNIT_NAME();//单位名称
+    String userId=user.getUSER_ID()==null ?"":user.getUSER_ID();//用户ID 
+    String userName=user.getNAME()==null ?"":user.getNAME();//用户姓名
+    String departId=user.getDEPARTMENT_ID()==null ?"":user.getDEPARTMENT_ID();//部门ID
+    String departName=user.getDEPARTMENT_NAME()==null ?"":user.getDEPARTMENT_NAME();//部门名称
+    String unitCode=user.getUNIT_CODE()==null ?"":user.getUNIT_CODE();//单位ID
+    String unitName=user.getUNIT_NAME()==null ?"":user.getUNIT_NAME();//单位名称
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -516,6 +516,7 @@
 			$("#DEPT_NAME").val('<%=departName%>');//部门名称	
 			$("#USER_CODE").val('<%=userId%>');//申请人编码
 			$("#USER_NAME").val('<%=userName%>');//申请人姓名
+			console.log('<%=departName%>');
 			$("#USER_DEPT").val('<%=departId%>');//申请人部门编码
 			$("#USER_DEPTNAME").val('<%=departName%>');//申请人部门名称
 			$("#USER_JOB").val("");//申请人岗位
@@ -556,7 +557,6 @@
 		 * 上传附件
 		 */
 		function addProAttachmentByType(type){
-			console.log(bill_code);
 			if(bill_code==undefined||bill_code==null){
 				$("#btnAddProInfoAttachment").tips({
 					side:3,
@@ -668,7 +668,6 @@
 					top.jzts();
 					var url = "<%=basePath%>changegrczhxz/delete.do?BILL_CODE="+encodeURI(Id);
 					$.get(url,function(data){
-// 						console.log(data);
 						//nextPage(${page.currentPage});
 						bootbox.dialog({
 							message: "<span class='bigger-110'>删除成功</span>",
@@ -738,7 +737,6 @@
 				}
 			});
 		};
-		//console.log(${varList});
 		/* var data=${varList};
 		//循环加载到页面
 		function getChangrData(){
@@ -791,9 +789,7 @@
 		            	bill_code=datas.BILL_CODE;		            	
 		            	var html = '';
 		      		     html += setDetail(datas);
-			            //console.log(html);
 		      			$('#detail-info').html(html);
-// 		      		    console.log(datas);
 		      		   if(datas.APPROVAL_STATE==2)
 		    			{
 		    			$("#step1").removeClass('active');
@@ -1031,7 +1027,6 @@
 		 * 初始化列表信息
 		 */
 		function initList(initUrl){
-			console.log('initList');
 			$("#tasks li").remove(); 
 			top.jzts();
 			var keywords = $("#SelectedBillCode").val();
@@ -1079,44 +1074,44 @@
 			+'</li>';
 			$("#tasks").append(htmlEmpty);
 		}
-		function initComplete(){
-			//下拉树
-			var defaultNodes = {"treeNodes":${zTreeNodes}};
-			//绑定change事件
-			$("#selectTree").bind("change",function(){
+// 		function initComplete(){
+// 			//下拉树
+// 			var defaultNodes = {"treeNodes":${zTreeNodes}};
+// 			//绑定change事件
+// 			$("#selectTree").bind("change",function(){
 
-				if(!$(this).attr("relValue")){
-			    }else{
-					$("#UNIT_CODE").val($(this).attr("relValue"));	
-			    }
-				 //清空select框中数据
-				   $('#USER_CODE').empty();
-				$.ajax({
-					   type: "POST",
-					   url: '<%=basePath%>changeerpxtbg/getUsers.do',
-					   data: {'UNIT_CODE':$("#UNIT_CODE").val()},
-					   dataType:'json',
-					   cache: false,
-					   success: function (data) {
-					           $('#USER_CODE').append("<option value='0'>--请选择申请人--</option>");
-					            //遍历成功返回的数据
-					            $.each(data, function (index,item) {
-					                var userName = data[index].NAME;
-					                var userId = data[index].USER_ID;
-					                //构造动态option
-					                $('#USER_CODE').append("<option value='"+userId+"'>"+userName+"</option>")
-					             });
-					    },
-					    error: function () {
+// 				if(!$(this).attr("relValue")){
+// 			    }else{
+// 					$("#UNIT_CODE").val($(this).attr("relValue"));	
+// 			    }
+// 				 //清空select框中数据
+// 				   $('#USER_CODE').empty();
+// 				$.ajax({
+// 					   type: "POST",
+<%-- 					   url: '<%=basePath%>changeerpxtbg/getUsers.do', --%>
+// 					   data: {'UNIT_CODE':$("#UNIT_CODE").val()},
+// 					   dataType:'json',
+// 					   cache: false,
+// 					   success: function (data) {
+// 					           $('#USER_CODE').append("<option value='0'>--请选择申请人--</option>");
+// 					            //遍历成功返回的数据
+// 					            $.each(data, function (index,item) {
+// 					                var userName = data[index].NAME;
+// 					                var userId = data[index].USER_ID;
+// 					                //构造动态option
+// 					                $('#USER_CODE').append("<option value='"+userId+"'>"+userName+"</option>")
+// 					             });
+// 					    },
+// 					    error: function () {
 
-					    }
-					  });
+// 					    }
+// 					  });
 
-			});
-			//赋给data属性
-			$("#selectTree").data("data",defaultNodes);  
-			$("#selectTree").render();
-		}		
+// 			});
+// 			//赋给data属性
+// 			$("#selectTree").data("data",defaultNodes);  
+// 			$("#selectTree").render();
+// 		}		
 	</script>
 
 
