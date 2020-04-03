@@ -193,7 +193,7 @@
 	</insert>
 	<!-- 记录用户已读状态 -->
 	<insert id="markRead" parameterType="pd">
-		insert into
+		replace into
 		<include refid="tb_push_mark"></include>
 		(
 		<include refid="tb_push_mark_field"></include>

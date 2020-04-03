@@ -298,8 +298,9 @@ function bubblesPopup(rd,bubblesId){
 			aLabel = '【<a href="javascript:void(0)" onclick="tagRead(this,\''+rd['iModuleId']+':'+rd['iModuleSubId']+':'+rd['iForkId']+'\')" class="red">'+rd['sCanClickTile']+'</a>】'
 			break;
 		case "1"://跳
-			console.log(menuIdName[rd['iModuleId']],rd['iModuleId'])
-			aLabel = '【<a href="javascript:void(0)" onclick="siMenu(\'z'+rd['iModuleSubId']+'\',\'lm'+rd['iModuleId']+'\',\''+menuIdName[rd['iModuleId']]+'\',\''+rd['sCanClickUrl']+'\','+bubblesId+');tagRead(this,\''+rd['iModuleId']+':'+rd['iModuleSubId']+':'+rd['iForkId']+'\')" class="red">'+rd['sCanClickTile']+'</a>】'
+//			console.log(menuIdName[rd['iModuleId']],rd['iModuleId'])
+			var theName = menuIdName[rd['iModuleId']]?menuIdName[rd['iModuleId']]:'临时窗口'+bubblesId;
+			aLabel = '【<a href="javascript:void(0)" onclick="siMenu(\'z'+rd['iModuleSubId']+'\',\'lm'+rd['iModuleId']+'\',\''+theName+'\',\''+rd['sCanClickUrl']+'\','+bubblesId+');tagRead(this,\''+rd['iModuleId']+':'+rd['iModuleSubId']+':'+rd['iForkId']+'\')" class="red">'+rd['sCanClickTile']+'</a>】'
 			break;
 		case "2"://新窗口
 			//aLabel = '【<a href="'+rd['sCanClickUrl']+'" onclick="javascript:$.gritter.remove('+bubblesId+')">'+rd['sCanClickTile']+'</a>】'
