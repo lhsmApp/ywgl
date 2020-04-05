@@ -138,4 +138,17 @@
 		where 
 			DEPART_PARENT_CODE = #{parentId} order by DEPART_CODE 
 	</select>
+	
+	<!-- 是否有相同编码 -->
+	<select id="hasSameDepartmentCode" parameterType="pd" resultType="pd">
+		select 
+		1
+		from 
+		<include refid="tableName"></include>
+		where 
+			DEPART_CODE = #{DEPART_CODE}
+		<if test="DEPARTMENT_ID != null and DEPARTMENT_ID != ''">
+			and DEPART_PARENT_CODE != #{DEPART_PARENT_CODE} 
+		</if>
+	</select>
 </mapper>

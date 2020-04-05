@@ -78,5 +78,8 @@ public interface TrainDepartManager{
 	 * @throws Exception
 	 */
 	public List<PageData> listAllTrainDepartToSelect(String parentId, List<PageData> ztrainDepartPdList) throws Exception;
+	
+	
+	public PageData hasSameDepartmentCode(PageData pd)throws Exception;
 }
 

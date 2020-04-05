@@ -43,7 +43,7 @@
 							</tr>
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">部门编码:</td>
-								<td><input type="text" name="DEPART_CODE" id="DEPART_CODE" value="${pd.DEPART_CODE}" maxlength="100" placeholder="这里输入部门编码" title="部门编码" style="width:98%;"/></td>
+								<td><input type="text" name="DEPART_CODE" id="DEPART_CODE" <c:if test="${pd.DEPART_CODE!=null and pd.DEPART_CODE!=''}">disabled="true"</c:if> value="${pd.DEPART_CODE}" maxlength="100" placeholder="这里输入部门编码" title="部门编码" style="width:98%;" onblur="hasBianma('${pd.DEPART_PARENT_CODE }');"/></td>
 							</tr>
 							<tr>
 								<td style="width:75px;text-align: right;padding-top: 13px;">部门名称:</td>
@@ -123,7 +123,30 @@
 			$("#zhongxin").hide();
 			$("#zhongxin2").show();
 		}
-		
+		//判断编码是否存在
+		function hasBianma(departmentID){
+			var DEPARTMENT_CODE = $.trim($("#DEPART_CODE").val());
+			if("" == DEPARTMENT_CODE)return;
+			$.ajax({
+				type: "POST",
+				url: '<%=basePath%>department/hasBianma.do',
+		    	data: {DEPARTMENT_CODE:DEPARTMENT_CODE,DEPARTMENT_ID:departmentID,tm:new Date().getTime()},
+				dataType:'json',
+				cache: false,
+				success: function(data){
+					 if("success" == data.result){
+					 }else{
+						$("#DEPART_CODE").tips({
+							side:1,
+				            msg:'编码'+DEPARTMENT_CODE+'已存在,重新输入',
+				            bg:'#AE81FF',
+				            time:5
+				        });
+						$('#DEPART_CODE').val('');
+					 }
+				}
+			});
+		}
 		$(function() {
 			//日期框
 			$('.date-picker').datepicker({autoclose: true,todayHighlight: true});

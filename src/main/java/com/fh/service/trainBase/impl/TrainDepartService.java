@@ -157,5 +157,13 @@ public class TrainDepartService implements TrainDepartManager{
 	public List<TrainDepart> listSubTrainDepartByParentId(String parentId) throws Exception {
 		return (List<TrainDepart>) dao.findForList("TrainDepartMapper.listSubTrainDepartByParentId", parentId);
 	}
+	
+	/**是否有相同编码 
+	 * @param pd
+	 * @throws Exception
+	 */
+	public PageData hasSameDepartmentCode(PageData pd)throws Exception{
+		return (PageData)dao.findForObject("TrainDepartMapper.hasSameDepartmentCode", pd);
+	}
 }
 
