@@ -117,8 +117,8 @@
 											<td class='center' style="width: 30px;">${vs.index+1}</td>
 											<td class='center'>${var.STUDENT_CODE}</td>
 											<td class='center'>${var.STUDENT_NAME}</td>
-											<td class='center'>${var.UNIT_CODE}</td>
-											<td class='center'>${var.DEPART_CODE}</td>		
+											<td class='center'>${var.UNIT_NAME}</td>
+											<td class='center'>${var.DEPART_NAME}</td>		
 											</tr>
 										</c:forEach>
 									</c:when>									
@@ -402,6 +402,8 @@
 			 diag.show();
 		}
 		function setTable(item,i){
+			var UNIT_NAME = item.UNIT_NAME?item.UNIT_NAME:''
+			var DEPART_NAME = item.DEPART_NAME?item.DEPART_NAME:''
 			div='<tr><td class="center" style="width: 30px;">'
 				+i 
 				+"</td><td class='center'>"
@@ -409,9 +411,9 @@
 				+"</td><td class='center'>"
 				+item.STUDENT_NAME
 				+"</td><td class='center'>"
-				+item.UNIT_NAME
+				+UNIT_NAME
 				+"</td><td class='center'>"
-				+item.DEPART_NAME
+				+DEPART_NAME
 				+'</td></tr>';				
 				return div;	
 		}
