@@ -42,6 +42,8 @@ public class TrainPlanService implements TrainPlanManager{
 	 */
 	public void edit(PageData pd)throws Exception{
 		dao.update("TrainPlanMapper.edit", pd);
+		dao.delete("TestPlanMapper.deleteAllPeople", pd);
+		dao.save("TestPlanMapper.savePeople", pd);
 	}
 	
 	/**列表

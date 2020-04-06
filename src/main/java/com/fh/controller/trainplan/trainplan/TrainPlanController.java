@@ -84,6 +84,17 @@ public class TrainPlanController extends BaseController {
 		pd.put("STATE", "1");
 		pd.put("START_DATE", pd.getString("START_DATE").replace("-", ""));//开始日期
 		pd.put("END_DATE", pd.getString("END_DATE").replace("-", ""));//结束日期
+		
+		String trainPersonStr=pd.getString("TRAIN_PLAN_PERSONS");
+		String [] trainPersons=trainPersonStr.split(",");
+		List<PageData> studentList=new ArrayList<PageData>();
+		for(int i=0;i<trainPersons.length;i++){
+			PageData p=new PageData();
+			p.put("STUDENT_ID", trainPersons[i]);
+			p.put("PLAN_TYPE", '2');//计划类型，1考试2培训
+			studentList.add(p);
+		}
+		pd.put("varList", studentList);
 		if(null==pd.getString("TRAIN_PLAN_ID")||pd.getString("TRAIN_PLAN_ID").trim().equals("")){
 			String billCode=BillnumUtil.getExamBillnum(billNumService, ExamBillNum.TRAIN_PLAN);
 			pd.put("TRAIN_PLAN_ID", billCode);	//主键
@@ -93,17 +104,7 @@ public class TrainPlanController extends BaseController {
 			Calendar calendar = Calendar.getInstance();
 			String nowDate = df.format(calendar.getTime());
 			pd.put("CREATE_DATE",nowDate);
-			String trainPersonStr=pd.getString("TRAIN_PLAN_PERSONS");
-			String [] trainPersons=trainPersonStr.split(",");
-			List<PageData> studentList=new ArrayList<PageData>();
-			for(int i=0;i<trainPersons.length;i++){
-				PageData p=new PageData();
-				p.put("TRAIN_PLAN_ID", billCode);
-				p.put("STUDENT_ID", trainPersons[i]);
-				p.put("PLAN_TYPE", '2');//计划类型，1考试2培训
-				studentList.add(p);
-			}
-			pd.put("varList", studentList);
+			
 			trainplanService.save(pd);
 			commonBase.setCode(0);
 		}else{

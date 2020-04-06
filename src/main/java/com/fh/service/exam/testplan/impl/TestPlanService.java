@@ -42,6 +42,8 @@ public class TestPlanService implements TestPlanManager{
 	 */
 	public void edit(PageData pd)throws Exception{
 		dao.update("TestPlanMapper.edit", pd);
+		dao.delete("TestPlanMapper.deleteAllPeople", pd);
+		dao.save("TestPlanMapper.savePeople", pd);
 	}
 	
 	/**列表

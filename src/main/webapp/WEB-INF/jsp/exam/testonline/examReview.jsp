@@ -48,7 +48,7 @@
 						 		<div style="margin-top: 20px;">
 						 		<a style="cursor: pointer;" onclick="returnTestMain()"><span class="label label-success arrowed">返回考试列表</span></a>
 								<div>---------------------------</div>
-								<h4 style='color: #ff0033;'>${pd.TEST_USER},您好！您该试卷的得分为${pd.TEST_SCORE}分,${pd.IF_QUALIFIED}</h4>
+								<h4 style='color: #ff0033;'>${pd.TEST_USER_NAME},您好！您该试卷的得分为${pd.TEST_SCORE}分,${pd.IF_QUALIFIED}</h4>
 							</div>
 							<div style="margin-top: 20px;">
 <%-- 					<span style="display: none;" id="exam-studentId">${sessionScope.loginStudent.studentId }</span> --%>

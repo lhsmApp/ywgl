@@ -83,20 +83,22 @@ public class TestPlanController extends BaseController {
 		Calendar calendar = Calendar.getInstance();
 		String nowDate = df.format(calendar.getTime());
 		pd.put("CREATE_DATE",nowDate);
+		
+		//人员信息处理
+		String testPersonStr=pd.getString("TEST_PLAN_PERSONS");
+		String [] trainPersons=testPersonStr.split(",");
+		List<PageData> studentList=new ArrayList<PageData>();
+		for(int i=0;i<trainPersons.length;i++){
+			PageData p=new PageData();
+			p.put("STUDENT_ID", trainPersons[i]);
+			p.put("PLAN_TYPE", '1');//计划类型，1考试2培训
+			studentList.add(p);
+		}
+		pd.put("varList", studentList);
+		
 		if(null==pd.getString("TEST_PLAN_ID")||pd.getString("TEST_PLAN_ID").trim().equals("")){
 			String testPlanId=BillnumUtil.getExamBillnum(billNumService, ExamBillNum.EXAM_PLAN);
 			pd.put("TEST_PLAN_ID", testPlanId);	//主键
-			String testPersonStr=pd.getString("TEST_PLAN_PERSONS");
-			String [] trainPersons=testPersonStr.split(",");
-			List<PageData> studentList=new ArrayList<PageData>();
-			for(int i=0;i<trainPersons.length;i++){
-				PageData p=new PageData();
-				p.put("TEST_PLAN_ID", testPlanId);
-				p.put("STUDENT_ID", trainPersons[i]);
-				p.put("PLAN_TYPE", '1');//计划类型，1考试2培训
-				studentList.add(p);
-			}
-			pd.put("varList", studentList);
 			testplanService.save(pd);
 			commonBase.setCode(0);
 		}else{

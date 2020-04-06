@@ -528,7 +528,8 @@ public class TestPaperController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
-	    String userId=user.getUSER_ID();
+	    String userId=user.getUSERNAME();
+//	    String userId=user.getUSER_ID();
 		pd.put("TEST_USER", userId);
 		List<PageData> answerList=new ArrayList<PageData>();//答案集合		 
 		JSONObject jsonobject = JSONObject.fromObject(pd.getString("result"));
@@ -665,7 +666,7 @@ public class TestPaperController extends BaseController {
 		}else{
 			pd.put("IF_QUALIFIED", "考试成绩不合格");
 		}
-		
+		pd.put("TEST_USER_NAME", user.getNAME());
 		mv.addObject("pd", pd);
 		return mv;		
 	}	

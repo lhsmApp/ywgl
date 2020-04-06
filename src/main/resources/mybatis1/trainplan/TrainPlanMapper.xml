@@ -63,7 +63,7 @@
 					PLAN_ID,	
 					STUDENT_ID,
 					PLAN_TYPE
-				) values (#{item.TRAIN_PLAN_ID},
+				) values (#{TRAIN_PLAN_ID},
 					#{item.STUDENT_ID},
 					#{item.PLAN_TYPE})
 					</if>

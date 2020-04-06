@@ -40,7 +40,7 @@
     }
     .box-foot{
       padding:2px 1px 1px 2px;
-      height:30px;
+      min-height:30px;
       width:230px;
     }
     .btm-box{
@@ -65,7 +65,7 @@
 				 	<label class="pull-left" style="padding: 5px;">筛选条件：</label>
 							<span class="input-icon nav-search" style="margin-left: 14px;">
 								<i class="ace-icon fa fa-search nav-search-icon"></i>
-								<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords}" placeholder="请输入课件名称" />
+								<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords}" placeholder="请输入考试计划名称" />
 							</span>
 						<span style="margin-left:-15px;"> 
 						</span>
@@ -107,8 +107,9 @@
 													        <div class="box-title"><span class="list-item-value-title">${var.TEST_PLAN_NAME}</span></div>
 													          <div class="box-body"><i class="ace-icon fa fa-clock-o"></i><a style="padding-left:3px;" class="list-item-info high-font" onclick="beginExam('${var.TEST_PLAN_ID}','${var.TEST_PAPER_ID}')" title="">考试时间 :${var.START_DATE}至${var.END_DATE}</a></div>
 													          <div  class="box-foot">
+													              <span class="list-item-info">试卷:《${ var.TEST_PAPER_TITLE}》</span><br>
 													              <span class="list-item-info"><i style="padding-right: 2px;" class="ace-icon fa fa-trophy no-hover orange"></i>总分:${var.TEST_PAPER_SCORE}</span>
-													              <span class="list-item-info" style="padding-left:3px;"> <i style="padding-right: 2px;" class="green ace-icon fa fa-pencil"></i>及格分:${var.QUALIFIED_SCORE}</span>
+													              <span class="list-item-info" style="padding-left:3px;"> <i style="padding-right: 2px;" class="green ace-icon fa fa-pencil"></i>及格分:${var.QUALIFIED_SCORE}</span><br>
 													           	  <span class="list-item-info" style="padding-left:3px;"><i style="padding-right: 2px;" class="blue ace-icon fa fa-inbox"></i>试题数:${var.TEST_QUESTION_NUM}</span>
 													          </div>
 													          <div class="btm-box">
@@ -147,16 +148,15 @@
 											      		</div>
 													    <div>
 													        <div class="box-title"><span class="list-item-value-title">${var.TEST_PLAN_NAME}</span></div>
-													          <div class="box-body"><i class="ace-icon fa fa-clock-o"></i><a style="padding-left:3px;" class="list-item-info high-font" onclick="checkPaper('${var.TEST_PLAN_ID}','${var.TEST_PAPER_ID}')" title="">考试时间 :${var.TEST_TIME}</a></div>
+													          <div class="box-body"><i class="ace-icon fa fa-clock-o"></i><a style="padding-left:3px;" class="list-item-info high-font" onclick="checkPaper('${var.TEST_PLAN_ID}','${var.TEST_PAPER_ID}')" title="">答卷时间 :${var.TEST_TIME}</a></div>
 													          <div  class="box-foot">
+													              <span class="list-item-info" style="padding-left:3px;"> </i>试卷:《${ var.TEST_PAPER_TITLE}》</span><br>
 													              <span class="list-item-info">
-													              	<c:if test=""></c:if>
-													              	<i style="padding-right: 2px;" class="ace-icon fa fa-trophy no-hover orange"></i>是否合格 : ${var.IF_QUALIFIED}
-													              	<c:if test=""></c:if>
-													              
+													              	<i style="padding-right: 2px;" class="ace-icon fa fa-trophy no-hover orange"></i>总分 : ${var.TEST_PAPER_SCORE}													              	
 													              </span>
-													              <span class="list-item-info" style="padding-left:3px;"> <i style="padding-right: 2px;" class="green ace-icon fa fa-pencil"></i>分数:${var.TEST_SCORE}</span>
+													              <span class="list-item-info" style="padding-left:3px;"> <i style="padding-right: 2px;" class="green ace-icon fa fa-pencil"></i>得分:${var.TEST_SCORE}</span><br>
 													           	  <span class="list-item-info" style="padding-left:3px;"><i style="padding-right: 2px;" class="blue ace-icon fa fa-inbox"></i>试题数:${var.TEST_QUESTION_NUM}</span>
+													           	  <span class="list-item-info" style="padding-left:3px;"><i style="padding-right: 2px;" class="ace-icon fa fa-trophy no-hover orange"></i>是否合格 : <c:if test="${var.IF_QUALIFIED==1}">合格</c:if> <c:if test="${var.IF_QUALIFIED==0}">不合格</c:if></span>
 													          </div>
 													          <div class="btm-box">
 														          <a style="width:100%;" class="btn btn-round btn-info" onclick="checkPaper('${var.TEST_PLAN_ID}','${var.TEST_PAPER_ID}')">

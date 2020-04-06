@@ -545,8 +545,16 @@ public class LoginController extends BaseController {
 		Map<String, String> map = new HashMap<String, String>();
 		try {
 			pd.put(Const.SESSION_USERNAME, USERNAME);
-			pd.put("ROLE_ID", userService.findByUsername(pd).get("ROLE_ID").toString());// 获取角色ID
+			PageData obj = userService.findByUsername(pd);
+			if(obj==null) {
+				pd.put("ROLE_ID", "");
+			}else {
+				pd.put("ROLE_ID", obj.get("ROLE_ID").toString());// 获取角色ID
+			}
 			pd = roleService.findObjectById(pd); // 获取角色信息
+			if(pd==null) {
+				return map;
+			}
 			map.put("adds", pd.getString("ADD_QX")); // 增
 			map.put("dels", pd.getString("DEL_QX")); // 删
 			map.put("edits", pd.getString("EDIT_QX")); // 改

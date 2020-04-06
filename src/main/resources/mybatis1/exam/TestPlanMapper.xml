@@ -55,7 +55,7 @@
 					PLAN_ID,	
 					STUDENT_ID,
 					PLAN_TYPE
-				) values (#{item.TEST_PLAN_ID},
+				) values (#{TEST_PLAN_ID},
 					#{item.STUDENT_ID},
 					#{item.PLAN_TYPE})
 					</if>
@@ -69,7 +69,40 @@
 		where 
 			TEST_PLAN_ID = #{TEST_PLAN_ID}
 	</delete>
-	
+	<!-- 删除计划中的人员-->
+	<delete id="deleteAllPeople" parameterType="pd">
+		delete from
+		tb_gl_plan_user
+		where 
+			PLAN_ID = 
+			<if test="TRAIN_PLAN_ID!=null">
+				#{TRAIN_PLAN_ID}
+			</if>
+			<if test="TEST_PLAN_ID!=null">
+				#{TEST_PLAN_ID}
+			</if>
+	</delete>
+	<!-- 添加人员 -->
+	<insert id="savePeople" parameterType="pd">
+		<foreach item="item" index="index" collection="varList" open=" " separator="; " close=" ">		
+			<if test="item!=null">
+				insert into tb_gl_plan_user
+				(
+					PLAN_ID,	
+					STUDENT_ID,
+					PLAN_TYPE
+				) values (
+				<if test="TRAIN_PLAN_ID!=null">
+					#{TRAIN_PLAN_ID}
+				</if>
+				<if test="TEST_PLAN_ID!=null">
+					#{TEST_PLAN_ID}
+				</if>,
+					#{item.STUDENT_ID},
+					#{item.PLAN_TYPE})
+					</if>
+		</foreach>
+	</insert>	
 	<!-- 修改 -->
 	<update id="edit" parameterType="pd">
 		update

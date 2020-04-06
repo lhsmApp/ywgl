@@ -118,12 +118,12 @@
 		AND 
 			b.STATE = 1 
 		AND 
-			c.STATE = 1;
+			c.STATE = 1
  		<!-- 关键词检索 -->
 		<if test="pd.keywords!= null and pd.keywords != ''">
 		AND
 				(
-					c.TEST_PAPER_TITLE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					b.TEST_PLAN_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 					<!-- 根据需求自己加检索条件
 					字段1 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 					 or 
@@ -150,7 +150,8 @@
 			a.CREATE_DATE,
 			b.STUDENT_NAME,
 			c.NAME,
-			d.TEST_PAPER_TITLE
+			d.TEST_PAPER_TITLE,
+			d.TEST_PAPER_SCORE 
 		FROM 
 			tb_test_main AS a
 		LEFT JOIN tb_train_student AS b ON a.TEST_USER = b.STUDENT_ID
@@ -165,11 +166,15 @@
 		AND
 			a.TEST_PLAN_ID = #{pd.TEST_PLAN_ID}		
 		</if> 
+		<if test="pd.STUDENT_ID != null and pd.STUDENT_ID != ''">
+		AND
+			a.TEST_USER = #{pd.STUDENT_ID}		
+		</if> 
 		<!-- 关键词检索 -->
 		<if test="pd.keywords!= null and pd.keywords != ''">
 			and
 				(
-					b.STUDENT_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					e.TEST_PLAN_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 					<!-- 根据需求自己加检索条件
 					字段1 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 					 or 
