@@ -27,7 +27,7 @@
  		}
  		.aswer-p {
  			width: 100%;
- 			height: 30px;
+ 			min-height: 30px;
  			line-height: 30px;
 			cursor: pointer;
 			text-indent:2em;

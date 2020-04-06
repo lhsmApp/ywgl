@@ -67,7 +67,7 @@
 									<input type="text" placeholder="这里输入计划名称" class="nav-search-input" id="nav-search-input" autocomplete="off" name="keywords" value="${pd.keywords}"/>
 									<i class="ace-icon fa fa-search nav-search-icon"></i>
 								</span>
-								<button style="margin-bottom:3px;" class="btn btn-info btn-sm" onclick="search();" title="检索">
+								<button style="margin-bottom:3px;" class="btn btn-info btn-sm"  title="检索">
 									<i class="ace-icon fa fa-search bigger-110"></i>
 								</button>
 							</div>

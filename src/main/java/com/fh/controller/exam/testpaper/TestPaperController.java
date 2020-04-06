@@ -646,7 +646,8 @@ public class TestPaperController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
-	    String userId=user.getUSER_ID();
+	    String userId=user.getUSERNAME();
+//	    String userId=user.getUSER_ID();
 		pd.put("TEST_USER", userId);
 		page.setPd(pd);
 		List<PageData>	varList = testpaperService.listExamHistory(page);	//列出TestPaper列表
