@@ -155,7 +155,7 @@
 				 }				
 				 var rightAnswer = '${vas.TEST_CORRECT_ANSWER}';//考试答案
 				 //答案错误背景标记为红色
-				 if(uesrAnswer!=rightAnswer){
+				 if(rightAnswer=='' || uesrAnswer!=rightAnswer){
 					 $("#answerExplain-"+name).css({"background-color":"red"});
 				 }
 			 </c:forEach> 
