@@ -372,7 +372,8 @@ public class MyPushService implements MyPushManager {
 	public Map<String, String> loadConfig() {
 		Map<String, String> configMap = new HashMap<String, String>();
 		configMap.put("from", "ywgl");// 平台
-		configMap.put("userTable", "sys_user");// 用户表名称
+		/*如果是多个用户表，则使用视图功能。把多个表合并成一个表*/
+		configMap.put("userTable", "view_userall");// 用户表名称
 		configMap.put("userIdField", "USER_ID");// USER_ID根据平台修改
 		configMap.put("where", " AND STATUS=1");// 补充where条件，可以为空
 		configMap.put("key", "ul,rl,dl");// 自定义类型英文名；“CUSTOM_GROUP”已被占用，请不要再次使用！

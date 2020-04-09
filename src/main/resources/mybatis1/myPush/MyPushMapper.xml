@@ -346,7 +346,7 @@
 	<select id="getUserInfo" parameterType="pd" resultType="pd">
 		select
 		${value} from ${userTable}
-		<where> ${userIdField}=${userIdValue}${where} ${whereA} </where>
+		<where> ${userIdField}=${userIdValue}${where} ${whereA} LIMIT 1 </where>
 	</select>
 	<!-- 获取我的公告 -->
 	<select id="getMyNotices" parameterType="pd" resultType="pd">
