@@ -79,7 +79,7 @@ function getMyNotice(id=''){
 			 var reData = data.reData;
 			 for(var rd in reData){
 				 if("function" != typeof(reData[rd])){
-					 bubblesPopup(reData[rd],rd+1);
+					 bubblesPopup(reData[rd],parseInt(rd)+1);
 				 }
 			 }
 		}

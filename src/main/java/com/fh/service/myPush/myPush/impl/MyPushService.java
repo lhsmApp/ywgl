@@ -204,8 +204,11 @@ public class MyPushService implements MyPushManager {
 				map.put("FHsmsSound", strIW[4]); // 站内信提示音效配置
 			}
 		}
-
-		NetCommBase.execPostCurl(map.get("oladress").toString(), str, "POST");
+		try {
+			NetCommBase.execPostCurl(map.get("oladress").toString(), str, "POST");
+		} catch (java.net.SocketTimeoutException e) {
+			// 忽略超时
+		}
 	}
 
 	/**
@@ -372,7 +375,7 @@ public class MyPushService implements MyPushManager {
 	public Map<String, String> loadConfig() {
 		Map<String, String> configMap = new HashMap<String, String>();
 		configMap.put("from", "ywgl");// 平台
-		/*如果是多个用户表，则使用视图功能。把多个表合并成一个表*/
+		/* 如果是多个用户表，则使用视图功能。把多个表合并成一个表 */
 		configMap.put("userTable", "view_userall");// 用户表名称
 		configMap.put("userIdField", "USER_ID");// USER_ID根据平台修改
 		configMap.put("where", " AND STATUS=1");// 补充where条件，可以为空
@@ -491,6 +494,10 @@ public class MyPushService implements MyPushManager {
 				"sCanClickUrl", "sImgUrl", "iIsForward" };
 		for (String s : atLeastOne) {
 			if (noticePd.get(s) != null) {
+				if (noticePd.get("iStatus") == null) {
+					noticePd.put("iStatus", 1);// 默认修改的时候激活通告
+				}
+
 				Object obj = dao.update("MyPushMapper.editNotice", noticePd);
 				if (obj.equals(0)) {
 					reData.put("iRet", -132);
