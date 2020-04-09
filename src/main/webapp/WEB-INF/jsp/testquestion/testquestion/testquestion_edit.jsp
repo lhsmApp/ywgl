@@ -149,7 +149,7 @@
 								</li>
 								<li id="liBefore" class="item-blue clearfix ui-sortable-handle">
 									<div class="inline">
-										<a class="btn btn-mini btn-primary" onclick="save();">保存题目</a>
+										<a id="saveBtn" class="btn btn-mini btn-primary" onclick="save();">保存题目</a>
 										<a class="btn btn-mini btn-danger" onclick="goQuestion();">返回列表</a>
 									</div>
 								</li>
@@ -335,13 +335,31 @@
 			  	else str += ',' + document.getElementsByName('ids')[i].value;
 			  }
 			}
+			
 			var TEST_QUESTION_ITEM_CONTENT = '';
 			for(var i=0;i < document.getElementsByName('TEST_QUESTION_ITEM_CONTENT').length;i++){
 				  	if(document.getElementsByName('TEST_QUESTION_ITEM_CONTENT')[i].value != ""){
-						if(TEST_QUESTION_ITEM_CONTENT=='') TEST_QUESTION_ITEM_CONTENT += document.getElementsByName('TEST_QUESTION_ITEM_CONTENT')[i].value;
-					  	else TEST_QUESTION_ITEM_CONTENT += ',' + document.getElementsByName('TEST_QUESTION_ITEM_CONTENT')[i].value;
+						if(TEST_QUESTION_ITEM_CONTENT=='') TEST_QUESTION_ITEM_CONTENT += document.getElementsByName('TEST_QUESTION_ITEM_CONTENT')[i].value.replace(/,/ig, '，');
+					  	else TEST_QUESTION_ITEM_CONTENT += ',' + document.getElementsByName('TEST_QUESTION_ITEM_CONTENT')[i].value.replace(/,/ig, '，');
 				  	}
 				}
+			//如果选择的是 单选或多选需要判断一下，若没选择选项或者选项为空则退出
+			if($('#TEST_QUESTION_TYPE').val()<3){
+				if(str==''){
+					var reTipsMsg = '您还没有选择正确答案';
+				}else if(TEST_QUESTION_ITEM_CONTENT == ''){
+					var reTipsMsg = '请检查选项内容，选项不可以为空～';
+				}
+				if(reTipsMsg){
+					$('#saveBtn').tips({
+						side:1,
+			            msg:reTipsMsg,
+			            bg:'#AE81FF',
+			            time:2,
+			        });
+					return;
+				}
+			}
 			var questionArray = new Array();
 			questionArray.push({"TESTQUESTION_ID":$("#TESTQUESTION_ID").val(),
 								"TEST_QUESTION_TITLE":$("#TEST_QUESTION_TITLE").val(),

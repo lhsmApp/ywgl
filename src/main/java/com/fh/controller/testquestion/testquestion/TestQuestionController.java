@@ -104,9 +104,9 @@ public class TestQuestionController extends BaseController {
 		
 		//判断简答题
 		
-			if(null != questionItem && questionItem.length() > 0) {
+			//if(null != questionItem && questionItem.length() > 0) {
 				this.saveDetail(questionId, questionItem, user.getUSERNAME());
-			}
+			//}
 		
 		return commonBase;
 	}
@@ -167,10 +167,10 @@ public class TestQuestionController extends BaseController {
 			testquestionService.edit(detailData);
 		}
 		
-		if(null != questionItem && questionItem.length() > 0) {
+		//if(null != questionItem && questionItem.length() > 0) {
 			testquestionService.deleteItem(questionId);
 			this.saveDetail(questionId, questionItem, user.getUSERNAME());
-		}
+		//}
 		
 		return commonBase;
 	}
