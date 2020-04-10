@@ -21,6 +21,7 @@ import com.alibaba.fastjson.JSON;
 import com.fh.controller.base.BaseController;
 import com.fh.entity.CommonBase;
 import com.fh.entity.Page;
+import com.fh.entity.PageResult2;
 import com.fh.entity.system.User;
 import com.fh.util.AppUtil;
 import com.fh.util.Const;
@@ -178,7 +179,7 @@ public class ApprovalConfigController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/getPageList")
-	public @ResponseBody List<PageData> getPageList(Page page) throws Exception{
+	public  @ResponseBody  PageResult2<PageData> getPageList(Page page) throws Exception{
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
@@ -210,6 +211,9 @@ public class ApprovalConfigController extends BaseController {
 		case "5": //GRC账号撤销;		   
 			varList = approvalconfigService.listByBusiness(page,"datalistPageGrcZhzx");
 		    break;
+		case "0": //GRC账号撤销;		   
+			varList = approvalconfigService.listByBusiness(page,"datalistPageAll");
+		    break;
 		default:
 			
 		    break;
@@ -228,7 +232,11 @@ public class ApprovalConfigController extends BaseController {
 				p.put("APPROVAL_STATE", "未上报");
 			}		
 		} 	
-		return varList;
+		PageResult2<PageData> result = new PageResult2<PageData>();
+		result.setRows(varList);
+		result.setPage(page);
+		result.setPageHtml(page.getPageStr2());
+		return result;
 	}
 	/**初始列表,显示当前待审批单据
 	 * @param
@@ -245,7 +253,7 @@ public class ApprovalConfigController extends BaseController {
 	    String roleCode=user.getRole().getROLE_ID(); //审批角色   
 	    pd.put("ROLE_CODE", roleCode);//角色编码
 		pd.put("UNIT_CODE", unitCode);//单位编码
-//		pd.put("ACTIVE_FLAG", '1');//激活状态为1
+		pd.put("ACTIVE_FLAG", '1');//激活状态为1
 		pd.put("APPROVAL_STATE", "0");///审批状态为0
 		//pd.put("BUSINESS_CODE", "1");///初始显示业务单据类型为系统变更
 		List<PageData>	varList = approvalconfigService.listApproval(pd);	//列出ChangeErpXtbg列表

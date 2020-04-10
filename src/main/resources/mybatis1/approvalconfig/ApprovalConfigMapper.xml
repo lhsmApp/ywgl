@@ -802,6 +802,228 @@
 			and  t.BG_REASON LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 		</if>
 	</select>
+	<!-- 显示当前需要审批的全部类型订单 -->
+	<select id="datalistPageAll" parameterType="page" resultType="pd">
+		SELECT t.*,	
+				c.NAME AS UNIT_NAME,
+				d.USERNAME,
+				e.NAME  DEPT_NAME,
+				f.NAME  USER_DEPTNAME,
+				g.APPROVAL_STATE
+				from 
+		(SELECT 
+			a.BUSINESS_CODE,a.BILL_CODE,a.CURRENT_LEVEL,a.NEXT_LEVEL,a.ACTIVE_FLAG,a.UNIT_CODE AS SPUNIT_CODE,a.DEPART_CODE,a.APPROVAL_STATE as SP_STATE,	
+			a.ROLE_CODE,a.APPROVAL_USER,a.APPROVAL_DATE,a.APPROVAL_ADVICE,b.UNIT_CODE AS UNIT_CODE,b.DEPT_CODE,b.ENTRY_DATE,	
+			b.SERIAL_NUM,b.USER_CODE,b.USER_DEPT,b.USER_JOB,b.USER_CONTACT,b.BG_NAME,b.SYSTEM,b.BG_TYPE,b.BG_REASON as REASON,b.BILL_STATE,b.BILL_USER,b.BILL_DATE
+		FROM
+			  tb_approval_detail a, tb_change_erp_xtbg b
+			    <where>
+			  a.BILL_CODE = b.BILL_CODE 
+			 <if test="pd.ACTIVE_FLAG!=null and pd.ACTIVE_FLAG!=''"> 
+			 and a.ACTIVE_FLAG =#{pd.ACTIVE_FLAG}
+			 </if>
+		 	<if test="pd.UNIT_CODE!=null and pd.UNIT_CODE!=''"> 
+			 and a.UNIT_CODE = #{pd.UNIT_CODE}
+			 </if>
+			<if test="pd.ROLE_CODE!=null and pd.ROLE_CODE!=''"> 
+			 and a.ROLE_CODE = #{pd.ROLE_CODE}
+			 </if>
+			<if test="pd.APPROVAL_STATE!=null and pd.APPROVAL_STATE!=''"> 
+			 and a.APPROVAL_STATE = #{pd.APPROVAL_STATE}
+			 </if>
+			</where>) as t
+			LEFT JOIN tb_approval_main g
+			ON 
+			g.BILL_CODE=t.BILL_CODE	
+			 LEFT JOIN oa_department c
+		 	 ON
+			c.DEPARTMENT_CODE = t.UNIT_CODE
+			LEFT JOIN sys_user d 
+			ON d.USER_ID=t.USER_CODE
+			LEFT JOIN oa_department e
+			  ON
+			e.DEPARTMENT_CODE = t.DEPT_CODE	
+			  left join oa_department f
+			  on
+			f.DEPARTMENT_CODE = t.USER_DEPT
+			
+			UNION
+			SELECT t.*,	
+			c.NAME AS UNIT_NAME,
+			d.USERNAME,
+			e.NAME  DEPT_NAME,
+			f.NAME  USER_DEPTNAME,
+			g.APPROVAL_STATE 
+			from 
+			(SELECT 
+				a.BUSINESS_CODE,a.BILL_CODE,a.CURRENT_LEVEL,a.NEXT_LEVEL,a.ACTIVE_FLAG,a.UNIT_CODE AS SPUNIT_CODE,a.DEPART_CODE,a.APPROVAL_STATE as SP_STATE,	
+				a.ROLE_CODE,a.APPROVAL_USER,a.APPROVAL_DATE,a.APPROVAL_ADVICE,b.UNIT_CODE AS UNIT_CODE,b.DEPT_CODE,b.ENTRY_DATE,	
+				b.SERIAL_NUM,b.USER_CODE,b.USER_DEPT,b.USER_JOB,b.USER_CONTACT,b.BG_NAME,b.SYSTEM,b.BG_TYPE,b.BG_REASON as REASON,b.BILL_STATE,b.BILL_USER,b.BILL_DATE
+			FROM
+			  tb_approval_detail a, tb_change_erp_jsbg b
+			  <where>
+			  a.BILL_CODE = b.BILL_CODE 
+			 <if test="pd.ACTIVE_FLAG!=null and pd.ACTIVE_FLAG!=''"> 
+			 and a.ACTIVE_FLAG =#{pd.ACTIVE_FLAG}
+			 </if>
+		 	<if test="pd.UNIT_CODE!=null and pd.UNIT_CODE!=''"> 
+			 and a.UNIT_CODE = #{pd.UNIT_CODE}
+			 </if>
+			<if test="pd.ROLE_CODE!=null and pd.ROLE_CODE!=''"> 
+			 and a.ROLE_CODE = #{pd.ROLE_CODE}
+			 </if>
+			<if test="pd.APPROVAL_STATE!=null and pd.APPROVAL_STATE!=''"> 
+			 and a.APPROVAL_STATE = #{pd.APPROVAL_STATE}
+			 </if>
+			</where>) as t
+			LEFT JOIN tb_approval_main g
+			ON 
+			g.BILL_CODE=t.BILL_CODE	
+			   LEFT JOIN oa_department c
+		 	 ON
+			c.DEPARTMENT_CODE = t.UNIT_CODE
+			LEFT JOIN sys_user d 
+			ON d.USER_ID=t.USER_CODE
+			LEFT JOIN oa_department e
+			  ON
+			e.DEPARTMENT_CODE = t.DEPT_CODE	
+			  left join oa_department f
+			  on
+			f.DEPARTMENT_CODE = t.USER_DEPT 
+			  
+				UNION
+				SELECT t.*,	
+				c.NAME AS UNIT_NAME,
+				d.USERNAME,
+				e.NAME  DEPT_NAME,
+				f.NAME  USER_DEPTNAME,
+				g.APPROVAL_STATE
+				from 
+		(SELECT 
+			a.BUSINESS_CODE,a.BILL_CODE,a.CURRENT_LEVEL,a.NEXT_LEVEL,a.ACTIVE_FLAG,a.UNIT_CODE AS SPUNIT_CODE,a.DEPART_CODE,a.APPROVAL_STATE as SP_STATE,	
+			a.ROLE_CODE,a.APPROVAL_USER,a.APPROVAL_DATE,a.APPROVAL_ADVICE,b.UNIT_CODE AS UNIT_CODE,b.DEPT_CODE,b.ENTRY_DATE,	
+			b.SERIAL_NUM,b.USER_CODE,b.USER_DEPT,b.USER_JOB,b.USER_CONTACT,'' as BG_NAME,b.SYSTEM,b.BG_TYPE,b.BG_REASON as REASON,b.BILL_STATE,b.BILL_USER,b.BILL_DATE
+		FROM
+			  tb_approval_detail a, tb_change_grc_qxbg b 
+			   <where>
+			  a.BILL_CODE = b.BILL_CODE 
+			 <if test="pd.ACTIVE_FLAG!=null and pd.ACTIVE_FLAG!=''"> 
+			 and a.ACTIVE_FLAG =#{pd.ACTIVE_FLAG}
+			 </if>
+		 	<if test="pd.UNIT_CODE!=null and pd.UNIT_CODE!=''"> 
+			 and a.UNIT_CODE = #{pd.UNIT_CODE}
+			 </if>
+			<if test="pd.ROLE_CODE!=null and pd.ROLE_CODE!=''"> 
+			 and a.ROLE_CODE = #{pd.ROLE_CODE}
+			 </if>
+			<if test="pd.APPROVAL_STATE!=null and pd.APPROVAL_STATE!=''"> 
+			 and a.APPROVAL_STATE = #{pd.APPROVAL_STATE}
+			 </if>
+			</where>) as t
+			LEFT JOIN tb_approval_main g
+			ON 
+			g.BILL_CODE=t.BILL_CODE	
+			   LEFT JOIN oa_department c
+		 	 ON
+			c.DEPARTMENT_CODE = t.UNIT_CODE
+			LEFT JOIN sys_user d 
+			ON d.USER_ID=t.USER_CODE
+			LEFT JOIN oa_department e
+			  ON
+			e.DEPARTMENT_CODE = t.DEPT_CODE	
+			  left join oa_department f
+			  on
+			f.DEPARTMENT_CODE = t.USER_DEPT
+			 
+				UNION
+				SELECT t.*,	
+				c.NAME AS UNIT_NAME,
+				d.USERNAME,
+				e.NAME  DEPT_NAME,
+				f.NAME  USER_DEPTNAME,
+				g.APPROVAL_STATE 
+				from 
+		(SELECT 
+			a.BUSINESS_CODE,a.BILL_CODE,a.CURRENT_LEVEL,a.NEXT_LEVEL,a.ACTIVE_FLAG,a.UNIT_CODE AS SPUNIT_CODE,a.DEPART_CODE,a.APPROVAL_STATE as SP_STATE,	
+			a.ROLE_CODE,a.APPROVAL_USER,a.APPROVAL_DATE,a.APPROVAL_ADVICE,b.UNIT_CODE AS UNIT_CODE,b.DEPT_CODE,b.ENTRY_DATE,	
+			b.SERIAL_NUM,b.USER_CODE,b.USER_DEPT,b.USER_JOB,b.USER_CONTACT,'' as BG_NAME,b.SYSTEM,'' as BG_TYPE,b.ACCOUNT_REASON as REASON,b.BILL_STATE,b.BILL_USER,b.BILL_DATE
+		FROM
+			  tb_approval_detail a, tb_change_grc_zhxz b 
+			  <where>
+			  a.BILL_CODE = b.BILL_CODE 
+			 <if test="pd.ACTIVE_FLAG!=null and pd.ACTIVE_FLAG!=''"> 
+			 and a.ACTIVE_FLAG =#{pd.ACTIVE_FLAG}
+			 </if>
+		 	<if test="pd.UNIT_CODE!=null and pd.UNIT_CODE!=''"> 
+			 and a.UNIT_CODE = #{pd.UNIT_CODE}
+			 </if>
+			<if test="pd.ROLE_CODE!=null and pd.ROLE_CODE!=''"> 
+			 and a.ROLE_CODE = #{pd.ROLE_CODE}
+			 </if>
+			<if test="pd.APPROVAL_STATE!=null and pd.APPROVAL_STATE!=''"> 
+			 and a.APPROVAL_STATE = #{pd.APPROVAL_STATE}
+			 </if>
+			</where>) as t
+			LEFT JOIN tb_approval_main g
+			ON 
+			g.BILL_CODE=t.BILL_CODE	
+			   LEFT JOIN oa_department c
+		 	 ON
+			c.DEPARTMENT_CODE = t.UNIT_CODE
+			LEFT JOIN sys_user d 
+			ON d.USER_ID=t.USER_CODE
+			LEFT JOIN oa_department e
+			  ON
+			e.DEPARTMENT_CODE = t.DEPT_CODE	
+			  left join oa_department f
+			  on
+			f.DEPARTMENT_CODE = t.USER_DEPT
+			  
+					UNION
+				SELECT t.*,	
+				c.NAME AS UNIT_NAME,
+				d.USERNAME,
+				e.NAME  DEPT_NAME,
+				f.NAME  USER_DEPTNAME,
+				g.APPROVAL_STATE 
+				from 
+		(SELECT 
+			a.BUSINESS_CODE,a.BILL_CODE,a.CURRENT_LEVEL,a.NEXT_LEVEL,a.ACTIVE_FLAG,a.UNIT_CODE AS SPUNIT_CODE,a.DEPART_CODE,a.APPROVAL_STATE as SP_STATE,	
+			a.ROLE_CODE,a.APPROVAL_USER,a.APPROVAL_DATE,a.APPROVAL_ADVICE,b.UNIT_CODE AS UNIT_CODE,b.DEPT_CODE,b.ENTRY_DATE,	
+			b.SERIAL_NUM,b.USER_CODE,b.USER_DEPT,b.USER_JOB,b.USER_CONTACT,'' as BG_NAME,b.SYSTEM,'' as BG_TYPE,b.CANCLE_REASON as REASON,b.BILL_STATE,b.BILL_USER,b.BILL_DATE
+		FROM
+			  tb_approval_detail a, tb_change_grc_zhzx b
+			    <where>
+			  a.BILL_CODE = b.BILL_CODE 
+			 <if test="pd.ACTIVE_FLAG!=null and pd.ACTIVE_FLAG!=''"> 
+			 and a.ACTIVE_FLAG =#{pd.ACTIVE_FLAG}
+			 </if>
+		 	<if test="pd.UNIT_CODE!=null and pd.UNIT_CODE!=''"> 
+			 and a.UNIT_CODE = #{pd.UNIT_CODE}
+			 </if>
+			<if test="pd.ROLE_CODE!=null and pd.ROLE_CODE!=''"> 
+			 and a.ROLE_CODE = #{pd.ROLE_CODE}
+			 </if>
+			<if test="pd.APPROVAL_STATE!=null and pd.APPROVAL_STATE!=''"> 
+			 and a.APPROVAL_STATE = #{pd.APPROVAL_STATE}
+			 </if>
+			</where> ) as t
+			LEFT JOIN tb_approval_main g
+			ON 
+			g.BILL_CODE=t.BILL_CODE	
+			   LEFT JOIN oa_department c
+		 	 ON
+			c.DEPARTMENT_CODE = t.UNIT_CODE
+			LEFT JOIN sys_user d 
+			ON d.USER_ID=t.USER_CODE
+			LEFT JOIN oa_department e
+			  ON
+			e.DEPARTMENT_CODE = t.DEPT_CODE	
+			  left join oa_department f
+			  on
+			f.DEPARTMENT_CODE = t.USER_DEPT
+			
+	</select>
 	<!-- 列表(全部) -->
 	<select id="listAllScheme" parameterType="pd" resultType="pd">
 		select
