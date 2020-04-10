@@ -17,13 +17,13 @@
 <%@ include file="../index/top.jsp"%>
 
 </head>
-<body class="no-skin">
+<body class="no-skin" style="overflow: hidden;">
 
 	<!-- /section:basics/navbar.layout -->
 	<div class="main-container" id="main-container">
 		<!-- /section:basics/sidebar -->
 		<div class="main-content" >
-			<img alt="" style="width:100%;height:auto;" src="static/images/mainbg.jpg">
+			<img alt="" style="margin:0 auto;display:block;width:77%;" src="static/images/mainbg.jpg">
 		
 			<!-- <div class="main-content-inner">
 				<div class="page-content">
