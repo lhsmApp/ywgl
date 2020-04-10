@@ -562,28 +562,38 @@
 
 			var title=undefined;
 			var reason=undefined;
-
-			if(value==1||value==2){
-				title=item.BG_NAME;
-				reason=item.BG_REASON;
-				$('#attachment').css("visibility",'hidden');
-			}else if(value==3){
-				title='GRC帐号新增';
-				reason=item.ACCOUNT_REASON;
-				
-				$('#attachment').css("visibility",'visible');
-				/* 获取附件信息 */
-				 getProAttachment(item.BILL_CODE,"CHANGE_GRC_ZHXZ");
-			}else if(value==4){
-				title='GRC权限变更';
-				reason=item.BG_REASON;
-				$('#attachment').css("visibility",'hidden');
-				
-			}else if(value==5){
-				title='GRC帐号撤销';
-				reason=item.CANCLE_REASON;
-				$('#attachment').css("visibility",'hidden');
-			}
+			  if(value==1||value==2){
+					title=item.BG_NAME;
+					reason=item.BG_REASON;
+					$('#attachment').css("visibility",'hidden');
+			    }else if(value==3){
+			    	title='GRC帐号新增';
+					reason=item.ACCOUNT_REASON;				
+					$('#attachment').css("visibility",'visible');
+					/* 获取附件信息 */
+					 getProAttachment(item.BILL_CODE,"CHANGE_GRC_ZHXZ");		
+			    }else if(value==4){
+			    	title='GRC权限变更';
+					reason=item.BG_REASON;
+					$('#attachment').css("visibility",'hidden');		
+			    }else if(value==5){
+			    	title='GRC帐号撤销';
+					reason=item.CANCLE_REASON;
+					$('#attachment').css("visibility",'hidden');	
+			    }else if(value==0){					
+			    	if(item.BG_NAME==""){
+				    	if(item.BUSINESS_CODE==3){
+				    		title='GRC帐号新增';							
+						}else if(item.BUSINESS_CODE==4){
+							title='GRC权限变更';										
+						}else{
+							title='GRC帐号撤销';
+						}							
+			    	}else{
+			    		title=item.BG_NAME;
+			    	}
+			    }
+			
 		    var div = '<div class="profile-user-info"><div class="profile-info-row"><div class="profile-info-name">变更名称：</div><div class="profile-info-value"><span>'
 		    	+title
 		        + '</span></div></div><div class="profile-info-row"><div class="profile-info-name">申请单号：</div><div class="profile-info-value"><i class="fa fa-map-marker light-orange bigger-110"></i><span>'
