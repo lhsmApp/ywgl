@@ -28,8 +28,8 @@
 					<!-- /section:settings.box -->
 					
 					<div class="page-header">
-						    <form action="approvalconfig/getPageList.do" >
-								 		</form>
+						  <form action="approvalconfig/getPageList.do" >
+						</form>
 						<span class="label label-xlg label-success arrowed-right">变更管理</span>
 			            <span class="label label-xlg label-yellow arrowed-in arrowed-right"
 			              id="subTitle" style="margin-left: 2px;">变更审批
@@ -499,6 +499,7 @@
 		        +'</span></label></div></li>';
 		    return div;
 		}
+		
 		function showDetail(code,current,next,businessType=0){
 			if(event){
 				$("#tasks li").each(function(){
@@ -557,13 +558,11 @@
 		         });
 		}
 		//动态加载变更单详情
-		function setDetail(item, businessType){
+		function setDetail(item, value){
+
 			var title=undefined;
 			var reason=undefined;
-			var value=  businessType//$(".level_select:checked").val();
-		      if(null==value||value==''){
-	            	value='1';
-	            }
+
 			if(value==1||value==2){
 				title=item.BG_NAME;
 				reason=item.BG_REASON;
@@ -580,7 +579,7 @@
 				reason=item.BG_REASON;
 				$('#attachment').css("visibility",'hidden');
 				
-			}else{
+			}else if(value==5){
 				title='GRC帐号撤销';
 				reason=item.CANCLE_REASON;
 				$('#attachment').css("visibility",'hidden');
@@ -607,7 +606,8 @@
 		        +(item.USER_TEL==undefined ?"":item.USER_TEL)
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请日期： </div><div class="profile-info-value"><span>'
 		        +(item.ENTRY_DATE==undefined ?"":item.ENTRY_DATE)
-		        +'</span></div></div>'
+		        +'</span></div></div>';
+				console.log(div);
 		    return div;	
 		}		
 		//打印
@@ -683,8 +683,8 @@
             var value=$(".level_select:checked").val();    	  
 			$.ajax({
 					type: "POST",
-					url: initUrl+'?BUSINESS_CODE='+value,
-			    	data: {keywords:keywords},
+					url: initUrl,
+			    	data: {keywords:keywords,BUSINESS_CODE:value},
 					dataType:'json',
 					cache: false,
 					success: function(data){
@@ -700,8 +700,7 @@
 							    	html += setDiv4(item);		
 							    }else if(value==5){
 							    	html += setDiv5(item);	
-							    }else if(value==0){
-					
+							    }else if(value==0){					
 							    	if(data.rows[i].BG_NAME==""){
 								    	if(data.rows[i].BUSINESS_CODE==3){
 								    		data.rows[i].BG_NAME='GRC帐号新增';
@@ -717,9 +716,13 @@
 							    }
 								$("#tasks").append(html);
 						 	});
-						}
-					
-						else{
+							if(data.rows.length!=0){
+								var htmlDetail = '';
+								htmlDetail += setDetail(data.rows[0], value);
+				      			$('#detail-info').html(htmlDetail);
+							}
+						
+						}else{
 							addEmpty();
 						}
 						top.hangge();
@@ -728,6 +731,7 @@
 		}
 		//搜索
 		function tosearch(){
+			$('#detail-info').html('');
 			initList(initUrl);
 
 		}
