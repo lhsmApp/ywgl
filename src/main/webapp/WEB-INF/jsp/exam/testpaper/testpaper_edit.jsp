@@ -333,7 +333,7 @@
 					 
 					 + '<option value="1">单选题</option><option value="2">多选题</option><option value="3">简答题</option></select>'
 					 
-					 + '<select id="TEST_PAPER_DIFFICULTY" name="TEST_PAPER_DIFFICULTY" class="inline" style="width:15%; margin-left: 9px;">'
+					 + '<select id="TEST_QUESTION_DIFFICULTY" name="TEST_QUESTION_DIFFICULTY" class="inline" style="width:15%; margin-left: 9px;">'
 					 
 					 + '<option value="1">简单</option><option value="2">中等</option><option value="3">困难</option></select>'
 					 
@@ -347,9 +347,53 @@
 			$("#paperRule").append(html);
 		}
 		
+		$(document).on('change','[name=TEST_QUESTION_TYPE]',function(){
+			var tqt = $(this).val();
+			var tqd = $(this).parent().children('#TEST_QUESTION_DIFFICULTY').val()
+			
+			var ii = 0;
+			for(var i=0;i < document.getElementsByName('TEST_QUESTION_TYPE').length;i++){
+				var a = document.getElementsByName('TEST_QUESTION_TYPE')[i].value
+				var b = document.getElementsByName('TEST_QUESTION_DIFFICULTY')[i].value
+				if((tqt+tqd)==(a+b)){
+					if(++ii>1){
+						$(this).tips({
+							side:3,
+				            msg:'不能有重复的规则！请修改后再保存。',
+				            bg:'#AE81FF',
+				            time:0
+				        })
+					}
+				}
+			}
+		})
+		$(document).on('change','[name=TEST_QUESTION_DIFFICULTY]',function(){
+			var tqt = $(this).parent().children('#TEST_QUESTION_TYPE').val()
+			var tqd = $(this).val();
+			var ii = 0;
+			for(var i=0;i < document.getElementsByName('TEST_QUESTION_TYPE').length;i++){
+				var a = document.getElementsByName('TEST_QUESTION_TYPE')[i].value
+				var b = document.getElementsByName('TEST_QUESTION_DIFFICULTY')[i].value
+				if((tqt+tqd)==(a+b)){
+					if(++ii>1){
+						$(this).tips({
+							side:3,
+				            msg:'不能有重复的规则！请修改后再保存。',
+				            bg:'#AE81FF',
+				            time:0
+				        })
+					}
+				}
+			}
+		})
+		
+		
 		/*生成随机试题*/
 		function autoPaper(){
 			top.jzts();
+			
+			$("#addQuestion").empty()
+			
 			var arr = new Array();
 			for(var i=0;i < document.getElementsByName('TEST_QUESTION_TYPE').length;i++){
 				if(document.getElementsByName('TEST_QUESTION_SCORE')[i].value != ""){
@@ -434,6 +478,8 @@
 		function setHtml(data){
 			var html = '';
 			for(var i = 0;i<data.length;i++){
+				data[i].TEST_QUESTION_ANSWER = data[i].TEST_QUESTION_ANSWER?data[i].TEST_QUESTION_ANSWER:'';
+				
 				html += '<tr id="'+ data[i].TEST_QUESTION_ID +'">'
 				 	 
 					  + '<td class="center">' 
