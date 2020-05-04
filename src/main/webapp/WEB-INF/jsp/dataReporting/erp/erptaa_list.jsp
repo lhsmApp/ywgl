@@ -26,6 +26,8 @@
 <%@ include file="../../system/index/top.jsp"%>
 <!--自由拉动  -->
  <link rel="stylesheet" href="static/ace/css/jquery-ui.css" />
+ <!-- 日期框 -->
+<link rel="stylesheet" href="static/ace/css/datepicker.css" />
 <style>
     .mtable{width:auto;border-collapse:collapse;}
     .mtable input{background: #FFF !important;border: none;}
@@ -67,14 +69,12 @@
 						<table style="margin-bottom: 6px;float: left;">
 							<tr>
 								<td>
-									<c:if test="${not empty listBusiDate}"> 	
-										<select class="form-control" id="busiDate" name="busiDate" style="width:150px;margin-left: 5px;">
-											<option value="">全部</option>
-											<c:forEach items="${listBusiDate}" var="var">
-												<option value="${var.BUSI_DATE}" <c:if test="${pd.busiDate == var.BUSI_DATE}">selected="selected"</c:if>>${var.BUSI_DATE}</option>
-											</c:forEach>
-										</select>
-									</c:if>
+									<div class="input-group input-group-sm">
+										<input type="text" id="busiDate" name="busiDate"   class="form-control"   placeholder="请选择年月（默认全部）" autocomplete="off" />
+										<span class="input-group-addon">
+											<i class="ace-icon fa fa-calendar" ></i>
+										</span>
+									</div>
 								</td>
 								<td style="vertical-align:top;padding-left:5px;">
 								 	<span class="pull-left" style="margin-right: 5px;">
@@ -182,6 +182,8 @@
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 	<!-- 自由拉动 -->
 	<script type="text/javascript" src="static/ace/js/jquery-ui.js"></script>
+	<!-- 日期框 -->
+	<script src="static/ace/js/date-time/bootstrap-datepicker.js"></script>
 	<script type="text/javascript">
 		$(top.hangge());//关闭加载状态
 		
@@ -198,6 +200,19 @@
 					$("#simple-table").css("width",tablewidth+ui.size.width+"px")
 				}
 			})
+			//日期
+			$("#busiDate").datepicker({
+				format: 'yyyymm', 
+			    language: "zh-CN",
+			    autoclose:true,
+			   	startView: 1,
+			    minViewMode: 1,
+			    maxViewMode: 1,
+			});
+			let busiDate = '${pd.busiDate}'
+			if(busiDate){
+				$('#busiDate').datepicker("update",new Date(busiDate.substring(0,busiDate.length-2)+'-'+busiDate.substring(busiDate.length-2)));
+			}
 		});
 		
 		/* 检索 */
@@ -345,6 +360,8 @@
 			if("" == name){
 				name = "请选择单位";
 			}
+			$("#SelectedDepartCode").val('${pd.SelectedDepartCode}');
+			$("#name").val(name);
 			$("#selectTree2_input").val(name);
 		}
 	</script>
