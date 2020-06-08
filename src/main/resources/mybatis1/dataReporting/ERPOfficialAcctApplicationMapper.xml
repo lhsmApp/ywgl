@@ -141,7 +141,8 @@
 			USER_DEPART = #{pd.USER_DEPART}
 		</if>
 		order by 
-			CONFIRM_STATE ASC
+			CONFIRM_STATE ASC,
+			ID DESC
 	</select>
 	
 	<!--业务期间集合  -->

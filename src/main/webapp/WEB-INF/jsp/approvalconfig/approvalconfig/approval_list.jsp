@@ -38,21 +38,21 @@
 			            </span>
 						<div class="pull-right">
 							<span class="green middle bolder">变更业务类型: &nbsp;</span>
-							<div class="btn-toolbar inline middle no-margin">
+							<div id="typeDivMain" class="btn-toolbar inline middle no-margin">
 								<div data-toggle="buttons" class="btn-group no-margin">
-									<label class="btn btn-sm btn-primary">
+									<label class="btn btn-sm btn-info">
 										<input type="radio" class="level_select"  name="level_select" value="1" >系统变更
 									</label>
-									<label class="btn btn-sm btn-primary"> 
+									<label class="btn btn-sm btn-info"> 
 										<input type="radio" class="level_select" name="level_select" value="2">角色变更
 									</label>
-									<label class="btn btn-sm btn-primary">
+									<label class="btn btn-sm btn-info">
 										<input type="radio" class="level_select" name="level_select" value="3">GRC帐号新增
 									</label>
-									<label class="btn btn-sm btn-primary"> 
+									<label class="btn btn-sm btn-info"> 
 										<input type="radio" class="level_select" name="level_select" value="4">GRC权限变更
 									</label>
-									<label class="btn btn-sm btn-primary">
+									<label class="btn btn-sm btn-info">
 										<input type="radio" class="level_select" name="level_select" value="5">GRC帐号撤销
 									</label> 
 									<label class="btn btn-sm btn-primary active">
@@ -238,6 +238,10 @@
 					$('#attachment').css("visibility",'hidden');
 				}
 		    }); */
+		    
+		    $("#typeDivMain").on('click', '.btn-info',function(){
+			    $(this).addClass('btn-primary').removeClass('btn-info').siblings().addClass('btn-info');
+			})
 		});
 		
 		/**

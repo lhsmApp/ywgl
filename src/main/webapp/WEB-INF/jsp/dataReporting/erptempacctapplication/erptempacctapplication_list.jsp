@@ -39,13 +39,13 @@
 											<span class="green middle bolder">填报类型: &nbsp;</span>
 												<div class="btn-toolbar inline middle no-margin">
 													<div data-toggle="buttons" class="btn-group no-margin">
-														<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toERPOfficialAcctApplication()">
+														<button id="btnEdit" class="btn btn-info btn-xs" onclick="toERPOfficialAcctApplication()">
 															<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP正式账号申请</span>
 														</button>
 														<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toERPTempacctApplication()">
 															<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP临时账号申请</span>
 														</button>
-														<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toERPDelAcctApplication()">
+														<button id="btnEdit" class="btn btn-info btn-xs" onclick="toERPDelAcctApplication()">
 															<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP删除账号申请</span>
 														</button>
 													</div>

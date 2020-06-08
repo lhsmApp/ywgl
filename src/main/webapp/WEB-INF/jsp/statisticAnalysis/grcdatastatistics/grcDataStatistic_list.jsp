@@ -53,7 +53,7 @@
 													<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toGRCPerson()">
 														<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>GRC人员信息</span>
 													</button>
-													<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toGRCApprovalMatrix()">
+													<button id="btnEdit" class="btn btn-info btn-xs" onclick="toGRCApprovalMatrix()">
 															<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>GRC审批矩阵</span>
 													</button>
 												</div>

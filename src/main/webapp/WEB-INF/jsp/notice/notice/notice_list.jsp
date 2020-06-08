@@ -31,7 +31,7 @@
 						<div class="col-xs-12">
 							
 						<!-- 检索  -->
-						<form action="notice/list.do" method="post" name="Form" id="Form">
+						<form action="notice/list<c:if test="${accessSourceType!=2}">2</c:if>.do" method="post" name="Form" id="Form">
 						<table style="margin-top:5px;">
 							<tr>
 								<td>
