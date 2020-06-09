@@ -105,6 +105,9 @@
 							<table id="simple-table" class="mtable table table-bordered" style="margin-top:10px; width:2015px;">
 								<thead>
 									<tr>
+										<th class="center" style="width:35px; padding-left: 5px;padding-right:5px;">
+										<label class="pos-rel"><input type="checkbox" class="ace" id="zcheckbox" /><span class="lbl"></span></label>
+										</th>
 										<th class="center" style="width:45px;  padding-left: 5px;padding-right:5px;">序号</th>
 										<th style="width:110px; height:30px;  text-align: center; padding-left: 12px;padding-right:12px;height: 30px;">员工编号</th>
 										<th style="width:110px;  text-align: center;padding-left: 12px;padding-right:12px;">员工姓名</th>
@@ -130,6 +133,9 @@
 								<!-- 开始循环 -->	
 										<c:forEach items="${varList}" var="var" varStatus="vs">
 											<tr>
+												<th class='center'>
+													<label class="pos-rel"><input type='checkbox' name='ids' value="${var.ID}" class="ace" /><span class="lbl"></span></label>
+												</th>
 												<th class='center'>
 													${vs.index+1}
 													<input type="hidden" name='ids' value="${var.ID}" class="ace" />
@@ -224,6 +230,15 @@
 			if(busiDate){
 				$('#busiDate').datepicker("update",new Date(busiDate.substring(0,busiDate.length-2)+'-'+busiDate.substring(busiDate.length-2)));
 			}
+			var active_class = 'active';
+			$('#simple-table > thead > tr > th input[type=checkbox]').eq(0).on('click', function(){
+				var th_checked = this.checked;//checkbox inside "TH" table header
+				$(this).closest('table').find('tbody > tr').each(function(){
+					var row = this;
+					if(th_checked) $(row).addClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', true);
+					else $(row).removeClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', false);
+				});
+			});
 		})
 		/* 检索 */
 		function tosearch(){
@@ -252,9 +267,19 @@
 				if(result) {
 					var str = '';
 					for(var i=0;i < document.getElementsByName('ids').length;i++){
-					  	if(str=='') str += document.getElementsByName('ids')[i].value;
-					  	else str += ',' + document.getElementsByName('ids')[i].value;
+						if(document.getElementsByName('ids')[i].checked){
+						  	if(str=='') str += document.getElementsByName('ids')[i].value;
+						  	else str += ',' + document.getElementsByName('ids')[i].value;
+						}
 					}
+					if(str == ''){
+						bootbox.dialog({
+							message: "<span class='bigger-110'>当前未选中任何申请!</span>",
+							buttons: 			
+							{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+						});
+						return;
+				  	} 
 					if($("#confirmState").val() != 2){
 						bootbox.dialog({
 							message: "<span class='bigger-110'>只能对未审批数据进行操作!</span>",
@@ -303,9 +328,19 @@
 				if(result) {
 					var str = '';
 					for(var i=0;i < document.getElementsByName('ids').length;i++){
-					  	if(str=='') str += document.getElementsByName('ids')[i].value;
-					  	else str += ',' + document.getElementsByName('ids')[i].value;
+						if(document.getElementsByName('ids')[i].checked){
+						  	if(str=='') str += document.getElementsByName('ids')[i].value;
+						  	else str += ',' + document.getElementsByName('ids')[i].value;
+						}
 					}
+					if(str == ''){
+						bootbox.dialog({
+							message: "<span class='bigger-110'>请选择需要驳回的申请!</span>",
+							buttons: 			
+							{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+						});
+						return;
+				  	} 
 					if($("#confirmState").val() != 2){
 						bootbox.dialog({
 							message: "<span class='bigger-110'>只能对未审批数据进行操作!</span>",
