@@ -93,7 +93,7 @@
 									<a class="btn btn-info btn-sm" onclick="tosearch()"><i class="ace-icon fa fa-search bigger-110"></i></a>
 									<c:if test="${pd.confirmState == 2}">
 									<a class="btn btn-white btn-info btn-bold" onclick="taaReport('确定要审批通过当前选中的申请吗?')"><i class="ace-icon fa fa-check-square-o bigger-110"></i>批量审批</a>
-									<a class="btn btn-white btn-info btn-bold" onclick="taaBackReport('确定要驳回当前页面选中的申请吗?');" title="批量驳回" ><i class="ace-icon fa fa-exclamation-triangle red bigger-110"></i>批量驳回</a>
+									<a class="btn btn-white btn-info btn-bold" onclick="taaBackReport('确定要驳回当前选中的申请吗?');" title="批量驳回" ><i class="ace-icon fa fa-exclamation-triangle red bigger-110"></i>批量驳回</a>
 									</c:if>
 									<a class="btn btn-white btn-info btn-bold" onclick="toExcel()"><span class="ace-icon fa fa-cloud-download"></span>导出</a>
 								</td>
