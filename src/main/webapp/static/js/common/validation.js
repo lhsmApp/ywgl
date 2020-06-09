@@ -32,7 +32,7 @@ var valida = {
     },
     /* 判断是否为邮箱 */
     isEmail : function(inVal) {
-        var rex = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
+        var rex = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
         var b = false;
         if (rex.test(inVal)) {
             b = true;
