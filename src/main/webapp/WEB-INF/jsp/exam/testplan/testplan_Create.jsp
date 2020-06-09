@@ -133,7 +133,7 @@
 								</tr>
 								<tr>
 								<td style="text-align: center;" colspan="10">
-									<a class="btn btn-mini btn-primary" onclick="save();top.Dialog.close();">保存</a>
+									<a class="btn btn-mini btn-primary" onclick="save();">保存</a>
 									<a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">取消</a>
 								</td>
 							</table>
@@ -181,7 +181,7 @@
 		
 		//保存
 		function save(){
-			top.jzts();		
+				
 			var testID=$("#TEST_PLAN_ID").val();//任务ID
 			var testName=$("#TEST_PLAN_NAME").val();//任务名称
 			var paperId=$("#TEST_PAPER_ID").val();//试卷ID
@@ -190,6 +190,59 @@
 			var testPersons=$("#TEST_PLAN_PERSONS").val();//考试人员
 			var testMemo=$("#TEST_PLAN_MEMO").val();//	任务描述
 			var COURSE_COVER=$("#COURSE_COVER").val();//图片路径
+			if(!testName){
+				$("#TEST_PLAN_NAME").tips({
+					side:3,
+		            msg:'请输入考试计划名称',
+		            bg:'#AE81FF',
+		            time:2
+		        });
+				$("#TEST_PLAN_NAME").focus()
+				return
+			}
+			if(!paperId){
+				$("#TEST_PAPER_ID").tips({
+					side:3,
+		            msg:'请选择试卷',
+		            bg:'#AE81FF',
+		            time:2
+		        });
+				$("#TEST_PAPER_ID").focus()
+				return
+			}
+			if(!startDate){
+				$("#START_DATE").tips({
+					side:3,
+		            msg:'请选择日期',
+		            bg:'#AE81FF',
+		            time:2
+		        });
+				$("#START_DATE").focus()
+				return
+			}
+			
+			if(!endDate){
+				$("#END_DATE").tips({
+					side:3,
+		            msg:'请选择日期',
+		            bg:'#AE81FF',
+		            time:2
+		        });
+				$("#END_DATE").focus()
+				return
+			}
+			
+			if(!testPersons){
+				$("#uesrTextarea").tips({
+					side:3,
+		            msg:'请选择考试人员',
+		            bg:'#AE81FF',
+		            time:2
+		        });
+				$("#uesrTextarea").focus()
+				return
+			}
+			top.jzts();	
 			$.ajax({
 				type: "POST",
 				url: '<%=basePath%>testplan/save.do',
@@ -198,6 +251,7 @@
 		    	async: false, 
 				cache: false,
 				success: function(response){
+					top.Dialog.close();
 					if(response.code==0){
 						$(top.hangge());//关闭加载状态
 						bootbox.dialog({
@@ -212,6 +266,7 @@
 					}
 				},
 		    	error: function(response) {
+		    		top.Dialog.close();
 		    		var msgObj=JSON.parse(response.responseText);
 		    		$(top.hangge());//关闭加载状态
 		    		bootbox.dialog({
