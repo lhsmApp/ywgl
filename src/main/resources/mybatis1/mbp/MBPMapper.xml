@@ -162,6 +162,7 @@
 	<!-- 列表 -->
 	<select id="datalistPage" parameterType="page" resultType="pd">
 		SELECT A.*,
+		(SELECT 1 FROM tb_problem_answer WHERE PRO_CODE = A.PRO_CODE) AS ANSWER, 
 		depart.NAME PRO_DEPART_NAME,
 		problemType.PRO_TYPE_NAME,
 		dic.NAME PRO_SYS_TYPE_NAME
@@ -191,10 +192,10 @@
 					(
 					
 						PRO_TITLE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
-					<!--	根据需求自己加检索条件
+					
 						 or 
-						字段2 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
-					-->
+						UPDATE_DATE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+					
 					)
 			</if>
 			<if test="pd.PRO_STATE != null and '' != pd.PRO_STATE" >           

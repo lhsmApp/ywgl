@@ -96,6 +96,23 @@
 		<include refid="tableName"></include>
 		where 
 			DEPART_CODE = #{DEPART_CODE}
+		limit 1
+	</select>
+	
+	<!-- 判断部门编码是否重复 -->
+	<select id="hasDepartCode" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		<where>
+			DEPART_CODE = #{DEPART_CODE}
+				
+			<if test="DEPART_ID != null and DEPART_ID != ''">
+				and DEPART_ID != #{DEPART_ID} 
+			</if>
+		</where>	
+		limit 1
 	</select>
 	
 	<!-- 列表 -->

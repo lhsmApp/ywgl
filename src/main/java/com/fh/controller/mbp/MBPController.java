@@ -30,6 +30,7 @@ import com.fh.entity.Page;
 import com.fh.entity.PageResult;
 import com.fh.entity.PageResult2;
 import com.fh.entity.system.User;
+import com.fh.service.attachment.AttachmentManager;
 import com.fh.service.billnum.BillNumManager;
 import com.fh.service.fhoa.department.impl.DepartmentService;
 import com.fh.service.mbp.MBPManager;
@@ -86,6 +87,9 @@ public class MBPController extends BaseController {
 	
 	@Resource(name="departmentService")
 	private DepartmentService departmentService;
+	
+	@Resource(name="attachmentService")
+	private AttachmentManager attachmentService;
 	
 	// 判断当前人员的所在组织机构是否只有自己单位
 	//private int departSelf = 0;
@@ -149,9 +153,9 @@ public class MBPController extends BaseController {
 		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 		String unitCode = user.getUNIT_CODE();
 		
-		/*String userName=user.getNAME();
-		pd.put("USER_NAME", userName);
-		pd.put("CURRENT_DATE", DateUtils.getCurrentTime());*/
+		String userID=user.getUSER_ID();
+		pd.put("USER_ID", userID);
+		pd.put("CURRENT_DATE", DateUtils.getCurrentTime());
 		mv.addObject("pd",pd);
 		mv.addObject("systemList", DictsUtil.getDictsByParentBianma(dictionariesService, "SYSTEM"));//系统类型
 		//上报人
@@ -568,6 +572,22 @@ public class MBPController extends BaseController {
 		return pageData;
 	}
 	
+	/**新增问题时，需先清空临时保存的附件
+	 * @param out
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/clearAttachment")
+	public @ResponseBody CommonBase clearAttachment() throws Exception{
+		CommonBase commonBase = new CommonBase();
+		commonBase.setCode(-1);
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		PageData pdAttachment=new PageData();
+		pdAttachment.put("BILL_CODE", "PRO"+user.getUSER_ID());
+		attachmentService.deleteByBillCode(pdAttachment);
+		commonBase.setCode(0);
+		return commonBase;
+	}
+	
 	/**
 	 * 保存问题提报信息
 	 * 
@@ -592,6 +612,12 @@ public class MBPController extends BaseController {
 			pd.put("UPDATE_DATE", DateUtils.getCurrentTime());
 			
 			mbpService.save(pd);
+			
+			//更新附件ID
+			PageData pdAttachment=new PageData();
+			pdAttachment.put("BILL_CODE_SOURCE", "PRO"+userId);
+			pdAttachment.put("BILL_CODE", billCode);
+			attachmentService.editBillCode(pdAttachment);
 			commonBase.setCode(0);
 		}
 		else{

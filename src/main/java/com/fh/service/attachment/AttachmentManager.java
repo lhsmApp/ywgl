@@ -24,11 +24,23 @@ public interface AttachmentManager{
 	 */
 	public void delete(PageData pd)throws Exception;
 	
+	/**删除-按业务单号删除
+	 * @param pd
+	 * @throws Exception
+	 */
+	public void deleteByBillCode(PageData pd)throws Exception;
+	
 	/**修改
 	 * @param pd
 	 * @throws Exception
 	 */
 	public void edit(PageData pd)throws Exception;
+	
+	/**更新BILLCODE
+	 * @param pd
+	 * @throws Exception
+	 */
+	public void editBillCode(PageData pd)throws Exception;
 	
 	/**列表
 	 * @param page

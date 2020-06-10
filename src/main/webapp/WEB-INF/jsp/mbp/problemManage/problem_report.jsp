@@ -31,6 +31,9 @@
 <link type="text/css" rel="stylesheet"
 	href="plugins/selectZtree/ztree/ztree.css"></link>
 <!-- 树形下拉框end -->
+
+<!-- 标准页面统一样式 -->
+<link rel="stylesheet" href="static/css/normal.css" />
 </head>
 <body class="no-skin">
 
@@ -47,7 +50,7 @@
 						<!-- <form style="margin:5px;" method="post" name="problemForm" id="problemForm"> -->
 							<div class="nav-search" style="margin:10px 0px;">
 								<span class="input-icon" style="width:86%">
-									<input style="width:100%" class="nav-search-input" autocomplete="off" id="keywords" type="text" name="keywords" value="${pd.keywords }" placeholder="这里输入问题标题" />
+									<input style="width:100%" class="nav-search-input" autocomplete="off" id="keywords" type="text" name="keywords" value="${pd.keywords }" placeholder="这里输入问题标题或时间" />
 									<i class="ace-icon fa fa-search nav-search-icon"></i>
 								</span>
 								<button style="margin-bottom:3px;" class="btn btn-light btn-minier" onclick="searchs();"  title="检索">
@@ -574,7 +577,7 @@ function initList(url){
 			success: function(data){
 				$("#page").html(data.pageHtml);
 				var first;
-				if(data.rows){
+				if(data.rows&&data.rows.length>0){
 					$.each(data.rows, function(i, item){
 						if(i==0){
 							first=item;
@@ -745,6 +748,26 @@ function save(){
 		$("#form-field-pro-title").focus();
 		return false;
 	}
+	if ($.trim($("#form-field-pro-accept-user").val()) == "") {
+		$("#form-field-pro-accept-user").tips({
+			side : 3,
+			msg : '请选择受理人',
+			bg : '#AE81FF',
+			time : 2
+		});
+		$("#form-field-pro-accept-user").focus();
+		return false;
+	}
+	if ($.trim($("#form-field-pro-sys-type").val()) == "") {
+		$("#form-field-pro-sys-type").tips({
+			side : 3,
+			msg : '请选择问题模块',
+			bg : '#AE81FF',
+			time : 2
+		});
+		$("#form-field-pro-sys-type").focus();
+		return false;
+	}
 	if ($("#form-field-pro-type-id").val()==null||$("#form-field-pro-type-id").val()=="") {
 		$("#selectTree").tips({
 			side : 3,
@@ -837,8 +860,25 @@ function add(){
 	$("#form-field-pro-resolve-time").val("");
 	$("#form-field-pro-content").val("");
 	UE.getEditor('editor').setContent("");
-	
 	$("#tbodyProInfoAttachment").html('');
+	
+	$("#form-field-pro-title").focus();
+	
+	top.jzts();
+	$.ajax({
+		type: "POST",
+		url: '<%=basePath%>mbp/clearAttachment.do',
+		data:'',
+    	dataType:'json',
+		cache: false,
+		success: function(response){
+			$(top.hangge());//关闭加载状态	
+		},
+    	error: function(response) {
+    		$(top.hangge());//关闭加载状态
+    	}
+	});
+	
 }
 
 /**
@@ -1111,18 +1151,27 @@ function cancel(){
  */
 function getProAttachment(attachmentType){
 	var billCode;
-	if(attachmentType=="PROBLEM_INFO"){
-		billCode=currentItem.PRO_CODE;//问题单号
-		$("#tbodyProInfoAttachment").html('');
-	}else if(attachmentType=="PROBLEM_ANSWER"){
-		/* var billCode=$("#ff-answer-info").val();
-		if(billCode == null){
-			billCode='';
-		} */
-		billCode=currentItem.PRO_CODE;//问题单号
-		$("#tbodyProAnswerAttachment").html('');
+	if(currentItem==null){
+		if(attachmentType=="PROBLEM_INFO"){
+			billCode="PRO"+"${pd.USER_ID}";
+			$("#tbodyProInfoAttachment").html('');
+		}else if(attachmentType=="PROBLEM_ANSWER"){
+			billCode="PRO"+"${pd.USER_ID}";
+			$("#tbodyProAnswerAttachment").html('');
+		}
+	}else{
+		if(attachmentType=="PROBLEM_INFO"){
+			billCode=currentItem.PRO_CODE;//问题单号
+			$("#tbodyProInfoAttachment").html('');
+		}else if(attachmentType=="PROBLEM_ANSWER"){
+			/* var billCode=$("#ff-answer-info").val();
+			if(billCode == null){
+				billCode='';
+			} */
+			billCode=currentItem.PRO_CODE;//问题单号
+			$("#tbodyProAnswerAttachment").html('');
+		}
 	}
-	
 	top.jzts();
 	//var proCode=currentItem.PRO_CODE;//问题单号
 	$.ajax({
@@ -1180,45 +1229,50 @@ function addItemAttachment(item,index,type){
  * 上传附件
  */
 function addProAttachmentByType(type){
+	var proCode="";
 	if(currentItem==null){
-		$("#btnAddProInfoAttachment").tips({
+		/* $("#btnAddProInfoAttachment").tips({
 			side:3,
             msg:'请先保存问题信息后，再上传附件',
             bg:'#cc0033',
             time:3
         });
-		return;
-	}
-	if(currentItem.PRO_STATE=='2'){//已提交
-		$("#btnAddProInfoAttachment").tips({
-			side : 3,
-			msg : '当前问题"已提交"，不能再上传附件',
-			bg : '#AE81FF',
-			time : 2
-		});
-		$("#btnAddProInfoAttachment").focus();
-		return false;
-	}else if(currentItem.PRO_STATE=='3'){//受理中
-		$("#btnAddProInfoAttachment").tips({
-			side : 3,
-			msg : '当前问题"受理中"，不能再上传附件',
-			bg : '#AE81FF',
-			time : 2
-		});
-		$("#btnAddProInfoAttachment").focus();
-		return false;
-	}else if(currentItem.PRO_STATE=='4'){//已关闭
-		$("#btnAddProInfoAttachment").tips({
-			side : 3,
-			msg : '当前问题"已关闭"，不能再上传附件',
-			bg : '#AE81FF',
-			time : 2
-		});
-		$("#btnAddProInfoAttachment").focus();
-		return false;
+		return; */
+		
+		proCode="PRO"+"${pd.USER_ID}";
+	}else{
+		 proCode=currentItem.PRO_CODE;
+		 
+		 if(currentItem.PRO_STATE=='2'){//已提交
+				$("#btnAddProInfoAttachment").tips({
+					side : 3,
+					msg : '当前问题"已提交"，不能再上传附件',
+					bg : '#AE81FF',
+					time : 2
+				});
+				$("#btnAddProInfoAttachment").focus();
+				return false;
+			}else if(currentItem.PRO_STATE=='3'){//受理中
+				$("#btnAddProInfoAttachment").tips({
+					side : 3,
+					msg : '当前问题"受理中"，不能再上传附件',
+					bg : '#AE81FF',
+					time : 2
+				});
+				$("#btnAddProInfoAttachment").focus();
+				return false;
+			}else if(currentItem.PRO_STATE=='4'){//已关闭
+				$("#btnAddProInfoAttachment").tips({
+					side : 3,
+					msg : '当前问题"已关闭"，不能再上传附件',
+					bg : '#AE81FF',
+					time : 2
+				});
+				$("#btnAddProInfoAttachment").focus();
+				return false;
+			}
 	}
 	
-	 var proCode=currentItem.PRO_CODE;
 	 top.jzts();
 	 var diag = new top.Dialog();
 	 diag.Drag=true;

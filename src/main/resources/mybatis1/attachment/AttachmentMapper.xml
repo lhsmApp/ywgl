@@ -78,6 +78,14 @@
 			ATTACHMENT_ID = #{ATTACHMENT_ID}
 	</delete>
 	
+	<!-- 删除-按业务单号删除-->
+	<delete id="deleteByBillCode" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			BILL_CODE = #{BILL_CODE}
+	</delete>
+	
 	<!-- 修改 -->
 	<update id="edit" parameterType="pd">
 		update
@@ -96,6 +104,16 @@
 			CUST3 = #{CUST3}
 		where 
 		ATTACHMENT_ID = #{ATTACHMENT_ID}
+	</update>
+	
+	<!-- 更新BILLCODE -->
+	<update id="editBillCode" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			BILL_CODE = #{BILL_CODE}
+		where 
+		BILL_CODE = #{BILL_CODE_SOURCE}
 	</update>
 	
 	<!-- 通过ID获取数据 -->

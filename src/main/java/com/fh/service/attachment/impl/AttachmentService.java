@@ -36,12 +36,28 @@ public class AttachmentService implements AttachmentManager{
 		dao.delete("AttachmentMapper.delete", pd);
 	}
 	
+	/**删除-按业务单号删除
+	 * @param pd
+	 * @throws Exception
+	 */
+	public void deleteByBillCode(PageData pd)throws Exception{
+		dao.delete("AttachmentMapper.deleteByBillCode", pd);
+	}
+	
 	/**修改
 	 * @param pd
 	 * @throws Exception
 	 */
 	public void edit(PageData pd)throws Exception{
 		dao.update("AttachmentMapper.edit", pd);
+	}
+	
+	/**更新BILLCODE
+	 * @param pd
+	 * @throws Exception
+	 */
+	public void editBillCode(PageData pd)throws Exception{
+		dao.update("AttachmentMapper.editBillCode", pd);
 	}
 	
 	/**列表

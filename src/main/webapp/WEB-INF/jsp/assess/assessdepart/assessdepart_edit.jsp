@@ -120,6 +120,11 @@
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 		<script type="text/javascript">
+		$(function() {
+			//日期框
+			$('.date-picker').datepicker({autoclose: true,todayHighlight: true});
+		});
+		
 		$(top.hangge());
 		//保存
 		function save(){
@@ -144,15 +149,37 @@
 				$("#DEPART_NAME").focus();
 				return false;
 			}
-			$("#Form").submit();
-			$("#zhongxin").hide();
-			$("#zhongxin2").show();
+			hasDepartCode();
+			
 		}
 		
-		$(function() {
-			//日期框
-			$('.date-picker').datepicker({autoclose: true,todayHighlight: true});
-		});
+		//判断单位编码是否存在
+		function hasDepartCode(){
+			var departCode = $.trim($("#DEPART_CODE").val());
+			$.ajax({
+				type: "POST",
+				url: '<%=basePath%>assessdepart/hasDepartCode.do',
+		    	data: {DEPART_ID:$("#DEPART_ID").val(),DEPART_CODE:departCode},
+				dataType:'json',
+				cache: false,
+				success: function(data){
+					if("success" != data.result){
+						 $("#DEPART_CODE").tips({
+								side:3,
+					            msg:'单位编码 '+departCode+' 已存在',
+					            bg:'#AE81FF',
+					            time:3
+					        });
+						 
+						 $("#DEPART_CODE").attr('tag','1');
+					 }else{
+						 $("#Form").submit();
+						 $("#zhongxin").hide();
+						 $("#zhongxin2").show();
+					 }
+				}
+			});
+		}
 		
 		//下拉树
 		var defaultNodes = {"treeNodes":${zTreeNodes}};

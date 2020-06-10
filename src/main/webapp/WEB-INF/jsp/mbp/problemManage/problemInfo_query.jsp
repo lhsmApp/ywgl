@@ -239,7 +239,7 @@ $(document).ready(function () {
 		pginput: false, // 是否允许输入分页页数  */
 
         sortable: true,
-        sortname: 'UPDATE_DATE,PRO_CODE',
+        sortname: 'UPDATE_DATE desc,PRO_CODE',
 		sortorder: 'desc',
 
 		//scroll: 1,

@@ -440,6 +440,7 @@ public class AssessDataController extends BaseController {
 			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "VOUCHER_NO");
 			// 设置必定不为空的列
 			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "VOUCHER_NO");
+			MustNotEditList = Arrays.asList("BUSI_DATE", "KPI_CODE");
 			break;
 		case "Z1MM1":
 			// 获取带__的列，后续删除之类的有用
@@ -494,13 +495,14 @@ public class AssessDataController extends BaseController {
 			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "VOUCHER_NO");
 			// 设置必定不为空的列
 			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "VOUCHER_NO");
+			MustNotEditList = Arrays.asList("BUSI_DATE", "KPI_CODE");
 			break;
 		default:
 			// 获取带__的列，后续删除之类的有用
 			keyListBase = Arrays.asList("BUSI_DATE", "KPI_CODE", "COMPANY_CODE");
 			// 设置必定不为空的列
 			MustInputList = Arrays.asList("BUSI_DATE", "KPI_CODE", "COMPANY_CODE", "TOTAL_SCORE", "PROPORTION");
-			MustNotEditList = Arrays.asList("BUSI_DATE", "KPI_CODE", "COMPANY_CODE", "TOTAL_SCORE", "PROPORTION");
+			MustNotEditList = Arrays.asList("BUSI_DATE", "KPI_CODE","TOTAL_SCORE", "PROPORTION");
 			break;
 		}
 		String jqGridColModel = "";
@@ -634,9 +636,14 @@ public class AssessDataController extends BaseController {
 		// 操作
 		String oper = getPd.getString("oper");
 		List<PageData> listData = new ArrayList<PageData>();
-		PageData getKpi = new PageData();
-		getKpi.put("KPI_CODE", kpiCode);
-		PageData pdKpi = kpiService.findByCode(getKpi);
+		if (kpiCode.contains("total")) {
+			String[] kpiCodes = kpiCode.split("-");
+			getPd.put("KPI_CODE", kpiCodes[1]);
+		} else {
+			getPd.put("KPI_CODE", kpiCode);
+		}
+		
+		PageData pdKpi = kpiService.findByCode(getPd);
 		if (oper.equals("add")) {
 			// 判断选择为必须选择的
 			String strGetCheckMustSelected = CheckMustSelectedAndSame(SelectedBusiDate, ShowDataBusiDate);
