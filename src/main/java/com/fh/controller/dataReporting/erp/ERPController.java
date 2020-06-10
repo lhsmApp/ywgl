@@ -36,6 +36,8 @@ import com.fh.util.ObjectExcelView;
 import com.fh.util.PageData;
 import com.fh.util.StringUtil;
 
+import net.sf.json.JSONArray;
+
 /** 
  * 说明：ERP删除账号申请处理模块
  * 创建人：xinyuLo
@@ -90,14 +92,18 @@ public class ERPController extends BaseController {
 		//获取业务期间
 		List<PageData>  listBusiDate = DateUtil.getMonthList("BUSI_DATE", date);
 		List<PageData>	varList = erpdelacctapplicationService.list(page);	//列出ERPDelAcctApplication列表
-		String DepartmentSelectTreeSource=DictsUtil.getDepartmentSelectTreeSource(departmentService,"00");
-		if(DepartmentSelectTreeSource.equals("0"))
-		{
-			pd.put("departTreeSource", DepartmentSelectTreeSource);
-		} else {
-			pd.put("departTreeSource", 1);
-		}
-		mv.addObject("zTreeNodes", DepartmentSelectTreeSource);
+//		String DepartmentSelectTreeSource=DictsUtil.getDepartmentSelectTreeSource(departmentService,"0");
+//		if(DepartmentSelectTreeSource.equals("0"))
+//		{
+//			pd.put("departTreeSource", DepartmentSelectTreeSource);
+//		} else {
+//			pd.put("departTreeSource", 1);
+//		}
+//		mv.addObject("zTreeNodes", DepartmentSelectTreeSource);
+		// 若是则树形结构加载所有单位，并将用户单位查询条件更新为所选单位
+		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
+		JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0", zdepartmentPdList));
+		mv.addObject("zTreeNodes", (null == arr ? "" : arr.toString()));
 		mv.setViewName("dataReporting/erp/erpdaa_list");
 		mv.addObject("varList", varList);
 		mv.addObject("listBusiDate",listBusiDate);
@@ -151,15 +157,19 @@ public class ERPController extends BaseController {
 		//获取业务期间
 		List<PageData>  listBusiDate = DateUtil.getMonthList("BUSI_DATE", date);
 		List<PageData>	varList = erpofficialacctapplicationService.list(page);	//列出ERPOfficialAcctApplication列表
-		String DepartmentSelectTreeSource=DictsUtil.getDepartmentSelectTreeSource(departmentService,"00");
-		if(DepartmentSelectTreeSource.equals("0"))
-		{
-			pd.put("departTreeSource", DepartmentSelectTreeSource);
-		} else {
-			pd.put("departTreeSource", 1);
-		}
+		
+		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
+		JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0", zdepartmentPdList));
+		mv.addObject("zTreeNodes", (null == arr ? "" : arr.toString()));
+//		String DepartmentSelectTreeSource=DictsUtil.getDepartmentSelectTreeSource(departmentService,"00");
+//		if(DepartmentSelectTreeSource.equals("0"))
+//		{
+//			pd.put("departTreeSource", DepartmentSelectTreeSource);
+//		} else {
+//			pd.put("departTreeSource", 1);
+//		}
 		mv.setViewName("dataReporting/erp/erpoaa_list");
-		mv.addObject("zTreeNodes", DepartmentSelectTreeSource);
+//		mv.addObject("zTreeNodes", DepartmentSelectTreeSource);
 		mv.addObject("listBusiDate",listBusiDate);
 		mv.addObject("varList", varList);
 		mv.addObject("pd", pd);
@@ -216,15 +226,19 @@ public class ERPController extends BaseController {
 		List<PageData>	varList = erptempacctapplicationService.list(page);	//列出ERPTempAcctApplication列表
 		//获取业务期间
 		List<PageData>  listBusiDate = DateUtil.getMonthList("BUSI_DATE", date);
-		String DepartmentSelectTreeSource=DictsUtil.getDepartmentSelectTreeSource(departmentService,"00");
-		if(DepartmentSelectTreeSource.equals("0"))
-		{
-			pd.put("departTreeSource", DepartmentSelectTreeSource);
-		} else {
-			pd.put("departTreeSource", 1);
-		}
+		
+		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
+		JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0", zdepartmentPdList));
+		mv.addObject("zTreeNodes", (null == arr ? "" : arr.toString()));
+//		String DepartmentSelectTreeSource=DictsUtil.getDepartmentSelectTreeSource(departmentService,"00");
+//		if(DepartmentSelectTreeSource.equals("0"))
+//		{
+//			pd.put("departTreeSource", DepartmentSelectTreeSource);
+//		} else {
+//			pd.put("departTreeSource", 1);
+//		}
 		mv.setViewName("dataReporting/erp/erptaa_list");
-		mv.addObject("zTreeNodes", DepartmentSelectTreeSource);
+//		mv.addObject("zTreeNodes", DepartmentSelectTreeSource);
 		mv.addObject("listBusiDate",listBusiDate);
 		mv.addObject("varList", varList);
 		mv.addObject("pd", pd);

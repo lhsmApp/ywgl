@@ -42,9 +42,9 @@ hr{ border-top-color:#dadada;}
 body {   padding: 0;    margin-top:0px;margin: 0px;} 
 /*body {background-image:url("1.jpg");   padding: 0;    margin-top:10%;} */
 
-#logo, #loginbox {    width: 32%;    margin-left: auto;  margin-right: auto;   position: relative;}
+#logo, #loginbox {  width: 518.39px; height: 379.75px;  margin-left: auto;  margin-right: auto;   position: relative;}
 #logo img {  margin: 0 auto;    display: block;}
-#loginbox { overflow: hidden !important; z-index: 100;  text-align: center;  position: relative; margin-top:10%;}
+#loginbox { overflow: hidden !important; z-index: 100;  text-align: center;  position: relative; margin-top:12%;}
 
 /* #loginbox form{ width:100%; background:#2E363F; position:relative; top:0; left:0; } */
 #loginbox form{ width:100%; background-color: rgba(0, 0, 0, 0.5);  position:relative; top:0; left:0; }

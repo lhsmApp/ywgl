@@ -362,6 +362,22 @@
 								
 										<!-- 问题回复 -->
 										<div id="answer-tab" class="tab-pane">
+											<h4 class="smaller lighter green">
+												<!-- <i class="ace-icon fa fa-list"></i>
+												Sortable Lists -->
+												<button id="btnNewAnswer" class="btn btn-success btn-xs"
+													onclick="newAnswer()">
+													<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>新回复</span>
+												</button>
+												<button id="btnAddAnswer" class="btn btn-primary btn-xs"
+													onclick="addAnswer()">
+													<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>提交</span>
+												</button>
+												<button id="btnDeleteAnswer" class="btn btn-danger btn-xs"
+													onclick="deleteAnswer()">
+													<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>删除</span>
+												</button>
+											</h4>
 											<form id="problemAnswerForm" method="post">
 												<!-- <input type="hidden" id="ff-answer-answer-id"/> -->
 												<div>
@@ -1551,6 +1567,138 @@ function initComplete(){
 	$("#selectTree").render();
 	//$("#selectTree2_input").val("${null==depname?'请选择问题类型':depname}");
 	
+}
+
+/**
+ * 新问题回复
+ */
+function newAnswer(){
+	console.log('newAnswer');
+	var option = new Option('', '', true, true);
+	$('#ff-answer-info').append(option);
+	UE.getEditor('editorAnswer').setContent('');
+	
+	$("#tbodyProAnswerAttachment").html('');
+}
+
+/**
+ * 问题回复
+ */
+function addAnswer(){
+	console.log('addAnswer');
+	var contentAnswer=UE.getEditor('editorAnswer').getContent();
+	if (contentAnswer == "") {
+		$("#editorAnswer").tips({
+			side : 3,
+			msg : '请输入回复内容',
+			bg : '#AE81FF',
+			time : 2
+		});
+		$("#editorAnswer").focus();
+		return false;
+	}
+	var content;
+	var arr = [];
+    arr.push(contentAnswer);
+    content=arr.join("");
+    /* content="<p></p>"+content; */
+    var proCode=currentItem.PRO_CODE;//问题单号
+    /* var answerId=$("#ff-answer-answer-id").val(); */
+    var answerID=$("#ff-answer-info").val();
+    //if(typeof answerID == "undefined" || answerID == null || answerID == ""){
+    if(answerID == null){
+    	answerID='';
+    }
+    	
+	top.jzts();
+	console.log(answerID);
+	$.ajax({
+		type: "POST",
+		url: '<%=basePath%>mbp/addAnswer.do',
+		data:{ANSWER_ID:answerID,PRO_CODE:proCode,ANSWER_CONTENT:content},
+    	dataType:'json',
+		cache: false,
+		success: function(response){
+			if(response.code==0){
+				$(top.hangge());//关闭加载状态
+				$("#btnAddAnswer").tips({
+					side:3,
+		            msg:'回复成功',
+		            bg:'#009933',
+		            time:3
+		        });
+				getProAnswers();
+			}else{
+				$(top.hangge());//关闭加载状态
+				$("#btnAddAnswer").tips({
+					side:3,
+		            msg:'回复失败,'+response.message,
+		            bg:'#cc0033',
+		            time:3
+		        });
+			}
+		},
+    	error: function(response) {
+    		$(top.hangge());//关闭加载状态
+    		var msgObj=JSON.parse(response.responseText);
+			$("#btnAddAnswer").tips({
+				side:3,
+	            msg:'回复失败,'+msgObj.message,
+	            bg:'#cc0033',
+	            time:3
+	        });
+    	}
+	});
+}
+
+/**
+ * 问题回复作废
+ */
+function deleteAnswer(){
+	console.log('deleteAnswer');
+	var answerID=$("#ff-answer-info").val();
+	if(answerID == null){
+    	answerID='';
+	}
+	top.jzts();
+	
+	$.ajax({
+		type: "POST",
+		url: '<%=basePath%>mbp/deleteAnswer.do',
+		data:{ANSWER_ID:answerID},
+    	dataType:'json',
+		cache: false,
+		success: function(response){
+			if(response.code==0){
+				$(top.hangge());//关闭加载状态
+				$("#btnDeleteAnswer").tips({
+					side:3,
+		            msg:'回复作废成功',
+		            bg:'#009933',
+		            time:3
+		        });
+				getProAnswers();
+			}else{
+				$(top.hangge());//关闭加载状态
+				$("#btnDeleteAnswer").tips({
+					side:3,
+		            msg:'回复作废失败,'+response.message,
+		            bg:'#cc0033',
+		            time:3
+		        });
+			}
+		},
+    	error: function(response) {
+    		$(top.hangge());//关闭加载状态
+    		var msgObj=JSON.parse(response.responseText);
+			$("#btnDeleteAnswer").tips({
+				side:3,
+	            msg:'回复作废失败,'+msgObj.message,
+	            bg:'#cc0033',
+	            time:3
+	        });
+    	}
+	});
 }
 </script>
 </html>

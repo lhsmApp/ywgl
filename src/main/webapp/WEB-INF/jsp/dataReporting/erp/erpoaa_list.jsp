@@ -28,6 +28,8 @@
 <%@ include file="../../system/index/top.jsp"%>
 <!--自由拉动  -->
  <link rel="stylesheet" href="static/ace/css/jquery-ui.css" />
+ <!-- 日期框 -->
+<link rel="stylesheet" href="static/ace/css/datepicker.css" />
  <style>
     .mtable{width:auto;border-collapse:collapse;}
     .mtable input{background: #FFF !important;border: none;}
@@ -50,10 +52,10 @@
 													<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toERPOaa()">
 														<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP正式账号审批</span>
 													</button>
-													<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toERPTaa()">
+													<button id="btnEdit" class="btn btn-info btn-xs" onclick="toERPTaa()">
 														<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP临时账号审批</span>
 													</button>
-													<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toERPDaa()">
+													<button id="btnEdit" class="btn btn-info btn-xs" onclick="toERPDaa()">
 														<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP删除账号审批</span>
 													</button>
 												</div>
@@ -69,14 +71,12 @@
 							<table style="margin-bottom:6px; float:left;">
 								<tr>
 									<td>
-										<c:if test="${not empty listBusiDate}"> 	
-											<select class="form-control" id="busiDate" name="busiDate" style="width:150px;margin-left: 5px;">
-												<option value="">全部</option>
-												<c:forEach items="${listBusiDate}" var="var">
-													<option value="${var.BUSI_DATE}" <c:if test="${pd.busiDate == var.BUSI_DATE}">selected="selected"</c:if>>${var.BUSI_DATE}</option>
-												</c:forEach>
-											</select>
-										</c:if>
+										<div class="input-group input-group-sm">
+											<input type="text" id="busiDate" name="busiDate"   class="form-control"   placeholder="请选择年月（默认全部）" autocomplete="off" />
+											<span class="input-group-addon">
+												<i class="ace-icon fa fa-calendar" ></i>
+											</span>
+										</div>
 									</td>
 									<td style="vertical-align:top;padding-left:5px;">
 									 	<span class="pull-left" style="margin-right: 5px;">
@@ -94,8 +94,8 @@
 									<td style="vertical-align:top;padding-left:3px;">
 										<a class="btn btn-info btn-sm" onclick="tosearch()"><i class="ace-icon fa fa-search bigger-110"></i></a>
 										<c:if test="${pd.confirmState == 2}">
-										<a class="btn btn-white btn-info btn-bold" onclick="oaaReport('确定要审批通过当前页面所有申请吗?')"><i class="ace-icon fa fa-check-square-o bigger-110"></i>批量审批</a>
-										<a class="btn btn-white btn-info btn-bold" onclick="oaaBackReport('确定要驳回当前页面所有申请吗?');" title="批量驳回" ><i class="ace-icon fa fa-exclamation-triangle red bigger-110"></i>批量驳回</a>
+										<a class="btn btn-white btn-info btn-bold" onclick="oaaReport('确定要审批通过当前选中的申请吗?')"><i class="ace-icon fa fa-check-square-o bigger-110"></i>批量审批</a>
+										<a class="btn btn-white btn-info btn-bold" onclick="oaaBackReport('确定要驳回当前选中的申请吗?');" title="批量驳回" ><i class="ace-icon fa fa-exclamation-triangle red bigger-110"></i>批量驳回</a>
 										</c:if>
 										<a class="btn btn-white btn-info btn-bold" onclick="toExcel()"><span class="ace-icon fa fa-cloud-download"></span>导出</a>
 									</td>
@@ -105,6 +105,9 @@
 							<table id="simple-table" class="mtable table table-bordered" style="margin-top:10px; width:2015px;">
 								<thead>
 									<tr>
+										<th class="center" style="width:35px; padding-left: 5px;padding-right:5px;">
+										<label class="pos-rel"><input type="checkbox" class="ace" id="zcheckbox" /><span class="lbl"></span></label>
+										</th>
 										<th class="center" style="width:45px;  padding-left: 5px;padding-right:5px;">序号</th>
 										<th style="width:110px; height:30px;  text-align: center; padding-left: 12px;padding-right:12px;height: 30px;">员工编号</th>
 										<th style="width:110px;  text-align: center;padding-left: 12px;padding-right:12px;">员工姓名</th>
@@ -130,6 +133,9 @@
 								<!-- 开始循环 -->	
 										<c:forEach items="${varList}" var="var" varStatus="vs">
 											<tr>
+												<th class='center'>
+													<label class="pos-rel"><input type='checkbox' name='ids' value="${var.ID}" class="ace" /><span class="lbl"></span></label>
+												</th>
 												<th class='center'>
 													${vs.index+1}
 													<input type="hidden" name='ids' value="${var.ID}" class="ace" />
@@ -193,21 +199,47 @@
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 	<!-- 自由拉动 -->
 	<script type="text/javascript" src="static/ace/js/jquery-ui.js"></script>
+	<!-- 日期框 -->
+	<script src="static/ace/js/date-time/bootstrap-datepicker.js"></script>
 	<script type="text/javascript">
 		$(top.hangge());//关闭加载状态
-		//table自由拉动
-		var tablewidth = 0;
-		$("th").resizable({
-			start:function(event,ui){
-				tablewidth = $("#simple-table").width()-ui.size.width;
-			},resize:function(event,ui){
-				$("#simple-table").css("width",tablewidth+ui.size.width+"px")
-			},stop:function(event,ui){
-				$("#simple-table").css("width",tablewidth+ui.size.width+"px")
-			}
-		})
-		$("th > div:last-child").removeClass();		
 		
+		$(function(){
+			//table自由拉动
+			var tablewidth = 0;
+			$("th").resizable({
+				start:function(event,ui){
+					tablewidth = $("#simple-table").width()-ui.size.width;
+				},resize:function(event,ui){
+					$("#simple-table").css("width",tablewidth+ui.size.width+"px")
+				},stop:function(event,ui){
+					$("#simple-table").css("width",tablewidth+ui.size.width+"px")
+				}
+			})
+			$("th > div:last-child").removeClass();		
+			//日期
+			$("#busiDate").datepicker({
+				format: 'yyyymm', 
+			    language: "zh-CN",
+			    autoclose:true,
+			   	startView: 1,
+			    minViewMode: 1,
+			    maxViewMode: 1,
+			});
+			let busiDate = '${pd.busiDate}'
+			if(busiDate){
+				$('#busiDate').datepicker("update",new Date(busiDate.substring(0,busiDate.length-2)+'-'+busiDate.substring(busiDate.length-2)));
+			}
+			var active_class = 'active';
+			$('#simple-table > thead > tr > th input[type=checkbox]').eq(0).on('click', function(){
+				var th_checked = this.checked;//checkbox inside "TH" table header
+				$(this).closest('table').find('tbody > tr').each(function(){
+					var row = this;
+					if(th_checked) $(row).addClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', true);
+					else $(row).removeClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', false);
+				});
+			});
+		})
 		/* 检索 */
 		function tosearch(){
 			top.jzts();
@@ -235,9 +267,19 @@
 				if(result) {
 					var str = '';
 					for(var i=0;i < document.getElementsByName('ids').length;i++){
-					  	if(str=='') str += document.getElementsByName('ids')[i].value;
-					  	else str += ',' + document.getElementsByName('ids')[i].value;
+						if(document.getElementsByName('ids')[i].checked){
+						  	if(str=='') str += document.getElementsByName('ids')[i].value;
+						  	else str += ',' + document.getElementsByName('ids')[i].value;
+						}
 					}
+					if(str == ''){
+						bootbox.dialog({
+							message: "<span class='bigger-110'>当前未选中任何申请!</span>",
+							buttons: 			
+							{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+						});
+						return;
+				  	} 
 					if($("#confirmState").val() != 2){
 						bootbox.dialog({
 							message: "<span class='bigger-110'>只能对未审批数据进行操作!</span>",
@@ -246,7 +288,6 @@
 						});
 						return;
 					}
-					if(msg == '确定要审批通过当前页面所有申请吗?'){
 						top.jzts();
 						$.ajax({
 							type: "POST",
@@ -275,7 +316,6 @@
 								}
 							}
 						});
-					}
 				}
 			});
 		};
@@ -286,9 +326,19 @@
 				if(result) {
 					var str = '';
 					for(var i=0;i < document.getElementsByName('ids').length;i++){
-					  	if(str=='') str += document.getElementsByName('ids')[i].value;
-					  	else str += ',' + document.getElementsByName('ids')[i].value;
+						if(document.getElementsByName('ids')[i].checked){
+						  	if(str=='') str += document.getElementsByName('ids')[i].value;
+						  	else str += ',' + document.getElementsByName('ids')[i].value;
+						}
 					}
+					if(str == ''){
+						bootbox.dialog({
+							message: "<span class='bigger-110'>请选择需要驳回的申请!</span>",
+							buttons: 			
+							{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+						});
+						return;
+				  	} 
 					if($("#confirmState").val() != 2){
 						bootbox.dialog({
 							message: "<span class='bigger-110'>只能对未审批数据进行操作!</span>",
@@ -297,7 +347,6 @@
 						});
 						return;
 					}
-					if(msg == '确定要驳回当前页面所有申请吗?'){
 						top.jzts();
 						$.ajax({
 							type: "POST",
@@ -326,7 +375,6 @@
 								}
 							}
 						});
-					}
 				}
 			});
 		};
@@ -353,6 +401,8 @@
 			if("" == name){
 				name = "请选择单位";
 			}
+			$("#SelectedDepartCode").val('${pd.SelectedDepartCode}');
+			$("#name").val(name);
 			$("#selectTree2_input").val(name);
 		}
 	</script>

@@ -208,6 +208,10 @@ public class MyPushService implements MyPushManager {
 			NetCommBase.execPostCurl(map.get("oladress").toString(), str, "POST");
 		} catch (java.net.SocketTimeoutException e) {
 			// 忽略超时
+		} catch (java.net.UnknownHostException e) {
+			// 忽略不认识域名
+		} catch (java.net.ConnectException e) {
+			// 忽略网络不通
 		}
 	}
 

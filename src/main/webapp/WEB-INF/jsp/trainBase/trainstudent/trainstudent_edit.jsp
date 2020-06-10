@@ -45,7 +45,7 @@
 							
 							<tr>
 								<td style="width:100px;text-align: right;padding-top: 13px;">学员编号:</td>
-								<td><input type="text" name="STUDENT_CODE" id="STUDENT_CODE" value="${pd.STUDENT_CODE}" maxlength="20" placeholder="这里输入学员编号" title="学员编号" style="width:98%;"/></td>
+								<td><input <c:if test="${msg=='edit' }">readonly</c:if> type="text" name="STUDENT_CODE" id="STUDENT_CODE" value="${pd.STUDENT_CODE}" onblur="hasBianma('${msg}');" maxlength="20" placeholder="这里输入学员编号" title="学员编号" style="width:98%;"/></td>
 							</tr>
 							<tr>
 								<td style="width:100px;text-align: right;padding-top: 13px;">密码:</td>
@@ -285,6 +285,34 @@
 			$("#selectTree1").data("data",defaultNodes);  
 			$("#selectTree1").render();
 			$("#selectTree3_input").val("${null==departName?'请选择所属部门':departName}");
+		}
+		
+		//判断编码是否存在
+		function hasBianma(msg){
+			if(msg=='edit'){
+				return
+			}
+			var STUDENT_ID = $.trim($("#STUDENT_CODE").val());
+			if("" == STUDENT_ID)return;
+			$.ajax({
+				type: "POST",
+				url: '<%=basePath%>trainstudent/hasBianma.do',
+		    	data: {STUDENT_ID:STUDENT_ID,tm:new Date().getTime()},
+				dataType:'json',
+				cache: false,
+				success: function(data){
+					 if("success" == data.result){
+					 }else{
+						$("#STUDENT_CODE").tips({
+							side:3,
+				            msg:'编码'+STUDENT_ID+'已存在,重新输入',
+				            bg:'#AE81FF',
+				            time:5
+				        });
+						$('#STUDENT_CODE').val('');
+					 }
+				}
+			});
 		}
 		</script>
 </body>

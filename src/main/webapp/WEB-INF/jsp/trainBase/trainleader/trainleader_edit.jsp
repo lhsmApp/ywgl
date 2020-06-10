@@ -45,7 +45,7 @@
 							
 							<tr>
 								<td style="width:100px;text-align: right;padding-top: 13px;">负责人编码:</td>
-								<td><input type="text" name="LEADER_CODE" id="LEADER_CODE" value="${pd.LEADER_CODE}" maxlength="20" placeholder="这里输入负责人编码" title="负责人编码" style="width:98%;"/></td>
+								<td><input type="text" name="LEADER_CODE" <c:if test="${msg=='edit' }">readonly</c:if>  id="LEADER_CODE" value="${pd.LEADER_CODE}" maxlength="20"  onblur="hasBianma('${msg}');" placeholder="这里输入负责人编码" title="负责人编码" style="width:98%;"/></td>
 							</tr>
 							<tr>
 								<td style="width:100px;text-align: right;padding-top: 13px;">负责人名称:</td>
@@ -254,6 +254,34 @@
 		$("#selectTree1").render();
 		$("#selectTree3_input").val("${null==departName?'请选择所属部门':departName}");
 	}
+	//判断编码是否存在
+	function hasBianma(msg){
+		if(msg=='edit'){
+			return
+		}
+		var LEADER_CODE = $.trim($("#LEADER_CODE").val());
+		if("" == LEADER_ID)return;
+		$.ajax({
+			type: "POST",
+			url: '<%=basePath%>trainleader/hasBianma.do',
+	    	data: {LEADER_ID:LEADER_CODE,tm:new Date().getTime()},
+			dataType:'json',
+			cache: false,
+			success: function(data){
+				 if("success" == data.result){
+				 }else{
+					$("#LEADER_CODE").tips({
+						side:3,
+			            msg:'编码'+LEADER_CODE+'已存在,重新输入',
+			            bg:'#AE81FF',
+			            time:5
+			        });
+					$('#LEADER_CODE').val('');
+				 }
+			}
+		});
+	}
+
 	</script>
 </body>
 </html>

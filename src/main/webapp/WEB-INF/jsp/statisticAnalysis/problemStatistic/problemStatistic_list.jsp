@@ -44,12 +44,12 @@
 				<form action="mbp/listProblemStatistic.do" method="post" name="Form" id="Form">
 					<div class="pull-right">
 						<span class="green middle bolder">类型: &nbsp;</span>
-						<div class="btn-toolbar inline middle no-margin">
+						<div id="typeDivMain" class="btn-toolbar inline middle no-margin">
 								<div data-toggle="buttons" class="btn-group no-margin">
 									<label class="btn btn-sm btn-primary active">
 										<input type="radio" class="level_select"  name="level_select" value="1" checked>模块统计
 									</label>
-									<label class="btn btn-sm btn-primary"> 
+									<label class="btn btn-sm btn-info"> 
 										<input type="radio" class="level_select" name="level_select" value="2">类型统计
 									</label>
 <!-- 									<label class="btn btn-sm btn-primary"> -->
@@ -184,6 +184,9 @@
 				$("#Form").submit();
 			}
 			$(function() {
+				$("#typeDivMain").on('click', '.btn-info',function(){
+				    $(this).addClass('btn-primary').removeClass('btn-info').siblings().addClass('btn-info');
+				})
 				//开始日期
 				$("#YEAR_MONTH").datepicker({
 					format: 'yyyy-mm',
@@ -235,8 +238,11 @@
 					            }
 					  });
 			}
+			
 			//检索
 			function tosearch(){
+				
+				
 				$("#tobodyUser tr").remove();
 				top.jzts();	
 				var value=$("#WEEKS").val();

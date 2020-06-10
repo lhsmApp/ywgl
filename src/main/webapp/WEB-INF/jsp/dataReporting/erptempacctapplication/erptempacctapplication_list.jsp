@@ -18,6 +18,8 @@
 <%@ include file="../../system/index/top.jsp"%>
 <!--自由拉动  -->
  <link rel="stylesheet" href="static/ace/css/jquery-ui.css" />
+  <!-- 日期框 -->
+ <link rel="stylesheet" href="static/ace/css/datepicker.css" />
 <style>
     .mtable{width:auto;border-collapse:collapse;}
     .mtable input{background: #FFF !important;border: none;}
@@ -37,13 +39,13 @@
 											<span class="green middle bolder">填报类型: &nbsp;</span>
 												<div class="btn-toolbar inline middle no-margin">
 													<div data-toggle="buttons" class="btn-group no-margin">
-														<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toERPOfficialAcctApplication()">
+														<button id="btnEdit" class="btn btn-info btn-xs" onclick="toERPOfficialAcctApplication()">
 															<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP正式账号申请</span>
 														</button>
 														<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toERPTempacctApplication()">
 															<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP临时账号申请</span>
 														</button>
-														<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toERPDelAcctApplication()">
+														<button id="btnEdit" class="btn btn-info btn-xs" onclick="toERPDelAcctApplication()">
 															<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP删除账号申请</span>
 														</button>
 													</div>
@@ -59,14 +61,12 @@
 						<table style="margin-bottom: 8px; float: left;">
 							<tr>
 								<td>
-									 <c:if test="${not empty listBusiDate}"> 	
-										<select class="form-control" id="busiDate" name="busiDate" style="width:150px;margin-left: 5px;" onchange="tosearch()">
-											<option value="">全部</option>
-											<c:forEach items="${listBusiDate}" var="var">
-												<option value="${var.BUSI_DATE}" <c:if test="${pd.busiDate == var.BUSI_DATE}">selected="selected"</c:if>>${var.BUSI_DATE}</option>
-											</c:forEach>
-										</select>
-									</c:if>
+									<div class="input-group input-group-sm">
+										<input type="text" id="busiDate" name="busiDate"   class="form-control"   placeholder="请选择年月（默认全部）" autocomplete="off" />
+										<span class="input-group-addon">
+											<i class="ace-icon fa fa-calendar" ></i>
+										</span>
+									</div>
 								</td>
 								<td>
 									<select class="form-control" id="confirmState" name="confirmState" style="width:150px;margin-left: 5px;" onchange="tosearch()">
@@ -218,6 +218,8 @@
 	<script type="text/javascript" src="static/ace/js/jquery-ui.js"></script>
     <!-- js正则库 -->
     <script type="text/javascript" src="static/js/common/validation.js"></script>
+    <!-- 日期框 -->
+	<script src="static/ace/js/date-time/bootstrap-datepicker.js"></script>
 	<script type="text/javascript">
 		$(top.hangge());//关闭加载状态
 		
@@ -244,6 +246,20 @@
 					else $(row).removeClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', false);
 				});
 			});
+			
+			//日期
+			$("#busiDate").datepicker({
+				format: 'yyyymm', 
+			    language: "zh-CN",
+			    autoclose:true,
+			   	startView: 1,
+			    minViewMode: 1,
+			    maxViewMode: 1,
+			});
+			let busiDate = '${pd.busiDate}'
+			if(busiDate){
+				$('#busiDate').datepicker("update",new Date(busiDate.substring(0,busiDate.length-2)+'-'+busiDate.substring(busiDate.length-2)));
+			}
 		});
 		
 		/*初始化数据*/
