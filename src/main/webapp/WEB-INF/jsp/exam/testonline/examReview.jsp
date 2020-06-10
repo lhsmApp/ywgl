@@ -82,15 +82,17 @@
 												</c:if>	
 												<%-- 简答题 --%>
 												<c:if test="${var.TEST_QUESTION_TYPE == 3 }">
-													<p class="aswer-p subject-id-${ans.TEST_QUESTION_ID}" data-sid="${ans.TEST_PAPER_ID}-${ans.TEST_QUESTION_ID}" data-type="textarea" ">
-													<textarea class="aswer-textarea" id="${ans.TEST_PAPER_ID}-${ans.TEST_QUESTION_ID}" name="${ans.TEST_PAPER_ID}-${ans.TEST_QUESTION_ID}" style="width:100%;height:50px;" ></textarea>
+													<%-- <p class="aswer-p subject-id-${ans.TEST_QUESTION_ID}" data-sid="${ans.TEST_PAPER_ID}-${ans.TEST_QUESTION_ID}" data-type="textarea" "> --%>
+													<%-- <textarea class="aswer-textarea" id="${ans.TEST_PAPER_ID}-${ans.TEST_QUESTION_ID}" name="${ans.TEST_PAPER_ID}-${ans.TEST_QUESTION_ID}" style="width:100%;height:50px;" ></textarea> --%>
 													</p>
 												</c:if>						
 											</c:if>
 										</c:forEach>
 										<div id="answerExplain-${var.TEST_PAPER_ID}-${var.TEST_QUESTION_ID}" style="background:#438EB8; color:#438EB8">
 										<p><span style='color: #F5FFE8;' >您的答案：${var.TEST_ANSWER}&nbsp;&nbsp;&nbsp;正确答案：${var.TEST_CORRECT_ANSWER}</span></p>
+										<c:if test="${var.TEST_QUESTION_TYPE != 3 }">
 										<p><span style='color: #F5FFE8;' >答案解析：${var.TEST_ANSWER_NOTE}</span></p></div>
+										</c:if>
 									</div>
 									</dd>
 										<c:set value="${index+1 }" var="index"></c:set>

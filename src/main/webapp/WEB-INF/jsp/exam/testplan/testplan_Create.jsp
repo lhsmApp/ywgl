@@ -403,7 +403,7 @@
 			 diag.Drag=true;
 			 diag.Title ="选择培训人员";
 			 diag.URL = '<%=basePath%>testplan/listStudent.do';
-			 diag.Width = 700;
+			 diag.Width = 768;
 			 diag.Height = 400;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮

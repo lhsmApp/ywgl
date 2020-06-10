@@ -50,8 +50,20 @@
 										<input type="hidden" name="DEPART_CODE" id="DEPART_CODE"  />
 										<div class="selectTree" id="selectTree" style="float:none;display:block;"></div>												
 									</div>		
-								</td>								
-								<td style=padding-left:2px"><a class="btn btn-light btn-xs" onclick="tosearch();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>														
+								</td>
+								<td>
+									<div class="nav-search" style="margin:10px 0px;">
+										<span class="input-icon">
+											<input style="width:100%;" class="nav-search-input" autocomplete="off" id="keywords" type="text" name="keywords" value="${pd.keywords }" placeholder="这里培训人员名称">
+											<i class="ace-icon fa fa-search nav-search-icon"></i>
+										</span>
+									</div>	
+								</td>									
+								<td style="padding-left:2px;">
+									<a class="btn btn-light btn-xs" onclick="tosearch();"  title="检索">
+									<i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i>
+									</a>
+								</td>	
 							</tr>
 						</table>	
 					</form>			
@@ -67,7 +79,6 @@
 									<th class="center">学员名称</th>
 									<th class="center">所属单位</th>
 									<th class="center">所属部门</th>
-									<th class="center">状态</th>
 								</tr>
 							</thead>
 													
@@ -86,10 +97,6 @@
 											<td class='center'>${var.STUDENT_NAME}</td>
 											<td class='center'>${var.UNIT_NAME}</td>
 											<td class='center'>${var.DEPART_NAME}</td>
-											<td style="width: 60px;" class="center">
-												<c:if test="${var.STATE == '0' }"><span class="label label-important arrowed-in">停用</span></c:if>
-												<c:if test="${var.STATE == '1' }"><span class="label label-success arrowed">正常</span></c:if>
-											</td>											
 										</tr>
 									
 									</c:forEach>
