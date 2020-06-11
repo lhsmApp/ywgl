@@ -19,6 +19,8 @@
 <!-- 日期框 -->
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
 <script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
+<script type="text/javascript" src="static/js/jquery.cookie.js"></script>
+
 <!-- 树形下拉框start -->
 <script type="text/javascript" src="plugins/selectZtree/selectTree.js"></script>
 <script type="text/javascript" src="plugins/selectZtree/framework.js"></script>
@@ -142,7 +144,24 @@
             top.jzts();
             $("#Form").submit();
         }
+		var userIdList = {}
         $(function(){
+			//初始化已选列表
+			let tStr = $.cookie('userIdList');
+			if(tStr){
+				let tArr = tStr.split('&')
+				for(let ta in tArr){
+					let tArr2 = tArr[ta].split('=')
+					userIdList[tArr2[0]] = tArr2[1]
+				}
+				console.log(userIdList)
+			}
+			$("#student-table > tbody > tr > td input[type=checkbox]").each(function(){
+				if(userIdList[$(this).val()]!=undefined){
+					$(this).prop('checked', true);
+				}
+			})
+
           //日期框
             $('.date-picker').datepicker({
                 autoclose: true,
@@ -154,10 +173,27 @@
                 var th_checked = this.checked;//checkbox inside "TH" table header
                 $(this).closest('table').find('tbody > tr').each(function(){
                     var row = this;
-                    if(th_checked) $(row).addClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', true);
-                    else $(row).removeClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', false);
+                    if(th_checked) $(row).addClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', true).change();
+                    else $(row).removeClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', false).change();
                 });
             });
+			$("#student-table > tbody > tr > td input[type=checkbox]").change(function(){
+				let thisVal  = $(this).val()
+				if($(this).is(':checked')){
+					if(thisVal){
+						userIdList[thisVal] = $(this).parent().parent().parent().find('td[name=ids2]').text()
+					}
+				}else{
+					delete userIdList[thisVal]
+				}
+				let tStr = [];
+				for(let i in userIdList){
+					tStr.push(i+'='+userIdList[i])
+				}
+				let tArr = Object.keys(userIdList)
+				$.cookie('userIdList',tStr.join('&'))
+			})
+
         })
     </script>
 </body>

@@ -128,7 +128,7 @@
 					)
 			</if>
 			<if test="pd.DEPART_CODE!= null and pd.DEPART_CODE != ''"><!-- 关键词检索 -->
-				and A.DEPART_CODE=#{pd.DEPART_CODE}
+				and A.UNIT_CODE=#{pd.DEPART_CODE}
 					
 			</if>
 		</where>

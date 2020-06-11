@@ -65,7 +65,7 @@
 										<select onchange="change()" id="TEST_QUESTION_TYPE" name="TEST_QUESTION_TYPE" class="inline" style="width:15%;">
 											<option value="1">单选题</option>
 											<option value="2">多选题</option>
-											<option value="3">简答题</option>
+											<!-- <option value="3">简答题</option> -->
 										</select>
 									</li>
 									<li id="singleAnswer" class="item-blue clearfix ui-sortable-handle">

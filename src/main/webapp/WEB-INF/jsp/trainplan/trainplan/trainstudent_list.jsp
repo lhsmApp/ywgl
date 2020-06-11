@@ -19,6 +19,7 @@
 <!-- 日期框 -->
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
 <script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
+<script type="text/javascript" src="static/js/jquery.cookie.js"></script>
 <!-- 树形下拉框start -->
 <script type="text/javascript" src="plugins/selectZtree/selectTree.js"></script>
 <script type="text/javascript" src="plugins/selectZtree/framework.js"></script>
@@ -114,7 +115,8 @@
 						<table style="width:100%;">
 							<tr>
 								<td style="vertical-align:top;">						
-									<a class="btn btn-mini btn-success" onclick="top.Dialog.close();">确定</a>
+								<input id="clickConfirm" name="clickConfirm" value="0" type="hidden">
+									<a class="btn btn-mini btn-success" onclick="$('#clickConfirm').val('1');top.Dialog.close();">确定</a>
 								</td>
 								<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
 							</tr>
@@ -150,8 +152,22 @@
 			top.jzts();
 			$("#Form").submit();
 		}
+		var userIdList = {}
 		$(function() {
-		
+			//初始化已选列表
+			let tStr = $.cookie('userIdList');
+			if(tStr){
+				let tArr = tStr.split(',')
+				for(let ta in tArr){
+					userIdList[tArr[ta]] = 1
+				}
+			}
+			$("#student-table > tbody > tr > td input[type=checkbox]").each(function(){
+				if(userIdList[$(this).val()]!=undefined){
+					$(this).prop('checked', true);
+				}
+			})
+			
 			//日期框
 			$('.date-picker').datepicker({
 				autoclose: true,
@@ -191,15 +207,28 @@
 				var th_checked = this.checked;//checkbox inside "TH" table header
 				$(this).closest('table').find('tbody > tr').each(function(){
 					var row = this;
-					if(th_checked) $(row).addClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', true);
-					else $(row).removeClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', false);
+					if(th_checked) $(row).addClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', true).change();
+					else $(row).removeClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', false).change();
 				});
 			});
+			$("#student-table > tbody > tr > td input[type=checkbox]").change(function(){
+				let thisVal  = $(this).val()
+				if($(this).is(':checked')){
+					if(thisVal){
+						userIdList[thisVal] = 1
+					}
+				}else{
+					delete userIdList[thisVal]
+				}
+				let tArr = Object.keys(userIdList)
+				let tStr = tArr.join(',',tArr);
+				$.cookie('userIdList',tStr)
+			})
 		});
 		function initComplete(){
 			//下拉树
 			var defaultNodes = {"treeNodes":${zTreeNodes}};
-			console.log(${zTreeNodes});
+			//console.log(${zTreeNodes});
 			//绑定change事件
 			$("#selectTree").bind("change",function(){
 	
