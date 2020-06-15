@@ -19,6 +19,7 @@
 <!-- 日期框 -->
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
 <script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
+<script type="text/javascript" src="static/js/jquery.cookie.js"></script>
 
 <!-- 树形下拉框start -->
 <script type="text/javascript" src="plugins/selectZtree/selectTree.js"></script>
@@ -135,7 +136,7 @@
 								</tr>
 								<tr>
 								<td style="text-align: center;" colspan="10">
-									<a class="btn btn-mini btn-primary" onclick="save();top.Dialog.close();">保存</a>
+									<a class="btn btn-mini btn-primary" onclick="save();">保存</a>
 									<a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">取消</a>
 								</td>
 							</table>
@@ -179,7 +180,6 @@
 		$("#COURSE_CODE").val('${pd.COURSE_ID}');
 		//保存
 		function save(){
-			top.jzts();		
 			var trainID=$("#TRAINPLAN_ID").val();//任务ID
 			var planName=$("#TRAIN_PLAN_NAME").val();//任务名称
 			var couseTypeId=$("#COURSE_TYPE_ID").val();//课程分类
@@ -188,6 +188,67 @@
 			var endDate=$("#END_DATE").val();//结束时间
 			var planPersons=$("#TRAIN_PLAN_PERSONS").val();//培训人员
 			var planMemo=$("#TRAIN_PLAN_MEMO").val();//	任务描述
+			if(!planName){
+				$("#TRAIN_PLAN_NAME").tips({
+					side:3,
+		            msg:'请输入任务名称',
+		            bg:'#AE81FF',
+		            time:2
+		        });
+				$("#TRAIN_PLAN_NAME").focus()
+				return
+			}
+			if(!couseTypeId){
+				$("#selectTree2_input").tips({
+					side:3,
+		            msg:'请选择课程分类',
+		            bg:'#AE81FF',
+		            time:2
+		        });
+				$("#selectTree2_input").focus()
+				return
+			}
+			if(couseCode=='0'){
+				$("#COURSE_CODE").tips({
+					side:3,
+		            msg:'请选择课程',
+		            bg:'#AE81FF',
+		            time:2
+		        });
+				$("#COURSE_CODE").focus()
+				return
+			}
+			if(!startDate){
+				$("#START_DATE").tips({
+					side:3,
+		            msg:'请选择日期',
+		            bg:'#AE81FF',
+		            time:2
+		        });
+				$("#START_DATE").focus()
+				return
+			}
+			if(!endDate){
+				$("#END_DATE").tips({
+					side:3,
+		            msg:'请选择日期',
+		            bg:'#AE81FF',
+		            time:2
+		        });
+				$("#END_DATE").focus()
+				return
+			}
+			if(!planPersons){
+				$("#uesrTextarea").tips({
+					side:3,
+		            msg:'请选择培训人员',
+		            bg:'#AE81FF',
+		            time:2
+		        });
+				$("#uesrTextarea").focus()
+				return
+			}
+			top.jzts();		
 			$.ajax({
 				type: "POST",
 				url: '<%=basePath%>trainplan/save.do',
@@ -207,6 +268,7 @@
 							message: "<span class='bigger-110'>保存失败</span>",
 						});		
 					}
+					top.Dialog.close();
 				},
 		    	error: function(response) {
 		    		var msgObj=JSON.parse(response.responseText);
@@ -214,6 +276,7 @@
 		    		bootbox.dialog({
 						message: "<span class='bigger-110'>保存失败"+msgObj.message+"</span>",
 					});		
+		    		top.Dialog.close();
 		    	}
 			});			
 		}
@@ -228,7 +291,15 @@
 			$("#tobodyUser").html('');
 			initComplete();
 		}
+		var gStr = ''//人员
 		$(function() {
+			//初始化 清空cookie  如果是编辑则获取以选中的id存到cookie中
+			$.removeCookie('userIdList');
+			let TRAIN_PLAN_PERSONS_T = '${pd.TRAIN_PLAN_PERSONS}'
+			gStr = TRAIN_PLAN_PERSONS_T
+			if(TRAIN_PLAN_PERSONS_T){
+				$.cookie('userIdList',TRAIN_PLAN_PERSONS_T)
+			}
 			//日期框
 			$('.date-picker').datepicker({
 				autoclose: true,
@@ -325,7 +396,8 @@
 			$("#COURSE_TYPE_ID").val('${pd.COURSE_TYPE_ID}');
 			$("#selectTree2_input").val('${coursetype}');		
 
-		}		
+		}	
+		
 		//选择培训人群
 		function choiceStudent(){
 			 top.jzts();
@@ -333,28 +405,41 @@
 			 diag.Drag=true;
 			 diag.Title ="选择培训人员";
 			 diag.URL = '<%=basePath%>trainplan/listStudent.do';
-			 diag.Width = 700;
+			 diag.Width = 768;
 			 diag.Height = 400;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮
 			 diag.CancelEvent = function(){ //关闭事件
-				 var str = '';
+				 /* var str = '';
 					for(var i=0;i < diag.innerFrame.contentWindow.document.getElementsByName('ids').length;i++){
 					  if(diag.innerFrame.contentWindow.document.getElementsByName('ids')[i].checked){
 					  	if(str=='') str += diag.innerFrame.contentWindow.document.getElementsByName('ids')[i].value;
 					  	else str += ',' + diag.innerFrame.contentWindow.document.getElementsByName('ids')[i].value;				 
 					  }
+					} */
+					
+					let is_clickConfirm = diag.innerFrame.contentWindow.document.getElementById("clickConfirm").value
+	           		if(is_clickConfirm == '0'){
+	           			diag.close();
+	           			$.cookie('userIdList',gStr)
+	           			return
+	           		}
+					gStr = $.cookie('userIdList')
+					if(!gStr){
+						diag.close();
+						return
 					}
 					$.ajax({
 						   type: "POST",
 						   url: '<%=basePath%>trainplan/getChoiceStudent.do',
-						   data: {'sturentStr':str},
+						   data: {'sturentStr':gStr},
 						   dataType:'json',
 						   //beforeSend: validateData,
 						   cache: false,
 						      success: function (data) {
-						    	  if($("#uesrTextarea").val()==''){
+						    	  
+						    	  /* if($("#uesrTextarea").val()==''){ */
 						    		  var userCodes='';
 							    	  var userNames='';
 							    	  $.each(data, function(i, item){
@@ -372,7 +457,7 @@
 									 	});
 							    	  $("#uesrTextarea").val(userNames);
 							    	  $("#TRAIN_PLAN_PERSONS").val(userCodes); 
-						    	  }else{
+						    	  /* }else{
 						    		  var userCodes='';
 							    	  var userNames='';
 							    	  var arry = $("#TRAIN_PLAN_PERSONS").val().split(",");
@@ -390,7 +475,7 @@
 									 	});	
 							       	  $("#uesrTextarea").val($("#uesrTextarea").val()+userNames);
 							    	  $("#TRAIN_PLAN_PERSONS").val($("#TRAIN_PLAN_PERSONS").val()+userCodes); 
-						    	  }
+						    	  } */
 						    	 
 						         },
 						            error: function () {
@@ -428,6 +513,8 @@
 		function clearTable(){
 			$("#tobodyUser").html('');
 			$("#uesrTextarea").val('');
+			$.removeCookie('userIdList');
+			gStr = ''
 		}
 	</script>
 

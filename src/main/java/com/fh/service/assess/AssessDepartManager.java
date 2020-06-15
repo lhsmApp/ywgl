@@ -55,6 +55,12 @@ public interface AssessDepartManager{
 	 */
 	public PageData findByCode(PageData pd)throws Exception;
 	
+	/**判断部门编码是否重复
+	 * @param pd
+	 * @throws Exception
+	 */
+	public PageData hasDepartCode(PageData pd)throws Exception;
+	
 	/**
 	 * 通过ID获取其子级列表
 	 * @param parentId

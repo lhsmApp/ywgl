@@ -31,6 +31,9 @@
 <link type="text/css" rel="stylesheet"
 	href="plugins/selectZtree/ztree/ztree.css"></link>
 <!-- 树形下拉框end -->
+
+<!-- 标准页面统一样式 -->
+<link rel="stylesheet" href="static/css/normal.css" />
 </head>
 <body class="no-skin">
 
@@ -46,7 +49,7 @@
 						<!-- 检索  -->
 							<div class="nav-search" style="margin:10px 0px;">
 								<span class="input-icon" style="width:86%">
-									<input style="width:100%" class="nav-search-input" autocomplete="off" id="keywords" type="text" name="keywords" value="${pd.keywords }" placeholder="这里输入问题标题" />
+									<input style="width:100%" class="nav-search-input" autocomplete="off" id="keywords" type="text" name="keywords" value="${pd.keywords }" placeholder="这里输入问题标题或时间" />
 									<i class="ace-icon fa fa-search nav-search-icon"></i>
 								</span>
 								<button style="margin-bottom:3px;" class="btn btn-light btn-minier" onclick="searchs();"  title="检索">

@@ -178,6 +178,9 @@ public class AssessDepartController extends BaseController {
 		String ASSESSDEPART_ID = null == pd.get("ASSESSDEPART_ID") ? "" : pd.get("ASSESSDEPART_ID").toString();
 		pd.put("DEPART_CODE", ASSESSDEPART_ID); // 上级ID
 		mv.addObject("pds", assessdepartService.findByCode(pd)); // 传入上级所有信息
+		PageData pdIsMerge = new PageData();
+		pdIsMerge.put("IS_MERGE_DEPART", "0"); // 默认不是合并单位
+		mv.addObject("pd", pdIsMerge); // 放入视图容器
 		mv.addObject("ASSESSDEPART_ID", ASSESSDEPART_ID); // 传入ID，作为子级ID用
 		mv.setViewName("assess/assessdepart/assessdepart_edit");
 		mv.addObject("msg", "save");
@@ -222,6 +225,27 @@ public class AssessDepartController extends BaseController {
 		JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0",zdepartmentPdList));
 		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
 		return mv;
+	}
+	
+	/**判断单位编码是否存在
+	 * @return
+	 */
+	@RequestMapping(value="/hasDepartCode")
+	@ResponseBody
+	public Object hasDepartCode(){
+		Map<String,String> map = new HashMap<String,String>();
+		String errInfo = "success";
+		PageData pd = new PageData();
+		try{
+			pd = this.getPageData();
+			if(assessdepartService.hasDepartCode(pd) != null){
+				errInfo = "error";
+			}
+		} catch(Exception e){
+			logger.error(e.toString(), e);
+		}
+		map.put("result", errInfo);				//返回结果
+		return AppUtil.returnObject(new PageData(), map);
 	}
 
 	/**

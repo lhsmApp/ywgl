@@ -23,7 +23,7 @@
 	<div class="main-container" id="main-container">
 		<!-- /section:basics/sidebar -->
 		<div class="main-content" >
-			<img alt="" style="margin:0 auto;display:block;width:77%;" src="static/images/mainbg.jpg">
+			<img alt="" style="margin:0 auto;display:block;width:77%;max-width:1034px;" src="static/images/mainbg.jpg">
 		
 			<!-- <div class="main-content-inner">
 				<div class="page-content">

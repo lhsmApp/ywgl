@@ -283,7 +283,8 @@
         	window.location.href='<%=basePath%>assessData/excel.do?'
         		+ 'SelectedBusiDate='+$("#SelectedBusiDate").val()
                 +'&ShowDataBusiDate='+ShowDataBusiDate
-                +'&KPI_CODE='+$("#KPI_CODE").val();
+                +'&KPI_CODE='+$("#KPI_CODE").val()
+                +'&funcType='+'${pd.funcType}';
         }
 	
 	    //检索

@@ -341,6 +341,10 @@ public class AssessDataService implements AssessDataManager {
 			list = (List<PageData>) dao.findForList("IntegrateVoucherCxMapper.exportList", page);
 			break;
 		default:
+			//list = (List<PageData>) dao.findForList("KhTotalMapper.exportList", page);
+			
+			PageData pageData = page.getPd();
+			pageData.put("KPI_CODE", pageData.getString("KPI_CODE").split("-")[1]);
 			list = (List<PageData>) dao.findForList("KhTotalMapper.exportList", page);
 			break;
 		}

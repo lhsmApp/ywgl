@@ -31,37 +31,18 @@
 						<div class="col-xs-12">
 							
 						<!-- 检索  -->
-						<form action="notice/list<c:if test="${accessSourceType!=2}">2</c:if>.do" method="post" name="Form" id="Form">
+						<form action="knowledgetype/list.do" method="post" name="Form" id="Form">
 						<table style="margin-top:5px;">
 							<tr>
 								<td>
 									<div class="nav-search">
 										<span class="input-icon">
-											<input type="text" placeholder="搜索内容关键词" class="nav-search-input" id="NOTICE_CONTENT" autocomplete="off" name="NOTICE_CONTENT" value="${pd.NOTICE_CONTENT}"/>
+											<input type="text" placeholder="这里输入类别名称" class="nav-search-input" id="nav-search-input" autocomplete="off" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词"/>
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 									</div>
 								</td>
-                                <td style="vertical-align:top;padding-left:2px;">
-                                    <!-- <select class="chosen-select form-control" name="name" id="id" data-placeholder="请选择" style="vertical-align:top;width: 120px;">
-                                    <option value=""></option>
-                                    <option value="">全部</option>
-                                    <option value="">1</option>
-                                    <option value="">2</option>
-                                    </select> -->
-                                    <div class="nav-search">
-                                        <span class="input-icon">
-                                            <input type="text" placeholder="搜索发布人" class="nav-search-input" id="NAME" autocomplete="off" name="NAME" value="${pd.NAME}"/>
-                                            <i class="ace-icon fa fa-search nav-search-icon"></i>
-                                        </span>
-                                    </div>
-                                </td>
-								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastStart" autocomplete="off" id="lastStart"  value="${pd.lastStart}" type="text" data-date-format="yyyy-mm-dd 00:00:00"  style="width:116px;" placeholder="发布时间（开始）" title="发布时间（开始）"/></td>
-								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastEnd" autocomplete="off" id="lastEnd"  value="${pd.lastEnd}" type="text" data-date-format="yyyy-mm-dd 00:00:00" style="width:116px;" placeholder="发布日期（结束）" title="发布日期（结束）"/></td>
 								<td style="vertical-align:top;padding-left:2px"><a class="btn btn-light btn-xs" onclick="tosearch();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
-								<c:if test="${accessSourceType==2}">
-                                <td style="vertical-align:top;padding-left:2px"><a class="btn btn-light btn-xs"  title="检索" onclick="add();"><i id="nav-add-icon" class="ace-icon glyphicon glyphicon-plus blue"></i>新建公告</a></td>
-								</c:if>
 							</tr>
 						</table>
 						<!-- 检索  -->
@@ -69,53 +50,79 @@
 						<table id="simple-table" class="table table-striped table-bordered table-hover" style="margin-top:5px;">	
 							<thead>
 								<tr>
+									<th class="center" style="width:35px;">
+									<label class="pos-rel"><input type="checkbox" class="ace" id="zcheckbox" /><span class="lbl"></span></label>
+									</th>
 									<th class="center" style="width:50px;">序号</th>
-									<th class="center">公告内容</th>
-									<th class="center">发布人</th>
-									<th class="center">开始时间</th>
-									<th class="center">结束时间</th>
-									<th class="center">附件</th>
-									<c:if test="${accessSourceType==2}">
+									<th class="center">单位</th>
+									<th class="center">学员编号</th>
+									<th class="center">学员名称</th>
+									<th class="center">状态</th>
 									<th class="center">操作</th>
-									</c:if>
 								</tr>
 							</thead>
+													
 							<tbody>
 							<!-- 开始循环 -->	
 							<c:choose>
-								<c:when test="${not empty varList}">
-									<c:forEach items="${varList}" var="var" varStatus="vs">
+								<c:when test="${not empty paperList}">
+									
+									<c:forEach items="${paperList}" var="var" varStatus="vs">
 										<tr>
-											<td class='center' style="width: 30px;">${vs.index+1}</td>
-											<td class='center'>${var.NOTICE_CONTENT}</td>
-											<td class='center'>${var.NAME}</td>
-											<td class='center'><fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${var.START_TIME}" /></td>
-											<td class='center'><fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${var.END_TIME}" /></td>
 											<td class='center'>
-											<c:if test="${'' != var.ATTACHMENT_PATH}">
-												<a href="<%=basePath%>notice/download.do?address=${var.ATTACHMENT_PATH}">
-													<i class="ace-icon fa fa-cloud-download bigger-120" title="下载"></i>
-												</a>
-											</c:if>
-											<c:if test="${'' == var.ATTACHMENT_PATH}">
-												无
-											</c:if>
-											<c:if test="${accessSourceType==2}">
+												<label class="pos-rel"><input type='checkbox' name='ids' value="${var.KNOWLEDGE_TYPE_ID}" class="ace" /><span class="lbl"></span></label>
 											</td>
+											<td class='center' style="width: 30px;">${vs.index+1}</td>
+											<td class='center'>${var.unit_name}</td>
+											<td class='center'>${var.TEST_USER}</td>
+											<td class='center'>${var.user_name}</td>
+											<td class='center'>${var.user_name}</td>
 											<td class="center">
 												<div class="hidden-sm hidden-xs btn-group">
-													
-													<a class="btn btn-xs btn-success" title="编辑" onclick="edit('${var.NOTICE_ID}');">
+													<a class="btn btn-xs btn-success" title="编辑" onclick="edit('${var.TEST_USER}');">
+														<i class="ace-icon fa fa-pencil-square-o bigger-120" title="编辑"></i>
+														批阅
+													</a>
+												</div>
+												<%-- <div class="hidden-sm hidden-xs btn-group">
+													<a class="btn btn-xs btn-success" title="编辑" onclick="edit('${var.KNOWLEDGE_TYPE_ID}');">
 														<i class="ace-icon fa fa-pencil-square-o bigger-120" title="编辑"></i>
 													</a>
-													<a class="btn btn-xs btn-danger" onclick="del('${var.NOTICE_ID}');">
+													
+													<a class="btn btn-xs btn-danger" onclick="del('${var.KNOWLEDGE_TYPE_ID}');">
 														<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
 													</a>
 												</div>
+												<div class="hidden-md hidden-lg">
+													<div class="inline pos-rel">
+														<button class="btn btn-minier btn-primary dropdown-toggle" data-toggle="dropdown" data-position="auto">
+															<i class="ace-icon fa fa-cog icon-only bigger-110"></i>
+														</button>
+			
+														<ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+															<li>
+																<a style="cursor:pointer;" onclick="edit('${var.KNOWLEDGE_TYPE_ID}');" class="tooltip-success" data-rel="tooltip" title="修改">
+																	<span class="green">
+																		<i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
+																	</span>
+																</a>
+															</li>
+															
+															<li>
+																<a style="cursor:pointer;" onclick="del('${var.KNOWLEDGE_TYPE_ID}');" class="tooltip-error" data-rel="tooltip" title="删除">
+																	<span class="red">
+																		<i class="ace-icon fa fa-trash-o bigger-120"></i>
+																	</span>
+																</a>
+															</li>
+														</ul>
+													</div>
+												</div> --%>
 											</td>
-											</c:if>
 										</tr>
+									
 									</c:forEach>
+									
 								</c:when>
 								<c:otherwise>
 									<tr class="main_info">
@@ -128,11 +135,16 @@
 						<div class="page-header position-relative">
 						<table style="width:100%;">
 							<tr>
+								<td style="vertical-align:top;">
+									
+									
+								</td>
 								<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
 							</tr>
 						</table>
 						</div>
 						</form>
+					
 						</div>
 						<!-- /.col -->
 					</div>
@@ -142,12 +154,15 @@
 			</div>
 		</div>
 		<!-- /.main-content -->
+
 		<!-- 返回顶部 -->
 		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
 			<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
 		</a>
+
 	</div>
 	<!-- /.main-container -->
+
 	<!-- basic scripts -->
 	<!-- 页面底部js¨ -->
 	<%@ include file="../../system/index/foot.jsp"%>
@@ -169,6 +184,7 @@
 			$("#Form").submit();
 		}
 		$(function() {
+		
 			//日期框
 			$('.date-picker').datepicker({
 				autoclose: true,
@@ -200,34 +216,51 @@
 					 else $('#form-field-select-4').removeClass('tag-input-style');
 				});
 			}
+			
+			
+			//复选框全选控制
+			var active_class = 'active';
+			$('#simple-table > thead > tr > th input[type=checkbox]').eq(0).on('click', function(){
+				var th_checked = this.checked;//checkbox inside "TH" table header
+				$(this).closest('table').find('tbody > tr').each(function(){
+					var row = this;
+					if(th_checked) $(row).addClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', true);
+					else $(row).removeClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', false);
+				});
+			});
 		});
 		
-		//新增
-		function add(){
-			window.location.href='<%=basePath%>notice/goAdd.do';
-		}
 		
-		
-		//删除
-		function del(Id){
-			bootbox.confirm("确定要删除吗?", function(result) {
-				if(result) {
-					top.jzts();
-					var url = "<%=basePath%>notice/delete.do?NOTICE_ID="+Id+"&tm="+new Date().getTime();
-					$.get(url,function(data){
-						$(top.hangge());//关闭加载状态
-						console.log(data)
-						location.reload()
-					});
-				}
-			});
-		}
 		
 		//修改
-		function edit(Id){
-			window.location.href='<%=basePath%>notice/goEdit.do?NOTICE_ID='+Id;
+		function edit(userId){
+			var planId = '${pd.TEST_PLAN_ID}'
+			var paperId = '${pd.TEST_PAPER_ID}'
+			 top.jzts();
+			 var diag = new top.Dialog();
+			 diag.Drag=true;
+			 diag.Title ="编辑";
+			 diag.URL = '<%=basePath%>testmain/goAudit.do?TEST_USER='+userId+'&TEST_PLAN_ID='+planId+'&TEST_PAPER_ID='+paperId;
+			 diag.Width = 550;
+			 diag.Height = 400;
+			 diag.Modal = true;				//有无遮罩窗口
+			 diag. ShowMaxButton = true;	//最大化按钮
+		     diag.ShowMinButton = true;		//最小化按钮 
+			 diag.CancelEvent = function(){ //关闭事件
+				 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
+					 nextPage(${page.currentPage});
+				}
+				diag.close();
+			 };
+			 diag.show();
 		}
 		
+		
+		
+		//导出excel
+		function toExcel(){
+			window.location.href='<%=basePath%>knowledgetype/excel.do';
+		}
 	</script>
 
 

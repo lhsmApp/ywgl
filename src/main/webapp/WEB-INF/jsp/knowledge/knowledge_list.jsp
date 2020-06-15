@@ -453,6 +453,7 @@
 		 * 保存
 		 */
 		function save(){
+			console.log('sdfsdf');
 			if ($("#form-field-knowledge-title").attr('disabled') == 'disabled') {
 				$("#btnSave").tips({
 					side : 3,
@@ -474,16 +475,16 @@
 				$("#form-field-knowledge-title").focus();
 				return false;
 			}
-			/* if ($("#form-field-pro-type-id").val()==null||$("#form-field-pro-type-id").val()=="") {
-				$("#form-field-pro-type-id").tips({
+			if ($("#form-field-knowledge-type").val()==null||$("#form-field-knowledge-type").val()=="") {
+				$("#form-field-knowledge-type").tips({
 					side : 3,
-					msg : '请选择问题类型',
+					msg : '请选择知识类别',
 					bg : '#AE81FF',
 					time : 2
 				});
-				$("#form-field-pro-type-id").focus();
+				$("#form-field-knowledge-type").focus();
 				return false;
-			} */
+			}
 			
 			var content;
 			var arr = [];
@@ -543,6 +544,7 @@
 		 * 增加
 		 */
 		function add(){
+			
 			$("#knowledgeList li").each(function(){
 				var item = this;
 				$(item).removeClass("bc-light-orange");
@@ -561,14 +563,16 @@
 			UE.getEditor('editor').setContent("");
 			
 			$("#tbodyAttachment").html('');
+			$("#form-field-knowledge-title").focus();
 		}
 
 		/**
 		 * 编辑
 		 */
 		function edit(){
-			initFieldDisabled(false);
 			
+			initFieldDisabled(false);
+			$("#form-field-knowledge-title").focus();
 			//setReportFieldValue(currentItem);
 		}
 

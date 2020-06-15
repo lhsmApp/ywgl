@@ -463,19 +463,18 @@
 		where
 		KEY_CODE = "SystemDataTime";
 		
-		<if test="CopyRptDur!= null and CopyRptDur != ''">
-		    <!-- 插入保存 -->
+		<!-- <if test="CopyRptDur!= null and CopyRptDur != ''">
 		    insert into
 		    <include refid="tableName"></include>
 		    (
 		    <include refid="FieldTmplCopy"></include>
 		    )
-		    SELECT <!-- #{NEXT_RPT_DUR} as RPT_DUR,BILL_OFF, DEPT_CODE,-->
+		    SELECT
 		    TABLE_CODE,COL_CODE,COL_NAME,DISP_ORDER,DICT_TRANS,
-		    COL_HIDE,COL_SUM,COL_AVE,<!-- COL_TRANSFER, -->COL_FORMULA,
+		    COL_HIDE,COL_SUM,COL_AVE,COL_FORMULA,
 		    CAL_ORDER,NUM_DGT,DEC_PRECISION
-		    FROM tb_tmpl_config_detail<!--  WHERE RPT_DUR=#{CUR_RPT_DUR} -->;
-		</if>
+		    FROM tb_tmpl_config_detail;
+		</if> -->
 	</update>
 	
 

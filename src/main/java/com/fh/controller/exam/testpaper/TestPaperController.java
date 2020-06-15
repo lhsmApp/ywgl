@@ -594,7 +594,8 @@ public class TestPaperController extends BaseController {
 				}
 				answerList.add(pdAnswer);
 			}else{
-				String rightAnswer=p.getString("TEST_QUESTION_ANSWER");
+				String rightAnswer=p.getString("TEST_ANSWER_NOTE");
+//				String rightAnswer=p.getString("TEST_QUESTION_ANSWER");
 				PageData pdAnswer = new PageData();//答案
 				//判断该简答题是否作答
 				if (jsonobject.has(p.getString("TEST_QUESTION_ID"))){

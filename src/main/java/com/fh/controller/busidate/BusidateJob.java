@@ -50,16 +50,18 @@ public class BusidateJob extends BaseController implements Job {
 			Date dtCur = DateUtils.string2Date(busiDate);
 			String nextBusidate = DateUtils.addMothToDate(1, dtCur, DateFormatUtils.DATE_MONTH_FORMAT);
 
-			PageData pd = this.getPageData();
+			/*PageData pd = this.getPageData();
 			pd.put("KEY_VALUE", nextBusidate);
 			pd.put("NEXT_RPT_DUR", nextBusidate);
-			pd.put("CUR_RPT_DUR", busiDate);
+			pd.put("CUR_RPT_DUR", busiDate);*/
 
-			String hasTmpl = tmplConfigService.findByRptDur(nextBusidate);
+			pdConfig.put("KEY_VALUE", nextBusidate);
+
+			/*String hasTmpl = tmplConfigService.findByRptDur(nextBusidate);
 			if (StringUtil.isEmpty(hasTmpl)) {
 				pd.put("CopyRptDur", true);
-			}
-			tmplConfigService.updateBusidate(pd);
+			}*/
+			tmplConfigService.updateBusidate(pdConfig);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

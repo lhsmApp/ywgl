@@ -133,16 +133,36 @@
 	
 	<!-- 导出列表 -->
 	<select id="exportList" parameterType="jqPage" resultType="pd">
-		select * 
-		from <include refid="tableName"></include>
-		<where>
-		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
-		        ${pd.QueryFeild}
-		    </if>
-		</where>
-		<if test="sidx != null and sidx.trim() != ''" >
-			order by ${sidx} ${sord} 
+		<!-- 导入功能，可以查询全部 -->
+		<if test="pd.funcType=='import'">
+			select * 
+			from <include refid="tableName"></include>
+			<where>
+			    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+			        ${pd.QueryFeild}
+			    </if>
+			</where>
+			<if test="sidx != null and sidx.trim() != ''" >
+				order by ${sidx} ${sord} 
+	    	</if>
     	</if>
+		<!-- 查询功能，只能查询各单位数据 -->
+		<if test="pd.funcType=='query'">
+			SELECT A.* FROM tb_kh_integrate_voucher_cx A
+			JOIN tb_assess_depart B
+			ON A.COMPANY_CODE=B.DEPART_CODE
+			<where>
+			    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+			        ${pd.QueryFeild}
+			    </if>
+			    <if test="pd.DEPART_CODE!= null and pd.DEPART_CODE != ''">
+			        and LOCAL_DEPART_CODE=#{pd.DEPART_CODE}
+			    </if>
+			</where>
+			<if test="sidx != null and sidx.trim() != ''" >
+				order by ${sidx} ${sord} 
+	    	</if>
+		</if>
 	</select>
 	<!-- 导出模板 -->
 	<select id="exportModel" parameterType="pd" resultType="pd">

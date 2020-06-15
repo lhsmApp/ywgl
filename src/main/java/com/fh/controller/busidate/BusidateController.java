@@ -109,42 +109,10 @@ public class BusidateController extends BaseController {
 		Date dtCur = DateUtils.string2Date(busiDate);
 		String nextBusidate = DateUtils.addMothToDate(1, dtCur, DateFormatUtils.DATE_MONTH_FORMAT);
 		
-		PageData pd = this.getPageData();
-		pd.put("KEY_VALUE", nextBusidate);
-		pd.put("NEXT_RPT_DUR", nextBusidate);
-		pd.put("CUR_RPT_DUR", busiDate);
+		pdConfig.put("KEY_VALUE", nextBusidate);
 
-		String hasTmpl = tmplconfigService.findByRptDur(nextBusidate);
-		if (StringUtil.isEmpty(hasTmpl)) {
-			pd.put("CopyRptDur", true);
-		}
-		String hasTmplStruMapping = tmplconfigService.findStruMappingByRptDurSpecial(nextBusidate);
-		if (StringUtil.isEmpty(hasTmplStruMapping)) {
-			pd.put("CopyStruMapping", true);
-		}
 		
-		String hasTmplTableMapping = tmplconfigService.findTableMappingByRptDurSpecial(nextBusidate);
-		if (StringUtil.isEmpty(hasTmplTableMapping)) {
-			pd.put("CopyTableMapping", true);
-		}
-		
-		String hasCertParm = tmplconfigService.findCertParmByRptDurSpecial(nextBusidate);
-		if (StringUtil.isEmpty(hasCertParm)) {
-			pd.put("CopyCertParm", true);
-		}
-		String hasGlItemUser = tmplconfigService.findGlItemUser(nextBusidate);
-		if (StringUtil.isEmpty(hasGlItemUser)) {
-			pd.put("CopyGlItemUser", true);
-		}
-		String hasStaffTds = tmplconfigService.findStaffTds(nextBusidate);
-		if (StringUtil.isEmpty(hasStaffTds)) {
-			pd.put("CopyStaffTds", true);
-		}
-		String hasStaffRemit = tmplconfigService.findStaffRemit(nextBusidate);
-		if (StringUtil.isEmpty(hasStaffRemit)) {
-			pd.put("CopyStaffRemit", true);
-		}
-		tmplconfigService.updateBusidate(pd);// 变更业务区间
+		tmplconfigService.updateBusidate(pdConfig);// 变更业务区间
 		
 		commonBase.setCode(0);
 		commonBase.setMessage(nextBusidate);

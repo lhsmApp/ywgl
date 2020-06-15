@@ -205,6 +205,30 @@ public class TrainLeaderController extends BaseController {
 		return AppUtil.returnObject(pd, map);
 	}
 	
+	
+	/**判断编码是否存在
+	 * @return
+	 */
+	@RequestMapping(value="/hasBianma")
+	@ResponseBody
+	public Object hasBianma(){
+		Map<String,String> map = new HashMap<String,String>();
+		String errInfo = "success";
+		PageData pd = new PageData();
+		try{
+			pd = this.getPageData();
+			if(trainleaderService.findById(pd) != null){
+				errInfo = "error";
+			}
+		} catch(Exception e){
+			logger.error(e.toString(), e);
+		}
+		map.put("result", errInfo);				//返回结果
+		return AppUtil.returnObject(new PageData(), map);
+	}
+	
+
+	
 	 /**导出到excel
 	 * @param
 	 * @throws Exception

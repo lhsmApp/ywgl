@@ -18,6 +18,7 @@
 	<link rel="stylesheet" href="static/ace/css/datepicker.css" />
 	<!-- 图片上传 -->
 	<script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
+	<script type="text/javascript" src="static/js/jquery.cookie.js"></script>
 	<script type="text/javascript" src="static/ace/js/jquery.form.js"></script>
 	<link rel="stylesheet" href="static/ace/css/bootstrap-editable.css" />
 </head>
@@ -150,6 +151,11 @@
 				var key = $(this).attr("data-key")
 				delete scope_Arr[key];
 				$(this).parent().remove()
+				scope_Arr_cookie = []
+				for(let sa in scope_Arr){
+					scope_Arr_cookie.push(sa+'='+scope_Arr[sa])
+				}
+	           	$.cookie('userIdList',scope_Arr_cookie.join('&'))
 				console.log("notice_edit.jsp:",scope_Arr)
 			})
 			//日期框
@@ -165,6 +171,8 @@
 			        //首先清空之前选择的内容，不然不好处理
 			        $("#scope_deil").empty()
 			        scope_Arr = {}
+			        scope_Arr_cookie = []
+			        $.cookie('userIdList','')
 			        //再显示添加框和添加按钮
 			        $("#select-scope,#addBtn").show()
 			    }else{
@@ -235,9 +243,15 @@
 				$("#file_path").val('')
 			})
 		});
+		var scope_Arr_cookie = [];
 		<c:forEach items="${reItem}" var="var">
 		  scope_Arr['${var.BUSINESS_CODE}']= '${var.BUSINESS_NAME}'
+		  scope_Arr_cookie.push('${var.BUSINESS_CODE}=${var.BUSINESS_NAME}')
 		</c:forEach>
+		  
+		//初始化 清空cookie  如果是编辑则获取以选中的id存到cookie中
+		$.removeCookie('userIdList');
+		$.cookie('userIdList',scope_Arr_cookie.join('&'))
 		//添加发布范围
 		function addExtent(){
 		    top.jzts();
@@ -251,20 +265,33 @@
             diag. ShowMaxButton = true;    //最大化按钮
             diag.ShowMinButton = true;     //最小化按钮
             diag.CancelEvent = function(){ //关闭事件
-            	is_clickConfirm = diag.innerFrame.contentWindow.document.getElementById("clickConfirm").value
+            	let is_clickConfirm = diag.innerFrame.contentWindow.document.getElementById("clickConfirm").value
            		if(is_clickConfirm == '0'){
            			diag.close();
+           			$.cookie('userIdList',scope_Arr_cookie.join('&'))
            			return
            		}
                 
-                var str = '';
-                   for(var i=0;i < diag.innerFrame.contentWindow.document.getElementsByName('ids').length;i++){
+                   /* for(var i=0;i < diag.innerFrame.contentWindow.document.getElementsByName('ids').length;i++){
                      if(diag.innerFrame.contentWindow.document.getElementsByName('ids')[i].checked){
                       var name = diag.innerFrame.contentWindow.document.getElementsByName('ids2')[i].innerHTML
                       var value = diag.innerFrame.contentWindow.document.getElementsByName('ids')[i].value
                        scope_Arr[value]=name//把发布范围添加到对象中
+                       scope_Arr_cookie.push(value+'='+name)
                      }
-                   }
+                   }  */
+                   
+					var str = $.cookie('userIdList')
+					scope_Arr_cookie = []
+                   	scope_Arr = {}
+                   console.log(str)
+					var strArr = str.split('&')
+					for (let i in strArr){
+						let tArr = strArr[i].split('=')
+						scope_Arr[tArr[0]] = tArr[1]
+						scope_Arr_cookie.push(tArr[0]+'='+tArr[1])
+					}
+                   $.cookie('userIdList',str)
                    //生成标签
                    $("#scope_deil").empty()//清空
                    for(sa in scope_Arr){        	   
@@ -286,6 +313,24 @@
         } 
 		//保存
 		function save(){
+			if(!$("#lastStart").val()){
+				$("#lastStart").tips({
+					side:1,
+		            msg:'请选择日期',
+		            bg:'#cc0033',
+		            time:3
+				})
+				return;
+			}
+			if(!$("#lastEnd").val()){
+				$("#lastEnd").tips({
+					side:1,
+		            msg:'请选择日期',
+		            bg:'#cc0033',
+		            time:3
+				})
+				return;
+			}
 			if($("#TEST_PAPER_DIFFICULTY").val()!="0"){
 				if(Object.keys(scope_Arr).length==0){
 					$("#scope_deil").tips({
@@ -298,6 +343,17 @@
 				}
 			}else{
 				scope_Arr = {} //如果范围是面向全部，把这个值设置为空可以稍微节约服务器资源
+				scope_Arr_cookie = []
+				$.cookie('userIdList','')
+			}
+			if(!$("#notice_content").text()){
+				$("#notice_content").tips({
+					side:1,
+		            msg:'请输入公告内容',
+		            bg:'#cc0033',
+		            time:3
+				})
+				return;
 			}
 			var scopeFormat = [];
 			for(sa in scope_Arr){

@@ -19,6 +19,9 @@
 <%@ include file="../../system/index/top.jsp"%>
 <!-- 日期框 -->
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
+
+<!-- 标准页面统一样式 -->
+<link rel="stylesheet" href="static/css/normal.css" />
 </head>
 <body class="no-skin">
 
@@ -34,7 +37,7 @@
 							<form action='mbp/getPageList.do?ProOperType=PROBLEM_CLOSE'></form>
 							<div class="nav-search" style="margin:10px 0px;">
 								<span class="input-icon" style="width:86%">
-									<input style="width:100%" class="nav-search-input" autocomplete="off" id="keywords" type="text" name="keywords" value="${pd.keywords }" placeholder="这里输入问题标题" />
+									<input style="width:100%" class="nav-search-input" autocomplete="off" id="keywords" type="text" name="keywords" value="${pd.keywords }" placeholder="这里输入问题标题或时间" />
 									<i class="ace-icon fa fa-search nav-search-icon"></i>
 								</span>
 								<button style="margin-bottom:3px;" class="btn btn-light btn-minier" onclick="searchs();"  title="检索">
@@ -445,7 +448,7 @@ function initList(url){
 						addItem(item); 
 				 	});
 					if(first){
-						getDetail(first.PRO_CODE);
+						getDetail(first.PRO_CODE,first.ANSWER);
 					}
 				}
 				else{
@@ -470,7 +473,7 @@ function addItem(item){
 	}else{
 		htmlProState='<span class="label label-xs label-success">'+item.PRO_STATE_NAME+'</span>'
 	}
-	var htmlItem='<li class="item-grey clearfix list-item-hover" onclick=getDetail("'+item.PRO_CODE+'")>'
+	var htmlItem='<li class="item-grey clearfix list-item-hover" onclick=getDetail("'+item.PRO_CODE+'","'+item.ANSWER+'")>'
 	+'<input name="PRO_CODE" id="PRO_CODE" type="hidden" value="'+item.PRO_CODE+'" />'
 		+'<div>'
 			+'<label class="inline" style="margin-bottom:5px;">'
@@ -525,7 +528,7 @@ function addEmpty(){
 /**
  * 获取明细信息
  */
-function getDetail(problemCode){
+function getDetail(problemCode,answer){
 	/* $("#problem-tab li").each(function(){
 		var item = this;
 		if($(item).attr("tag")=="detail-tab"){
@@ -573,7 +576,22 @@ function getDetail(problemCode){
 				 $("#valPRO_STATE").text(data.PRO_STATE_NAME);
 				 $("#valUPDATE_DATE").text(data.UPDATE_DATE);
 				 $("#valPRO_CONTENT").html(data.PRO_CONTENT);
+				 console.log(answer);
 				 
+				 UE.getEditor('editorClose').addListener("ready", function () {
+					if(answer!=null&&answer=='1'){
+						UE.getEditor('editorClose').setContent('已处理');
+					}else{
+						UE.getEditor('editorClose').setContent('');
+					}
+				 });
+				 if(UE.getEditor('editorClose').isReady){
+					 if(answer!=null&&answer=='1'){
+						 UE.getEditor('editorClose').setContent('已处理');
+					 }else{
+						 UE.getEditor('editorClose').setContent('');
+					 }
+				 }
 				 
 				 /* 获取提报中附件信息 */
 				 getProAttachment("PROBLEM_INFO");

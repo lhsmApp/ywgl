@@ -210,6 +210,8 @@ public class MyPushService implements MyPushManager {
 			// 忽略超时
 		} catch (java.net.UnknownHostException e) {
 			// 忽略不认识域名
+		} catch (java.net.ConnectException e) {
+			// 忽略网络不通
 		}
 	}
 

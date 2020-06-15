@@ -19,6 +19,7 @@
 <!-- 日期框 -->
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
 <script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
+<script type="text/javascript" src="static/js/jquery.cookie.js"></script>
 
 <!-- 树形下拉框start -->
 <script type="text/javascript" src="plugins/selectZtree/selectTree.js"></script>
@@ -133,7 +134,7 @@
 								</tr>
 								<tr>
 								<td style="text-align: center;" colspan="10">
-									<a class="btn btn-mini btn-primary" onclick="save();top.Dialog.close();">保存</a>
+									<a class="btn btn-mini btn-primary" onclick="save();">保存</a>
 									<a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">取消</a>
 								</td>
 							</table>
@@ -181,7 +182,7 @@
 		
 		//保存
 		function save(){
-			top.jzts();		
+				
 			var testID=$("#TEST_PLAN_ID").val();//任务ID
 			var testName=$("#TEST_PLAN_NAME").val();//任务名称
 			var paperId=$("#TEST_PAPER_ID").val();//试卷ID
@@ -190,6 +191,59 @@
 			var testPersons=$("#TEST_PLAN_PERSONS").val();//考试人员
 			var testMemo=$("#TEST_PLAN_MEMO").val();//	任务描述
 			var COURSE_COVER=$("#COURSE_COVER").val();//图片路径
+			if(!testName){
+				$("#TEST_PLAN_NAME").tips({
+					side:3,
+		            msg:'请输入考试计划名称',
+		            bg:'#AE81FF',
+		            time:2
+		        });
+				$("#TEST_PLAN_NAME").focus()
+				return
+			}
+			if(!paperId){
+				$("#TEST_PAPER_ID").tips({
+					side:3,
+		            msg:'请选择试卷',
+		            bg:'#AE81FF',
+		            time:2
+		        });
+				$("#TEST_PAPER_ID").focus()
+				return
+			}
+			if(!startDate){
+				$("#START_DATE").tips({
+					side:3,
+		            msg:'请选择日期',
+		            bg:'#AE81FF',
+		            time:2
+		        });
+				$("#START_DATE").focus()
+				return
+			}
+			
+			if(!endDate){
+				$("#END_DATE").tips({
+					side:3,
+		            msg:'请选择日期',
+		            bg:'#AE81FF',
+		            time:2
+		        });
+				$("#END_DATE").focus()
+				return
+			}
+			
+			if(!testPersons){
+				$("#uesrTextarea").tips({
+					side:3,
+		            msg:'请选择考试人员',
+		            bg:'#AE81FF',
+		            time:2
+		        });
+				$("#uesrTextarea").focus()
+				return
+			}
+			top.jzts();	
 			$.ajax({
 				type: "POST",
 				url: '<%=basePath%>testplan/save.do',
@@ -198,6 +252,7 @@
 		    	async: false, 
 				cache: false,
 				success: function(response){
+					top.Dialog.close();
 					if(response.code==0){
 						$(top.hangge());//关闭加载状态
 						bootbox.dialog({
@@ -212,6 +267,7 @@
 					}
 				},
 		    	error: function(response) {
+		    		top.Dialog.close();
 		    		var msgObj=JSON.parse(response.responseText);
 		    		$(top.hangge());//关闭加载状态
 		    		bootbox.dialog({
@@ -230,7 +286,16 @@
 			$("#uesrTextarea").val('');
 			$("#tobodyUser").html('');
 		}
+		var gStr = ''//人员
 		$(function() {
+			//初始化 清空cookie  如果是编辑则获取以选中的id存到cookie中
+			$.removeCookie('userIdList');
+			let TRAIN_PLAN_PERSONS_T = '${pd.TEST_PERSONSCODE}'
+			gStr = TRAIN_PLAN_PERSONS_T
+			if(TRAIN_PLAN_PERSONS_T){
+				$.cookie('userIdList',TRAIN_PLAN_PERSONS_T)
+			}
+
 			//上传区域框
 			$('#uploadPic').find('input[type=file]').ace_file_input({
 				style:'well',
@@ -340,7 +405,7 @@
 			 window.location.href = '<%=basePath%>trainplan/list.do';
 		}
 	
-	
+		
 		//选择培训人群
 		function choiceStudent(){
 			 top.jzts();
@@ -348,27 +413,40 @@
 			 diag.Drag=true;
 			 diag.Title ="选择培训人员";
 			 diag.URL = '<%=basePath%>testplan/listStudent.do';
-			 diag.Width = 700;
+			 diag.Width = 768;
 			 diag.Height = 400;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮
 			 diag.CancelEvent = function(){ //关闭事件
-				 var str = '';
+				 /* var str = '';
 					for(var i=0;i < diag.innerFrame.contentWindow.document.getElementsByName('ids').length;i++){
 					  if(diag.innerFrame.contentWindow.document.getElementsByName('ids')[i].checked){
 					  	if(str=='') str += diag.innerFrame.contentWindow.document.getElementsByName('ids')[i].value;
 					  	else str += ',' + diag.innerFrame.contentWindow.document.getElementsByName('ids')[i].value;				 
 					  }
+					} */
+					
+					let is_clickConfirm = diag.innerFrame.contentWindow.document.getElementById("clickConfirm").value
+	           		if(is_clickConfirm == '0'){
+	           			diag.close();
+	           			$.cookie('userIdList',gStr)
+	           			return
+	           		}
+					gStr = $.cookie('userIdList')
+					if(!gStr){
+						diag.close();
+						return
 					}
 					$.ajax({
 						   type: "POST",
 						   url: '<%=basePath%>testplan/getChoiceStudent.do',
-						   data: {'sturentStr':str},
+						   data: {'sturentStr':gStr},
 						   dataType:'json',
 						   cache: false,
 						      success: function (data) {
-						    	  if($("#uesrTextarea").val()==''){
+						    	  
+						    	  /* if($("#uesrTextarea").val()==''){ */
 						    		  var userCodes='';
 							    	  var userNames='';
 							    	  $.each(data, function(i, item){
@@ -386,7 +464,7 @@
 									 	});
 							    	  $("#uesrTextarea").val(userNames);
 							    	  $("#TEST_PLAN_PERSONS").val(userCodes); 
-						    	  }else{
+						    	 /*  }else{
 						    		  var userCodes='';
 							    	  var userNames='';
 							    	  var arry = $("#TEST_PLAN_PERSONS").val().split(",");
@@ -404,7 +482,7 @@
 									 	});	
 							       	  $("#uesrTextarea").val($("#uesrTextarea").val()+userNames);
 							    	  $("#TEST_PLAN_PERSONS").val($("#TEST_PLAN_PERSONS").val()+userCodes); 
-						    	  }
+						    	  } */
 						    	 
 						         },
 						            error: function () {
@@ -442,6 +520,8 @@
 		function clearTable(){
 			$("#tobodyUser").html('');
 			$("#uesrTextarea").val('');
+			$.removeCookie('userIdList');
+			gStr = ''
 		}
 	</script>
 

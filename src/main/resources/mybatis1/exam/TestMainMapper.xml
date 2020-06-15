@@ -205,7 +205,7 @@
 	
 	<!--将考试成绩写入主表和明细表-->
 	<insert id="saveExamResult" parameterType="pd">
-	insert into tb_test_main
+	REPLACE into tb_test_main
 	(TEST_PLAN_ID,	
 		TEST_PAPER_ID,	
 		TEST_USER,	
@@ -232,7 +232,7 @@
 		);
 		<foreach item="item" index="index" collection="answerList" open=" " separator="; " close=" ">
 			<if test="item!=null">
-				insert into tb_test_detail
+				REPLACE into tb_test_detail
 				(
 					TEST_USER,
 					TEST_PAPER_ID,
