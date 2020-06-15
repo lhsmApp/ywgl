@@ -6,8 +6,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import javax.annotation.Resource;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -41,6 +44,7 @@ import com.fh.service.changegrcxtbg.changegrczhxz.impl.ChangeGrcZhxzService;
 import com.fh.service.changegrcxtbg.changegrczhzx.impl.ChangeGrcZhzxService;
 import com.fh.service.fhoa.department.DepartmentManager;
 import com.fh.service.myPush.myPush.MyPushManager;
+import com.fh.service.system.user.UserManager;
 
 /** 
  * 说明：TB_APPROVAL_BUSINESS_CONFIG
@@ -75,6 +79,9 @@ public class ApprovalConfigController extends BaseController {
 	
 	@Resource(name = "myPushService")
 	private MyPushManager myPushService;
+	
+	@Resource(name="userService")
+	private UserManager userService;
 	/**保存
 	 * @param
 	 * @throws Exception
@@ -368,23 +375,40 @@ public class ApprovalConfigController extends BaseController {
 			p.put("ROLE_CODE","68a2eb8394484984bb78338c05807533");
 			list.add(p);
 		}
+		//根据角色和单位获取用户id， 2020 06 15
+		PageData sUserPd = new PageData();
+		List<String> userList = new ArrayList<String>();
+		for(PageData tPd:list) {
+			sUserPd.put("UNIT_CODE",tPd.get("UNIT_CODE"));
+			sUserPd.put("ROLE_CODE",tPd.get("ROLE_CODE"));
+			List<PageData> luPd = userService.listAllUser(pd);
+			if(luPd!=null) {
+				for(PageData tPd2:luPd) {
+					userList.add(tPd2.get("USER_ID")+"");
+				}
+			}
+		}
+		
+		// 创建HashSet集合
+		Set<String> set = new HashSet<String>();
+		set.addAll(userList);     // 将list所有元素添加到set中    set集合特性会自动去重复
+		userList.clear();
+		userList.addAll(set);    // 将list清空并将set中的所有元素添加到list中
+		
 		PageData pd2 = new PageData();
-			// 新建成功后推送消息
-//			pd2.put("iModuleId", 243);
-//			pd2.put("iModuleSubId", nId);
-//			pd2.put("iForkId", 1);
-//			pd2.put("sDetails", pd.getString("NOTICE_CONTENT"));
-//			if (pd.getString("NOTICE_TYPE").equals("0")) {
-//				pd2.put("iGroupId", "0");
-//			} else {
-//				pd2.put("ul", scoStr);
-//			}
-//			pd2.put("dtBeginTime", pd.getString("START_TIME"));
-//			pd2.put("dtOverTime", pd.getString("END_TIME"));
-//			pd2.put("sCanClickUrl", "notice/list2.do?NOTICE_CONTENT="+pd.getString("NOTICE_CONTENT"));
-//			pd2.put("iIsForward", "1");
-//			com.alibaba.fastjson.JSONObject json2 = myPushService.saveSend(pd2);
-//			System.out.println(json2);// test
+		//新建成功后推送消息
+		pd2.put("iModuleId", 190);
+		pd2.put("iModuleSubId", billCode);
+		pd2.put("iForkId", 1);
+		pd2.put("sCanClickTile", "前往审批");
+		pd2.put("sCanClickUrl", "approvalconfig/listApproval.do");
+		pd2.put("iIsForward", "1");
+		pd2.put("sTitle", "变更管理：您有待审批的事项");
+		pd2.put("sDetails", " ");
+		pd2.put("ul", String.join(",",userList));
+		pd2.put("rebootScope","1");
+		pd2.put("rebootMark","1");
+		com.alibaba.fastjson.JSONObject json2 = myPushService.saveSend(pd2);
 
 		pd1.put("listDetail", list);
 		approvalconfigService.save(pd1);

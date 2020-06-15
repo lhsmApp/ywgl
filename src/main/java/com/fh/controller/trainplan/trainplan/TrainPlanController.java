@@ -112,43 +112,43 @@ public class TrainPlanController extends BaseController {
 			trainplanService.save(pd);
 			commonBase.setCode(0);
 			//推送
-			PageData pd2 = new PageData();
-			pd2.put("iModuleId", 221);
-			pd2.put("iModuleSubId", billCode);
-			pd2.put("iForkId", 1);
-			pd2.put("sTitle", pd.getString("TRAIN_PLAN_NAME"));
-			pd2.put("sCanClickTile", "立即前往培训中心");
-			pd2.put("ul", trainPersonStr);
-			pd2.put("dtBeginTime", pd.getString("START_DATE"));
-			pd2.put("dtOverTime", pd.getString("END_DATE"));
-			pd2.put("sDetails", "");
-			pd2.put("sCanClickUrl", "courseuse/list.do?keywords="+pd.getString("TRAIN_PLAN_NAME"));
-			pd2.put("iIsForward", "1");
-			com.alibaba.fastjson.JSONObject json2 = myPushService.saveSend(pd2);
+//			PageData pd2 = new PageData();
+//			pd2.put("iModuleId", 221);
+//			pd2.put("iModuleSubId", billCode);
+//			pd2.put("iForkId", 1);
+//			pd2.put("sTitle", pd.getString("TRAIN_PLAN_NAME"));
+//			pd2.put("sCanClickTile", "立即前往培训中心");
+//			pd2.put("ul", trainPersonStr);
+//			pd2.put("dtBeginTime", pd.getString("START_DATE"));
+//			pd2.put("dtOverTime", pd.getString("END_DATE"));
+//			pd2.put("sDetails", "");
+//			pd2.put("sCanClickUrl", "courseuse/list.do?keywords="+pd.getString("TRAIN_PLAN_NAME"));
+//			pd2.put("iIsForward", "1");
+//			com.alibaba.fastjson.JSONObject json2 = myPushService.saveSend(pd2);
 		}else{
 			//pd.put("UPDATE_DATE", DateUtils.getCurrentTime());
 			pd.put("COURSE_ID",pd.getString("COURSE_CODE"));//课程ID
 			trainplanService.edit(pd);
 			commonBase.setCode(0);
 			//推送 修改
-			PageData pd2 = new PageData();
-			pd2.put("iModuleId", 221);
-			pd2.put("iModuleSubId", pd.getString("TRAIN_PLAN_ID"));
-			pd2.put("iForkId", 1);
-			pd2.put("sTitle", pd.getString("TRAIN_PLAN_NAME"));
-			pd2.put("sCanClickTile", "立即前往培训中心");
-			pd2.put("ul", trainPersonStr);
-			pd2.put("dtBeginTime", pd.getString("START_DATE"));
-			pd2.put("dtOverTime", pd.getString("END_DATE"));
-			pd2.put("sDetails", "");
-			pd2.put("sCanClickUrl", "courseuse/list.do?keywords="+pd.getString("TRAIN_PLAN_NAME"));
-			com.alibaba.fastjson.JSONObject json2 = myPushService.editSend(pd2);
-			if(json2.get("iRet").equals(-132)) {
-				pd2.put("rebootMark","1");
-				pd2.put("rebootScope","1");
-				pd2.put("iIsForward", "1");
-				myPushService.saveSend(pd2);
-			}
+//			PageData pd2 = new PageData();
+//			pd2.put("iModuleId", 221);
+//			pd2.put("iModuleSubId", pd.getString("TRAIN_PLAN_ID"));
+//			pd2.put("iForkId", 1);
+//			pd2.put("sTitle", pd.getString("TRAIN_PLAN_NAME"));
+//			pd2.put("sCanClickTile", "立即前往培训中心");
+//			pd2.put("ul", trainPersonStr);
+//			pd2.put("dtBeginTime", pd.getString("START_DATE"));
+//			pd2.put("dtOverTime", pd.getString("END_DATE"));
+//			pd2.put("sDetails", "");
+//			pd2.put("sCanClickUrl", "courseuse/list.do?keywords="+pd.getString("TRAIN_PLAN_NAME"));
+//			com.alibaba.fastjson.JSONObject json2 = myPushService.editSend(pd2);
+//			if(json2.get("iRet").equals(-132)) {
+//				pd2.put("rebootMark","1");
+//				pd2.put("rebootScope","1");
+//				pd2.put("iIsForward", "1");
+//				myPushService.saveSend(pd2);
+//			}
 		}
 		return commonBase;
 	}

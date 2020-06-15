@@ -331,7 +331,7 @@
 	<script src="static/ace/js/ace/ace.onpage-help.js"></script>
 
 	<!--引入属于此页面的js -->
-	<script type="text/javascript" src="static/js/myjs/head.js"></script>
+	<script type="text/javascript" src="static/js/myjs/head.js?ver=<%=System.currentTimeMillis()%>"></script>
 	<!--引入属于此页面的js -->
 	<script type="text/javascript" src="static/js/myjs/index.js"></script>
 

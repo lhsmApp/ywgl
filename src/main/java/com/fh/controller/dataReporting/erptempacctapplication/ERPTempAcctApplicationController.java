@@ -30,6 +30,7 @@ import com.fh.entity.system.User;
 import com.fh.exception.CustomException;
 import com.fh.service.dataReporting.erptempacctapplication.ERPTempAcctApplicationManager;
 import com.fh.service.dataReporting.grcperson.GRCPersonManager;
+import com.fh.service.myPush.myPush.MyPushManager;
 import com.fh.service.sysConfig.sysconfig.SysConfigManager;
 import com.fh.service.tmplconfig.tmplconfig.impl.TmplConfigService;
 import com.fh.util.Const;
@@ -64,6 +65,8 @@ public class ERPTempAcctApplicationController extends BaseController {
 	private SysConfigManager sysconfigService;
 	@Resource(name="grcpersonService")
 	private GRCPersonManager grcpersonService;
+	@Resource(name = "myPushService")
+	private MyPushManager myPushService;
 
 	Map<String, TableColumns> Map_HaveColumnsList = new LinkedHashMap<String, TableColumns>();
 	Map<String, TmplConfigDetail> Map_SetColumnsList = new LinkedHashMap<String, TmplConfigDetail>();
@@ -233,6 +236,22 @@ public class ERPTempAcctApplicationController extends BaseController {
 			String arrayDATA_IDS[] = DATA_IDS.split(",");
 			pd.put("arrayDATA_IDS", arrayDATA_IDS);
 			erptempacctapplicationService.editReportState(pd);
+			if("2".equals(pd.get("CONFIRM_STATE"))) {
+				//推送给管理员
+				PageData pd2 = new PageData();
+				pd2.put("iModuleId", 244);
+				pd2.put("iModuleSubId", 2);
+				pd2.put("iForkId", 1);
+				pd2.put("sCanClickTile", "前往审批");
+				pd2.put("sCanClickUrl", "erp/erpTaaList.do");
+				pd2.put("iIsForward", "1");
+				pd2.put("sTitle", "ERP临时账号审批");
+				pd2.put("sDetails", " ");
+				pd2.put("iGroupId", 1);//ERP账号新增删除管理员
+				pd2.put("rebootScope","1");
+				pd2.put("rebootMark","1");
+				com.alibaba.fastjson.JSONObject json2 = myPushService.saveSend(pd2);
+			}
 			commonBase.setCode(0);
 		}else{
 			commonBase.setCode(-1);

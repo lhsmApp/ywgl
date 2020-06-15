@@ -346,7 +346,7 @@
 				scope_Arr_cookie = []
 				$.cookie('userIdList','')
 			}
-			if(!$("#notice_content").text()){
+			if(!$("#notice_content").val()){
 				$("#notice_content").tips({
 					side:1,
 		            msg:'请输入公告内容',

@@ -292,19 +292,23 @@ function updateUserPhoto(value){
 //弹出气泡弹窗
 function bubblesPopup(rd,bubblesId){
 	console.log(rd)
+	var ididid = rd['iModuleId']+':'+rd['iModuleSubId']+':'+rd['iForkId']
+	if(!onlyOneFunc(rd['iModuleId'],ididid)){
+		return
+	}
 	var aLabel = '';
 	switch(rd['iIsForward']){
 		case "0"://不跳
-			aLabel = '【<a href="javascript:void(0)" onclick="tagRead(this,\''+rd['iModuleId']+':'+rd['iModuleSubId']+':'+rd['iForkId']+'\')" class="red">'+rd['sCanClickTile']+'</a>】'
+			aLabel = '【<a href="javascript:void(0)" onclick="tagRead(this,\''+ididid+'\')" class="red">'+rd['sCanClickTile']+'</a>】'
 			break;
 		case "1"://跳
 //			console.log(menuIdName[rd['iModuleId']],rd['iModuleId'])
 			var theName = menuIdName[rd['iModuleId']]?menuIdName[rd['iModuleId']]:'临时窗口'+bubblesId;
-			aLabel = '【<a href="javascript:void(0)" onclick="siMenu(\'z'+rd['iModuleSubId']+'\',\'lm'+rd['iModuleId']+'\',\''+theName+'\',\''+rd['sCanClickUrl']+'\','+bubblesId+');tagRead(this,\''+rd['iModuleId']+':'+rd['iModuleSubId']+':'+rd['iForkId']+'\')" class="red">'+rd['sCanClickTile']+'</a>】'
+			aLabel = '【<a href="javascript:void(0)" onclick="siMenu(\'z'+rd['iModuleSubId']+'\',\'lm'+rd['iModuleId']+'\',\''+theName+'\',\''+rd['sCanClickUrl']+'\','+bubblesId+');tagRead(this,\''+ididid+'\')" class="red">'+rd['sCanClickTile']+'</a>】'
 			break;
 		case "2"://新窗口
 			//aLabel = '【<a href="'+rd['sCanClickUrl']+'" onclick="javascript:$.gritter.remove('+bubblesId+')">'+rd['sCanClickTile']+'</a>】'
-			aLabel = '【<a href="javascript:void(0)" onclick="javascript:openDiagFromNotice(\''+rd['sCanClickUrl']+'\');tagRead(this,\''+rd['iModuleId']+':'+rd['iModuleSubId']+':'+rd['iForkId']+'\')" class="red">'+rd['sCanClickTile']+'</a>】'
+			aLabel = '【<a href="javascript:void(0)" onclick="javascript:openDiagFromNotice(\''+rd['sCanClickUrl']+'\');tagRead(this,\''+ididid+'\')" class="red">'+rd['sCanClickTile']+'</a>】'
 			break;
 	}
 	
@@ -315,10 +319,28 @@ function bubblesPopup(rd,bubblesId){
 		//image: 'static/ace/avatars/user.jpg',
 		sticky: true,
 		time: '',
-		class_name:'gritter-info'+((new Date()).getHours()<18?' gritter-light':'')
+		class_name:'gritter-info'+((new Date()).getHours()<18?' gritter-light':''),
+		after_close:function(){
+			tagRead(null,ididid)
+		}
 	});
 //    console.log(unique_id)
 };
+
+//限制只出现一个泡泡
+var onlyOneList = []
+function onlyOneFunc(val,id){
+	var targetList = [190]//限制变更管理、ERP账号新增删除审批
+	if($.inArray(val,targetList)>=0){
+		if($.inArray(val,onlyOneList)>=0){
+			tagRead(null,id)
+			return false;
+		}else{
+			onlyOneList.push(val)
+		}
+	}
+	return true;
+}
 //开发新窗口
 function openDiagFromNotice(url){
 //	 top.jzts();
