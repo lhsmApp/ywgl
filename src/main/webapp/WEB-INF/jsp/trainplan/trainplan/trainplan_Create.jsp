@@ -513,6 +513,8 @@
 		function clearTable(){
 			$("#tobodyUser").html('');
 			$("#uesrTextarea").val('');
+			$.removeCookie('userIdList');
+			gStr = ''
 		}
 	</script>
 

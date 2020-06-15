@@ -1037,6 +1037,9 @@ public class AssessDataController extends BaseController {
 			getPd.put("filterWhereResult", SqlTools.constructWhere(filters, null));
 		}
 		TransferPd(getPd, SelectedBusiDate);
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		String departCode = user.getUNIT_CODE();
+		getPd.put("DEPART_CODE", departCode);
 		page.setPd(getPd);
 		List<PageData> varOList = assessDataService.exportList(page);
 		return export(varOList, "", map_SetColumnsList, map_DicList);
