@@ -40,6 +40,7 @@ import com.fh.service.changegrcxtbg.changegrcqxbg.impl.ChangeGrcQxbgService;
 import com.fh.service.changegrcxtbg.changegrczhxz.impl.ChangeGrcZhxzService;
 import com.fh.service.changegrcxtbg.changegrczhzx.impl.ChangeGrcZhzxService;
 import com.fh.service.fhoa.department.DepartmentManager;
+import com.fh.service.myPush.myPush.MyPushManager;
 
 /** 
  * 说明：TB_APPROVAL_BUSINESS_CONFIG
@@ -72,7 +73,8 @@ public class ApprovalConfigController extends BaseController {
 	@Resource(name="departmentService")
 	private DepartmentManager departmentService;
 	
-	
+	@Resource(name = "myPushService")
+	private MyPushManager myPushService;
 	/**保存
 	 * @param
 	 * @throws Exception
@@ -366,6 +368,24 @@ public class ApprovalConfigController extends BaseController {
 			p.put("ROLE_CODE","68a2eb8394484984bb78338c05807533");
 			list.add(p);
 		}
+		PageData pd2 = new PageData();
+			// 新建成功后推送消息
+//			pd2.put("iModuleId", 243);
+//			pd2.put("iModuleSubId", nId);
+//			pd2.put("iForkId", 1);
+//			pd2.put("sDetails", pd.getString("NOTICE_CONTENT"));
+//			if (pd.getString("NOTICE_TYPE").equals("0")) {
+//				pd2.put("iGroupId", "0");
+//			} else {
+//				pd2.put("ul", scoStr);
+//			}
+//			pd2.put("dtBeginTime", pd.getString("START_TIME"));
+//			pd2.put("dtOverTime", pd.getString("END_TIME"));
+//			pd2.put("sCanClickUrl", "notice/list2.do?NOTICE_CONTENT="+pd.getString("NOTICE_CONTENT"));
+//			pd2.put("iIsForward", "1");
+//			com.alibaba.fastjson.JSONObject json2 = myPushService.saveSend(pd2);
+//			System.out.println(json2);// test
+
 		pd1.put("listDetail", list);
 		approvalconfigService.save(pd1);
 		pd1.put("msg", "单据"+billCode+"上报成功！");

@@ -493,62 +493,41 @@ public class ChangeErpXtbgController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/excel")
-	public ModelAndView exportExcel() throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"导出changeerpxtbg到excel");
-		if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;}
+	public ModelAndView exportExcel(Page page) throws Exception{
+//		logBefore(logger, Jurisdiction.getUsername()+"导出changeerpxtbg到excel");
+//		if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;}
 		ModelAndView mv = new ModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		Map<String,Object> dataMap = new HashMap<String,Object>();
 		List<String> titles = new ArrayList<String>();
-		titles.add("备注1");	//1
-		titles.add("备注2");	//2
-		titles.add("备注3");	//3
-		titles.add("备注4");	//4
-		titles.add("备注5");	//5
-		titles.add("备注6");	//6
-		titles.add("备注7");	//7
-		titles.add("备注8");	//8
-		titles.add("备注9");	//9
-		titles.add("备注10");	//10
-		titles.add("备注11");	//11
-		titles.add("备注12");	//12
-		titles.add("备注13");	//13
-		titles.add("备注14");	//14
-		titles.add("备注15");	//15
-		titles.add("备注16");	//16
-		titles.add("备注17");	//17
-		titles.add("备注18");	//18
-		titles.add("备注19");	//19
-		titles.add("备注20");	//20
-		titles.add("备注21");	//21
+		titles.add("变更单号");	//1
+		titles.add("变更名称");	//2
+		titles.add("申请单位");	//3
+		titles.add("申请部门");	//4
+		titles.add("变更原因");	//5
+		titles.add("申请人");	//6
+		titles.add("申请人部门");	//7
+		titles.add("申请人岗位");	//8
+		titles.add("联系方式");	//9
+		titles.add("申请日期");	//10
 		dataMap.put("titles", titles);
-		List<PageData> varOList = changeerpxtbgService.listAll(pd);
+		page.setPd(pd);
+		List<PageData> varOList = changeerpxtbgService.list(page);
 		List<PageData> varList = new ArrayList<PageData>();
 		for(int i=0;i<varOList.size();i++){
 			PageData vpd = new PageData();
 			vpd.put("var1", varOList.get(i).getString("BILL_CODE"));	    //1
-			vpd.put("var2", varOList.get(i).getString("UNIT_CODE"));	    //2
-			vpd.put("var3", varOList.get(i).getString("DEPT_CODE"));	    //3
-			vpd.put("var4", varOList.get(i).getString("ENTRY_DATE"));	    //4
-			vpd.put("var5", varOList.get(i).getString("SERIAL_NUM"));	    //5
-			vpd.put("var6", varOList.get(i).getString("USER_CODE"));	    //6
-			vpd.put("var7", varOList.get(i).getString("USER_DEPT"));	    //7
+			vpd.put("var2", varOList.get(i).getString("BG_NAME"));	    //2
+			vpd.put("var3", varOList.get(i).getString("UNIT_NAME"));	    //3
+			vpd.put("var4", varOList.get(i).getString("DEPT_NAME"));	    //4
+			vpd.put("var5", varOList.get(i).getString("BG_REASON"));	    //5
+			vpd.put("var6", varOList.get(i).getString("USERNAME"));	    //6
+			vpd.put("var7", varOList.get(i).getString("USER_DEPTNAME"));	    //7
 			vpd.put("var8", varOList.get(i).getString("USER_JOB"));	    //8
 			vpd.put("var9", varOList.get(i).getString("USER_CONTACT"));	    //9
-			vpd.put("var10", varOList.get(i).getString("BG_NAME"));	    //10
-			vpd.put("var11", varOList.get(i).getString("SYSTEM"));	    //11
-			vpd.put("var12", varOList.get(i).getString("BG_TYPE"));	    //12
-			vpd.put("var13", varOList.get(i).getString("BG_REASON"));	    //13
-			vpd.put("var14", varOList.get(i).getString("BILL_STATE"));	    //14
-			vpd.put("var15", varOList.get(i).getString("BILL_USER"));	    //15
-			vpd.put("var16", varOList.get(i).getString("BILL_DATE"));	    //16
-			vpd.put("var17", varOList.get(i).getString("CUS_COLUMN1"));	    //17
-			vpd.put("var18", varOList.get(i).getString("CUS_COLUMN2"));	    //18
-			vpd.put("var19", varOList.get(i).getString("CUS_COLUMN3"));	    //19
-			vpd.put("var20", varOList.get(i).getString("CUS_COLUMN4"));	    //20
-			vpd.put("var21", varOList.get(i).getString("CUS_COLUMN5"));	    //21
-			varList.add(vpd);
+			vpd.put("var10", varOList.get(i).getString("ENTRY_DATE"));	    //10
+			varList.add(vpd);				
 		}
 		dataMap.put("varList", varList);
 		ObjectExcelView erv = new ObjectExcelView();
