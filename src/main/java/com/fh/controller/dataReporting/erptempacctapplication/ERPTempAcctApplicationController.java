@@ -250,7 +250,7 @@ public class ERPTempAcctApplicationController extends BaseController {
 				pd2.put("iGroupId", 1);//ERP账号新增删除管理员
 				pd2.put("rebootScope","1");
 				pd2.put("rebootMark","1");
-				com.alibaba.fastjson.JSONObject json2 = myPushService.saveSend(pd2);
+//				com.alibaba.fastjson.JSONObject json2 = myPushService.saveSend(pd2);
 			}
 			commonBase.setCode(0);
 		}else{

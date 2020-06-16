@@ -403,12 +403,12 @@ public class ApprovalConfigController extends BaseController {
 		pd2.put("sCanClickTile", "前往审批");
 		pd2.put("sCanClickUrl", "approvalconfig/listApproval.do");
 		pd2.put("iIsForward", "1");
-		pd2.put("sTitle", "变更管理：您有待审批的事项");
+		pd2.put("sTitle", "变更审批：您有待审批的事项");
 		pd2.put("sDetails", " ");
 		pd2.put("ul", String.join(",",userList));
 		pd2.put("rebootScope","1");
 		pd2.put("rebootMark","1");
-		com.alibaba.fastjson.JSONObject json2 = myPushService.saveSend(pd2);
+//		com.alibaba.fastjson.JSONObject json2 = myPushService.saveSend(pd2);
 
 		pd1.put("listDetail", list);
 		approvalconfigService.save(pd1);
