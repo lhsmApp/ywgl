@@ -297,7 +297,8 @@ function bubblesPopup(rd,bubblesId){
 		return
 	}
 	var aLabel = '';
-	switch(rd['iIsForward']){
+	aLabel = '【<a href="javascript:void(0)" onclick="tagRead(this,\''+ididid+'\')" class="red">已读</a>】'//临时使用
+	/*switch(rd['iIsForward']){
 		case "0"://不跳
 			aLabel = '【<a href="javascript:void(0)" onclick="tagRead(this,\''+ididid+'\')" class="red">'+rd['sCanClickTile']+'</a>】'
 			break;
@@ -310,7 +311,7 @@ function bubblesPopup(rd,bubblesId){
 			//aLabel = '【<a href="'+rd['sCanClickUrl']+'" onclick="javascript:$.gritter.remove('+bubblesId+')">'+rd['sCanClickTile']+'</a>】'
 			aLabel = '【<a href="javascript:void(0)" onclick="javascript:openDiagFromNotice(\''+rd['sCanClickUrl']+'\');tagRead(this,\''+ididid+'\')" class="red">'+rd['sCanClickTile']+'</a>】'
 			break;
-	}
+	}*/
 	
     var unique_id = $.gritter.add({
 		title: rd['sTitle']+aLabel,

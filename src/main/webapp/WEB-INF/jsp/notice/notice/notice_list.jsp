@@ -56,8 +56,8 @@
                                         </span>
                                     </div>
                                 </td>
-								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastStart" autocomplete="off" id="lastStart"  value="${pd.lastStart}" type="text" data-date-format="yyyy-mm-dd 00:00:00"  style="width:116px;" placeholder="发布时间（开始）" title="发布时间（开始）"/></td>
-								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastEnd" autocomplete="off" id="lastEnd"  value="${pd.lastEnd}" type="text" data-date-format="yyyy-mm-dd 00:00:00" style="width:116px;" placeholder="发布日期（结束）" title="发布日期（结束）"/></td>
+								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastStart" autocomplete="off" id="lastStart"  value="${pd.lastStart}" type="text" data-date-format="yyyy-mm-dd 00:00:00"  style="width:116px;" placeholder="开始时间（开始）" title="发布时间（开始）"/></td>
+								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastEnd" autocomplete="off" id="lastEnd"  value="${pd.lastEnd}" type="text" data-date-format="yyyy-mm-dd 00:00:00" style="width:116px;" placeholder="开始时间（结束）" title="发布日期（结束）"/></td>
 								<td style="vertical-align:top;padding-left:2px"><a class="btn btn-light btn-xs" onclick="tosearch();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
 								<c:if test="${accessSourceType==2}">
                                 <td style="vertical-align:top;padding-left:2px"><a class="btn btn-light btn-xs"  title="检索" onclick="add();"><i id="nav-add-icon" class="ace-icon glyphicon glyphicon-plus blue"></i>新建公告</a></td>

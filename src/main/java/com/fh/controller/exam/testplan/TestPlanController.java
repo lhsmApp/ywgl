@@ -65,8 +65,8 @@ public class TestPlanController extends BaseController {
 	@Resource(name="traindepartService")
 	private TrainDepartManager trainDepartService;
 
-	@Resource(name = "myPushService")
-	private MyPushManager myPushService;
+//	@Resource(name = "myPushService")
+//	private MyPushManager myPushService;
 	/**保存
 	 * @param
 	 * @throws Exception
@@ -190,12 +190,12 @@ public class TestPlanController extends BaseController {
 		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return;} //校验权限
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		PageData pd2 = new PageData();
-		pd2.put("iModuleId", 224);
-		pd2.put("iModuleSubId", pd.getString("TEST_PLAN_ID"));
-		pd2.put("iForkId", 1);
-		pd2.put("iStatus", "-2");
-		myPushService.editSend(pd2);
+//		PageData pd2 = new PageData();
+//		pd2.put("iModuleId", 224);
+//		pd2.put("iModuleSubId", pd.getString("TEST_PLAN_ID"));
+//		pd2.put("iForkId", 1);
+//		pd2.put("iStatus", "-2");
+//		myPushService.editSend(pd2);
 		
 		testplanService.delete(pd);
 		out.write("success");
@@ -318,14 +318,14 @@ public class TestPlanController extends BaseController {
 		if(null != DATA_IDS && !"".equals(DATA_IDS)){
 			String ArrayDATA_IDS[] = DATA_IDS.split(",");
 			testplanService.deleteAll(ArrayDATA_IDS);
-			for(String strT:ArrayDATA_IDS) {
-				PageData pd2 = new PageData();
-				pd2.put("iModuleId", 224);
-				pd2.put("iModuleSubId", strT);
-				pd2.put("iForkId", 1);
-				pd2.put("iStatus", "-2");
-				myPushService.editSend(pd2);
-			}
+//			for(String strT:ArrayDATA_IDS) {
+//				PageData pd2 = new PageData();
+//				pd2.put("iModuleId", 224);
+//				pd2.put("iModuleSubId", strT);
+//				pd2.put("iForkId", 1);
+//				pd2.put("iStatus", "-2");
+//				myPushService.editSend(pd2);
+//			}
 			pd.put("msg", "ok");
 		}else{
 			pd.put("msg", "no");
