@@ -138,8 +138,8 @@
 											</th>
 											<th>${var.STAFF_CODE}</th>
 											<th>${var.STAFF_NAME}</th>
-											<th>${var.STAFF_UNIT_LEVEL2}</th>
-											<th>${var.STAFF_UNIT_LEVEL3}</th>
+											<th>${var.DEPART_CODE}</th>
+											<th>${var.UNITS_DEPART}</th>
 											<th>${var.STAFF_POSITION}</th>
 											<th>${var.STAFF_JOB}</th>
 											<th>${var.STAFF_MODULE}</th>
