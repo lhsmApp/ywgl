@@ -83,6 +83,10 @@ public class AssessDataController extends BaseController {
 
 	@Resource(name = "kpiService")
 	private KPIManager kpiService;
+	
+	private List<PageData> listCorver=null;
+	
+	
 
 	// 表名
 	// String TableName = "TB_TAX_STAFF_DETAIL";
@@ -939,6 +943,7 @@ public class AssessDataController extends BaseController {
 										// 重复数据，要在界面提示是否覆盖
 										commonBase.setCode(9);
 										commonBase.setMessage("本月已经上传过考核数据，是否继续导入？继续会将当前指标本月数据清空！");
+										listCorver=listAdd;
 									} else {
 
 										// 此处执行集合添加
@@ -966,7 +971,7 @@ public class AssessDataController extends BaseController {
 		mv.addObject("ShowDataBusiDate", ShowDataBusiDate);
 		mv.addObject("commonBaseCode", commonBase.getCode());
 		mv.addObject("commonMessage", commonBase.getMessage());
-		mv.addObject("StringDataRows", JSONArray.fromObject(listAdd).toString().replaceAll("'", "%"));//
+		//mv.addObject("StringDataRows", JSONArray.fromObject(listAdd).toString().replaceAll("'", "%"));//
 		return mv;
 	}
 
@@ -984,15 +989,16 @@ public class AssessDataController extends BaseController {
 
 		PageData getPd = this.getPageData();
 
-		Object DATA_ROWS = getPd.get("StringDataRows");
-		String json = DATA_ROWS.toString();
-		json = json.replaceAll("%", "'");
-		JSONArray array = JSONArray.fromObject(json);
-		List<PageData> listData = (List<PageData>) JSONArray.toCollection(array, PageData.class);
-		if (null != listData && listData.size() > 0) {
+//		Object DATA_ROWS = 
+//		Object DATA_ROWS = getPd.get("StringDataRows");
+//		String json = DATA_ROWS.toString();
+//		json = json.replaceAll("%", "'");
+//		JSONArray array = JSONArray.fromObject(json);
+//		List<PageData> listData = (List<PageData>) JSONArray.toCollection(array, PageData.class);
+		if (null != listCorver && listCorver.size() > 0) {
 			String kpiCode = getPd.getString("KPI_CODE");
 			// 直接删除添加，不判断重复数据
-			assessDataService.batchCoverAdd(listData, kpiCode);
+			assessDataService.batchCoverAdd(listCorver, kpiCode);
 			commonBase.setCode(0);
 		}
 		return commonBase;
