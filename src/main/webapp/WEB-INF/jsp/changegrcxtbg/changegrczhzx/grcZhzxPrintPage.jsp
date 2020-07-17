@@ -54,7 +54,7 @@
 <table width="750"    border="1" align="center" cellspacing="0" bgcolor="#221144">
   <tr>
         <td height="40" align="center" width="100" bgcolor="EFEFFF">申请人</td>
-        <td align="center" width="200" bgcolor="#FFFFFF">${pd.USERNAME}</td>
+        <td align="center" width="200" bgcolor="#FFFFFF">${pd.USER_CODE}</td>
         <td align="center" width="100" bgcolor="EFEFFF">申请人部门</br>/岗位</td>
         <td align="center" width="200" bgcolor="#FFFFFF">${pd.USER_DEPTNAME}</br>${pd.USER_JOB}</td>
   </tr>

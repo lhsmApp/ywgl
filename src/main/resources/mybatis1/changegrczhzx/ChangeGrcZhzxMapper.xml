@@ -227,7 +227,7 @@
 			SELECT * FROM (SELECT 
 				t.*,
 				u.NAME AS UNIT_NAME,
-				v.NAME USERNAME,
+<!-- 				v.NAME USERNAME, -->
 				w.NAME  DEPT_NAME,
 				x.NAME  USER_DEPTNAME
 			FROM 
@@ -257,8 +257,8 @@
 			a.BILL_CODE=b.BILL_CODE)  AS t
 				left join oa_department u
 				on  u.DEPARTMENT_CODE = t.UNIT_CODE
-		 		left join sys_user v 
-	 			on t.USER_CODE=v.USER_ID
+<!-- 		 		left join sys_user v  -->
+<!-- 	 			on t.USER_CODE=v.USER_ID -->
 	 			left join oa_department w
 		  		ON
 				w.DEPARTMENT_CODE = t.DEPT_CODE
