@@ -185,8 +185,8 @@
 													</div>
 													<div style="margin:10px 0px;">
 														<label for="form-field-xtbg-report-depart">申请人部门</label>
-														<input type="hidden" name="USER_DEPT" id="USER_DEPT" />
-														<input type="text" name="USER_DEPTNAME" id="USER_DEPTNAME" class="form-control" readonly="readonly" placeholder="请输入申请人部门"/>
+<!-- 														<input type="hidden" name="USER_DEPT" id="USER_DEPT" /> -->
+														<input type="text" name="USER_DEPT" id="USER_DEPT" class="form-control"  placeholder="请输入申请人部门"/>
 													</div>
 										   			<div style="margin:10px 0px;">
 														<label for="form-field-jsbg-report-job">申请人岗位</label>
@@ -403,10 +403,10 @@
 			$("#DEPT_CODE").val('<%=departId%>');//部门编码
 			$("#DEPT_NAME").val('<%=departName%>');//部门名称	
 <%-- 			$("#"+'<%=userId%>').val('<%=userName%>');//申请人 --%>
-<%-- 			$("#USER_CODE").val('<%=userId%>');//申请人编码 --%>
+			$("#USER_CODE").val('<%=userName%>');//申请人编码
 <%-- 			$("#USER_NAME").val('<%=userName%>');//申请人姓名 --%>
-			$("#USER_DEPT").val('<%=departId%>');//申请人部门编码
-			$("#USER_DEPTNAME").val('<%=departName%>');//申请人部门名称
+			$("#USER_DEPT").val('<%=departName%>');//申请人部门编码
+<%-- 			$("#USER_DEPTNAME").val('<%=departName%>');//申请人部门名称 --%>
 			$("#USER_JOB").val("");//申请人岗位
 			$("#USER_CONTACT").val("");//联系方式
 			$("#EFFECTIVE_DATE").val("");//申请生效日期
@@ -605,7 +605,7 @@
 			$("#USER_CODE").val(datas.USER_CODE);//申请人
 // 			$("#USER_NAME").val(datas.USERNAME);//申请人
 			$("#USER_DEPT").val(datas.USER_DEPT);//申请人部门
-			$("#USER_DEPTNAME").val(datas.USER_DEPTNAME);//申请人部门
+// 			$("#USER_DEPTNAME").val(datas.USER_DEPTNAME);//申请人部门
 			$("#USER_JOB").val(datas.USER_JOB);//申请人岗位
 			$("#USER_CONTACT").val(datas.USER_CONTACT);//联系方式
 			$("#EFFECTIVE_DATE").val(datas.EFFECTIVE_DATE);//申请生效日期
@@ -625,7 +625,7 @@
 			$("#USER_CODE").attr("disabled","disabled");//申请人单位
 // 			$("#USER_NAME").attr("disabled","disabled");
 			$("#USER_DEPT").attr("disabled","disabled");//申请部门
-			$("#USER_DEPTNAME").attr("disabled","disabled");//申请人部门
+// 			$("#USER_DEPTNAME").attr("disabled","disabled");//申请人部门
 			$("#USER_JOB").attr("disabled","disabled");//申请人岗位
 			$("#USER_CONTACT").attr("disabled","disabled");//联系方式
 			$("#EFFECTIVE_DATE").attr("disabled","disabled");//变更预期时间
@@ -646,7 +646,7 @@
 			$("#USER_CODE").removeAttr("disabled");//申请人单位
 // 			$("#USER_NAME").removeAttr("disabled");
 			$("#USER_DEPT").removeAttr("disabled");//申请部门
-			$("#USER_DEPTNAME").removeAttr("disabled");//申请部门名称
+// 			$("#USER_DEPTNAME").removeAttr("disabled");//申请部门名称
 			$("#USER_JOB").removeAttr("disabled");//申请人岗位
 			$("#USER_CONTACT").removeAttr("disabled");//联系方式
 			$("#EFFECTIVE_DATE").removeAttr("disabled");//变更预期时间
@@ -673,7 +673,7 @@
 			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name">删除角色 ：</div><div class="profile-info-value"><span>'
 			        +(item.DELETE_ROLES==undefined ?"":item.DELETE_ROLES)
 			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人部门： </div><div class="profile-info-value"><span>'
-			        +(item.USER_DEPTNAME==undefined ?"":item.USER_DEPTNAME)
+			        +(item.USER_DEPT==undefined ?"":item.USER_DEPT)
 			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人： </div><div class="profile-info-value"><span>'
 			        +(item.USER_CODE==undefined ?"":item.USER_CODE)
 			        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请人岗位： </div><div class="profile-info-value"><span>'

@@ -56,7 +56,7 @@
         <td height="40" align="center" width="100" bgcolor="EFEFFF">申请人</td>
         <td align="center" width="200" bgcolor="#FFFFFF">${pd.USER_CODE}</td>
         <td align="center" width="100" bgcolor="EFEFFF">申请人部门</br>/岗位</td>
-        <td align="center" width="200" bgcolor="#FFFFFF">${pd.USER_DEPTNAME}</br>${pd.USER_JOB}</td>
+        <td align="center" width="200" bgcolor="#FFFFFF">${pd.USER_DEPT}</br>${pd.USER_JOB}</td>
   </tr>
   <tr>
         <td height="40" align="center" bgcolor="EFEFFF">联系方式</br>(Email,电话)</td>
