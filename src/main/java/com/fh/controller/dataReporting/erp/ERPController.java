@@ -249,8 +249,8 @@ public class ERPController extends BaseController {
 		Map_SetColumnsList.put("BUSI_DATE", new TmplConfigDetail("BUSI_DATE", "录入时间", "1", false));
 		Map_SetColumnsList.put("STAFF_CODE", new TmplConfigDetail("STAFF_CODE", "员工编号", "1", false));
 		Map_SetColumnsList.put("STAFF_NAME", new TmplConfigDetail("STAFF_NAME", "员工姓名", "1", false));
-		Map_SetColumnsList.put("STAFF_UNIT_LEVEL2", new TmplConfigDetail("STAFF_UNIT", "二级单位", "1", false));
-		Map_SetColumnsList.put("STAFF_UNIT_LEVEL3", new TmplConfigDetail("STAFF_DEPART", "三级单位", "1", false));
+		Map_SetColumnsList.put("DEPART_CODE", new TmplConfigDetail("DEPART_CODE", "二级单位", "1", false));
+		Map_SetColumnsList.put("UNITS_DEPART", new TmplConfigDetail("UNITS_DEPART", "三级单位", "1", false));
 		Map_SetColumnsList.put("STAFF_POSITION", new TmplConfigDetail("STAFF_POSITION", "职务", "1", false));
 		Map_SetColumnsList.put("STAFF_JOB", new TmplConfigDetail("STAFF_JOB", "岗位", "1", false));
 		Map_SetColumnsList.put("STAFF_MODULE", new TmplConfigDetail("STAFF_MODULE", "模块", "1", false));
