@@ -254,7 +254,7 @@
 		
 		//导出excel
 		function toExcel(){
-			window.location.href='<%=basePath%>changeerpxtbg/excel.do';
+			window.location.href='<%=basePath%>changeerpxtbg/exportXtbg.do';
 		}
 	</script>
 
