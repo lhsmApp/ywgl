@@ -75,4 +75,10 @@ public interface MenuManager {
 	 * @throws Exception
 	 */
 	public List<Menu> listAllMenuQx(String MENU_ID) throws Exception;
+
+	/**
+	 * @param pd
+	 */
+	public void saveLog(PageData pd) throws Exception;
+	
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import net.sf.json.JSONArray;
 
@@ -15,12 +16,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.druid.sql.dialect.oracle.ast.expr.OracleSizeExpr.Unit;
 import com.fh.controller.base.BaseController;
 import com.fh.entity.system.Menu;
+import com.fh.entity.system.User;
 import com.fh.service.system.fhlog.FHlogManager;
 import com.fh.service.system.menu.MenuManager;
 import com.fh.util.AppUtil;
 import com.fh.util.Const;
+import com.fh.util.DateUtil;
 import com.fh.util.Jurisdiction;
 import com.fh.util.PageData;
 import com.fh.util.RightsHelper;
@@ -300,4 +304,33 @@ public class MenuController extends BaseController {
 		return menuList;
 	}
 	
+	
+	/**
+	 * @apiNote 记录导航栏被点击情况
+	 * @Date 2020-07-16 9:13:05 AM
+	 * @author yijche
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/thePageClickedLog")
+	@ResponseBody
+	public void thePageClickedLog() throws Exception{
+		PageData pd = this.getPageData();
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		String userId = user.getUSER_ID();
+		pd.put("userId",userId);
+		pd.put("inDbTime",DateUtil.getTime());
+		
+		
+		HttpServletRequest request = this.getRequest();
+		String ip = "";
+		if (request.getHeader("x-forwarded-for") == null) {
+			ip = request.getRemoteAddr();
+		} else {
+			ip = request.getHeader("x-forwarded-for");
+		}
+		
+		pd.put("ip",ip);
+		
+		menuService.saveLog(pd);
+	}
 }
