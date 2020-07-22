@@ -81,7 +81,7 @@ public class ChangeErpYhqxbgController extends BaseController {
 	private SysConfigManager sysconfigService;
 	
 	
-	Map<String, TmplConfigDetail> Map_SetColumnsListJsbg = new LinkedHashMap<String, TmplConfigDetail>();
+	Map<String, TmplConfigDetail> Map_SetColumnsListYhqxbg = new LinkedHashMap<String, TmplConfigDetail>();
 	/**保存
 	 * @param
 	 * @throws Exception
@@ -247,20 +247,21 @@ public class ChangeErpYhqxbgController extends BaseController {
 		}
 		page.setPd(pd);
 		List<PageData>	varList = changeerpyhqxbgService.list(page);	//列出ChangeErpXtbg列表
-		mv.setViewName("changeerpxtbg/changeerpjsbg/changeerpjsbgQuery");
+		mv.setViewName("changeerpxtbg/changeerpyhqxbg/changeerpyhqxbgQuery");
 		mv.addObject("varList", varList);
 		mv.addObject("pd", pd);
-		Map_SetColumnsListJsbg.put("BILL_CODE", new TmplConfigDetail("BILL_CODE", "申请单号", "1", false));
-		Map_SetColumnsListJsbg.put("BG_NAME", new TmplConfigDetail("BG_NAME", "变更名称", "1", false));
-		Map_SetColumnsListJsbg.put("UNIT_NAME", new TmplConfigDetail("UNIT_NAME", "申请单位", "1", false));
-		Map_SetColumnsListJsbg.put("DEPT_NAME", new TmplConfigDetail("DEPT_NAME", "申请部门", "1", false));
-		Map_SetColumnsListJsbg.put("BG_REASON", new TmplConfigDetail("BG_REASON", "变更原因", "1", false));
-		Map_SetColumnsListJsbg.put("USERNAME",new TmplConfigDetail("USERNAME", "申请人", "1", false));
-		Map_SetColumnsListJsbg.put("USER_DEPTNAME", new TmplConfigDetail("USER_DEPTNAME", "申请人部门", "1", false));
-		Map_SetColumnsListJsbg.put("USER_JOB", new TmplConfigDetail("USER_JOB", "申请人岗位", "1", true));
-		Map_SetColumnsListJsbg.put("USER_CONTACT", new TmplConfigDetail("USER_CONTACT", "联系方式", "1", false));
-		Map_SetColumnsListJsbg.put("ENTRY_DATE", new TmplConfigDetail("ENTRY_DATE", "申请日期", "1", true));
-		Map_SetColumnsListJsbg.put("APPROVAL_STATE", new TmplConfigDetail("APPROVAL_STATE", "处理状态", "1", false));
+		Map_SetColumnsListYhqxbg.put("BILL_CODE", new TmplConfigDetail("BILL_CODE", "申请单号", "1", false));
+		Map_SetColumnsListYhqxbg.put("BG_REASON", new TmplConfigDetail("BG_REASON", "变更原因及内容", "1", false));
+		Map_SetColumnsListYhqxbg.put("UNIT_NAME", new TmplConfigDetail("UNIT_NAME", "申请单位", "1", false));
+		Map_SetColumnsListYhqxbg.put("DEPT_NAME", new TmplConfigDetail("DEPT_NAME", "申请部门", "1", false));
+		Map_SetColumnsListYhqxbg.put("ADD_ROLE", new TmplConfigDetail("ADD_ROLE", "新增角色", "1", false));
+		Map_SetColumnsListYhqxbg.put("DEL_ROLE", new TmplConfigDetail("DEL_ROLE", "删除角色", "1", false));
+		Map_SetColumnsListYhqxbg.put("USERNAME",new TmplConfigDetail("USERNAME", "申请人", "1", false));
+		Map_SetColumnsListYhqxbg.put("USER_DEPTNAME", new TmplConfigDetail("USER_DEPTNAME", "申请人部门", "1", false));
+		Map_SetColumnsListYhqxbg.put("USER_JOB", new TmplConfigDetail("USER_JOB", "申请人岗位", "1", true));
+		Map_SetColumnsListYhqxbg.put("USER_CONTACT", new TmplConfigDetail("USER_CONTACT", "联系方式", "1", false));
+		Map_SetColumnsListYhqxbg.put("ENTRY_DATE", new TmplConfigDetail("ENTRY_DATE", "申请日期", "1", true));
+		Map_SetColumnsListYhqxbg.put("APPROVAL_STATE", new TmplConfigDetail("APPROVAL_STATE", "处理状态", "1", false));
 		return mv;
 	}
 	/**显示变更详情
@@ -273,7 +274,7 @@ public class ChangeErpYhqxbgController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		PageData pdResult = changeerpyhqxbgService.findById(pd);	//根据ID读取
-		mv.setViewName("changeerpxtbg/changeerpjsbg/jsbgDetailView");
+		mv.setViewName("changeerpxtbg/changeerpyhqxbg/yhqxbgDetailView");
 		mv.addObject("pd", pdResult);
 		return mv;
 	}
@@ -456,8 +457,8 @@ public class ChangeErpYhqxbgController extends BaseController {
 	 * @param
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/exportJsbg")
-	public ModelAndView exportJsbg(Page page) throws Exception {
+	@RequestMapping(value = "/exportYhqxbg")
+	public ModelAndView exportYhqxbg(Page page) throws Exception {
 		PageData pd = new PageData();
 		PageData pd1 = new PageData();
 		PageData pd2 = new PageData();
@@ -521,8 +522,8 @@ public class ChangeErpYhqxbgController extends BaseController {
 				varOList.add(p);
 			}			
 		}
-		return export(varOList, "ERP角色变更_" + DateUtils.getCurrentTime(DateFormatUtils.DATE_FORMAT1),
-				Map_SetColumnsListJsbg);
+		return export(varOList, "ERP系统用户权限变更_" + DateUtils.getCurrentTime(DateFormatUtils.DATE_FORMAT1),
+				Map_SetColumnsListYhqxbg);
 	}
 	private ModelAndView export(List<PageData> varOList, String ExcelName,
 			Map<String, TmplConfigDetail> map_SetColumnsList) throws Exception {		

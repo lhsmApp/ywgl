@@ -27,7 +27,7 @@
 				<div class="page-content">
 					<div class="page-header">
 						<!-- 检索  -->
-						<form class="form-inline" action="changeerpjsbg/queryList.do" method="post" id="jsbgForm" name="jsbgForm">
+						<form class="form-inline" action="changeerpyhqxbg/queryList.do" method="post" id="jsbgForm" name="jsbgForm">
 									<div class="nav-search">
 										<span class="input-icon">
 										<input type="text" placeholder="这里输入关键词" class="nav-search-input" id="nav-search-input" autocomplete="off" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词"/>
@@ -50,13 +50,14 @@
 								<tr>
 									<th class="center" style="width:50px;">序号</th>
 									<th class="center">申请单号</th>
-									<th class="center">变更名称</th>
+									<th class="center">变更原因名称及内容</th>
 									<th class="center">申请单位</th>
 									<th class="center">申请部门</th>
-									<th class="center">变更原因</th>
 									<th class="center">申请人</th>
 									<th class="center">申请人部门</th>
 									<th class="center">申请人岗位</th>
+									<th class="center">新增角色</th>
+									<th class="center">删除角色</th>
 									<th class="center">联系方式</th>
 									<th class="center">申请日期</th>	
 									<th class="center">处理状态</th>
@@ -73,14 +74,15 @@
 												<tr>
 												<td class='center' style="width: 30px;">${vs.index+1}</td>
 												<td class='center'style="width: 100px;">${var.BILL_CODE}</td>
-												<td class='center'style="width: 100px;">${var.BG_NAME}</td>
+												<td class='center'style="width: 100px;">${var.BG_REASON}</td>
 												<td class='center'style="width: 100px;">${var.UNIT_NAME}</td>
-												<td class='center'style="width: 100px;">${var.DEPT_NAME}</td>
-												<td class='center'style="width: 100px;">${var.BG_REASON}</td>					
+												<td class='center'style="width: 100px;">${var.DEPT_NAME}</td>							
 												<td class='center'style="width: 100px;">${var.USERNAME}</td>
 												<td class='center'style="width: 100px;">${var.USER_DEPTNAME}</td>
 												<td class='center'style="width: 100px;">${var.USER_JOB}</td>
-												<td class='center'style="width: 100px;">${var.USER_CONTACT}</td>
+												<td class='center'style="width: 100px;">${var.ADD_ROLE}</td>
+												<td class='center'style="width: 100px;">${var.DEL_ROLE}</td>
+												<td class='center'style="width: 100px;">电话：${var.USER_TEL}、邮箱：${var.USER_EMAIL}</td>
 												<td class='center'style="width: 200px;">${var.ENTRY_DATE}</td>
 													<td style="width: 100px;" class="center">
 												<c:if test="${var.APPROVAL_STATE == '0' }"><span class="label blue">审批中</span></c:if>
@@ -201,7 +203,7 @@
 			 var diag = new top.Dialog();
 			 diag.Drag=true;
 			 diag.Title ="角色变更单"+Id+"详情";
-			 diag.URL = '<%=basePath%>changeerpjsbg/detailView.do?BILL_CODE='+Id;
+			 diag.URL = '<%=basePath%>changeerpyhqxbg/detailView.do?BILL_CODE='+Id;
 			 diag.Width = 800;
 			 diag.Height = 405;			
 			 diag.CancelEvent = function(){ //关闭事件
@@ -212,7 +214,7 @@
 
 		//导出excel
 		function toExcel(){
-			window.location.href='<%=basePath%>changeerpjsbg/exportJsbg.do';
+			window.location.href='<%=basePath%>changeerpyhqxbg/exportYhqxbg.do';
 		}
 	</script>
 
