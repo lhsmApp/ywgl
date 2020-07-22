@@ -39,6 +39,7 @@ import net.sf.json.JSONArray;
 import com.fh.service.approvalconfig.approvalconfig.ApprovalConfigManager;
 import com.fh.service.changeerpxtbg.changeerpjsbg.impl.ChangeErpJsbgService;
 import com.fh.service.changeerpxtbg.changeerpxtbg.impl.ChangeErpXtbgService;
+import com.fh.service.changeerpxtbg.changeerpyhqxbg.impl.changeerpYhqxbgService;
 import com.fh.service.changegrcxtbg.changegrcqxbg.impl.ChangeGrcQxbgService;
 import com.fh.service.changegrcxtbg.changegrczhxz.impl.ChangeGrcZhxzService;
 import com.fh.service.changegrcxtbg.changegrczhzx.impl.ChangeGrcZhzxService;
@@ -73,6 +74,9 @@ public class ApprovalConfigController extends BaseController {
 	
 	@Resource(name="changegrczhzxService")
 	private ChangeGrcZhzxService changegrczhzxService;
+	
+	@Resource(name="changeerpyhqxbgService")
+	private changeerpYhqxbgService changeerpyhqxbgService;
 	
 	@Resource(name="departmentService")
 	private DepartmentManager departmentService;
@@ -323,6 +327,9 @@ public class ApprovalConfigController extends BaseController {
 		case "5": //GRC账号撤销;		   
 			pd1 = changegrczhzxService.findById(pd1);
 		    break;
+		case "6": //ERP用户权限变更;		   
+			pd1 = changeerpyhqxbgService.findById(pd1);
+		    break;
 		default:
 			
 		    break;
@@ -353,7 +360,7 @@ public class ApprovalConfigController extends BaseController {
 				}
 				//上报后只对审批级别为1的进行激活
 				if(level==1){
-					p.put("ACTIVE_FLAG",'1');
+					p.put("ACTIVE_FLAG",'1'); 
 				}else{
 					p.put("ACTIVE_FLAG",'0');
 				}				
