@@ -124,6 +124,8 @@
 									<th style="width:110px;  text-align: center;">申请日期</th>
 									<th style="width:110px;  text-align: center;">账号删除原因</th>
 									<th style="width:110px;  text-align: center;">备注</th>
+									<th style="width:110px;  text-align: center;">上报人姓名</th>
+									<th style="width:110px;  text-align: center;">上报人单位</th>
 									<th style="width:110px;  text-align: center;">审批状态</th>
 								</tr>
 							</thead>	
@@ -151,6 +153,8 @@
 											<th>${var.APPLY_DATE}</th>
 											<th>${var.ACCOUNT_DELETE_REASON}</th>
 											<th>${var.NOTE}</th>
+											<th>${var.BILL_USERNAME}</th>
+											<th>${var.BILL_DEPANAME}</th>
 											<th class="center">
 												<input type="hidden" id="CONFIRM_STATE" name="CONFIRM_STATE" value="${var.CONFIRM_STATE}"/>
 												<c:if test="${var.CONFIRM_STATE == 2}"><span class="label label-warning arrowed">待审批</span></c:if>

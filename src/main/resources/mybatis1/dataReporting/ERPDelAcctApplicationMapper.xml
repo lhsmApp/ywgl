@@ -89,24 +89,28 @@
 	<!-- 列表 -->
 	<select id="datalistPage" parameterType="page" resultType="pd">
 		select
-			ID,
-			BUSI_DATE,
-			STAFF_CODE,	
-			STAFF_NAME,	
-			DEPART_CODE,	
-			UNITS_DEPART,	
-			STAFF_POSITION,	
-			STAFF_JOB,	
-			STAFF_MODULE,	
-			PHONE,	
-			MAIL,	
-			PERMISSION_CHANGE,	
-			APPLY_DATE,	
-			ACCOUNT_DELETE_REASON,	
-			NOTE,
-			CONFIRM_STATE
+			t0.ID,
+			t0.BUSI_DATE,
+			t0.STAFF_CODE,	
+			t0.STAFF_NAME,	
+			t0.DEPART_CODE,	
+			t0.UNITS_DEPART,	
+			t0.STAFF_POSITION,	
+			t0.STAFF_JOB,	
+			t0.STAFF_MODULE,	
+			t0.PHONE,	
+			t0.MAIL,	
+			t0.PERMISSION_CHANGE,	
+			t0.APPLY_DATE,	
+			t0.ACCOUNT_DELETE_REASON,	
+			t0.NOTE,
+			t0.CONFIRM_STATE,
+			t1.NAME BILL_USERNAME,
+			t2.NAME BILL_DEPANAME
 		from 
-		<include refid="tableName"></include>
+		<include refid="tableName"></include> t0
+		left join `sys_user` t1 on t1.USER_ID =t0.BILL_USER
+		left join `oa_department` t2 on t2.DEPARTMENT_CODE =t0.USER_DEPART
 		where  STATE=1
 		<if test="pd.SelectedDepartCode != null and pd.SelectedDepartCode != ''">
 		and 
@@ -162,22 +166,50 @@
 	<!-- *********************导入导出********************************* -->
 	<!-- 导出列表 -->
 	<select id="exportList" parameterType="Page" resultType="pd">
-		select 
-			<include refid="Field"></include>
+		select
+			t0.ID,
+			t0.BUSI_DATE,
+			t0.STAFF_CODE,	
+			t0.STAFF_NAME,	
+			t0.DEPART_CODE,	
+			t0.UNITS_DEPART,	
+			t0.STAFF_POSITION,	
+			t0.STAFF_JOB,	
+			t0.STAFF_MODULE,	
+			t0.PHONE,	
+			t0.MAIL,	
+			t0.PERMISSION_CHANGE,	
+			t0.APPLY_DATE,	
+			t0.ACCOUNT_DELETE_REASON,	
+			t0.NOTE,
+			t0.CONFIRM_STATE,
+			t1.NAME BILL_USERNAME,
+			t2.NAME BILL_DEPANAME
 		from 
-			<include refid="tableName"></include>
-		where 
-			STATE = 1
+		<include refid="tableName"></include> t0
+		left join `sys_user` t1 on t1.USER_ID =t0.BILL_USER
+		left join `oa_department` t2 on t2.DEPARTMENT_CODE =t0.USER_DEPART
+		where  STATE=1
+		<if test="pd.SelectedDepartCode != null and pd.SelectedDepartCode != ''">
 		and 
-			CONFIRM_STATE = #{pd.confirmState}
-		<if test="pd.BUSI_DATE!= null and pd.BUSI_DATE!= ''">
-			and BUSI_DATE = #{pd.BUSI_DATE}
+			USER_DEPART = #{pd.SelectedDepartCode}
 		</if>
-		<if test="pd.USER_DEPART!= null and pd.USER_DEPART!= ''">
-			and USER_DEPART = #{pd.USER_DEPART}
+		
+		<if test="pd.confirmState != null and pd.confirmState != ''">
+		and 
+			CONFIRM_STATE IN (${pd.confirmState})
+		</if>
+		<if test="pd.busiDate != null and pd.busiDate != ''">
+		and 
+			BUSI_DATE = #{pd.busiDate}
+		</if>
+		<if test="pd.USER_DEPART != null and pd.USER_DEPART != ''">
+		and 
+			USER_DEPART = #{pd.USER_DEPART}
 		</if>
 		order by 
-			CONFIRM_STATE ASC
+			CONFIRM_STATE ASC,
+			ID DESC
 	</select>
 	
 	<!-- 更新数据 -->

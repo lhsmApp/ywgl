@@ -873,6 +873,15 @@ public class AssessDataController extends BaseController {
 					String strRetUserCode = "";
 					String sbRetMust = "";
 					String strErrorMessage = "";
+					PageData pdSCORE=listUploadAndRead.get(0);
+					if (kpiCode.contains("total")) {
+						String[] kpiCodes = kpiCode.split("-");
+						pdSCORE.put("KPI_CODE", kpiCodes[1]);
+					} else {
+						pdSCORE.put("KPI_CODE", kpiCode);
+					}
+					PageData pdKpi = kpiService.findByCode(pdSCORE);
+					
 					for (int i = 0; i < listSize; i++) {
 						PageData pdAdd = listUploadAndRead.get(i);
 						if (pdAdd.size() <= 0) {
@@ -891,7 +900,7 @@ public class AssessDataController extends BaseController {
 							pdAdd.put("KPI_CODE", kpiCode);
 						}
 
-						PageData pdKpi = kpiService.findByCode(pdAdd);
+						//PageData pdKpi = kpiService.findByCode(pdAdd);
 
 						pdAdd.put("TOTAL_SCORE", pdKpi.get("TOTAL_SCORE"));
 						pdAdd.put("PROPORTION", pdKpi.get("PROPORTION"));
@@ -944,6 +953,7 @@ public class AssessDataController extends BaseController {
 										commonBase.setCode(9);
 										commonBase.setMessage("本月已经上传过考核数据，是否继续导入？继续会将当前指标本月数据清空！");
 										listCorver=listAdd;
+										
 									} else {
 
 										// 此处执行集合添加
