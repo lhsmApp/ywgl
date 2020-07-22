@@ -1,8 +1,8 @@
 package com.fh.dao;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -11,7 +11,14 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
+
+import com.fh.entity.system.User;
+import com.fh.util.Const;
+import com.fh.util.DateUtil;
+import com.fh.util.Jurisdiction;
 import com.fh.util.PageData;
+
+import net.sf.json.JSONObject;
 /**
  *  
 * @ClassName: DaoSupport
@@ -34,7 +41,26 @@ public class DaoSupport implements DAO {
 	 * @throws Exception
 	 */
 	public Object findForObject(String str, Object obj) throws Exception {
-		return sqlSessionTemplate.selectOne(str, obj);
+		long startTime = System.currentTimeMillis();
+		Object sst = sqlSessionTemplate.selectOne(str, obj);
+		long endTime = System.currentTimeMillis();
+		
+		User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USER);
+				
+		PageData pd = new PageData();
+		pd.put("inDbTime",DateUtil.getTime());
+		if(null!=user) {
+			pd.put("userId",user.getUSER_ID());
+		}
+		pd.put("pageName",str);
+		pd.put("usedTime",endTime-startTime);
+		try {
+			pd.put("textParams",(JSONObject.fromObject(obj)).toString());
+		}catch(Exception e) {
+			
+		}
+		sqlSessionTemplate.insert("MenuMapper.saveSqlLog", pd);
+		return sst;
 	}
 
 	/**
@@ -45,11 +71,47 @@ public class DaoSupport implements DAO {
 	 * @throws Exception
 	 */
 	public Object findForList(String str, Object obj) throws Exception {
-		return sqlSessionTemplate.selectList(str, obj);
+		long startTime = System.currentTimeMillis();
+		List<Object> sst =  sqlSessionTemplate.selectList(str, obj); 
+		long endTime = System.currentTimeMillis();
+		
+		User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USER);
+		PageData pd = new PageData();
+		pd.put("inDbTime",DateUtil.getTime());
+		pd.put("pageName",str);
+		try {
+			pd.put("textParams",(JSONObject.fromObject(obj)).toString());
+		}catch(Exception e) {
+			
+		}
+		if(null!=user) {
+			pd.put("userId",user.getUSER_ID());
+		}
+		pd.put("usedTime",endTime-startTime);
+		sqlSessionTemplate.insert("MenuMapper.saveSqlLog", pd);
+		return sst;
 	}
 	
 	public Object findForMap(String str, Object obj, String key, String value) throws Exception {
-		return sqlSessionTemplate.selectMap(str, obj, key);
+		long startTime = System.currentTimeMillis();
+		Map<Object, Object> sst = sqlSessionTemplate.selectMap(str, obj, key);
+		long endTime = System.currentTimeMillis();
+		
+		User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USER);
+		PageData pd = new PageData();
+		pd.put("inDbTime",DateUtil.getTime());
+		pd.put("pageName",str);
+		if(null!=user) {
+			pd.put("userId",user.getUSER_ID());
+		}
+		pd.put("usedTime",endTime-startTime);
+		try {
+			pd.put("textParams",(JSONObject.fromObject(obj)).toString());
+		}catch(Exception e) {
+			
+		}
+		sqlSessionTemplate.insert("MenuMapper.saveSqlLog", pd);
+		return sst;
 	}
 
 	/**

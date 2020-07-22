@@ -425,56 +425,20 @@
 			
 			if(ace.vars['old_ie']) ace.helper.redraw(document.body, true);
 		}
-		//向后台获取公告信息
-		function getNewNotice(id){
-		    $.ajax({
-                type: "POST",
-                url: '<%=basePath%>notice/getMyNotice.do?tm='+new Date().getTime(),
-                data: {id:id},//如果不为空则查询某一条消息
-                cache: false,
-                success: function(json){
-                    var data =JSON.parse(decodeURIComponent(json))
-                    //console.log(data)
-                    var notices = data['retData']
-                    for (var i=0;i< notices.length;i++){
-                        console.log(notices[i])
-                        ejectNotice("新消息提示",notices[i]['NOTICE_CONTENT'],notices[i]['NOTICE_ID']);
-                    } 
-                }
-            });
-		}
-		//右下角气泡弹窗 函数
-		//弹出
-		function ejectNotice(title,msg,id){
-	        var unique_id = $.gritter.add({
-				title: title+'【<a href="javascript:void(0)" onclick="readNotice(this,'+id+')" class="red">点击表示已读</a>】',
-				text: msg,
-				//image: 'static/ace/avatars/user.jpg',
-				sticky: true,
-				time: '',
-				class_name:'gritter-info'+((new Date()).getHours()<18?' gritter-light':'')
-			});
-		}; 
-		//标记为已读
-		function readNotice(event,id){
-		    //console.log(event.target.tag)//id
-		    $(event).html("提交中..").attr("disabled",true).css("pointer-events","none");
-		    
+		
+		$('.nav-list').on('click','.submenu li',function(){
 			$.ajax({
                 type: "POST",
-                url: '<%=basePath%>notice/tagRead.do?tm='+new Date().getTime(),
-                data: {NOTICE_ID:id},
+                url: '<%=basePath%>menu/thePageClickedLog.do?tm='+new Date().getTime(),
+                data: {pageName:$(this).attr('id')},
                 cache: false,
                 success: function(json){
-                    console.log(json)
-                    $(event).parent().parent().prev(".gritter-close").trigger("click");
+                	
                 },error:function(){
-                	//$(event).html("点击表示已读").attr("disabled",null).css("pointer-events",'');
-                	$(event).html("标记失败")
+                	
                 }
             });
-		}
-		
+		})
 	</script>
 </body>
 </html>
