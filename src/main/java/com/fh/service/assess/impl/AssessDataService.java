@@ -79,7 +79,7 @@ public class AssessDataService implements AssessDataManager {
 			break;
 		default:
 			PageData pageData = page.getPd();
-			pageData.put("KPI_CODE", pageData.getString("KPI_CODE").split("-")[1]);
+			pageData.put("KPI_CODE_TOTAL", pageData.getString("KPI_CODE").split("-")[1]);
 			list = (List<PageData>) dao.findForList("KhTotalMapper.datalistJqPage", page);
 
 			break;
@@ -160,6 +160,8 @@ public class AssessDataService implements AssessDataManager {
 			count = (int) dao.findForObject("IntegrateVoucherCxMapper.countJqGridExtend", page);
 			break;
 		default:
+			PageData pageData = page.getPd();
+			pageData.put("KPI_CODE_TOTAL", pageData.getString("KPI_CODE").split("-")[1]);
 			count = (int) dao.findForObject("KhTotalMapper.countJqGridExtend", page);
 			break;
 		}

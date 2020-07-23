@@ -16,38 +16,85 @@
 
 	<!-- 列表 -->
 	<select id="datalistJqPage" parameterType="jqPage" resultType="pd">
-		select 
-		    * 
-		    <if test="pd.FieldSelectKey!= null and pd.FieldSelectKey != ''">
-		        ${pd.FieldSelectKey}
-		    </if>
-		from 
-		<include refid="tableName"></include>
-		<where>
-		    <if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
-			    ${pd.filterWhereResult}
-		    </if>
-		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
-		        ${pd.QueryFeild}
-		    </if>
-		</where>
-		<if test="sidx != null and sidx.trim() != ''" >
-			order by ${sidx} ${sord} 
-    	</if>
-    	<if test="currentResult != null and rowNum != null" >           
-              limit #{currentResult}, #{rowNum} 
-        </if>
+		<!-- 导入功能，可以查询全部 -->
+		<if test="pd.funcType=='import'">
+			select 
+			    * 
+			    <if test="pd.FieldSelectKey!= null and pd.FieldSelectKey != ''">
+			        ${pd.FieldSelectKey}
+			    </if>
+			from 
+			<include refid="tableName"></include>
+			<where>
+			    <if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+				    ${pd.filterWhereResult}
+			    </if>
+			    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+			        ${pd.QueryFeild}
+			    </if>
+			</where>
+			<if test="sidx != null and sidx.trim() != ''" >
+				order by ${sidx} ${sord} 
+	    	</if>
+	    	<if test="currentResult != null and rowNum != null" >           
+	              limit #{currentResult}, #{rowNum} 
+	        </if>
+       	</if>
+		<!-- 查询功能，只能查询各单位数据 -->
+		<if test="pd.funcType=='query'">
+			SELECT A.* FROM <include refid="tableName"></include> A
+			JOIN tb_assess_depart B
+			ON A.COMPANY_CODE=B.DEPART_CODE
+			<where>
+			    <if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+				    ${pd.filterWhereResult}
+			    </if>
+			    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+			        ${pd.QueryFeild}
+			    </if>
+			    <if test="pd.DEPART_CODE!= null and pd.DEPART_CODE != ''">
+			        and LOCAL_DEPART_CODE=#{pd.DEPART_CODE}
+			    </if>
+			</where>
+			<if test="sidx != null and sidx.trim() != ''" >
+				order by ${sidx} ${sord} 
+	    	</if>
+	    	<if test="currentResult != null and rowNum != null" >           
+	              limit #{currentResult}, #{rowNum} 
+	        </if>
+		</if>
 	</select>
 	<select id="countJqGridExtend" parameterType="jqPage" resultType="int">
-		select count(*) from <include refid="tableName"></include> 
-		<where>
-		    <if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
-			    ${pd.filterWhereResult}
-		    </if>
-		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
-		        ${pd.QueryFeild}
-		    </if>
-		</where>
+		<!-- 导入功能，可以查询全部 -->
+		<if test="pd.funcType=='import'">
+			select count(*) from <include refid="tableName"></include> 
+			<where>
+			    <if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+				    ${pd.filterWhereResult}
+			    </if>
+			    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+			        ${pd.QueryFeild}
+			    </if>
+			</where>
+		</if>
+		
+		<!-- 查询功能，只能查询各单位数据 -->
+		<if test="pd.funcType=='query'">
+			SELECT COUNT(*) FROM <include refid="tableName"></include> A
+			JOIN tb_assess_depart B
+			ON A.COMPANY_CODE=B.DEPART_CODE
+			<where>
+			    <if test="pd.filterWhereResult!= null and pd.filterWhereResult != ''"><!-- 关键词检索 -->
+				    ${pd.filterWhereResult}
+			    </if>
+			    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+			        ${pd.QueryFeild}
+			    </if>
+			    <if test="pd.DEPART_CODE!= null and pd.DEPART_CODE != ''">
+			        and LOCAL_DEPART_CODE=#{pd.DEPART_CODE}
+			    </if>
+			</where>
+		</if>
 	</select>
 	<select id="getFooterSummary" parameterType="jqPage" resultType="pd">
 		select ${pd.Userdata} 
@@ -74,18 +121,48 @@
 		</where> 
 	</select>
 	
+	<!-- 用于当前月份是否已经导入过数据 -->
+	<select id="checkRepeat" parameterType="pd" resultType="pd">
+		select 1
+		from 
+		<include refid="tableName"></include>
+		where 
+			BUSI_DATE = #{BUSI_DATE} 
+		limit 1	
+	</select>
+	
 	<!-- 导出列表 -->
 	<select id="exportList" parameterType="jqPage" resultType="pd">
-		select * 
-		from <include refid="tableName"></include>
-		<where>
-		    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
-		        ${pd.QueryFeild}
-		    </if>
-		</where>
-		<if test="sidx != null and sidx.trim() != ''" >
-			order by ${sidx} ${sord} 
+		<!-- 导入功能，可以查询全部 -->
+		<if test="pd.funcType=='import'">
+			select * 
+			from <include refid="tableName"></include>
+			<where>
+			    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+			        ${pd.QueryFeild}
+			    </if>
+			</where>
+			<if test="sidx != null and sidx.trim() != ''" >
+				order by ${sidx} ${sord} 
+	    	</if>
     	</if>
+		<!-- 查询功能，只能查询各单位数据 -->
+		<if test="pd.funcType=='query'">
+			SELECT A.* FROM <include refid="tableName"></include> A
+			JOIN tb_assess_depart B
+			ON A.COMPANY_CODE=B.DEPART_CODE
+			<where>
+			    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
+			        ${pd.QueryFeild}
+			    </if>
+			    <if test="pd.DEPART_CODE!= null and pd.DEPART_CODE != ''">
+			        and LOCAL_DEPART_CODE=#{pd.DEPART_CODE}
+			    </if>
+			</where>
+			<if test="sidx != null and sidx.trim() != ''" >
+				order by ${sidx} ${sord} 
+	    	</if>
+		</if>
 	</select>
 	<!-- 导出模板 -->
 	<select id="exportModel" parameterType="pd" resultType="pd">
@@ -129,9 +206,7 @@
 		<foreach item="item" index="index" collection="list" open=" " separator=" " close=" ">
 		    delete from
 		    <include refid="tableName"></include>
-		    where BUSI_DATE = #{item.BUSI_DATE} 
-		    and COMPANY_CODE = #{item.COMPANY_CODE} 
-		    and EQUIPMENT_CODE = #{item.EQUIPMENT_CODE};
+		    where BUSI_DATE = #{item.BUSI_DATE};
 		    insert into
 		    <include refid="tableName"></include>
 		    (${item.InsertField}) values (${item.InsertVale});

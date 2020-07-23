@@ -459,6 +459,7 @@ public class AssessDataController extends BaseController {
 			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "FACTORY_CODE");
 			// 设置必定不为空的列
 			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "FACTORY_CODE");
+			MustNotEditList = Arrays.asList("BUSI_DATE", "KPI_CODE");
 			break;
 		case "Z2AM1":
 			// 获取带__的列，后续删除之类的有用
@@ -477,6 +478,7 @@ public class AssessDataController extends BaseController {
 			keyListBase = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "EQUIPMENT_CODE");
 			// 设置必定不为空的列
 			MustInputList = Arrays.asList("BUSI_DATE", "COMPANY_CODE", "EQUIPMENT_CODE");
+			MustNotEditList = Arrays.asList("BUSI_DATE", "KPI_CODE");
 			break;
 		case "Z2PS1":
 			// 获取带__的列，后续删除之类的有用

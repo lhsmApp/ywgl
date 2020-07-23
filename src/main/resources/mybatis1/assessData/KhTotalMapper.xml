@@ -32,8 +32,8 @@
 			    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
 			        ${pd.QueryFeild}
 			    </if>
-			    <if test="pd.KPI_CODE!= null and pd.KPI_CODE != ''">
-			        and KPI_CODE=#{pd.KPI_CODE}
+			    <if test="pd.KPI_CODE_TOTAL!= null and pd.KPI_CODE_TOTAL != ''">
+			        and KPI_CODE=#{pd.KPI_CODE_TOTAL}
 			    </if>
 			</where>
 			<if test="sidx != null and sidx.trim() != ''" >
@@ -55,8 +55,8 @@
 			    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
 			        ${pd.QueryFeild}
 			    </if>
-			    <if test="pd.KPI_CODE!= null and pd.KPI_CODE != ''">
-			        and KPI_CODE=#{pd.KPI_CODE}
+			    <if test="pd.KPI_CODE_TOTAL!= null and pd.KPI_CODE_TOTAL != ''">
+			        and KPI_CODE=#{pd.KPI_CODE_TOTAL}
 			    </if>
 			    <if test="pd.DEPART_CODE!= null and pd.DEPART_CODE != ''">
 			        and LOCAL_DEPART_CODE=#{pd.DEPART_CODE}
@@ -81,8 +81,8 @@
 			    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
 			        ${pd.QueryFeild}
 			    </if>
-			    <if test="pd.KPI_CODE!= null and pd.KPI_CODE != ''">
-			        and KPI_CODE=#{pd.KPI_CODE}
+			    <if test="pd.KPI_CODE_TOTAL!= null and pd.KPI_CODE_TOTAL != ''">
+			        and KPI_CODE=#{pd.KPI_CODE_TOTAL}
 			    </if>
 			</where>
 		</if>
@@ -99,8 +99,8 @@
 			    <if test="pd.QueryFeild!= null and pd.QueryFeild != ''">
 			        ${pd.QueryFeild}
 			    </if>
-			    <if test="pd.KPI_CODE!= null and pd.KPI_CODE != ''">
-			        and KPI_CODE=#{pd.KPI_CODE}
+			    <if test="pd.KPI_CODE_TOTAL!= null and pd.KPI_CODE_TOTAL != ''">
+			        and KPI_CODE=#{pd.KPI_CODE_TOTAL}
 			    </if>
 			    <if test="pd.DEPART_CODE!= null and pd.DEPART_CODE != ''">
 			        and LOCAL_DEPART_CODE=#{pd.DEPART_CODE}
