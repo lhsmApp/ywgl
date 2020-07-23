@@ -6,7 +6,7 @@
 <%@ page import="com.fh.entity.system.User"%>
 <%@ page import="com.fh.util.Jurisdiction"%>
 <%
-	String path = request.getContextPath();
+	String path = request.getContextPath(); 
 	String basePath = request.getScheme() + "://"
 			+ request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";

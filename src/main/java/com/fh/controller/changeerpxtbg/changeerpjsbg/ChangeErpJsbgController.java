@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
@@ -25,6 +26,7 @@ import com.fh.controller.common.DictsUtil;
 import com.fh.entity.CommonBase;
 import com.fh.entity.Page;
 import com.fh.entity.PageResult2;
+import com.fh.entity.TmplConfigDetail;
 import com.fh.entity.system.User;
 import com.fh.util.AppUtil;
 import com.fh.util.Const;
@@ -33,6 +35,7 @@ import com.fh.util.PageData;
 import com.fh.util.StringUtil;
 import com.fh.util.Jurisdiction;
 import com.fh.util.Tools;
+import com.fh.util.date.DateFormatUtils;
 import com.fh.util.date.DateUtils;
 import com.fh.util.enums.BillNumType;
 
@@ -77,6 +80,8 @@ public class ChangeErpJsbgController extends BaseController {
 	@Resource(name = "sysconfigService")
 	private SysConfigManager sysconfigService;
 	
+	
+	Map<String, TmplConfigDetail> Map_SetColumnsListJsbg = new LinkedHashMap<String, TmplConfigDetail>();
 	/**保存
 	 * @param
 	 * @throws Exception
@@ -195,8 +200,6 @@ public class ChangeErpJsbgController extends BaseController {
 	 */
 	@RequestMapping(value="/queryList")
 	public ModelAndView queryList(Page page) throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"列表changeerpxtbg");
-		//if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;} //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		PageData pd1 = new PageData();
@@ -249,7 +252,17 @@ public class ChangeErpJsbgController extends BaseController {
 		mv.setViewName("changeerpxtbg/changeerpjsbg/changeerpjsbgQuery");
 		mv.addObject("varList", varList);
 		mv.addObject("pd", pd);
-		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
+		Map_SetColumnsListJsbg.put("BILL_CODE", new TmplConfigDetail("BILL_CODE", "申请单号", "1", false));
+		Map_SetColumnsListJsbg.put("BG_NAME", new TmplConfigDetail("BG_NAME", "变更名称", "1", false));
+		Map_SetColumnsListJsbg.put("UNIT_NAME", new TmplConfigDetail("UNIT_NAME", "申请单位", "1", false));
+		Map_SetColumnsListJsbg.put("DEPT_NAME", new TmplConfigDetail("DEPT_NAME", "申请部门", "1", false));
+		Map_SetColumnsListJsbg.put("BG_REASON", new TmplConfigDetail("BG_REASON", "变更原因", "1", false));
+		Map_SetColumnsListJsbg.put("USERNAME",new TmplConfigDetail("USERNAME", "申请人", "1", false));
+		Map_SetColumnsListJsbg.put("USER_DEPTNAME", new TmplConfigDetail("USER_DEPTNAME", "申请人部门", "1", false));
+		Map_SetColumnsListJsbg.put("USER_JOB", new TmplConfigDetail("USER_JOB", "申请人岗位", "1", true));
+		Map_SetColumnsListJsbg.put("USER_CONTACT", new TmplConfigDetail("USER_CONTACT", "联系方式", "1", false));
+		Map_SetColumnsListJsbg.put("ENTRY_DATE", new TmplConfigDetail("ENTRY_DATE", "申请日期", "1", true));
+		Map_SetColumnsListJsbg.put("APPROVAL_STATE", new TmplConfigDetail("APPROVAL_STATE", "处理状态", "1", false));
 		return mv;
 	}
 	/**显示变更详情
@@ -439,7 +452,114 @@ public class ChangeErpJsbgController extends BaseController {
 		map.put("list", pdList);
 		return AppUtil.returnObject(pd, map);
 	}
-	
+	/**
+	 * 导出到excel-角色变更
+	 * 
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/exportJsbg")
+	public ModelAndView exportJsbg(Page page) throws Exception {
+		PageData pd = new PageData();
+		PageData pd1 = new PageData();
+		PageData pd2 = new PageData();
+		pd = this.getPageData();
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+	    String userId=user.getUSER_ID();
+	    String roleId = user.getRole().getROLE_ID();//获取当前用户所属角色ID
+	    String unitCode=user.getUNIT_CODE();//获取当前用户所属单位
+		pd1.put("KEY_CODE", "xxglbRoles");//信息管理部角色
+		pd2.put("KEY_CODE", "jcdwczyRoles");//基层单位操作员角色
+		String roleStr = sysconfigService.getSysConfigByKey(pd1);
+		String roleStr2 = sysconfigService.getSysConfigByKey(pd2);
+		String[] roles = null;
+		if (StringUtil.isNotEmpty(roleStr)) {
+			if (roleStr.contains(",")) {
+				roles = roleStr.split(",");
+			} else {
+				roles = new String[1];
+				roles[0] = roleStr;
+			}
+		}
+		String[] roles2 = null;
+		if (StringUtil.isNotEmpty(roleStr)) {
+			if (roleStr2.contains(",")) {
+				roles2 = roleStr2.split(",");
+			} else {
+				roles2 = new String[1];
+				roles2[0] = roleStr2;
+			}
+		}
+	    pd.put("BILL_USER", userId);	
+		String keywords = pd.getString("keywords");	
+		if(null != keywords && !"".equals(keywords)){
+			pd.put("keywords", keywords.trim());
+		}
+		if (null != roles && !"".equals(roles)) {
+			if (Arrays.asList(roles).contains(roleId)){
+				pd.put("BILL_USER", "");
+			}
+		}
+		if (null != roles2 && !"".equals(roles2)){
+			if (Arrays.asList(roles2).contains(roleId)){
+				pd.put("BILL_USER", "");
+				pd.put("UNIT_CODE", unitCode);
+			}
+		}
+		page.setPd(pd);
+		List<PageData>	varList = changeerpjsbgService.list(page);	//列出ChangeErpXtbg列表
+		List<PageData> varOList =new ArrayList<PageData>();
+		for(PageData p:varList){
+			if(p.containsKey("APPROVAL_STATE")){
+				if("0".equals(p.getString("APPROVAL_STATE"))){
+					p.put("APPROVAL_STATE", "审批中");
+				}else if("2".equals(p.getString("APPROVAL_STATE"))){
+					p.put("APPROVAL_STATE", "退回");
+				}else if("1".equals(p.getString("APPROVAL_STATE"))){
+					p.put("APPROVAL_STATE", "已完成");
+				}else{
+					p.put("APPROVAL_STATE", "未上报");
+				}	
+				varOList.add(p);
+			}			
+		}
+		return export(varOList, "ERP角色变更_" + DateUtils.getCurrentTime(DateFormatUtils.DATE_FORMAT1),
+				Map_SetColumnsListJsbg);
+	}
+	private ModelAndView export(List<PageData> varOList, String ExcelName,
+			Map<String, TmplConfigDetail> map_SetColumnsList) throws Exception {		
+		ModelAndView mv = new ModelAndView();
+		Map<String, Object> dataMap = new LinkedHashMap<String, Object>();
+		dataMap.put("filename", ExcelName);
+		List<String> titles = new ArrayList<String>();
+		List<PageData> varList = new ArrayList<PageData>();
+		if (map_SetColumnsList != null && map_SetColumnsList.size() > 0) {
+			for (TmplConfigDetail col : map_SetColumnsList.values()) {
+				if (col.getCOL_HIDE().equals("1")) {
+					titles.add(col.getCOL_NAME());
+				}
+			}
+			if (varOList != null && varOList.size() > 0) {
+				for (int i = 0; i < varOList.size(); i++) {
+					PageData vpd = new PageData();
+					int j = 1;
+					for (TmplConfigDetail col : map_SetColumnsList.values()) {
+						if (col.getCOL_HIDE().equals("1")) {
+							Object getCellValue = varOList.get(i).get(col.getCOL_CODE().toUpperCase());
+							vpd.put("var" + j, StringUtil.toString(getCellValue, ""));
+							j++;
+						}
+					}
+					varList.add(vpd);
+				}
+			}
+		}
+		dataMap.put("titles", titles);
+		dataMap.put("varList", varList);
+		ObjectExcelView erv = new ObjectExcelView();
+		mv = new ModelAndView(erv, dataMap);
+		return mv;
+	}
 	 /**导出到excel
 	 * @param
 	 * @throws Exception

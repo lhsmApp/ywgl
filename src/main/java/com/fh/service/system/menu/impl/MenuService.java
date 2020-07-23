@@ -123,4 +123,8 @@ public class MenuService implements MenuManager{
 		return menuList;
 	}
 	
+	public void saveLog(PageData pd) throws Exception{
+		dao.save("MenuMapper.saveLog", pd);
+	}
+	
 }

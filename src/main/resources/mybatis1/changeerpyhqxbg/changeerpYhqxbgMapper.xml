@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ChangeErpYhqxbgMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		TB_CHANGE_ERP_YHQXBG
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		BILL_CODE,	
+		UNIT_CODE,	
+		DEPT_CODE,	
+		ENTRY_DATE,	
+		SERIAL_NUM,	
+		USER_CODE,
+		USER_ACCOUNT_NUM,	
+		USER_DEPT,	
+		USER_JOB,	
+		USER_CONTACT,
+		EFFECTIVE_DATE,	
+		SYSTEM,	
+		BG_REASON,	
+		APPLY_TYPE,
+		ADD_ROLE,	
+		DEL_ROLE,
+		CONFORM_PSR,
+		CONFORM_SDR,
+		IMPLEMENT_USER,
+		IMPLEMENT_DATE,
+		BILL_STATE,	
+		BILL_USER,	
+		BILL_DATE,	
+		USER_TEL,
+		USER_EMAIL,	
+		CUS_COLUMN1,	
+		CUS_COLUMN2,	
+		CUS_COLUMN3,	
+		CUS_COLUMN4,	
+		CUS_COLUMN5
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{BILL_CODE},	
+		#{UNIT_CODE},	
+		#{DEPT_CODE},	
+		#{ENTRY_DATE},	
+		#{SERIAL_NUM},	
+		#{USER_CODE},
+		#{USER_ACCOUNT_NUM},	
+		#{USER_DEPT},	
+		#{USER_JOB},	
+		#{USER_CONTACT},
+		#{EFFECTIVE_DATE},	
+		#{SYSTEM},	
+		#{BG_REASON},	
+		#{APPLY_TYPE},
+		#{ADD_ROLE},	
+		#{DEL_ROLE},
+		#{CONFORM_PSR},
+		#{CONFORM_SDR},
+		#{IMPLEMENT_USER},
+		#{IMPLEMENT_DATE},
+		#{BILL_STATE},	
+		#{BILL_USER},	
+		#{BILL_DATE},	
+		#{USER_TEL},
+		#{USER_EMAIL},	
+		#{CUS_COLUMN1},	
+		#{CUS_COLUMN2},	
+		#{CUS_COLUMN3},	
+		#{CUS_COLUMN4},	
+		#{CUS_COLUMN5}
+		
+		
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			BILL_CODE = #{BILL_CODE}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			BILL_CODE = #{BILL_CODE},
+			UNIT_CODE = #{UNIT_CODE},
+			DEPT_CODE = #{DEPT_CODE},
+			ENTRY_DATE = #{ENTRY_DATE},
+			SERIAL_NUM = #{SERIAL_NUM},
+			USER_CODE = #{USER_CODE},
+			USER_DEPT = #{USER_DEPT},
+			USER_JOB = #{USER_JOB},
+			USER_CONTACT = #{USER_CONTACT},
+			BG_NAME = #{BG_NAME},
+			SYSTEM = #{SYSTEM},
+			BG_TYPE = #{BG_TYPE},
+			BG_REASON = #{BG_REASON},
+			BILL_STATE = #{BILL_STATE},
+			BILL_USER = #{BILL_USER},
+			BILL_DATE = #{BILL_DATE},
+			ADD_ROLE = #{ADD_ROLE},
+			DEL_ROLE = #{DEL_ROLE},
+			USER_TEL = #{USER_TEL},
+			USER_EMAIL = #{USER_EMAIL},
+			CUS_COLUMN1 = #{CUS_COLUMN1},
+			CUS_COLUMN2 = #{CUS_COLUMN2},
+			CUS_COLUMN3 = #{CUS_COLUMN3},
+			CUS_COLUMN4 = #{CUS_COLUMN4},
+			CUS_COLUMN5 = #{CUS_COLUMN5},
+			EFFECTIVE_DATE = #{EFFECTIVE_DATE},
+			BG_CONTENT = #{BG_CONTENT}
+		where 
+		BILL_CODE = #{BILL_CODE}
+	</update>
+		<!-- 对角色变更内容进行修改 -->
+	<update id="updateEdit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 	
+			BG_REASON = #{BG_REASON},	
+			UNIT_CODE = #{UNIT_CODE},
+			DEPT_CODE = #{DEPT_CODE},
+			USER_CODE = #{USER_CODE},
+			USER_DEPT = #{USER_DEPT},
+			USER_JOB = #{USER_JOB},
+			USER_CONTACT = #{USER_CONTACT},		
+			ADD_ROLE = #{ADD_ROLE},
+			DEL_ROLE = #{DEL_ROLE},
+			USER_TEL = #{USER_TEL},
+			USER_EMAIL = #{USER_EMAIL},
+			EFFECTIVE_DATE = #{EFFECTIVE_DATE}
+		where 
+		BILL_CODE = #{BILL_CODE}
+	</update>
+	<!-- 通过ID获取数据 -->
+	<select id="findById1" parameterType="pd" resultType="pd">
+		SELECT 
+				a.BILL_CODE BILL_CODE,	
+				a.UNIT_CODE UNIT_CODE,		
+				a.DEPT_CODE DEPT_CODE,	
+				a.ENTRY_DATE ENTRY_DATE,	
+				a.SERIAL_NUM SERIAL_NUM,	
+				a.USER_CODE USER_CODE,	
+				a.USER_ACCOUNT_NUM USER_ACCOUNT_NUM,
+				a.USER_DEPT USER_DEPT,	
+				a.USER_JOB USER_JOB,	
+				a.USER_CONTACT USER_CONTACT,
+				a.EFFECTIVE_DATE,
+				a.SYSTEM SYSTEM,	
+				a.BG_REASON BG_REASON,
+				a.APPLY_TYPE,	
+				a.ADD_ROLE,	
+				a.DEL_ROLE,	
+				a.CONFORM_PSR,
+				a.CONFORM_SDR,
+				a.IMPLEMENT_USER,
+				a.IMPLEMENT_DATE,
+				a.BILL_STATE BILL_STATE,	
+				a.BILL_USER BILL_USER,	
+				a.BILL_DATE BILL_DATE,
+				a.USER_EMAIL USER_EMAIL,
+				a.USER_TEL USER_TEL,
+				b.APPROVAL_STATE AS APPROVAL_STATE
+			FROM
+				TB_CHANGE_ERP_YHQXBG a  left join tb_approval_main b		
+			on
+			a.BILL_CODE=b.BILL_CODE
+			where
+			a.BILL_CODE=#{BILL_CODE}
+	</select>
+<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		SELECT * FROM (SELECT 
+				t.*,
+				u.NAME AS UNIT_NAME,
+				v.NAME USERNAME,
+				w.NAME DEPT_NAME,
+				x.NAME USER_DEPTNAME				
+			FROM 
+			(SELECT 
+				a.BILL_CODE BILL_CODE,	
+				a.UNIT_CODE UNIT_CODE,		
+				a.DEPT_CODE DEPT_CODE,	
+				a.ENTRY_DATE ENTRY_DATE,	
+				a.SERIAL_NUM SERIAL_NUM,	
+				a.USER_CODE USER_CODE,	
+				a.USER_ACCOUNT_NUM USER_ACCOUNT_NUM,
+				a.USER_DEPT USER_DEPT,	
+				a.USER_JOB USER_JOB,	
+				a.USER_CONTACT USER_CONTACT,
+				a.EFFECTIVE_DATE,
+				a.SYSTEM SYSTEM,	
+				a.BG_REASON BG_REASON,
+				a.APPLY_TYPE,	
+				a.ADD_ROLE,	
+				a.DEL_ROLE,	
+				a.CONFORM_PSR,
+				a.CONFORM_SDR,
+				a.IMPLEMENT_USER,
+				a.IMPLEMENT_DATE,
+				a.BILL_STATE BILL_STATE,	
+				a.BILL_USER BILL_USER,	
+				a.BILL_DATE BILL_DATE,
+				a.USER_EMAIL USER_EMAIL,
+				a.USER_TEL USER_TEL,
+				b.APPROVAL_STATE AS APPROVAL_STATE
+			FROM
+				TB_CHANGE_ERP_YHQXBG a  left join tb_approval_main b		
+			on
+			a.BILL_CODE=b.BILL_CODE)  AS t 
+				left join oa_department u
+				on  u.DEPARTMENT_CODE = t.UNIT_CODE
+		 		left join sys_user v 
+	 			on t.USER_CODE=v.USER_ID
+	 			left join oa_department w
+		  		ON
+				w.DEPARTMENT_CODE = t.DEPT_CODE
+				left join oa_department x
+				on
+				x.DEPARTMENT_CODE = t.USER_DEPT) AS h
+			where
+			BILL_CODE=#{BILL_CODE}
+	</select>
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		SELECT * FROM (SELECT 
+				t.*,
+				u.NAME AS UNIT_NAME,
+				v.NAME USERNAME,
+				w.NAME  DEPT_NAME,
+				x.NAME  USER_DEPTNAME				
+			FROM 
+			(SELECT
+				a.BILL_CODE BILL_CODE,	
+				a.UNIT_CODE UNIT_CODE,		
+				a.DEPT_CODE DEPT_CODE,	
+				a.ENTRY_DATE ENTRY_DATE,	
+				a.SERIAL_NUM SERIAL_NUM,	
+				a.USER_CODE USER_CODE,	
+				a.USER_ACCOUNT_NUM USER_ACCOUNT_NUM,
+				a.USER_DEPT USER_DEPT,	
+				a.USER_JOB USER_JOB,	
+				a.USER_CONTACT USER_CONTACT,
+				a.EFFECTIVE_DATE,
+				a.SYSTEM SYSTEM,	
+				a.BG_REASON BG_REASON,
+				a.APPLY_TYPE,	
+				a.ADD_ROLE,	
+				a.DEL_ROLE,	
+				a.CONFORM_PSR,
+				a.CONFORM_SDR,
+				a.IMPLEMENT_USER,
+				a.IMPLEMENT_DATE,
+				a.BILL_STATE BILL_STATE,	
+				a.BILL_USER BILL_USER,	
+				a.BILL_DATE BILL_DATE,
+				a.USER_EMAIL USER_EMAIL,
+				a.USER_TEL USER_TEL,	
+				b.APPROVAL_STATE APPROVAL_STATE
+				FROM 
+				TB_CHANGE_ERP_YHQXBG a LEFT JOIN tb_approval_main b
+				ON a.BILL_CODE=b.BILL_CODE)  AS t 
+				left join oa_department u
+				on  u.DEPARTMENT_CODE = t.UNIT_CODE
+		 		left join sys_user v 
+	 			on t.USER_CODE=v.USER_ID
+	 			left join oa_department w
+		  		ON
+				w.DEPARTMENT_CODE = t.DEPT_CODE
+				left join oa_department x
+				on
+				x.DEPARTMENT_CODE = t.USER_DEPT) AS h
+		<where>
+			<if test="pd.BILL_USER!= null and pd.BILL_USER != ''">
+			AND
+			(BILL_USER=#{pd.BILL_USER}
+				or
+			USER_CODE=#{pd.BILL_USER})
+ 			</if>
+ 			<if test="pd.UNIT_CODE!= null and pd.UNIT_CODE != ''">
+			AND UNIT_CODE=#{pd.UNIT_CODE}			
+ 			</if>
+			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+				BG_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				)
+			</if>
+		</where>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			BILL_CODE in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+		<!-- 根据BILL_CODE获取表单信息以及表单上申请人所在的单位及部门名称-->
+	<select id="findByBillCode" parameterType="pd" resultType="pd">
+		SELECT 
+			a.BILL_CODE BILL_CODE,	
+				a.UNIT_CODE UNIT_CODE,		
+				a.DEPT_CODE DEPT_CODE,	
+				a.ENTRY_DATE ENTRY_DATE,	
+				a.SERIAL_NUM SERIAL_NUM,	
+				a.USER_CODE USER_CODE,	
+				a.USER_ACCOUNT_NUM USER_ACCOUNT_NUM,
+				a.USER_DEPT USER_DEPT,	
+				a.USER_JOB USER_JOB,	
+				a.USER_CONTACT USER_CONTACT,
+				a.EFFECTIVE_DATE,
+				a.SYSTEM SYSTEM,	
+				a.BG_REASON BG_REASON,
+				a.APPLY_TYPE,	
+				a.ADD_ROLE,	
+				a.DEL_ROLE,	
+				a.CONFORM_PSR,
+				a.CONFORM_SDR,
+				a.IMPLEMENT_USER,
+				a.IMPLEMENT_DATE,
+				a.BILL_STATE BILL_STATE,	
+				a.BILL_USER BILL_USER,	
+				a.BILL_DATE BILL_DATE,
+				a.USER_EMAIL USER_EMAIL,
+				a.USER_TEL USER_TEL,	
+		b.NAME AS UNIT_NAME,
+		c.USERNAME,
+		c.NAME,
+		d.NAME  DEPT_NAME,
+		e.NAME  USER_DEPTNAME
+		FROM
+		  TB_CHANGE_ERP_YHQXBG a
+			LEFT JOIN 
+		  oa_department b
+		  ON
+		b.DEPARTMENT_CODE = a.UNIT_CODE
+		LEFT JOIN sys_user c 
+		ON a.USER_CODE=c.USER_ID
+		LEFT JOIN oa_department d
+		  ON
+		d.DEPARTMENT_CODE = a.DEPT_CODE	
+		  left join oa_department e
+		  on
+		e.DEPARTMENT_CODE = a.USER_DEPT
+	  	where a.BILL_CODE =#{BILL_CODE} 
+	</select>
+</mapper>

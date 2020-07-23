@@ -157,12 +157,12 @@ public class MyPushService implements MyPushManager {
 			noticePd.put("iForkId", ++lastfId);
 		} else {
 			// 查看该分支是否存在
-			List<PageData> list = (List<PageData>) dao.findForList("MyPushMapper.getNoticeById", noticePd);
-			if (list.size() > 0) {
-				reData.put("iRet", 100504);
-				reData.put("sMsg", "失败，通告id已存在");
-				return reData;
-			}
+//			List<PageData> list = (List<PageData>) dao.findForList("MyPushMapper.getNoticeById", noticePd);
+//			if (list.size() > 0) {
+//				reData.put("iRet", 100504);
+//				reData.put("sMsg", "失败，通告id已存在");
+//				return reData;
+//			}
 		}
 
 		// 开始插入
@@ -176,7 +176,7 @@ public class MyPushService implements MyPushManager {
 		if (noticePd.get("rebootMark") != null && noticePd.get("rebootMark").equals("1")) {// 是否清空已读
 			dao.delete("MyPushMapper.deleteMarkByNoticeId", noticePd);
 		}
-		if (noticePd.get("rebootScope") != null && noticePd.get("rebootScope").equals("1")) {// 是否清空已读
+		if (noticePd.get("rebootScope") != null && noticePd.get("rebootScope").equals("1")) {// 是否清空范围
 			dao.delete("MyPushMapper.deleteScopeByNoticeId", noticePd);
 		}
 

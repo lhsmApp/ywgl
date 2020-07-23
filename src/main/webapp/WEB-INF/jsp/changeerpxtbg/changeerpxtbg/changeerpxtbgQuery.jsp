@@ -35,6 +35,9 @@
 								<button type="button" class="btn btn-info btn-xs" onclick="tosearch();">
 										<i class="ace-icon fa fa-search bigger-110"></i>
 								</button>
+								 <label class="btn btn-sm btn-primary" onclick="toExcel()"> 
+								<i class="ace-icon fa fa-share bigger-110"></i>导出
+								 </label>
 							</div>
 						</form>
 					</div>
@@ -251,7 +254,7 @@
 		
 		//导出excel
 		function toExcel(){
-			window.location.href='<%=basePath%>changeerpxtbg/excel.do';
+			window.location.href='<%=basePath%>changeerpxtbg/exportXtbg.do';
 		}
 	</script>
 

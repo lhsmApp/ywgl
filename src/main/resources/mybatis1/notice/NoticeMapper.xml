@@ -119,6 +119,7 @@
 				AND START_TIME &lt;= #{pd.lastEnd}
 			</if> 
 		</where>
+		ORDER BY NOTICE_ID DESC
 	</select>
 	
 	<!-- 列表(全部) -->

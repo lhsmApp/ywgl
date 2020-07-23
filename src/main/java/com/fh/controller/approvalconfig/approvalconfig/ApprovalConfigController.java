@@ -6,8 +6,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import javax.annotation.Resource;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -36,10 +39,13 @@ import net.sf.json.JSONArray;
 import com.fh.service.approvalconfig.approvalconfig.ApprovalConfigManager;
 import com.fh.service.changeerpxtbg.changeerpjsbg.impl.ChangeErpJsbgService;
 import com.fh.service.changeerpxtbg.changeerpxtbg.impl.ChangeErpXtbgService;
+import com.fh.service.changeerpxtbg.changeerpyhqxbg.impl.changeerpYhqxbgService;
 import com.fh.service.changegrcxtbg.changegrcqxbg.impl.ChangeGrcQxbgService;
 import com.fh.service.changegrcxtbg.changegrczhxz.impl.ChangeGrcZhxzService;
 import com.fh.service.changegrcxtbg.changegrczhzx.impl.ChangeGrcZhzxService;
 import com.fh.service.fhoa.department.DepartmentManager;
+import com.fh.service.myPush.myPush.MyPushManager;
+import com.fh.service.system.user.UserManager;
 
 /** 
  * 说明：TB_APPROVAL_BUSINESS_CONFIG
@@ -69,10 +75,17 @@ public class ApprovalConfigController extends BaseController {
 	@Resource(name="changegrczhzxService")
 	private ChangeGrcZhzxService changegrczhzxService;
 	
+	@Resource(name="changeerpyhqxbgService")
+	private changeerpYhqxbgService changeerpyhqxbgService;
+	
 	@Resource(name="departmentService")
 	private DepartmentManager departmentService;
 	
+	@Resource(name = "myPushService")
+	private MyPushManager myPushService;
 	
+	@Resource(name="userService")
+	private UserManager userService;
 	/**保存
 	 * @param
 	 * @throws Exception
@@ -314,6 +327,9 @@ public class ApprovalConfigController extends BaseController {
 		case "5": //GRC账号撤销;		   
 			pd1 = changegrczhzxService.findById(pd1);
 		    break;
+		case "6": //ERP用户权限变更;		   
+			pd1 = changeerpyhqxbgService.findById(pd1);
+		    break;
 		default:
 			
 		    break;
@@ -344,7 +360,7 @@ public class ApprovalConfigController extends BaseController {
 				}
 				//上报后只对审批级别为1的进行激活
 				if(level==1){
-					p.put("ACTIVE_FLAG",'1');
+					p.put("ACTIVE_FLAG",'1'); 
 				}else{
 					p.put("ACTIVE_FLAG",'0');
 				}				
@@ -366,6 +382,41 @@ public class ApprovalConfigController extends BaseController {
 			p.put("ROLE_CODE","68a2eb8394484984bb78338c05807533");
 			list.add(p);
 		}
+		//根据角色和单位获取用户id， 2020 06 15
+		PageData sUserPd = new PageData();
+		List<String> userList = new ArrayList<String>();
+		for(PageData tPd:list) {
+			sUserPd.put("UNIT_CODE",tPd.get("UNIT_CODE"));
+			sUserPd.put("ROLE_CODE",tPd.get("ROLE_CODE"));
+			List<PageData> luPd = userService.listAllUser(pd);
+			if(luPd!=null) {
+				for(PageData tPd2:luPd) {
+					userList.add(tPd2.get("USER_ID")+"");
+				}
+			}
+		}
+		
+		// 创建HashSet集合
+		Set<String> set = new HashSet<String>();
+		set.addAll(userList);     // 将list所有元素添加到set中    set集合特性会自动去重复
+		userList.clear();
+		userList.addAll(set);    // 将list清空并将set中的所有元素添加到list中
+		
+		PageData pd2 = new PageData();
+		//新建成功后推送消息
+		pd2.put("iModuleId", 190);
+		pd2.put("iModuleSubId", billCode);
+		pd2.put("iForkId", 1);
+		pd2.put("sCanClickTile", "前往审批");
+		pd2.put("sCanClickUrl", "approvalconfig/listApproval.do");
+		pd2.put("iIsForward", "1");
+		pd2.put("sTitle", "变更审批：您有待审批的事项");
+		pd2.put("sDetails", " ");
+		pd2.put("ul", String.join(",",userList));
+		pd2.put("rebootScope","1");
+		pd2.put("rebootMark","1");
+//		com.alibaba.fastjson.JSONObject json2 = myPushService.saveSend(pd2);
+
 		pd1.put("listDetail", list);
 		approvalconfigService.save(pd1);
 		pd1.put("msg", "单据"+billCode+"上报成功！");

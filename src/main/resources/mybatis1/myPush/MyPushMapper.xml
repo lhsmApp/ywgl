@@ -168,7 +168,7 @@
 	<insert id="saveNotice" parameterType="pd">
 		<!-- <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer"> 
 			SELECT LAST_INSERT_ID() </selectKey> -->
-		insert into
+		REPLACE into
 		<include refid="tb_push_notice"></include>
 		(
 		<include refid="tb_push_notice_field_ins"></include>
@@ -178,7 +178,7 @@
 	</insert>
 	<!-- 范围表批量新增数据 -->
 	<insert id="saveBatchScope" parameterType="pd">
-		insert into
+		REPLACE into
 		<include refid="tb_push_scope"></include>
 		(
 		<include refid="tb_push_scope_field"></include>
@@ -346,7 +346,7 @@
 	<select id="getUserInfo" parameterType="pd" resultType="pd">
 		select
 		${value} from ${userTable}
-		<where> ${userIdField}=${userIdValue}${where} ${whereA} LIMIT 1 </where>
+		<where> ${userIdField}='${userIdValue}'${where} ${whereA} LIMIT 1 </where>
 	</select>
 	<!-- 获取我的公告 -->
 	<select id="getMyNotices" parameterType="pd" resultType="pd">

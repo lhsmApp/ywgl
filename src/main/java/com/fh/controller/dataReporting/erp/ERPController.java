@@ -125,6 +125,8 @@ public class ERPController extends BaseController {
 		Map_SetColumnsList.put("APPLY_DATE", new TmplConfigDetail("APPLY_DATE", "申请日期", "1", false));
 		Map_SetColumnsList.put("ACCOUNT_DELETE_REASON", new TmplConfigDetail("ACCOUNT_DELETE_REASON", "账号删除原因", "1", false));
 		Map_SetColumnsList.put("NOTE", new TmplConfigDetail("NOTE", "备注", "1", false));
+		Map_SetColumnsList.put("BILL_USERNAME", new TmplConfigDetail("BILL_USERNAME", "上报人姓名", "1", false));
+		Map_SetColumnsList.put("BILL_DEPANAME", new TmplConfigDetail("BILL_DEPANAME", "上报人单位", "1", false));
 		
 		return mv;
 	}
@@ -195,6 +197,8 @@ public class ERPController extends BaseController {
 		Map_SetColumnsList.put("UKEY_NUM", new TmplConfigDetail("UKEY_NUM", "UKey编号", "1", false));
 		Map_SetColumnsList.put("APPLY_DATE", new TmplConfigDetail("APPLY_DATE", "申请日期", "1", false));
 		Map_SetColumnsList.put("NOTE", new TmplConfigDetail("NOTE", "备注", "1", false));
+		Map_SetColumnsList.put("BILL_USERNAME", new TmplConfigDetail("BILL_USERNAME", "上报人姓名", "1", false));
+		Map_SetColumnsList.put("BILL_DEPANAME", new TmplConfigDetail("BILL_DEPANAME", "上报人单位", "1", false));
 		return mv;
 	}
 	
@@ -249,8 +253,8 @@ public class ERPController extends BaseController {
 		Map_SetColumnsList.put("BUSI_DATE", new TmplConfigDetail("BUSI_DATE", "录入时间", "1", false));
 		Map_SetColumnsList.put("STAFF_CODE", new TmplConfigDetail("STAFF_CODE", "员工编号", "1", false));
 		Map_SetColumnsList.put("STAFF_NAME", new TmplConfigDetail("STAFF_NAME", "员工姓名", "1", false));
-		Map_SetColumnsList.put("STAFF_UNIT_LEVEL2", new TmplConfigDetail("STAFF_UNIT", "二级单位", "1", false));
-		Map_SetColumnsList.put("STAFF_UNIT_LEVEL3", new TmplConfigDetail("STAFF_DEPART", "三级单位", "1", false));
+		Map_SetColumnsList.put("DEPART_CODE", new TmplConfigDetail("DEPART_CODE", "二级单位", "1", false));
+		Map_SetColumnsList.put("UNITS_DEPART", new TmplConfigDetail("UNITS_DEPART", "三级单位", "1", false));
 		Map_SetColumnsList.put("STAFF_POSITION", new TmplConfigDetail("STAFF_POSITION", "职务", "1", false));
 		Map_SetColumnsList.put("STAFF_JOB", new TmplConfigDetail("STAFF_JOB", "岗位", "1", false));
 		Map_SetColumnsList.put("STAFF_MODULE", new TmplConfigDetail("STAFF_MODULE", "模块", "1", false));
@@ -261,6 +265,8 @@ public class ERPController extends BaseController {
 		Map_SetColumnsList.put("APPLY_TEMP_REASON", new TmplConfigDetail("APPLY_TEMP_REASON", "申请临时原因", "1", false));
 		Map_SetColumnsList.put("UKEY_NUM", new TmplConfigDetail("UKEY_NUM", "UKey编号", "1", false));
 		Map_SetColumnsList.put("NOTE", new TmplConfigDetail("NOTE", "备注", "1", false));
+		Map_SetColumnsList.put("BILL_USERNAME", new TmplConfigDetail("BILL_USERNAME", "上报人姓名", "1", false));
+		Map_SetColumnsList.put("BILL_DEPANAME", new TmplConfigDetail("BILL_DEPANAME", "上报人单位", "1", false));
 		return mv;
 	}
 	

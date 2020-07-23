@@ -83,6 +83,10 @@ public class AssessDataController extends BaseController {
 
 	@Resource(name = "kpiService")
 	private KPIManager kpiService;
+	
+	private List<PageData> listCorver=null;
+	
+	
 
 	// 表名
 	// String TableName = "TB_TAX_STAFF_DETAIL";
@@ -871,6 +875,15 @@ public class AssessDataController extends BaseController {
 					String strRetUserCode = "";
 					String sbRetMust = "";
 					String strErrorMessage = "";
+					PageData pdSCORE=listUploadAndRead.get(0);
+					if (kpiCode.contains("total")) {
+						String[] kpiCodes = kpiCode.split("-");
+						pdSCORE.put("KPI_CODE", kpiCodes[1]);
+					} else {
+						pdSCORE.put("KPI_CODE", kpiCode);
+					}
+					PageData pdKpi = kpiService.findByCode(pdSCORE);
+					
 					for (int i = 0; i < listSize; i++) {
 						PageData pdAdd = listUploadAndRead.get(i);
 						if (pdAdd.size() <= 0) {
@@ -889,7 +902,7 @@ public class AssessDataController extends BaseController {
 							pdAdd.put("KPI_CODE", kpiCode);
 						}
 
-						PageData pdKpi = kpiService.findByCode(pdAdd);
+						//PageData pdKpi = kpiService.findByCode(pdAdd);
 
 						pdAdd.put("TOTAL_SCORE", pdKpi.get("TOTAL_SCORE"));
 						pdAdd.put("PROPORTION", pdKpi.get("PROPORTION"));
@@ -941,6 +954,8 @@ public class AssessDataController extends BaseController {
 										// 重复数据，要在界面提示是否覆盖
 										commonBase.setCode(9);
 										commonBase.setMessage("本月已经上传过考核数据，是否继续导入？继续会将当前指标本月数据清空！");
+										listCorver=listAdd;
+										
 									} else {
 
 										// 此处执行集合添加
@@ -968,7 +983,7 @@ public class AssessDataController extends BaseController {
 		mv.addObject("ShowDataBusiDate", ShowDataBusiDate);
 		mv.addObject("commonBaseCode", commonBase.getCode());
 		mv.addObject("commonMessage", commonBase.getMessage());
-		mv.addObject("StringDataRows", JSONArray.fromObject(listAdd).toString().replaceAll("'", "%"));//
+		//mv.addObject("StringDataRows", JSONArray.fromObject(listAdd).toString().replaceAll("'", "%"));//
 		return mv;
 	}
 
@@ -986,15 +1001,16 @@ public class AssessDataController extends BaseController {
 
 		PageData getPd = this.getPageData();
 
-		Object DATA_ROWS = getPd.get("StringDataRows");
-		String json = DATA_ROWS.toString();
-		json = json.replaceAll("%", "'");
-		JSONArray array = JSONArray.fromObject(json);
-		List<PageData> listData = (List<PageData>) JSONArray.toCollection(array, PageData.class);
-		if (null != listData && listData.size() > 0) {
+//		Object DATA_ROWS = 
+//		Object DATA_ROWS = getPd.get("StringDataRows");
+//		String json = DATA_ROWS.toString();
+//		json = json.replaceAll("%", "'");
+//		JSONArray array = JSONArray.fromObject(json);
+//		List<PageData> listData = (List<PageData>) JSONArray.toCollection(array, PageData.class);
+		if (null != listCorver && listCorver.size() > 0) {
 			String kpiCode = getPd.getString("KPI_CODE");
 			// 直接删除添加，不判断重复数据
-			assessDataService.batchCoverAdd(listData, kpiCode);
+			assessDataService.batchCoverAdd(listCorver, kpiCode);
 			commonBase.setCode(0);
 		}
 		return commonBase;
@@ -1039,6 +1055,9 @@ public class AssessDataController extends BaseController {
 			getPd.put("filterWhereResult", SqlTools.constructWhere(filters, null));
 		}
 		TransferPd(getPd, SelectedBusiDate);
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		String departCode = user.getUNIT_CODE();
+		getPd.put("DEPART_CODE", departCode);
 		page.setPd(getPd);
 		List<PageData> varOList = assessDataService.exportList(page);
 		return export(varOList, "", map_SetColumnsList, map_DicList);

@@ -36,6 +36,10 @@
 								<button type="button" class="btn btn-info btn-xs" onclick="tosearch();">
 								<i class="ace-icon fa fa-search bigger-110"></i>
 								</button>
+								<button type="button" class="btn btn-xs btn-info" style="margin-right:5px;" onclick="toExcel();">
+									<i class="ace-icon fa fa-cloud-upload   bigger-120"></i>
+									导出
+								</button>	
 							</div>
 						</form>
 					</div>
@@ -87,8 +91,9 @@
 												<c:if test="${var.APPROVAL_STATE == null }"><span class="label grey">未上报</span></c:if>
 													</td>
 													<td style="width: 60px;" class="center">
-														<c:if test="${var.BILL_STATE == '0' }"><span class="label label-important arrowed-in">停用</span></c:if>
-														<c:if test="${var.BILL_STATE == '1' }"><span class="label label-success arrowed">正常</span></c:if>
+<%-- 														<c:if test="${var.BILL_STATE == '0' }"><span class="label label-important arrowed-in">停用</span></c:if> --%>
+<%-- 														<c:if test="${var.BILL_STATE == '1' }"><span class="label label-success arrowed">正常</span></c:if> --%>
+															<span class="label label-success arrowed">正常</span>
 													</td>
 													<td class="center">
 														<div class="hidden-sm hidden-xs btn-group">
@@ -207,9 +212,10 @@
 			 diag.show();
 		}
 
+
 		//导出excel
 		function toExcel(){
-			window.location.href='<%=basePath%>changeerpxtbg/excel.do';
+			window.location.href='<%=basePath%>changegrcqxbg/exportGrcqxbg.do';
 		}
 	</script>
 

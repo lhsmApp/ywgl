@@ -19,6 +19,7 @@
 <!-- 日期框 -->
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
 <script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
+<script type="text/javascript" src="static/js/jquery.cookie.js"></script>
 
 <!-- 树形下拉框start -->
 <script type="text/javascript" src="plugins/selectZtree/selectTree.js"></script>
@@ -285,7 +286,16 @@
 			$("#uesrTextarea").val('');
 			$("#tobodyUser").html('');
 		}
+		var gStr = ''//人员
 		$(function() {
+			//初始化 清空cookie  如果是编辑则获取以选中的id存到cookie中
+			$.removeCookie('userIdList');
+			let TRAIN_PLAN_PERSONS_T = '${pd.TEST_PERSONSCODE}'
+			gStr = TRAIN_PLAN_PERSONS_T
+			if(TRAIN_PLAN_PERSONS_T){
+				$.cookie('userIdList',TRAIN_PLAN_PERSONS_T)
+			}
+
 			//上传区域框
 			$('#uploadPic').find('input[type=file]').ace_file_input({
 				style:'well',
@@ -395,7 +405,7 @@
 			 window.location.href = '<%=basePath%>trainplan/list.do';
 		}
 	
-	
+		
 		//选择培训人群
 		function choiceStudent(){
 			 top.jzts();
@@ -403,27 +413,40 @@
 			 diag.Drag=true;
 			 diag.Title ="选择培训人员";
 			 diag.URL = '<%=basePath%>testplan/listStudent.do';
-			 diag.Width = 700;
+			 diag.Width = 768;
 			 diag.Height = 400;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮
 			 diag.CancelEvent = function(){ //关闭事件
-				 var str = '';
+				 /* var str = '';
 					for(var i=0;i < diag.innerFrame.contentWindow.document.getElementsByName('ids').length;i++){
 					  if(diag.innerFrame.contentWindow.document.getElementsByName('ids')[i].checked){
 					  	if(str=='') str += diag.innerFrame.contentWindow.document.getElementsByName('ids')[i].value;
 					  	else str += ',' + diag.innerFrame.contentWindow.document.getElementsByName('ids')[i].value;				 
 					  }
+					} */
+					
+					let is_clickConfirm = diag.innerFrame.contentWindow.document.getElementById("clickConfirm").value
+	           		if(is_clickConfirm == '0'){
+	           			diag.close();
+	           			$.cookie('userIdList',gStr)
+	           			return
+	           		}
+					gStr = $.cookie('userIdList')
+					if(!gStr){
+						diag.close();
+						return
 					}
 					$.ajax({
 						   type: "POST",
 						   url: '<%=basePath%>testplan/getChoiceStudent.do',
-						   data: {'sturentStr':str},
+						   data: {'sturentStr':gStr},
 						   dataType:'json',
 						   cache: false,
 						      success: function (data) {
-						    	  if($("#uesrTextarea").val()==''){
+						    	  
+						    	  /* if($("#uesrTextarea").val()==''){ */
 						    		  var userCodes='';
 							    	  var userNames='';
 							    	  $.each(data, function(i, item){
@@ -441,7 +464,7 @@
 									 	});
 							    	  $("#uesrTextarea").val(userNames);
 							    	  $("#TEST_PLAN_PERSONS").val(userCodes); 
-						    	  }else{
+						    	 /*  }else{
 						    		  var userCodes='';
 							    	  var userNames='';
 							    	  var arry = $("#TEST_PLAN_PERSONS").val().split(",");
@@ -459,7 +482,7 @@
 									 	});	
 							       	  $("#uesrTextarea").val($("#uesrTextarea").val()+userNames);
 							    	  $("#TEST_PLAN_PERSONS").val($("#TEST_PLAN_PERSONS").val()+userCodes); 
-						    	  }
+						    	  } */
 						    	 
 						         },
 						            error: function () {
@@ -497,6 +520,8 @@
 		function clearTable(){
 			$("#tobodyUser").html('');
 			$("#uesrTextarea").val('');
+			$.removeCookie('userIdList');
+			gStr = ''
 		}
 	</script>
 
