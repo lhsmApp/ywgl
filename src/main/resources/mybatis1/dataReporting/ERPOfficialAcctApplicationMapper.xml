@@ -121,11 +121,10 @@
 			t0.NOTE,
 			t0.CONFIRM_STATE,
 			t1.NAME BILL_USERNAME,
-			t2.NAME BILL_DEPANAME
+			t1.PHONE BILL_PHONE
 		from 
 		<include refid="tableName"></include> t0
 		left join `sys_user` t1 on t1.USER_ID =t0.BILL_USER
-		left join `oa_department` t2 on t2.DEPARTMENT_CODE =t0.USER_DEPART
 		where STATE=1
 		<if test="pd.SelectedDepartCode != null and pd.SelectedDepartCode != ''">
 		and 
@@ -205,11 +204,10 @@
 			t0.NOTE,
 			t0.CONFIRM_STATE,
 			t1.NAME BILL_USERNAME,
-			t2.NAME BILL_DEPANAME
+			t1.PHONE BILL_PHONE
 		from 
 		<include refid="tableName"></include> t0
 		left join `sys_user` t1 on t1.USER_ID =t0.BILL_USER
-		left join `oa_department` t2 on t2.DEPARTMENT_CODE =t0.USER_DEPART
 		where STATE=1
 		<if test="pd.SelectedDepartCode != null and pd.SelectedDepartCode != ''">
 		and 

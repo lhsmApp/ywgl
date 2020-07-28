@@ -122,7 +122,7 @@
 									<th style="width:110px;  text-align: center;">UKey编号</th>
 									<th style="width:110px;  text-align: center;">备注</th>
 									<th style="width:110px;  text-align: center;">上报人姓名</th>
-									<th style="width:110px;  text-align: center;">上报人单位</th>
+									<th style="width:110px;  text-align: center;">上报人手机号</th>
 									<th style="width:110px;  text-align: center;padding-left: 12px;padding-right:12px;">审批状态</th>
 								</tr>
 							</thead>
@@ -153,7 +153,7 @@
 											<th>${var.UKEY_NUM}</th>
 											<th>${var.NOTE}</th>
 											<th>${var.BILL_USERNAME}</th>
-											<th>${var.BILL_DEPANAME}</th>
+											<th>${var.BILL_PHONE}</th>
 											<th class="center">
 												<c:if test="${var.CONFIRM_STATE == 2}"><span class="label label-warning arrowed">待审批</span></c:if>
 												<c:if test="${var.CONFIRM_STATE == 3}"><span class="label label-success arrowed">已审批</span></c:if>

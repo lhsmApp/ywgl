@@ -126,7 +126,7 @@ public class ERPController extends BaseController {
 		Map_SetColumnsList.put("ACCOUNT_DELETE_REASON", new TmplConfigDetail("ACCOUNT_DELETE_REASON", "账号删除原因", "1", false));
 		Map_SetColumnsList.put("NOTE", new TmplConfigDetail("NOTE", "备注", "1", false));
 		Map_SetColumnsList.put("BILL_USERNAME", new TmplConfigDetail("BILL_USERNAME", "上报人姓名", "1", false));
-		Map_SetColumnsList.put("BILL_DEPANAME", new TmplConfigDetail("BILL_DEPANAME", "上报人单位", "1", false));
+		Map_SetColumnsList.put("BILL_PHONE", new TmplConfigDetail("BILL_PHONE", "上报人手机号", "1", false));
 		
 		return mv;
 	}
@@ -198,7 +198,7 @@ public class ERPController extends BaseController {
 		Map_SetColumnsList.put("APPLY_DATE", new TmplConfigDetail("APPLY_DATE", "申请日期", "1", false));
 		Map_SetColumnsList.put("NOTE", new TmplConfigDetail("NOTE", "备注", "1", false));
 		Map_SetColumnsList.put("BILL_USERNAME", new TmplConfigDetail("BILL_USERNAME", "上报人姓名", "1", false));
-		Map_SetColumnsList.put("BILL_DEPANAME", new TmplConfigDetail("BILL_DEPANAME", "上报人单位", "1", false));
+		Map_SetColumnsList.put("BILL_PHONE", new TmplConfigDetail("BILL_PHONE", "上报人手机号", "1", false));
 		return mv;
 	}
 	
@@ -266,7 +266,7 @@ public class ERPController extends BaseController {
 		Map_SetColumnsList.put("UKEY_NUM", new TmplConfigDetail("UKEY_NUM", "UKey编号", "1", false));
 		Map_SetColumnsList.put("NOTE", new TmplConfigDetail("NOTE", "备注", "1", false));
 		Map_SetColumnsList.put("BILL_USERNAME", new TmplConfigDetail("BILL_USERNAME", "上报人姓名", "1", false));
-		Map_SetColumnsList.put("BILL_DEPANAME", new TmplConfigDetail("BILL_DEPANAME", "上报人单位", "1", false));
+		Map_SetColumnsList.put("BILL_PHONE", new TmplConfigDetail("BILL_PHONE", "上报人手机号", "1", false));
 		return mv;
 	}
 	
