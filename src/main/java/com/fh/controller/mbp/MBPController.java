@@ -1351,17 +1351,109 @@ public class MBPController extends BaseController {
 		public ModelAndView queryProblemUserTime(Page page) throws Exception{
 			ModelAndView mv = this.getModelAndView();
 			PageData pd = this.getPageData();
-			PageData pd1 = new PageData();
 			//获取所有问题类型
-			List<PageData> proTypeList=problemtypeService.listAll(pd);
-			
+			List<PageData> proTypeList=problemtypeService.listAll(pd);			
 			page.setPd(pd);
-			List<PageData> varList = mbpService.getProLogTime(page);
+			List<PageData> varoList = mbpService.getUserProblemTime(page);
+			List<PageData> varList=new ArrayList<PageData>();
+			for(PageData p:varoList){
+				if(null!=p.get("PJSC")){
+					String zys=getDate(Long.valueOf(p.get("PJSC").toString()));//总用时
+					p.put("PJSC", zys);
+					varList.add(p);
+				}
+					
+			}
 			mv.addObject("pd", pd);
 			mv.addObject("varList", varList);	
 			mv.addObject("proTypeList", proTypeList);				
-			mv.addObject("pd1", varList.get(0));
 			mv.setViewName("statisticAnalysis/timeliness/userTimeline_query");
+			return mv;
+		}
+		/**运维人员处理问题时效统计
+		 * @param page
+		 * @throws Exception
+		 */
+		@RequestMapping(value="/dataListProblemUserTime")
+		public @ResponseBody List<PageData> dataListProblemUserTime(Page page) throws Exception{
+			PageData pd = this.getPageData();		
+			page.setPd(pd);
+			List<PageData> varoList = mbpService.getUserProblemTime(page);
+			List<PageData> varList=new ArrayList<PageData>();
+			for(PageData p:varoList){
+				if(null!=p.get("PJSC")){
+					String zys=getDate(Long.valueOf(p.get("PJSC").toString()));//总用时
+					p.put("PJSC", zys);
+					varList.add(p);
+				}
+					
+			}
+			return varList;
+		}
+		public static String getDate(long diff) {
+			long nd = 24 * 60 * 60;
+			long nh = 60 * 60;
+			long nm = 60;
+			long ns=1;
+			// 计算差多少天
+			long day = diff / nd;
+			// 计算差多少小时
+			long hour = diff % nd / nh;
+			// 计算差多少分钟
+			long min = diff % nd % nh / nm;
+			// 计算差多少秒//输出结果
+			 long sec = diff % nd % nh % nm / ns;
+			 if(diff<0){
+				 return "";
+			 }else{
+				 return day + "天" + hour + "小时" + min + "分钟"+sec+"秒";
+			 }		
+			}
+		/**导出运维人员时效分析到excel
+		 * @param
+		 * @throws Exception
+		 */
+		@RequestMapping(value="/listUserTimeExcel")
+		public ModelAndView listUserTimeExcel(Page page) throws Exception{
+			ModelAndView mv = new ModelAndView();
+			PageData pd = new PageData();
+			pd = this.getPageData();		
+			page.setPd(pd);
+			Map<String,Object> dataMap = new HashMap<String,Object>();
+			List<String> titles = new ArrayList<String>();
+			titles.add("问题类型");	//1
+			titles.add("问题数量");	//2
+			titles.add("领取数量");	//3
+			titles.add("关闭数量");	//4
+			titles.add("解决中问题数量");	//5
+			titles.add("平均处理时长");	//6
+			titles.add("运维人员");	//7			
+			dataMap.put("titles", titles);
+			List<PageData> varList1 = mbpService.getUserProblemTime(page);
+			List<PageData> varOList=new ArrayList<PageData>();
+			for(PageData p:varList1){
+				if(null!=p.get("PJSC")){
+					String zys=getDate(Long.valueOf(p.get("PJSC").toString()));//总用时
+					p.put("PJSC", zys);
+					varOList.add(p);
+				}
+					
+			}
+			List<PageData> varList = new ArrayList<PageData>();
+			for(int i=0;i<varOList.size();i++){
+				PageData vpd = new PageData();
+				vpd.put("var1", varOList.get(i).get("PRO_TYPE_NAME").toString());
+				vpd.put("var2", varOList.get(i).get("WTNUMS").toString());
+				vpd.put("var3", varOList.get(i).get("LQNUMS").toString());
+				vpd.put("var4", varOList.get(i).get("GBNUMS").toString());
+				vpd.put("var5", varOList.get(i).get("JJZNUMS").toString());
+				vpd.put("var6", varOList.get(i).get("PJSC").toString());
+				vpd.put("var7", varOList.get(i).get("USERNAME").toString());
+				varList.add(vpd);
+			}
+			dataMap.put("varList", varList);
+			ObjectExcelView erv = new ObjectExcelView();
+			mv = new ModelAndView(erv,dataMap);
 			return mv;
 		}
 }

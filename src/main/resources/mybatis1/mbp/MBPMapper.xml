@@ -623,4 +623,58 @@
 		</if> 
 			GROUP BY tb_problem_log.PRO_CODE
 	</select>
+		<!-- 运维人员问题处理时效统计 -->
+	<select id="getUserProblemTime" parameterType="page" resultType="pd">	
+	SELECT 
+		USERNAME,
+		PRO_TYPE_NAME,
+		PRO_TYPE_ID,
+		SUM(SECONDS) SECONDS,
+		COUNT(PRO_TYPE_NAME) WTNUMS,
+		SUM(CASE WHEN LQ IS NOT NULL THEN 1 ELSE 0 END) LQNUMS,
+		SUM(CASE WHEN GB IS NOT NULL THEN 1 ELSE 0 END) GBNUMS,
+		(COUNT(PRO_TYPE_NAME) -SUM(CASE WHEN GB IS NOT NULL THEN 1 ELSE 0 END)) JJZNUMS,
+		FLOOR(SUM(SECONDS)/(SUM(CASE WHEN GB IS NOT NULL THEN 1 ELSE 0 END))) PJSC
+		FROM 
+		
+		(SELECT 
+		a.`PRO_CODE`,
+		b.`WTLQ`,e.`WTGB`,
+		TIMESTAMPDIFF(SECOND,b.WTLQ,e.WTGB) AS SECONDS,
+		c.`PRO_TYPE_NAME`,
+		c.`PRO_TYPE_ID`,
+		d.`NAME` USERNAME,
+		b.PRO_EVENT LQ,
+		e.PRO_EVENT GB
+		FROM tb_problem_info a 
+		LEFT JOIN  
+				(SELECT PRO_CODE,'' CREATE_USER,PRO_EVENT,MAX(CREATE_DATE) WTLQ FROM tb_problem_log WHERE  PRO_EVENT='问题领取' GROUP BY PRO_CODE) b
+					ON a.PRO_CODE=b.PRO_CODE  
+				
+				LEFT JOIN
+				(SELECT PRO_CODE,CREATE_USER,PRO_EVENT,MAX(CREATE_DATE) WTGB FROM tb_problem_log WHERE  PRO_EVENT='关闭问题' GROUP BY PRO_CODE) e
+				ON a.PRO_CODE=e.PRO_CODE 
+		  LEFT JOIN tb_problem_type c
+		  ON a.`PRO_TYPE_ID`=c.`PRO_TYPE_ID`
+		  LEFT JOIN sys_user d
+		  ON e.`CREATE_USER`=d.`USER_ID`
+		  where 1=1
+		  <if test="pd.START_DATE!=null and pd.START_DATE!='' "> 
+			  and  SUBSTRING(a.BILL_DATE,1,10) &gt;= #{pd.START_DATE} 
+		</if>
+		<if test="pd.END_DATE!=null and pd.END_DATE!=''"> 
+			 and  SUBSTRING(a.BILL_DATE,1,10) &lt;= #{pd.END_DATE} 
+		</if>
+		<if test="pd.PRO_TYPE_ID!=null and pd.PRO_TYPE_ID!=''"> 
+			 and  c.PRO_TYPE_ID  = #{pd.PRO_TYPE_ID} 
+		</if>  
+			<if test="pd.USER_NAME!=null and pd.USER_NAME!=''"> 
+			 and  d.NAME LIKE CONCAT(CONCAT('%', #{pd.USER_NAME}),'%')
+		</if> 
+		  ) AS t
+					 GROUP BY 
+		USERNAME,
+		PRO_TYPE_NAME
+			
+	</select>
 </mapper>

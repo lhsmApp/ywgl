@@ -174,6 +174,11 @@ public interface MBPManager{
 	 * @throws Exception
 	 */
 	public List<PageData> getProLogTime(Page page)throws Exception;
+	/**运维人员问题处理时效
+	 * @param pd
+	 * @throws Exception
+	 */
+	public List<PageData> getUserProblemTime(Page page)throws Exception;
 	/**问题日志
 	 * @param pd
 	 * @throws Exception

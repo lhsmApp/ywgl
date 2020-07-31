@@ -44,7 +44,7 @@
 					<div class="row">
 						<div class="col-xs-12">							
 						<!-- 检索  -->
-						<form action="mbp/queryProblemLog.do" method="post" name="Form" id="Form">
+						<form action="mbp/queryProblemUserTime.do" method="post" name="Form" id="Form">
 							<table style="margin-top:5px;">
 								<tr>							
 								<td style="padding-left:2px;">
@@ -62,7 +62,22 @@
 											<i class="ace-icon fa fa-calendar" ></i>
 										</span>
 									</div>
-								</td>							
+								</td>	
+								<td ><span>问题类型：</span></td>
+			
+									<td width="150px">
+									<select class="form-control" name="PROBLEM_TYPE" id="PROBLEM_TYPE" >
+									<option value="">请选择问题类型</option>
+									<c:forEach items="${proTypeList}" var="type">
+									<option value="${type.PRO_TYPE_ID}">${type.PRO_TYPE_NAME}</option>
+									</c:forEach>
+								</select>				
+									</td>
+									<td><span class="nav-search input-icon" style="margin-left:20px;margin-top:2px;">
+										<input type="text" placeholder="请输入运维人员" class="nav-search-input" id="USER_NAME" autocomplete="off" name="USER_NAME" />
+										<i class="ace-icon fa fa-search nav-search-icon"></i>
+									</span>
+									</td>								
 									<td style="padding-left:2px;">																		 
 													<button type="button" class="btn btn-info btn-xs" onclick="tosearch();">
 													    <i class="ace-icon fa fa-search bigger-110"></i>
@@ -78,28 +93,31 @@
 					
 						<table id="simple-table" class="mtable" style="margin-top:20px; width: 100%;">	
 							<thead>
-							<tr>
-							<th style="background-color: #BEBEC5; text-align: center;">运维人员</th>
-								<c:forEach items="${proTypeList}" var="pro" varStatus="vs">						
-									<th style="background-color: #BEBEC5; text-align: center;">${pro.PRO_TYPE_NAME}</th>
-								</c:forEach>
-							</tr>
+								<tr>
+								<th class="center" style="width:30px;">序号</th>
+									<th class="center"style="width: 100px;">问题类型</th>
+									<th class="center"style="width: 100px;">问题数量</th>
+									<th class="center"style="width: 100px;">领取数量</th>
+									<th class="center"style="width: 100px;">关闭数量</th>
+									<th class="center"style="width: 100px;">解决中问题数量</th>
+									<th class="center"style="width: 150px;">平均处理时长</th>
+									<th class="center"style="width: 100px;">运维人员</th>		
+								</tr>
 							</thead>												
 							<tbody id="tobodyUser" >
 							<!-- 开始循环 -->	
 							<c:choose>
 									<c:when test="${not empty varList}">
 										<c:forEach items="${varList}" var="var" varStatus="vs">	
-										<tr onclick="showProTime('${var.PRO_CODE}')">
-											<td class='center'>${var.PRO_CODE}</td>
-											<td class='center'>${var.WTFQ}</td>
-<%-- 											<td class='center'>${var.FQ_FP}</td>										 --%>
-<%-- 											<td class='center'>${var.WTFP}</td> --%>
-											<td class='center'>${var.FQ_LQ}</td>
-											<td class='center'>${var.WTLQ}</td>
-											<td class='center'>${var.LQ_GB}</td>
-											<td class='center'>${var.WTGB}</td>
-											<td class='center'>${var.ZYS}</td>
+										<tr>
+											<td class='center' style="width: 30px;">${vs.index+1}</td>
+												<td class='center'style="width: 100px;">${var.PRO_TYPE_NAME}</td>
+												<td class='center'style="width: 100px;">${var.WTNUMS}</td>
+												<td class='center'style="width: 100px;">${var.LQNUMS}</td>
+												<td class='center'style="width: 100px;">${var.GBNUMS}</td>
+												<td class='center'style="width: 100px;">${var.JJZNUMS}</td>					
+												<td class='center'style="width: 150px;">${var.PJSC}</td>
+												<td class='center'style="width: 100px;">${var.USERNAME}</td>
 										</tr>									
 									</c:forEach>																		
 								</c:when>
@@ -119,17 +137,17 @@
 						</table>
 					</div>					
 				</div>
+
 		</div>
 	</div>
-
+</div>
 		
 		<!-- 返回顶部 -->
 		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
 			<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
 		</a>
-		</div>
+
 	</div>
-</div>
 		
 											
 	<!-- /.main-container -->
@@ -176,37 +194,19 @@
 // 				})
 			
 			})
-			function showProTime(proCode){
-				//console.log(proCode);
-				$.ajax({
-					type: "POST",
-					url: '<%=basePath%>mbp/dataListProblemLog.do',
-			    	data: {PRO_CODE:proCode},
-					dataType:'json',
-					cache: false,
-					success: function(data){
-						if(data.length>0){
-							$.each(data, function(i, item){
-						    	var html = '';
-						        html += setTimeNode(item,i+1);
-							//$("#tobodyUser").append(html);
-						    	console.log(html);
-						 	});
-						}
-						top.hangge();
-					}
-			});
-			}
+			
 		//检索
 			function tosearch(){
 				$("#tobodyUser tr").remove();
 				top.jzts();	
 				var startDate=$("#START_DATE").val();
 				var endDate=$("#END_DATE").val();
+				var problemType=$("#PROBLEM_TYPE").val();
+				var uesrName=$("#USER_NAME").val();
 				$.ajax({
 						type: "POST",
-						url: '<%=basePath%>mbp/dataListProblemLog.do',
-				    	data: {START_DATE:startDate,END_DATE:endDate},
+						url: '<%=basePath%>mbp/dataListProblemUserTime.do',
+				    	data: {START_DATE:startDate,END_DATE:endDate,PRO_TYPE_ID:problemType,USER_NAME:uesrName},
 						dataType:'json',
 						cache: false,
 						success: function(data){
@@ -222,45 +222,33 @@
 				});
 			}
 			function setUserTable(item,i){
-				rows='<tr  onclick="showProTime(\''+item.PRO_CODE+'\');">'
+				rows='<tr>'
 					+"</td><td class='center'>"
-					+item.PRO_CODE
+					+i
 					+"</td><td class='center'>"
-					+item.WTFQ
+					+item.PRO_TYPE_NAME
 					+"</td><td class='center'>"
-					+item.FQ_LQ
+					+item.WTNUMS
 					+"</td><td class='center'>"
-					+item.WTLQ
+					+item.LQNUMS
 					+"</td><td class='center'>"
-					+item.LQ_GB
+					+item.GBNUMS
 					+"</td><td class='center'>"
-					+item.WTGB
+					+item.JJZNUMS
 					+"</td><td class='center'>"
-					+item.ZYS
+					+item.PJSC
+					+"</td><td class='center'>"
+					+item.USERNAME
 					+'</td></tr>';				
 					return rows;	
 			}
-			function setTimeNode(item,i){
-				rows="<tr><td class='center'>"
-					+item.PRO_CODE
-					+"</td><td class='center'>"
-					+item.WTFQ
-					+"</td><td class='center'>"
-					+item.FQ_LQ
-					+"</td><td class='center'>"
-					+item.WTLQ
-					+"</td><td class='center'>"
-					+item.LQ_GB
-					+"</td><td class='center'>"
-					+item.WTGB
-					+"</td><td class='center'>"
-					+item.ZYS
-					+'</td></tr>';				
-					return rows;	
-			}
+			
 			  function toExcel(){
-				    	window.location.href='<%=basePath%>approvalconfig/listStatisticExcel.do?START_DATE='+$("#START_DATE").val()
+				    	window.location.href='<%=basePath%>mbp/listUserTimeExcel.do?START_DATE='+$("#START_DATE").val()
 			             +'&END_DATE='+$("#END_DATE").val() 
+			              +'&PRO_TYPE_ID='+$("#PROBLEM_TYPE").val() 
+			               +'&USER_NAME='+$("#USER_NAME").val() 
+
 			    }
 	</script>
 
