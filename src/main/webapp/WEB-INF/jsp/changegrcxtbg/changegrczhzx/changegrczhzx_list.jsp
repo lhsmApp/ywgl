@@ -141,11 +141,34 @@
 									<div class="tab-content padding-8">
 										
 										<div id="detail-tab" class="tab-pane active">
-											
+											<div id="detail-info">
+										</div>
+										<hr />
+											<div >
+												<h5 class="lighter block blue"><i class="ace-icon fa fa-rss blue"></i>&nbsp;附件</h5>
+												<hr />
+												<table id="simple-table" class="table table-striped table-bordered table-hover" style="margin-top:5px;">	
+													<thead>
+														<tr>
+															<th class="center" style="width:50px;">序号</th>
+															<th class="center">附件名</th>
+															<th class="center">附件说明</th>
+															<th class="center">附件大小</th>
+															<th class="center">上传人</th>
+															<th class="center">上传日期</th>
+															<th class="center">操作</th>
+														</tr>
+													</thead>
+																			
+													<tbody id="tbodyAttachment">
+														
+													</tbody>
+												</table>
+											</div>
 										</div>
 										<div id="report-tab" class="tab-pane">
 										<div class="row">
-											<div class="col-xs-5">
+											<div class="col-xs-12">
 											<form action="" name="problemAssignForm" id="problemAssignForm" method="post">
 												<input type="hidden" name="BILL_CODE" id="BILL_CODE" value="${pd.BILL_CODE }"/>
 												<div id="zhongxin" style="padding-top: 13px;">													
@@ -240,7 +263,34 @@
 															</span>
 														</div>
 													</div>
-													<hr />
+												<hr />
+													<div class="row">
+												<div style="margin:10px 12px;">
+													<h4>
+														<a id="btnAddProInfoAttachment" class="btn btn-success btn-xs"
+															onclick="addProAttachmentByType('CHANGE_GRC_ZHZX')">
+															<i class="ace-icon fa fa-chevron-down bigger-110"></i> <span>上传附件</span>
+														</a>
+													</h4>
+													<table id="simple-table" class="table table-striped table-bordered table-hover" style="margin-top:5px;">	
+														<thead>
+															<tr>
+																<th class="center" style="width:50px;">序号</th>
+																<th class="center">附件名</th>
+																<th class="center">附件说明</th>
+																<th class="center">附件大小</th>
+																<th class="center">上传人</th>
+																<th class="center">上传日期</th>
+																<th class="center">操作</th>
+															</tr>
+														</thead>
+																				
+														<tbody id="tbodyProInfoAttachment">
+															
+														</tbody>
+													</table>
+												</div>
+											</div>
 													<div>
 														<a class="btn btn-mini btn-primary" onclick="save();">保存</a>
 														<a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">取消</a>
@@ -421,6 +471,7 @@
 			yesEdit();
 			//点击新增按钮，弹到提报tab页
 			$("#zhzx-tab li[tag='report-tab'] a").click();
+			$("#tbodyProInfoAttachment").html('');
 			//新增清空文本框
 			$("#UNIT_CODE").val('<%=unitCode%>');//单位编码
 			$("#UNIT_NAME").val('<%=unitName%>');//单位名称
@@ -440,7 +491,104 @@
 			$("#USER_EMAIL").val("");//Email
 			$("#USER_TEL").val("");//电话
 		}			
+		/**
+		 * 上传附件
+		 */
+		function addProAttachmentByType(type){
+			if(bill_code==undefined||bill_code==null){
+				$("#btnAddProInfoAttachment").tips({
+					side:3,
+		            msg:'请先保存GRC账号注销信息后，再上传附件',
+		            bg:'#cc0033',
+		            time:3
+		        });
+				return;
+			}
+			 top.jzts();
+			 var diag = new top.Dialog();
+			 diag.Drag=true;
+			 diag.Title ="上传附件";
+			 diag.URL = '<%=basePath%>attachment/goAdd.do?BUSINESS_TYPE='+type+'&BILL_CODE='+bill_code;
+			 diag.Width = 460;
+			 diag.Height = 290;
+			 diag.Modal = true;				//有无遮罩窗口
+			 diag. ShowMaxButton = true;	//最大化按钮
+		     diag.ShowMinButton = true;		//最小化按钮
+			 diag.CancelEvent = function(){ //关闭事件
+				if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
+					getProAttachment(type);
+					//addItemAttachment();
+				}
+				diag.close();
+			 };
+			 diag.show();
+		}
 		
+		/**
+		 * 获取问题附件信息
+		 */
+		function getProAttachment(attachmentType){
+			$("#tbodyAttachment").html('');
+			$("#tbodyProInfoAttachment").html('');
+			top.jzts();
+			$.ajax({
+					type: "GET",
+					url: '<%=basePath%>attachment/getAttachmentByType.do?BUSINESS_TYPE='+attachmentType+'&BILL_CODE='+bill_code,
+			    	//data: {PRO_CODE:proCode},
+					//dataType:'json',
+					cache: false,
+					success: function(data){
+						if(data){
+							$.each(data, function(i, item){
+								var tr=addItemAttachment(item,i+1,attachmentType); 
+								$('#tbodyAttachment').append(tr);
+								$('#tbodyProInfoAttachment').append(tr);
+						 	});
+						}
+						top.hangge();
+					}
+			});
+		}
+		
+		/**
+		 * 增加附件tr
+		 */
+		function addItemAttachment(item,index,type){
+			var href='<%=basePath%>/attachment/download.do?ATTACHMENT_ID='+item.ATTACHMENT_ID;
+			var ext=item.ATTACHMENT_PATH.substring(19,item.ATTACHMENT_PATH.length);
+			var htmlLog='<tr>'
+				+'<td class="center" style="width: 30px;">'+index+'</td>'
+				+'<td class="center">'+item.ATTACHMENT_NAME+ext+'</td>'
+				+'<td class="center">'+item.ATTACHMENT_MEMO+'</td>'
+				+'<td class="center">'+item.ATTACHMENT_SIZE+'&nbsp;KB</td>'
+				+'<td class="center">'+item.CREATE_USER+'</td>'
+				+'<td class="center">'+item.CREATE_DATE+'</td>'
+				+'<td class="center">'
+					+'<div class="hidden-sm hidden-xs btn-group">'
+						+'<a class="btn btn-xs btn-success" onclick=window.location.href="'+href+'">'
+							+'<i class="ace-icon fa fa-cloud-download bigger-120" title="下载"></i>'
+						+'</a>'
+						+'<a class="btn btn-xs btn-danger" onclick=delProAttachment("'+item.ATTACHMENT_ID+'","'+type+'")>'
+							+'<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>'
+						+'</a>'
+					+'</div>'
+				+'</td>'
+			+'</tr>';
+			return htmlLog;
+		}
+		
+		//删除
+		function delProAttachment(Id,type){
+			bootbox.confirm("确定要删除吗?", function(result) {
+				if(result) {
+					top.jzts();
+					var url = "<%=basePath%>attachment/delete.do?ATTACHMENT_ID="+Id;
+					$.get(url,function(data){
+						getProAttachment(type);
+					});
+				}
+			});
+		}
 		//删除
 		function del(Id){
 			if($("#step2").hasClass("active")){
@@ -578,7 +726,7 @@
 		           
 		            	var html = '';
 		      		     html += setDetail(datas);
-		      			$('#detail-tab').html(html);
+		      			$('#detail-info').html(html);
                       //2为退回状态
 		      		  if(datas.APPROVAL_STATE==2)
 		    			{
@@ -609,7 +757,9 @@
 			    			$("#step3").removeClass('active');
 			    			yesEdit();
 			    			setValue(datas);
-		    			}
+		    			}		      		   
+		      		 	/* 获取提报中附件信息 */
+						 getProAttachment("CHANGE_GRC_ZHZX");
 		            } 
 		         });
 		}
