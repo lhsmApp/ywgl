@@ -1029,12 +1029,14 @@ function commit(){
 	}
 	
 	var proCode=currentItem.PRO_CODE;//问题单号
+	var proAcceptUser=$("#form-field-pro-accept-user").val();//受理人
+	var proTitle=$("#form-field-pro-title").val();//问题标题
 	top.jzts();
 	
 	$.ajax({
 		type: "POST",
 		url: '<%=basePath%>mbp/commit.do',
-		data:{PRO_CODE:proCode},
+		data:{PRO_CODE:proCode,PRO_ACCEPT_USER:proAcceptUser,PRO_TITLE:proTitle},
     	dataType:'json',
 		cache: false,
 		success: function(response){

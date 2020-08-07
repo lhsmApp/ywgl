@@ -46,6 +46,9 @@
 									<label class="btn btn-sm btn-info"> 
 										<input type="radio" class="level_select" name="level_select" value="2">角色变更
 									</label>
+										<label class="btn btn-sm btn-info"> 
+										<input type="radio" class="level_select" name="level_select" value="6">用户权限变更
+									</label>
 									<label class="btn btn-sm btn-info">
 										<input type="radio" class="level_select" name="level_select" value="3">GRC帐号新增
 									</label>
@@ -403,10 +406,12 @@
 			});
 		};
 		var data=${varList};
+
 		//循环加载到页面
 		function getChangeData(){
 		    var html = '';
 		    for(var i = 0;i<data.length;i++){
+
  		    	if(data[i].BG_NAME==""){
 		    		if(data[i].BUSINESS_CODE==3){
 		    			data[i].BG_NAME='GRC帐号新增';
@@ -416,14 +421,20 @@
 						data[i].BG_NAME='GRC权限变更';
 						//data[i].BG_REASON=data[i].BG_REASON;
 						
+					}else if(data[i].BUSINESS_CODE==6){
+						data[i].BG_NAME='ERP用户权限变更';
+
+						//data[i].BG_REASON=data[i].BG_REASON;
+						
 					}else{
 						data[i].BG_NAME='GRC帐号撤销';
 						//data[i].BG_REASON=data[i].CANCLE_REASON;
 					}
 		    	} 
 				data[i].BG_REASON=data[i].REASON;
-				//console.log(data);
+				//console.log('第'+i+'条,业务编码'+data[i].BUSINESS_CODE+','+data[i].BG_NAME);
 		        html += setDiv(data[i]);
+				//console.log(html);
 		    }
 		    //document.getElementById("tasks").innerHTML = html;
 			$('#tasks').html(html);
@@ -498,6 +509,24 @@
 		        + (item.UNIT_NAME==undefined ?"":item.UNIT_NAME)
 		        +'</span></label></div><div><label class="inline"><span class="list-item-info">账号撤销原因:&nbsp;</span><span class="list-item-value">'
 		        + (item.CANCLE_REASON==undefined ?"":item.CANCLE_REASON)
+		        +'</span></label><label class="inline pull-right"><span class="list-item-info">申请日期:&nbsp;'
+		        + (item.ENTRY_DATE==undefined ?"":item.ENTRY_DATE)
+		        +'</span></label></div></li>';
+		    return div;
+		}
+		function setDiv6(item){
+		    var div = '<li  class="item-grey clearfix" onclick="showDetail(\''+item.BILL_CODE+'\',\''+item.CURRENT_LEVEL+'\',\''+item.NEXT_LEVEL+'\');"><div><label class="inline" style="margin-bottom:5px;"><span class="list-item-value-title">'
+		        + "ERP用户权限变更"
+		        + '</span></label></div><div><label class="inline"><span class="list-item-info">单号:&nbsp;</span><span class="list-item-value">'
+		        + item.BILL_CODE
+		        +'</span></label><label class="inline pull-right"><span class="list-item-info">科室：</span><span class="list-item-value">'
+		        + (item.DEPT_NAME==undefined ?"":item.DEPT_NAME)
+		        +'</span></label></div><div><label class="inline"><span class="list-item-info">状态:&nbsp;</span><span class="list-item-value">'
+		        + (item.APPROVAL_STATE==undefined ?"":item.APPROVAL_STATE)
+		        +'</span></label><label class="inline pull-right"><span class="list-item-info">单位:&nbsp;</span><span class="list-item-value">'
+		        + (item.UNIT_NAME==undefined ?"":item.UNIT_NAME)
+		        +'</span></label></div><div><label class="inline"><span class="list-item-info">变更原因:&nbsp;</span><span class="list-item-value">'
+		        + (item.BG_REASON==undefined ?"":item.BG_REASON)
 		        +'</span></label><label class="inline pull-right"><span class="list-item-info">申请日期:&nbsp;'
 		        + (item.ENTRY_DATE==undefined ?"":item.ENTRY_DATE)
 		        +'</span></label></div></li>';
@@ -602,7 +631,7 @@
 					 getProAttachment(item.BILL_CODE,"CHANGE_GRC_ZHZX");	
 			    }else if(value==6){
 			    	title='ERP用户权限变更';
-					reason=item.CANCLE_REASON;
+					reason=item.BG_REASON;
 					//$('#attachment').css("visibility",'hidden');	
 					$('#attachment').css("visibility",'visible');
 					/* 获取附件信息 */
@@ -645,7 +674,7 @@
 		        +'</span></div></div><div class="profile-info-row"><div class="profile-info-name"> 申请日期： </div><div class="profile-info-value"><span>'
 		        +(item.ENTRY_DATE==undefined ?"":item.ENTRY_DATE)
 		        +'</span></div></div>';
-				console.log(div);
+				//console.log(div);
 		    return div;	
 		}		
 		//打印
@@ -738,6 +767,8 @@
 							    	html += setDiv4(item);		
 							    }else if(value==5){
 							    	html += setDiv5(item);	
+							    }else if(value==6){
+							    	html += setDiv6(item);	
 							    }else if(value==0){					
 							    	if(data.rows[i].BG_NAME==""){
 								    	if(data.rows[i].BUSINESS_CODE==3){
@@ -745,6 +776,8 @@
 											
 										}else if(data.rows[i].BUSINESS_CODE==4){
 											data.rows[i].BG_NAME='GRC权限变更';										
+										}else if(data.rows[i].BUSINESS_CODE==6){
+											data.rows[i].BG_NAME='ERP用户权限变更';										
 										}else{
 											data.rows[i].BG_NAME='GRC帐号撤销';
 										}							

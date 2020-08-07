@@ -157,6 +157,9 @@ public class ApprovalConfigController extends BaseController {
 		case "5": //GRC账号撤销;		   
 			pd = changegrczhzxService.findById(pd);
 		    break;
+		case "6": //ERP用户权限变更;		   
+			pd = changeerpyhqxbgService.findById(pd);	
+		    break;
 		default:
 			
 		    break;
@@ -223,6 +226,9 @@ public class ApprovalConfigController extends BaseController {
 		    break;
 		case "5": //GRC账号撤销;		   
 			varList = approvalconfigService.listByBusiness(page,"datalistPageGrcZhzx");
+		    break;
+		case "6": //ERP用户权限变更;		   
+			varList = approvalconfigService.listByBusiness(page,"datalistPageErpYhqxbg");
 		    break;
 		case "0": //GRC账号撤销;		   
 			varList = approvalconfigService.listByBusiness(page,"datalistPageAll");

@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -35,6 +37,7 @@ import com.fh.service.billnum.BillNumManager;
 import com.fh.service.fhoa.department.impl.DepartmentService;
 import com.fh.service.mbp.MBPManager;
 import com.fh.service.mbp.ProblemTypeManager;
+import com.fh.service.myPush.myPush.MyPushManager;
 import com.fh.service.sysConfig.sysconfig.SysConfigManager;
 import com.fh.service.system.dictionaries.DictionariesManager;
 import com.fh.service.system.user.UserManager;
@@ -91,6 +94,8 @@ public class MBPController extends BaseController {
 	@Resource(name="attachmentService")
 	private AttachmentManager attachmentService;
 	
+	@Resource(name = "myPushService")
+	private MyPushManager myPushService;
 	// 判断当前人员的所在组织机构是否只有自己单位
 	//private int departSelf = 0;
 	
@@ -691,6 +696,31 @@ public class MBPController extends BaseController {
 		 */
 		// commonBase.setCode(-1);
 		// commonBase.setMessage("当前删除的信息含有业务关联字段，不能删除");
+		//根据角色和单位获取用户id
+		List<String> userList = new ArrayList<String>();	
+				userList.add(pd.get("PRO_ACCEPT_USER")+"");
+
+		// 创建HashSet集合
+		Set<String> set = new HashSet<String>();
+		set.addAll(userList);     // 将list所有元素添加到set中    set集合特性会自动去重复
+		userList.clear();
+		userList.addAll(set);    // 将list清空并将set中的所有元素添加到list中
+		
+		PageData pd2 = new PageData();
+		//新建成功后推送消息
+		pd2.put("iModuleId", 159);
+		pd2.put("iModuleSubId", pd.get("PRO_CODE"));
+		pd2.put("iForkId", 1);
+		pd2.put("sCanClickTile", "前往问题提领取");
+		pd2.put("sCanClickUrl", "mbp/problemGet.do");
+		pd2.put("iIsForward", "1");
+		pd2.put("sTitle", "问题领取：您有待处理的问题");
+		pd2.put("sDetails", pd.get("PRO_TITLE"));
+		pd2.put("ul", String.join(",",userList));
+		pd2.put("rebootScope","1");
+		pd2.put("rebootMark","1");
+ 		com.alibaba.fastjson.JSONObject json2 = myPushService.saveSend(pd2);
+ 		System.out.println(json2);
 		return commonBase;
 	}
 	
