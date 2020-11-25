@@ -88,11 +88,11 @@ public class NoticeController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		String NOTICE_CONTENT = pd.get("NOTICE_CONTENT").toString();
-		if (NOTICE_CONTENT.length() > 100) {
-			out.write("{\"ret\":\"-1\",\"sMsg\":\"NOTICE_CONTENT too lang\"}");
-			out.close();
-			return;
-		}
+//		if (NOTICE_CONTENT.length() > 100) {
+//			out.write("{\"ret\":\"-1\",\"sMsg\":\"NOTICE_CONTENT too lang\"}");
+//			out.close();
+//			return;
+//		}
 
 		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 		pd.put("NOTICE_USER", user.getUSER_ID());
@@ -183,7 +183,7 @@ public class NoticeController extends BaseController {
 			} else {
 				pd2.put("ul", scoStr);
 			}
-			pd2.put("sDetails", pd.getString("NOTICE_CONTENT"));
+			pd2.put("sDetails", pd.getString("NOTICE_TITLE"));
 			pd2.put("dtBeginTime", pd.getString("START_TIME"));
 			pd2.put("dtOverTime", pd.getString("END_TIME"));
 			pd2.put("sCanClickUrl", "notice/list2.do?NOTICE_CONTENT="+pd.getString("NOTICE_CONTENT"));
@@ -200,7 +200,7 @@ public class NoticeController extends BaseController {
 			pd2.put("iModuleId", 243);
 			pd2.put("iModuleSubId", nId);
 			pd2.put("iForkId", 1);
-			pd2.put("sDetails", pd.getString("NOTICE_CONTENT"));
+			pd2.put("sDetails", pd.getString("NOTICE_TITLE"));
 			if (pd.getString("NOTICE_TYPE").equals("0")) {
 				pd2.put("iGroupId", "0");
 			} else {
@@ -378,7 +378,29 @@ public class NoticeController extends BaseController {
 
 		return mv;
 	}
+	/**
+	 * 去显示页面
+	 * 
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/goShow")
+	public ModelAndView goShow() throws Exception {
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		PageData repd = noticeService.findById(pd); // 根据ID读取
 
+		if (null != repd && !repd.get("NOTICE_TYPE").equals("0")) {
+			List<PageData> reItem = noticeItemService.findById(pd);
+			mv.addObject("reItem", reItem);
+		}
+		mv.setViewName("notice/notice/notice_show");
+		mv.addObject("msg", "edit");
+		mv.addObject("pd", repd);
+
+		return mv;
+	}
 	/**
 	 * 去选择发布范围
 	 * 

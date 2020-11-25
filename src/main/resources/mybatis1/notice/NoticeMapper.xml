@@ -15,6 +15,7 @@
 	
 	<!-- 字段 -->
 	<sql id="Field2">
+		NOTICE_TITLE,
 		NOTICE_CONTENT,	
 		NOTICE_USER,	
 		NOTICE_TYPE,	
@@ -34,6 +35,7 @@
 	
 	<!-- 字段值 -->
 	<sql id="FieldValue2">
+		#{NOTICE_TITLE},	
 		#{NOTICE_CONTENT},	
 		#{NOTICE_USER},	
 		#{NOTICE_TYPE},	

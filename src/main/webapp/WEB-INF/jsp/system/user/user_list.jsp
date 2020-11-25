@@ -261,7 +261,7 @@ function add(){
 	 diag.Title ="新增";
 	 diag.URL = '<%=basePath%>user/goAddU.do';
 	 diag.Width = 469;
-	 diag.Height = 505;
+	 diag.Height = 555;
 	 diag.CancelEvent = function(){ //关闭事件
 		 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
 			 if('${page.currentPage}' == '0'){

@@ -1,13 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
+	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -32,103 +29,46 @@
 	<div class="main-content">
 		<div class="main-content-inner">
 			<div class="page-content">
-                <div class="page-header">
-                    <table style="width:100%;">
-                        <tbody>
-                            <tr>
-                                <td style="vertical-align:top;">
-                                    <span class="green middle bolder">
-                                    <c:choose>
-									<c:when test="${pd.NOTICE_ID==null}">新建公告: &nbsp;</c:when>
-									<c:otherwise>编辑公告: &nbsp;</c:otherwise>
-									</c:choose>
-                                    </span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
 				<div class="row">
 					<div class="col-xs-12">
 					<form action="notice/${msg }.do" name="Form" id="Form" method="post">
 						<input type="hidden" name="NOTICE_ID" id="NOTICE_ID" value="${pd.NOTICE_ID}"/>
-						<div id="zhongxin" style="padding-top: 13px;">
-							<div id="task-tab" class="tab-pane active">
-							<ul id="tasks_1" class="item-list ui-sortable">
-									<li class="item-orange clearfix ui-sortable-handle">
-										<label class="inline"><span style="padding-left:5px;" class="lbl"><i style="margin-right: 3px;" class="ace-icon fa fa-calendar orange"></i>起止时间:</span></label>
-										<div class="inline">
-										<div style="padding-left:2px;" class="inline"><input class="span10 date-picker inline" name="lastStart" id="lastStart"  value="${pd.START_TIME}" type="text" data-date-format="yyyy-mm-dd 00:00:00" readonly="readonly" style="width:143px;" placeholder="开始日期" title="开始日期"/></div>
-										<div style="padding-left:2px;" class="inline"><input class="span10 date-picker inline" name="lastEnd" id="lastEnd" name="lastEnd"  value="${pd.END_TIME}" type="text" data-date-format="yyyy-mm-dd 23:59:59" readonly="readonly" style="width:143px;" placeholder="结束日期" title="结束日期"/></div>
-										</div>
-									</li>
-									<li id="liBefore" class="item-green clearfix ui-sortable-handle">
-										<label class="inline">
-											<span style="padding-left:5px;" class="lbl"><i style="margin-right: 3px;" class="ace-icon fa fa-asterisk green"></i>发布范围:</span>
-										</label>
-    									<select id="TEST_PAPER_DIFFICULTY" name="TEST_PAPER_DIFFICULTY" class="form-control inline" style="width:155px;">
-    										<option value="0" <c:if test="${pd.NOTICE_TYPE == '0'}">selected</c:if> >全部</option>
-    										<%-- <option value="1" <c:if test="${pd.NOTICE_TYPE == '1'}">selected</c:if> >按角色选择</option>
-    										<option value="2" <c:if test="${pd.NOTICE_TYPE == '2'}">selected</c:if> >按单位选择</option> --%>
-    										<option value="3" <c:if test="${pd.NOTICE_TYPE == '3'}">selected</c:if> >按人员选择</option>
-    									</select>
-	                                    <a id="addBtn" class="btn btn-mini btn-primary" onclick="addExtent()" <c:if test="${pd.NOTICE_TYPE == 0 || null == pd.NOTICE_TYPE}">style="display: none;"</c:if>><i id="nav-add-icon" class="ace-icon glyphicon glyphicon-plus while"></i>添加</a>
-									</li>
-                                    <li id="select-scope" class="item-blue clearfix ui-sortable-handle" <c:if test="${pd.NOTICE_TYPE == 0|| null == pd.NOTICE_TYPE}">style="display: none;"</c:if>>
-                                        <label class="inline" style="width:100%;"><span style="padding-left:5px;" class="lbl"><i style="margin-right: 3px;" class="ace-icon fa fa-users orange"></i>当前发布范围包括：</span></label>
-                                        <div class="inline" style="width:100%;">
-                                            <div class="tags" id="scope_deil" style="width:100%;min-height: 82px;max-height: 200px;overflow: auto;">
-                                            <!-- 开始循环 -->	
-											<c:choose>
-												<c:when test="${not empty reItem}">
-													<c:forEach items="${reItem}" var="var" varStatus="vs"><span class="tag"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">${var.BUSINESS_NAME}</font></font><button type="button" class="close" data-key="${var.BUSINESS_CODE}"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">×</font></font></button></span></c:forEach>
-												</c:when>
-											</c:choose>	
-											
-                                            </div>
-                                        </div>
-                                    </li>
-									<li id="attachmentLi" class="item-blue clearfix ui-sortable-handle">
-										<label class="inline">
+						<div id="zhongxin" style="padding-top: 13px;">	
+						
+						
+									
+							<div  style="text-align: center;" >
+                                <label class="inline" style="width:100%;">
+                                        <span style="padding-left:5px;color:#000000;font-size:18px;" class="lbl"><i style="margin-right: 3px;" ></i> ${pd.NOTICE_TITLE}                                
+                                        </span>
+                                 </label>
+                                   <label class="inline" style="width:100%;text-align:left;">
+                                  <span style="padding-left:5px;color:#000000;font-size:18px;" class="lbl"><i style="margin-right: 3px;" ></i>
+                                  ${pd.NOTICE_CONTENT}</span>
+                                  </label>
+            				</div>                     
+									<div style="width:90%;">
+										<label class="inline"">
 											<i class="ace-icon fa fa-download green"></i>
 											<span style="padding-left:5px;" class="lbl">附件:</span>
 										</label>
-										<div>
-											<input id="file" name="video" type="file"/>
-                                            <input id="file_path" type="hidden">
-											<input type="hidden" name="ATTACHMENT_PATH" id="ATTACHMENT_PATH" value="${pd.ATTACHMENT_PATH}"/> 
+										<div style="width:90%;text-align: left;">
+										<a href="<%=basePath%>notice/download.do?address=${pd.ATTACHMENT_PATH}"> ${pd.ATTACHMENT_PATH}</a>
 										</div>
-									</li>
-									 <li id="notice_title">
-                                        <label class="inline" style="width:100%;"><span style="padding-left:5px;" class="lbl"><i style="margin-right: 3px;" class="ace-icon fa fa-pencil-square-o orange"></i>公告标题：<span style="color:#999;"></span></span></label>
-                                        <div class="inline" style="width:100%;">
-                                         <input type="text" name="NOTICE_TITLE" id="NOTICE_TITLE" value="${pd.NOTICE_TITLE}" maxlength="150" placeholder="这里输入公告标题" title="公告标题" style="width:100%;"/>
-                                        </div>
-                                    </li>
-<!--                                     <li id="ContentLi" class="item-blue clearfix ui-sortable-handle"> -->
-<!--                                         <label class="inline" style="width:100%;"><span style="padding-left:5px;" class="lbl"><i style="margin-right: 3px;" class="ace-icon fa fa-pencil-square-o orange"></i>公告内容：<span style="color:#999;"></span></span></label> -->
-<!--                                         <div class="inline" style="width:100%;"> -->
-<%--                                             <textarea id="notice_content" style="width:100%;">${pd.NOTICE_CONTENT}</textarea> --%>
-									<div style="margin:10px 12px;">
-													<label for="editor">公告内容</label>
-													<script id="editor" type="text/plain" style="width:100%;height:259px;"></script>
-												</div>
-<!--                                         </div> -->
-                                    </li>
-						<li id="liBefore" class="item-blue clearfix ui-sortable-handle">
+								  </div> 
+                                
+							<div>
 							<div class="inline">
-								<a class="btn btn-mini btn-primary" onclick="save();">
-									<c:choose>
-									<c:when test="${pd.NOTICE_ID==null}">发布公告</c:when>
-									<c:otherwise>保存修改</c:otherwise>
-									</c:choose>
-								</a>
+						
 								<a class="btn btn-mini btn-danger" onclick="goPaper();">返回列表</a>
 							</div>
-						</li>
-					</ul>
-				</div>
+							<div   style="text-align: center;" >
 						</div>
+						
+						
+						
+						
+					</div>
 						<div id="zhongxin2" class="center" style="display:none"><br/><br/><br/><br/><br/><img src="static/images/jiazai.gif" /><br/><h4 class="lighter block green">提交中...</h4></div>
 					</form>
 					</div>
@@ -152,18 +92,10 @@
 	<script src="static/ace/js/date-time/bootstrap-datepicker.js"></script>
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
-		<!-- 编辑框-->
-	<script type="text/javascript" charset="utf-8">window.UEDITOR_HOME_URL = "<%=path%>/plugins/ueditor/";</script>
-	<script type="text/javascript" charset="utf-8" src="plugins/ueditor/ueditor.config.js"></script>
-	<script type="text/javascript" charset="utf-8" src="plugins/ueditor/ueditor.all.js"></script>
-	<!-- 编辑框-->
 	<!-- ace scripts -->
 	<script src="static/ace/js/ace/elements.fileinput.js"></script>
 	<script src="static/ace/js/ace/ace.js"></script>
-</body>
 		<script type="text/javascript">
-		//初始化字段为只读
-
 		var scope_Arr = {}//记录发布范围
 		$(top.hangge());
 		$(function(){
@@ -322,7 +254,6 @@
             };
             diag.show();
 		}
-	
 		//返回
 		function goPaper(){
 			history.back(-1)
@@ -335,7 +266,6 @@
         } 
 		//保存
 		function save(){
-	
 			if(!$("#lastStart").val()){
 				$("#lastStart").tips({
 					side:1,
@@ -354,7 +284,6 @@
 				})
 				return;
 			}
-
 			if($("#TEST_PAPER_DIFFICULTY").val()!="0"){
 				if(Object.keys(scope_Arr).length==0){
 					$("#scope_deil").tips({
@@ -370,37 +299,19 @@
 				scope_Arr_cookie = []
 				$.cookie('userIdList','')
 			}
-	
-			if(!$("#NOTICE_TITLE").val()){
-				$("#NOTICE_TITLE").tips({
+			if(!$("#notice_content").val()){
+				$("#notice_content").tips({
 					side:1,
-		            msg:'请输入公告标题',
+		            msg:'请输入公告内容',
 		            bg:'#cc0033',
 		            time:3
 				})
 				return;
 			}
-
-// 			if(!$("#notice_content").val()){
-// 				$("#notice_content").tips({
-// 					side:1,
-// 		            msg:'请输入公告内容',
-// 		            bg:'#cc0033',
-// 		            time:3
-// 				})
-// 				return;
-// 			}
-
 			var scopeFormat = [];
 			for(sa in scope_Arr){
 				scopeFormat.push({id:sa,name:scope_Arr[sa]})
 			}
-
-			var content;
-			var arr = [];
-		    arr.push(UE.getEditor('editor').getContent());
-		    content=arr.join("");
-			console.log(content);
 		    var postData = {
 		    		NOTICE_ID:getUrlParam("NOTICE_ID"),
 		            START_TIME:$("#lastStart").val(),
@@ -408,8 +319,7 @@
 		            NOTICE_TYPE:$("#TEST_PAPER_DIFFICULTY").val(),
 		            scope_Arr:JSON.stringify(scopeFormat),
 		            ATTACHMENT_PATH:$("#file_path").val(),
-		            NOTICE_CONTENT:content,
-		            NOTICE_TITLE:$("#NOTICE_TITLE").val()
+		            NOTICE_CONTENT:$("#notice_content").val()
 		    }
 		    $("#zhongxin").hide();
             $("#zhongxin2").show();
@@ -454,35 +364,6 @@
 			//日期框
 			$('.date-picker').datepicker({autoclose: true,todayHighlight: true});
         });
-		ueditor();
-		initFieldDisabled(false);
-		/**
-		 * 加载富文本 
-		 */
-		function ueditor(){
-			var ue = UE.getEditor('editor');
-		}
-		/**
-		 * 初始化字段为只读
-		 */
-		function initFieldDisabled(disabled){
-			
-			$("#form-field-pro-code").val("");
-			$("#form-field-pro-title").val("");
-			$("#form-field-pro-report-user").val("");
-			$("#form-field-pro-accept-user").val("");
-			$("#form-field-pro-sys-type").val("");
-			$("#form-field-pro-type-id").val("");
-			$("#selectTree2_input").val("");
-			$("#form-field-pro-tag").val("");
-			$("#form-field-pro-priority").val("");
-			$("#form-field-pro-resolve-time").val("");
-			$("#form-field-pro-content").val("");
-			UE.getEditor('editor').addListener("ready", function () {
-				UE.getEditor('editor').setContent('${pd.NOTICE_CONTENT}');
-			});
-		
-		}
 </script>
-
+</body>
 </html>

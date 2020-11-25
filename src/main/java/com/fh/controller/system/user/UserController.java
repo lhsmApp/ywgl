@@ -228,8 +228,7 @@ public class UserController extends BaseController {
 		pd.put("SKIN", "default");
 		pd.put("RIGHTS", "");
 		String PW = pd.getString("PASSWORD");
-		pd.put("PASSWORD", new SimpleHash("SHA-1", pd.getString("USERNAME"), PW).toString());	//密码加密
-		
+		pd.put("PASSWORD", new SimpleHash("SHA-1", pd.getString("USERNAME"), PW).toString());	//密码加密	
 		if(null == userService.findByUsername(pd)){	//判断用户名是否存在
 			userService.saveU(pd); 					//执行保存
 			FHLOG.save(Jurisdiction.getUsername(), "新增系统用户："+pd.getString("USERNAME"));

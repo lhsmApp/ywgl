@@ -76,8 +76,12 @@
 											<input name="DEPARTMENT_ID" id="department_id" value="${pd.DEPARTMENT_ID }" type="hidden" />
 										</c:if>
 										<tr>
+<!-- 											<td style="width:79px;text-align: right;padding-top: 13px;">用户名:</td> -->
+<%-- 											<td><input type="text" name="USERNAME" id="loginname" value="${pd.USERNAME }" maxlength="32" placeholder="这里输入用户名(员工编号)" title="用户名" onblur="hasU('${pd.USER_ID }')" style="width:98%;"/></td> --%>
+<!-- 										</tr> -->
+												<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">用户名:</td>
-											<td><input type="text" name="USERNAME" id="loginname" value="${pd.USERNAME }" maxlength="32" placeholder="这里输入用户名" title="用户名" onblur="hasU('${pd.USER_ID }')" style="width:98%;"/></td>
+											<td><input type="text" name="USERNAME" id="loginname" value="${pd.USERNAME }" maxlength="8" placeholder="这里输入用户名(员工编号)" title="用户名" onblur="hasU('${pd.USER_ID }')" style="width:98%;"/></td>
 										</tr>
 										<%-- <tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">编号:</td>
@@ -85,11 +89,11 @@
 										</tr> --%>
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">密码:</td>
-											<td><input type="password" name="PASSWORD" id="password"  maxlength="32" placeholder="输入密码" title="密码" style="width:98%;"/></td>
+											<td><input type="password" name="PASSWORD" id="password"  maxlength="32" placeholder="输入密码" title="密码" value="erp123" readonly= "readonly" style="width:98%;"/></td>
 										</tr>
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">确认密码:</td>
-											<td><input type="password" name="chkpwd" id="chkpwd"  maxlength="32" placeholder="确认密码" title="确认密码" style="width:98%;"/></td>
+											<td><input type="password" name="chkpwd" id="chkpwd"  maxlength="32" placeholder="确认密码" title="确认密码" value="erp123" readonly= "readonly" style="width:98%;"/></td>
 										</tr>
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">姓名:</td>
@@ -115,6 +119,15 @@
 												<option value="0" <c:if test="${pd.STATUS == '0' }">selected</c:if> >停用</option>
 												</select>
 											</td>
+										</tr>
+										<tr>
+											<td style="width:79px;text-align: right;padding-top: 13px;"></td>
+											<td style="width:79px;text-align: left;padding-top: 13px;">
+												<input name="USER_PROPERTY" id="USER_PROPERTY" type="checkbox" class="ace"/>
+												
+											<span class="lbl">是否SAP账号</span>
+											</td>
+	
 										</tr>
 										<tr>
 											<td style="text-align: center;" colspan="10">
@@ -158,16 +171,28 @@
 	});
 	//保存
 	function save(){
-		if($("#role_id").val()==""){
-			$("#juese").tips({
+		var idValue =$("#loginname").val();
+        var reg = new RegExp(/^\d{8}$/);   //用户名必须是8位数字
+        if(!reg.test(idValue)) {
+        	$("#loginname").tips({
 				side:3,
-	            msg:'选择角色',
+	            msg:'用户名为员工编号,必须为8位数字！',
 	            bg:'#AE81FF',
 	            time:2
 	        });
-			$("#role_id").focus();
-			return false;
-		}
+            return;
+        }
+// 		if($("#role_id").val()==""){
+// 			$("#juese").tips({
+// 				side:3,
+// 	            msg:'选择角色',
+// 	            bg:'#AE81FF',
+// 	            time:2
+// 	        });
+// 			$("#role_id").focus();
+// 			return false;
+// 		}
+
 		if($("#loginname").val()=="" || $("#loginname").val()=="此用户名已存在!"){
 			$("#loginname").tips({
 				side:3,
@@ -342,7 +367,14 @@
 			}
 		});
 	}
-	
+	 $('#USER_PROPERTY').on('change',function(e){        
+		 e.preventDefault(); 
+		 if ($('#USER_PROPERTY').attr('checked')) {
+			   	this.value=1;
+			}else{
+				this.value=0;
+			}
+	  });
 	//判断编码是否存在
 	function hasN(USERNAME){
 		var NUMBER = $.trim($("#NUMBER").val());

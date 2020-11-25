@@ -145,7 +145,14 @@
 		                bg:'#AE81FF',
 		                time:3
 		            });
-		        } else {
+		        } else if($.trim(commonBaseCode) == 2){
+		            $("#excel").tips({
+		                side:3,
+		                msg:'导入失败! ' + commonMessage,
+		                bg:'#AE81FF',
+		                time:3
+		            });
+		        }else {
 		        	if($.trim(commonBaseCode) == 3){
 		        	    //top.jzts();
 		        	    //var diag = new top.Dialog();

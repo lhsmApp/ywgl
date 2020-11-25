@@ -18,6 +18,53 @@
 <%@ include file="../../system/index/top.jsp"%>
 <!-- 日期框 -->
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
+	<style type="text/css">
+
+*{
+  padding: 0;
+  margin: 0;
+}
+.news {
+  width: 100%;
+/*   border: 1px solid gray; */
+  padding: 20px 15px ;
+  margin: 10px;
+  background: url();
+}
+
+.news h2{
+  padding-bottom: 5px;
+  color: black;
+  font-weight: bold;
+}
+
+.news ul{
+   padding:5px 10px ;
+   background: white;
+}
+
+.news ul li{
+  list-style: none;
+  height: 30px;
+  line-height: 30px;
+  border-bottom: 1px dashed gray;
+/*   text-indent: 15px; */
+  font-size: 14px;
+  background:url() no-repeat center left;
+
+}
+
+.news a{
+  text-decoration: none;
+  color: #06C;
+}
+
+.news a:hover{
+  text-decoration: underline;
+  color: red;
+}
+
+</style>
 </head>
 <body class="no-skin">
 
@@ -65,19 +112,20 @@
 							</tr>
 						</table>
 						<!-- 检索  -->
-					
+						<c:if test="${accessSourceType==2}">
 						<table id="simple-table" class="table table-striped table-bordered table-hover" style="margin-top:5px;">	
 							<thead>
 								<tr>
 									<th class="center" style="width:50px;">序号</th>
-									<th class="center">公告内容</th>
+									<th class="center">公告标题</th>
 									<th class="center">发布人</th>
 									<th class="center">开始时间</th>
 									<th class="center">结束时间</th>
-									<th class="center">附件</th>
-									<c:if test="${accessSourceType==2}">
+
+									<th class="center">附件</th>								
+<%-- 									<c:if test="${accessSourceType==2}"> --%>
 									<th class="center">操作</th>
-									</c:if>
+<%-- 									</c:if> --%>
 								</tr>
 							</thead>
 							<tbody>
@@ -85,12 +133,15 @@
 							<c:choose>
 								<c:when test="${not empty varList}">
 									<c:forEach items="${varList}" var="var" varStatus="vs">
+									
+									
 										<tr>
 											<td class='center' style="width: 30px;">${vs.index+1}</td>
-											<td class='center'>${var.NOTICE_CONTENT}</td>
+											<td class='center'>${var.NOTICE_TITLE}</td>
 											<td class='center'>${var.NAME}</td>
 											<td class='center'><fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${var.START_TIME}" /></td>
 											<td class='center'><fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${var.END_TIME}" /></td>
+										
 											<td class='center'>
 											<c:if test="${'' != var.ATTACHMENT_PATH}">
 												<a href="<%=basePath%>notice/download.do?address=${var.ATTACHMENT_PATH}">
@@ -100,8 +151,9 @@
 											<c:if test="${'' == var.ATTACHMENT_PATH}">
 												无
 											</c:if>
-											<c:if test="${accessSourceType==2}">
+						
 											</td>
+											<c:if test="${accessSourceType==2}">
 											<td class="center">
 												<div class="hidden-sm hidden-xs btn-group">
 													
@@ -112,7 +164,15 @@
 														<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
 													</a>
 												</div>
+																				
 											</td>
+													</c:if>
+														<c:if test="${accessSourceType!=2}">
+												<td class='center'>
+												<a onclick="showPage('${var.NOTICE_ID}');">
+														<i class="ace-icon  " >查看</i>
+													</a>
+												</td>
 											</c:if>
 										</tr>
 									</c:forEach>
@@ -125,6 +185,25 @@
 							</c:choose>
 							</tbody>
 						</table>
+						</c:if>
+						<c:if test="${accessSourceType!=2}">
+						 <div class="news">
+
+					    <h4 style="margin-left:35px">通知列表</h4>
+					
+					    <ul>
+					    				<c:choose>
+						<c:when test="${not empty varList}">
+									<c:forEach items="${varList}" var="var" varStatus="vs">
+					       <li><a onclick="showPage('${var.NOTICE_ID}');">${var.NOTICE_TITLE}</a></li>
+							</c:forEach>
+								</c:when>
+					   			</c:choose>
+					
+					     </ul>
+					
+					   </div>
+						</c:if>
 						<div class="page-header position-relative">
 						<table style="width:100%;">
 							<tr>
@@ -227,7 +306,10 @@
 		function edit(Id){
 			window.location.href='<%=basePath%>notice/goEdit.do?NOTICE_ID='+Id;
 		}
-		
+		//修改
+		function showPage(Id){
+			window.location.href='<%=basePath%>notice/goShow.do?NOTICE_ID='+Id;
+		}
 	</script>
 
 

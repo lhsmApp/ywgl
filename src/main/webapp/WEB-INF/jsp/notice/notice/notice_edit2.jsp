@@ -1,13 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
+	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -105,15 +102,11 @@
                                          <input type="text" name="NOTICE_TITLE" id="NOTICE_TITLE" value="${pd.NOTICE_TITLE}" maxlength="150" placeholder="这里输入公告标题" title="公告标题" style="width:100%;"/>
                                         </div>
                                     </li>
-<!--                                     <li id="ContentLi" class="item-blue clearfix ui-sortable-handle"> -->
-<!--                                         <label class="inline" style="width:100%;"><span style="padding-left:5px;" class="lbl"><i style="margin-right: 3px;" class="ace-icon fa fa-pencil-square-o orange"></i>公告内容：<span style="color:#999;"></span></span></label> -->
-<!--                                         <div class="inline" style="width:100%;"> -->
-<%--                                             <textarea id="notice_content" style="width:100%;">${pd.NOTICE_CONTENT}</textarea> --%>
-									<div style="margin:10px 12px;">
-													<label for="editor">公告内容</label>
-													<script id="editor" type="text/plain" style="width:100%;height:259px;"></script>
-												</div>
-<!--                                         </div> -->
+                                    <li id="ContentLi" class="item-blue clearfix ui-sortable-handle">
+                                        <label class="inline" style="width:100%;"><span style="padding-left:5px;" class="lbl"><i style="margin-right: 3px;" class="ace-icon fa fa-pencil-square-o orange"></i>公告内容：<span style="color:#999;"></span></span></label>
+                                        <div class="inline" style="width:100%;">
+                                            <textarea id="notice_content" style="width:100%;">${pd.NOTICE_CONTENT}</textarea>
+                                        </div>
                                     </li>
 						<li id="liBefore" class="item-blue clearfix ui-sortable-handle">
 							<div class="inline">
@@ -152,18 +145,10 @@
 	<script src="static/ace/js/date-time/bootstrap-datepicker.js"></script>
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
-		<!-- 编辑框-->
-	<script type="text/javascript" charset="utf-8">window.UEDITOR_HOME_URL = "<%=path%>/plugins/ueditor/";</script>
-	<script type="text/javascript" charset="utf-8" src="plugins/ueditor/ueditor.config.js"></script>
-	<script type="text/javascript" charset="utf-8" src="plugins/ueditor/ueditor.all.js"></script>
-	<!-- 编辑框-->
 	<!-- ace scripts -->
 	<script src="static/ace/js/ace/elements.fileinput.js"></script>
 	<script src="static/ace/js/ace/ace.js"></script>
-</body>
 		<script type="text/javascript">
-		//初始化字段为只读
-
 		var scope_Arr = {}//记录发布范围
 		$(top.hangge());
 		$(function(){
@@ -322,7 +307,6 @@
             };
             diag.show();
 		}
-	
 		//返回
 		function goPaper(){
 			history.back(-1)
@@ -335,7 +319,6 @@
         } 
 		//保存
 		function save(){
-	
 			if(!$("#lastStart").val()){
 				$("#lastStart").tips({
 					side:1,
@@ -354,7 +337,6 @@
 				})
 				return;
 			}
-
 			if($("#TEST_PAPER_DIFFICULTY").val()!="0"){
 				if(Object.keys(scope_Arr).length==0){
 					$("#scope_deil").tips({
@@ -370,7 +352,6 @@
 				scope_Arr_cookie = []
 				$.cookie('userIdList','')
 			}
-	
 			if(!$("#NOTICE_TITLE").val()){
 				$("#NOTICE_TITLE").tips({
 					side:1,
@@ -380,27 +361,19 @@
 				})
 				return;
 			}
-
-// 			if(!$("#notice_content").val()){
-// 				$("#notice_content").tips({
-// 					side:1,
-// 		            msg:'请输入公告内容',
-// 		            bg:'#cc0033',
-// 		            time:3
-// 				})
-// 				return;
-// 			}
-
+			if(!$("#notice_content").val()){
+				$("#notice_content").tips({
+					side:1,
+		            msg:'请输入公告内容',
+		            bg:'#cc0033',
+		            time:3
+				})
+				return;
+			}
 			var scopeFormat = [];
 			for(sa in scope_Arr){
 				scopeFormat.push({id:sa,name:scope_Arr[sa]})
 			}
-
-			var content;
-			var arr = [];
-		    arr.push(UE.getEditor('editor').getContent());
-		    content=arr.join("");
-			console.log(content);
 		    var postData = {
 		    		NOTICE_ID:getUrlParam("NOTICE_ID"),
 		            START_TIME:$("#lastStart").val(),
@@ -408,7 +381,7 @@
 		            NOTICE_TYPE:$("#TEST_PAPER_DIFFICULTY").val(),
 		            scope_Arr:JSON.stringify(scopeFormat),
 		            ATTACHMENT_PATH:$("#file_path").val(),
-		            NOTICE_CONTENT:content,
+		            NOTICE_CONTENT:$("#notice_content").val(),
 		            NOTICE_TITLE:$("#NOTICE_TITLE").val()
 		    }
 		    $("#zhongxin").hide();
@@ -454,35 +427,6 @@
 			//日期框
 			$('.date-picker').datepicker({autoclose: true,todayHighlight: true});
         });
-		ueditor();
-		initFieldDisabled(false);
-		/**
-		 * 加载富文本 
-		 */
-		function ueditor(){
-			var ue = UE.getEditor('editor');
-		}
-		/**
-		 * 初始化字段为只读
-		 */
-		function initFieldDisabled(disabled){
-			
-			$("#form-field-pro-code").val("");
-			$("#form-field-pro-title").val("");
-			$("#form-field-pro-report-user").val("");
-			$("#form-field-pro-accept-user").val("");
-			$("#form-field-pro-sys-type").val("");
-			$("#form-field-pro-type-id").val("");
-			$("#selectTree2_input").val("");
-			$("#form-field-pro-tag").val("");
-			$("#form-field-pro-priority").val("");
-			$("#form-field-pro-resolve-time").val("");
-			$("#form-field-pro-content").val("");
-			UE.getEditor('editor').addListener("ready", function () {
-				UE.getEditor('editor').setContent('${pd.NOTICE_CONTENT}');
-			});
-		
-		}
 </script>
-
+</body>
 </html>
