@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TrainScoreMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		tb_train_score
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		USERNAME,
+		NAME1,
+		UNIT_CODE,
+		TEST_SCORE,
+		MODULE,
+		TEST_NAME,
+		TEST_DATE,
+		IF_QUALIFIED,
+		CREAT_USER,
+		CREAT_DATE,
+		QUALIFIED_SCORE,
+		STATE
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="InsertField">
+		USERNAME,
+		NAME1,
+		UNIT_CODE,
+		TEST_SCORE,
+		MODULE,
+		TEST_NAME,
+		TEST_DATE,
+		IF_QUALIFIED,
+		CREAT_USER,
+		CREAT_DATE,
+		QUALIFIED_SCORE,
+		STATE
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">	
+		#{USERNAME},
+		#{NAME1},
+		#{UNIT_CODE},
+		#{TEST_SCORE},
+		#{MODULE},
+		#{TEST_NAME},
+		#{TEST_DATE},
+		#{IF_QUALIFIED},
+		#{CREAT_USER},
+		#{CREAT_DATE},
+		#{QUALIFIED_SCORE},
+		#{STATE}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="InsertField"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			USERNAME = #{USERNAME}
+			AND
+				MODULE = #{MODULE}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			USERNAME=#{USERNAME},
+			NAME1=#{NAME1},
+			UNIT_CODE=#{UNIT_CODE},
+			TEST_SCORE=#{TEST_SCORE},
+			MODULE=#{MODULE},
+			TEST_NAME=#{TEST_NAME},
+			TEST_DATE=#{TEST_DATE},
+			IF_QUALIFIED=#{IF_QUALIFIED},
+			CREAT_USER=#{CREAT_USER},
+			CREAT_DATE=#{CREAT_DATE},
+			QUALIFIED_SCORE=#{QUALIFIED_SCORE},
+			STATE=#{STATE}
+
+		where 
+		USERNAME = #{USERNAME}
+			AND
+				MODULE = #{MODULE}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			USERNAME = #{USERNAME}
+			AND
+				MODULE = #{MODULE}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select A.*,unit.NAME UNIT_NAME,user.NAME  USER_NAME		
+		from 
+		<include refid="tableName"></include> A
+		LEFT JOIN  sys_user user
+		ON A.USERNAME=user.USERNAME
+		LEFT JOIN oa_department unit
+		ON A.UNIT_CODE=unit.DEPARTMENT_CODE
+		
+		<where>
+			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+				and
+					(
+						A.NAME1 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+	 					or
+						unit.NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+						 or 
+						A.TEST_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+				
+					)
+			</if>
+		</where>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			USERNAME in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!-- 导出列表 -->
+	<select id="exportList" parameterType="jqPage" resultType="pd">
+		select * 
+		from <include refid="tableName"></include>
+		<where>
+<!-- 			<if test="pd.keywords!= null and pd.keywords != ''">关键词检索 -->
+<!-- 				and (CON_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')) -->
+<!-- 			</if> -->
+			<if test="pd.UNIT_CODE!= null and pd.UNIT_CODE != ''">
+				and UNIT_CODE = #{pd.UNIT_CODE}
+			</if>
+			<if test="pd.MODULE!= null and pd.MODULE != ''">
+				and MODULE = #{pd.MODULE}
+			</if>
+			<if test="pd.start!= null and pd.start != ''">
+				and TEST_DATE >= #{pd.start}
+			</if>
+			<if test="pd.end!= null and pd.end != ''">
+				and TEST_DATE &lt;= #{pd.end}
+			</if>
+		</where>
+		order by MODULE,  UNIT_CODE
+	</select>
+	<!-- 导出模板 -->
+	<select id="exportModel" parameterType="pd" resultType="pd">
+		select *  
+		from <include refid="tableName"></include>
+		limit 1
+	</select>
+		<!-- 保存-->
+	<insert id="saveImport" parameterType="pd" useGeneratedKeys="false">
+		<foreach item="item" index="index" collection="listDetail" open=" " separator="; " close=" ">
+			<if test="item!=null">
+				delete from tb_train_score where USERNAME = #{item.USERNAME} AND MODULE = #{item.MODULE};
+				insert into tb_train_score
+				( 
+				 USERNAME, NAME1,UNIT_CODE,TEST_SCORE,MODULE,TEST_NAME,TEST_DATE,CREAT_USER,CREAT_DATE,QUALIFIED_SCORE
+				) values (
+				#{item.USERNAME,jdbcType=VARCHAR},#{item.NAME1,jdbcType=VARCHAR},
+				#{item.UNIT_CODE,jdbcType=VARCHAR},#{item.TEST_SCORE,jdbcType=VARCHAR},
+				#{item.MODULE,jdbcType=VARCHAR},#{item.TEST_NAME,jdbcType=VARCHAR},
+				#{item.TEST_DATE,jdbcType=VARCHAR},#{item.CREAT_USER,jdbcType=VARCHAR},
+				#{item.CREAT_DATE,jdbcType=VARCHAR},#{item.QUALIFIED_SCORE,jdbcType=VARCHAR})		
+			</if>
+		</foreach>
+	</insert>
+			
+</mapper>
