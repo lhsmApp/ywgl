@@ -3,14 +3,15 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
 	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://"
+			+ request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
 %>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
 <title>${pd.SYSNAME}</title>
-<!-- 页面顶部¨ -->
-<%@ include file="head.jsp"%>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -19,6 +20,8 @@
 <link rel="stylesheet" href="static/login/bootstrap-responsive.min.css" />
 <link rel="stylesheet" href="static/login/matrix-login.css" />
 <link href="static/login/font-awesome.css" rel="stylesheet" />
+<script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
+<script type="text/javascript" src="plugins/selectZtree/framework.js"></script>
 <script type="text/javascript" src="static/login/js/jquery-1.5.1.min.js"></script>
 <!-- 软键盘控件start -->
 <link href="static/login/keypad/css/framework/form.css" rel="stylesheet"
@@ -263,7 +266,18 @@
 	</div>
 	
 	<!-- <img alt="" style="background-size: cover; background-repeat: no-repeat;" src="static/login/images/banner_slide_05.jpg"> -->
-
+	<!-- 页面底部js¨ -->
+	<%@ include file="../../system/index/foot.jsp"%>
+	<!-- 删除时确认窗口 -->
+	<script src="static/ace/js/bootbox.js"></script>
+	<!-- ace scripts -->
+	<script src="static/ace/js/ace/ace.js"></script>
+	<!-- 日期框 -->
+	<script src="static/ace/js/date-time/bootstrap-datepicker.js"></script>
+	<!-- 下拉框 -->
+	<script src="static/ace/js/chosen.jquery.js"></script>
+	<!--提示框-->
+	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 
 	<script type="text/javascript">
 		//服务器校验
@@ -272,6 +286,7 @@
 				var loginname = $("#loginname").val();
 				var password = $("#password").val();
 				var code = loginname + ",fh," + password+ ",fh," + $("#code").val();
+				
 				$.ajax({
 					type : "POST",
 					url : 'login_login',
@@ -283,12 +298,14 @@
 					cache : false,
 					success : function(data) {
 						if ("success" == data.result) {
- 						   if(getLvl(password)==3){
-								saveCookie();
+// 						   if(getLvl(password)==3){
+// 								saveCookie();
+// 								window.location.href = "main/index"; 
+// 						   }else{
+							   saveCookie();
 								window.location.href = "main/index"; 
-						   }else{
-							   editUserH();
-					   		}
+// 						   }
+						
 						} else if ("usererror" == data.result) {
 							$("#loginname").tips({
 								side : 1,
@@ -321,7 +338,38 @@
 				});
 			}
 		}
+// 		//修改个人资料
+// 		function editUserH(){
+// 			console.log("进入修改界面");
+// 			 top.jzts();
+// 			 var diag = new top.Dialog();
+// 			 diag.Drag=true;
+// 			 diag.Title ="个人资料";
+<%-- 			 diag.URL = '<%=basePath%>user/goEditMy.do'; --%>
+// 			 diag.Width = 469;
+// 			 diag.Height = 320;
+// 			 diag.CancelEvent = function(){ //关闭事件
+// 				diag.close();
+// 			 };
+// 			 diag.show();
+// 		}
 
+// 		function getLvl(txt) {
+// 		    var lvl = 0;
+// 		    //判断这个字符串中有没有数字
+// 		    if (/[0-9]/.test(txt)) {
+// 		        lvl++;
+// 		    }
+// 		    //判断字符串中有没有字母
+// 		    if (/[a-zA-Z]/.test(txt)) {
+// 		        lvl++;
+// 		    }
+// 		    //判断字符串中有没有特殊符号
+// 		    if (/[^0-9a-zA-Z_]/.test(txt)) {
+// 		        lvl++;
+// 		    }
+// 		    return lvl;
+// 		}
 		$(document).ready(function() {
 			changeCode1();
 			$("#codeImg").bind("click", changeCode1);
@@ -345,44 +393,6 @@
 		function changeCode2() {
 			$("#zcodeImg").attr("src", "code.do?t=" + genTimestamp());
 		}
-		function getLvl(txt) {
-		    var lvl = 0;
-		    //判断这个字符串中有没有数字
-		    if (/[0-9]/.test(txt)) {
-		        lvl++;
-		    }
-		    //判断字符串中有没有字母
-		    if (/[a-zA-Z]/.test(txt)) {
-		        lvl++;
-		    }
-		    //判断字符串中有没有特殊符号
-		    if (/[^0-9a-zA-Z_]/.test(txt)) {
-		        lvl++;
-		    }
-		    return lvl;
-		}
-		function editUserH(){
-		       var locat = (window.location+'').split('/'); 
-		       if('main'== locat[3]){
-		         locat =  locat[0]+'//'+locat[2];
-		       }else{
-		         locat =  locat[0]+'//'+locat[2]+'/'+locat[3];
-		       }
-		       var loginname = $("#loginname").val();
-		       var diag = new Dialog();
-		       diag.Drag=true;
-		       diag.Title ="修改密码";
-		       diag.URL = locat+'/user/goEditlogin?USERNAME='+loginname;
-		       console.log(diag.URL+'111111');
-		       console.log(loginname);
-		       diag.Width = 469;
-		       diag.Height = 320;
-		       diag.CancelEvent = function(){ //关闭事件
-		        diag.close();
-		       };
-		       diag.show();
-		    }
-
 		//客户端校验
 		function check() {
 
@@ -664,23 +674,13 @@
 	<script src="static/login/js/bootstrap.min.js"></script>
 	<script src="static/js/jquery-1.7.2.js"></script>
 	<script src="static/login/js/jquery.easing.1.3.js"></script>
-	<script src="static/login/js/jquery.mdobile.customized.min.js"></script>
+	<script src="static/login/js/jquery.mobile.customized.min.js"></script>
 	<script src="static/login/js/camera.min.js"></script>
 	<script src="static/login/js/templatemo_script.js"></script>
 	<script src="static/login/js/ban.js"></script>
 	<script type="text/javascript" src="static/js/jQuery.md5.js"></script>
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 	<script type="text/javascript" src="static/js/jquery.cookie.js"></script>
-	
-	
-	<script src="static/ace/js/bootstrap.js"></script>
-	<!-- 删除时确认窗口 -->
-	<script src="static/ace/js/bootbox.js"></script>
-	<!-- ace scripts -->
-	<script src="static/ace/js/ace/ace.js"></script>
-	
-	<script type="text/javascript" src="static/js/zDialog.js"></script>
-	<script type="text/javascript" src="static/js/zDrag.js"></script>
 
 	<!-- 软键盘控件start -->
 	<script type="text/javascript"

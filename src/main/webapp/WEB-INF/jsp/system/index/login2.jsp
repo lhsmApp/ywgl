@@ -9,8 +9,6 @@
 
 <head>
 <title>${pd.SYSNAME}</title>
-<!-- 页面顶部¨ -->
-<%@ include file="head.jsp"%>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -20,6 +18,8 @@
 <link rel="stylesheet" href="static/login/matrix-login.css" />
 <link href="static/login/font-awesome.css" rel="stylesheet" />
 <script type="text/javascript" src="static/login/js/jquery-1.5.1.min.js"></script>
+
+
 <!-- 软键盘控件start -->
 <link href="static/login/keypad/css/framework/form.css" rel="stylesheet"
 	type="text/css" />
@@ -33,6 +33,10 @@
 		padding-top:20px;
 	    }
 	    */
+    .modal-backdrop, .modal-backdrop.fade.in {
+	    opacity: 0; 
+	    filter: alpha(opacity=80);
+	}
 	.cavs {
 		z-index: 1;
 		position: fixed;
@@ -48,8 +52,6 @@
 	/* .title a{ padding: 0 30px; color: #a2a2a2;} */
 	/* .title a.active{ color: #404040;} */
 	.title a.last{ border-left: 1px solid #cecece;}
-	
-	
 </style>
 <script>
 	//window.setTimeout(showfh,3000); 
@@ -88,7 +90,7 @@
 	};
 </script>
 </head>
-<body style="background-image:url(static/login/images/erpdenglu1.jpg);background-repeat:no-repeat;background-size: cover;">
+<body>
 
 	<c:if test="${pd.isMusic == 'yes' }">
 		<div style="display: none">
@@ -96,23 +98,17 @@
 		</div>
 	</c:if>
 	<canvas class="cavs"></canvas>
-	
-	<div style="width: 100%; text-align: center; margin: 0 auto; position: absolute;">
+	<div
+		style="width: 100%; text-align: center; margin: 0 auto; position: absolute;">
 		<!-- 管理员登录 -->
 		<div id="windows1">
-			
 			<div id="loginbox">
-				
 				<form action="" method="post" name="loginForm" id="loginForm">
-					
 					<div class="control-group normal_text">
-						
-							<!-- <span style="font-size:20px;font-weight:bold;">ERP运维管理平台</span> -->
 						<h3>
-							ERP运维管理平台
+							<img src="static/login/logo.png" alt="东部管道人工成本核算系统" />
 						</h3>
 					</div>
-					
 					<div class="control-group">
 						<div class="controls">
 							<div class="main_input_box">
@@ -161,6 +157,8 @@
 								<span class="pull-right" style="padding-right: 3%;"><a
 									href="javascript:changepage(1);" class="btn btn-success">注册</a></span>
 							</c:if>
+							<!-- <span id="btnChangePwd"  class="pull-right hidden" style="padding-right: 3%;"><a
+									 onclick="editUserH();" class="btn btn-success">修改密码</a></span> -->
 							<span class="pull-right"><a onclick="severCheck();"
 								class="flip-link btn btn-info" id="to-recover">登录</a></span>
 						</div>
@@ -169,7 +167,7 @@
 				<div class="controls">
 					<div class="main_input_box">
 						<font color="white"><span id="nameerr">Copyright ©
-								lhsm 2020</span></font>
+								lhsm 2017</span></font>
 					</div>
 				</div>
 			</div>
@@ -261,9 +259,26 @@
 		</div>
 
 	</div>
-	
-	<!-- <img alt="" style="background-size: cover; background-repeat: no-repeat;" src="static/login/images/banner_slide_05.jpg"> -->
-
+	<div id="templatemo_banner_slide" class="container_wapper">
+		<div class="camera_wrap camera_emboss" id="camera_slide">
+			<!-- 背景图片 -->
+			<c:choose>
+				<c:when test="${not empty pd.listImg}">
+					<c:forEach items="${pd.listImg}" var="var" varStatus="vs">
+						<div data-src="static/login/images/${var.FILEPATH }"></div>
+					</c:forEach>
+				</c:when>
+				<c:otherwise>
+					<div data-src="static/login/images/banner_slide_01.jpg"></div>
+					<div data-src="static/login/images/banner_slide_02.jpg"></div>
+					<div data-src="static/login/images/banner_slide_03.jpg"></div>
+					<div data-src="static/login/images/banner_slide_04.jpg"></div>
+					<div data-src="static/login/images/banner_slide_05.jpg"></div>
+				</c:otherwise>
+			</c:choose>
+		</div>
+		<!-- #camera_wrap_3 -->
+	</div>
 
 	<script type="text/javascript">
 		//服务器校验
@@ -283,13 +298,37 @@
 					cache : false,
 					success : function(data) {
 						if ("success" == data.result) {
- 						   if(getLvl(password)==3){
-								saveCookie();
-								window.location.href = "main/index"; 
-						   }else{
-							   editUserH();
-					   		}
-						} else if ("usererror" == data.result) {
+							saveCookie();
+							/* var locat = (window.location+'').split('/'); 
+							 if('main'== locat[3]){
+								 locat =  locat[0]+'//'+locat[2];
+							 }else{
+								 locat =  locat[0]+'//'+locat[2]+'/'+locat[3];
+							 } */
+							window.location.href = "http://localhost:8090/sh2/"+"main/index";
+						}else if ("pwderror" == data.result) {
+							/* $("#loginname").tips({
+								side : 1,
+								msg : "密码不符合强密码校验规则，强密码要求同时包含字母、数字、特殊字符，请重新修改密码后再登录",
+								bg : '#FF5080',
+								time : 15
+							});
+							showfh();  
+							$("#btnChangePwd").removeClass('hidden');*/
+							var msg = '密码不符合强密码校验规则，强密码要求同时包含字母、数字、特殊字符，请重新修改密码后再登录';
+			                bootbox.confirm(msg, function(result) {
+			    				if(result) {
+			    					editUserH();
+			    				}
+			                });
+			                /* bootbox.dialog({
+			    				message: "<span class='bigger-110'>密码不符合强密码校验规则，强密码要求同时包含字母、数字、特殊字符，请重新修改密码后再登录</span>",
+			    				buttons: 			
+			    				{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+			    			}); */
+			                
+							$("#loginname").focus();
+						}else if ("usererror" == data.result) {
 							$("#loginname").tips({
 								side : 1,
 								msg : "用户名或密码有误",
@@ -345,44 +384,6 @@
 		function changeCode2() {
 			$("#zcodeImg").attr("src", "code.do?t=" + genTimestamp());
 		}
-		function getLvl(txt) {
-		    var lvl = 0;
-		    //判断这个字符串中有没有数字
-		    if (/[0-9]/.test(txt)) {
-		        lvl++;
-		    }
-		    //判断字符串中有没有字母
-		    if (/[a-zA-Z]/.test(txt)) {
-		        lvl++;
-		    }
-		    //判断字符串中有没有特殊符号
-		    if (/[^0-9a-zA-Z_]/.test(txt)) {
-		        lvl++;
-		    }
-		    return lvl;
-		}
-		function editUserH(){
-		       var locat = (window.location+'').split('/'); 
-		       if('main'== locat[3]){
-		         locat =  locat[0]+'//'+locat[2];
-		       }else{
-		         locat =  locat[0]+'//'+locat[2]+'/'+locat[3];
-		       }
-		       var loginname = $("#loginname").val();
-		       var diag = new Dialog();
-		       diag.Drag=true;
-		       diag.Title ="修改密码";
-		       diag.URL = locat+'/user/goEditlogin?USERNAME='+loginname;
-		       console.log(diag.URL+'111111');
-		       console.log(loginname);
-		       diag.Width = 469;
-		       diag.Height = 320;
-		       diag.CancelEvent = function(){ //关闭事件
-		        diag.close();
-		       };
-		       diag.show();
-		    }
-
 		//客户端校验
 		function check() {
 
@@ -638,6 +639,28 @@
 						.slice(-(v.length > 2 ? v.length : 2))
 			});
 		};
+		
+		//修改个人资料
+		function editUserH(){
+			 var locat = (window.location+'').split('/'); 
+			 if('main'== locat[3]){
+				 locat =  locat[0]+'//'+locat[2];
+			 }else{
+				 locat =  locat[0]+'//'+locat[2]+'/'+locat[3];
+			 }
+			 console.log(locat);
+			 var loginname = $("#loginname").val();
+			 var diag = new Dialog();
+			 diag.Drag=true;
+			 diag.Title ="个人资料";
+			 diag.URL = locat+'/user/goEditMy?userName='+loginname;
+			 diag.Width = 469;
+			 diag.Height = 320;
+			 diag.CancelEvent = function(){ //关闭事件
+				diag.close();
+			 };
+			 diag.show();
+		}
 	</script>
 	<script>
 		//TOCMAT重启之后 点击左侧列表跳转登录首页 
@@ -661,6 +684,7 @@
 			}
 		</script>
 	</c:if>
+	<!-- 删除时确认窗口 -->
 	<script src="static/login/js/bootstrap.min.js"></script>
 	<script src="static/js/jquery-1.7.2.js"></script>
 	<script src="static/login/js/jquery.easing.1.3.js"></script>
@@ -681,7 +705,6 @@
 	
 	<script type="text/javascript" src="static/js/zDialog.js"></script>
 	<script type="text/javascript" src="static/js/zDrag.js"></script>
-
 	<!-- 软键盘控件start -->
 	<script type="text/javascript"
 		src="static/login/keypad/js/form/keypad.js"></script>

@@ -37,13 +37,14 @@
 				/plugins/keypad/** 			= anon
 				/static/js/myjs/** 			= authc
 				/static/js/** 				= anon
+				/static/ace/** 				= anon
 				/uploadFiles/uploadImgs/** 	= anon
 	           	/code.do 					= anon
 	           	/login_login	 			= anon
-	           	/login_login_app	 		= anon
 	           	/login_login_guest	 		= anon
+	           	/user/goEditMy**			= anon
+	           	/user/editUMy**		        = anon
 	           	/app**/** 					= anon
-	           	/attachment/**              = anon
 	           	/weixin/** 					= anon
 	           	/**							= authc
 				</value>
