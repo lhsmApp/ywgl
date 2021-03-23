@@ -149,7 +149,35 @@ public class UserController extends BaseController {
 		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
 		return mv;
 	}
-	
+	/**显示用户列表
+	 * @param page
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/listSapUsers")
+	public ModelAndView listSapUsers(Page page)throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		String keywords = pd.getString("keywords");				//关键词检索条件
+		if(null != keywords && !"".equals(keywords)){
+			pd.put("keywords", keywords.trim());
+		}
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		String unitCode=user.getUNIT_CODE();	
+		pd.put("UNIT_CODE", unitCode);
+		pd.put("USER_PROPERTY", "1");
+		page.setPd(pd);
+		List<PageData>	userList = userService.listSapUsers(page);	//列出用户列表
+		mv.setViewName("dataReporting/erpaccountcancle/erpaccountcancle_list");
+		mv.addObject("userList", userList);
+		mv.addObject("pd", pd);
+		mv.addObject("userName", Jurisdiction.getUsername());		
+		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
+		JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0",zdepartmentPdList));
+		mv.addObject("zTreeNodes", (null == arr ?"":arr.toString()));
+		return mv;
+	}
 	/**删除用户
 	 * @param out
 	 * @throws Exception 
@@ -470,6 +498,40 @@ public class UserController extends BaseController {
 		
 		return mv;
 	}
+	/**去修改用户页面(个人修改)
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/goEditlogin")
+	public ModelAndView goEditlogin() throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		if(pd.getString("USERNAME")!=null){
+			pd.put("USERNAME", pd.getString("USERNAME"));
+		}else{
+			pd.put("USERNAME", Jurisdiction.getUsername());
+		}
+		
+		HttpSession session = Jurisdiction.getSession();
+		User user = (User) session.getAttribute(Const.SESSION_USER); // 读取session中的用户信息(单独用户信息)
+		if (user != null) {
+			if(user.getUSER_TYPE().equals("1")){
+				pd = userService.findByUsername(pd);	
+				mv.setViewName("system/user/user_edit_login");//根据用户名读取
+				mv.addObject("msg", "editUMy");
+				mv.addObject("pd", pd);
+			}else{
+				pd = userService.findByStudentCode(pd);	
+				mv.setViewName("system/user/student_edit_login");
+				mv.addObject("msg", "editStudentMy");
+				mv.addObject("pd", pd);
+			}
+		}
+							
+		
+		return mv;
+	}
 	
 	/**查看用户
 	 * @return
@@ -541,15 +603,25 @@ public class UserController extends BaseController {
 	 */
 	@RequestMapping(value="/editUMy")
 	public ModelAndView editUMy() throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"修改个人信息");
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
+		if(pd.getString("USERNAME")!=null){
+			logBefore(logger, pd.getString("USERNAME")+"修改个人信息");
+		}else{
+			logBefore(logger, Jurisdiction.getUsername()+"修改个人信息");
+		}
+		
+	
 		if(pd.getString("PASSWORD") != null && !"".equals(pd.getString("PASSWORD"))){
 			pd.put("PASSWORD", new SimpleHash("SHA-1", pd.getString("USERNAME"), pd.getString("PASSWORD")).toString());
 		}
 		userService.editUMy(pd);//执行修改
-		FHLOG.save(Jurisdiction.getUsername(), "修改个人用户："+pd.getString("USERNAME"));
+		if(pd.getString("USERNAME")!=null){
+			FHLOG.save(pd.getString("USERNAME"), "修改个人用户："+pd.getString("USERNAME"));
+		}else{
+			FHLOG.save(Jurisdiction.getUsername(), "修改个人用户："+pd.getString("USERNAME"));
+		}
 		mv.addObject("msg","success");
 		mv.setViewName("save_result");
 		return mv;
@@ -696,7 +768,7 @@ public class UserController extends BaseController {
 		if (null != file && !file.isEmpty()) {
 			String filePath = PathUtil.getClasspath() + Const.FILEPATHFILE;								//文件上传路径
 			String fileName =  FileUpload.fileUp(file, filePath, "userexcel");							//执行上传
-			List<PageData> listPd = (List)ObjectExcelRead.readExcel(filePath, fileName, 2, 0, 0);		//执行读EXCEL操作,读出的数据导入List 2:从第3行开始；0:从第A列开始；0:第0个sheet
+			List<PageData> listPd = (List)ObjectExcelRead.readExcel(filePath, fileName, 1, 0, 0);		//执行读EXCEL操作,读出的数据导入List 2:从第3行开始；0:从第A列开始；0:第0个sheet
 			/*存入数据库操作======================================*/
 			pd.put("RIGHTS", "");					//权限
 			pd.put("LAST_LOGIN", "");				//最后登录时间
@@ -715,9 +787,10 @@ public class UserController extends BaseController {
 			 */
 			for(int i=0;i<listPd.size();i++){		
 				//pd.put("USER_ID", this.get32UUID());										//ID
-				pd.put("NAME", listPd.get(i).getString("var1"));							//姓名
+				pd.put("USER_PROPERTY", "1");												//导入的均为SAP用户
+				pd.put("NAME", listPd.get(i).getString("var12"));							//姓名
 				
-				String USERNAME = GetPinyin.getPingYin(listPd.get(i).getString("var1"));	//根据姓名汉字生成全拼
+				String USERNAME = GetPinyin.getPingYin(listPd.get(i).getString("var9"));	//根据姓名汉字生成全拼
 				pd.put("USERNAME", USERNAME);	
 				if(userService.findByUsername(pd) != null){									//判断用户名是否重复
 					USERNAME = GetPinyin.getPingYin(listPd.get(i).getString("var1"))+Tools.getRandomNum();
@@ -735,7 +808,7 @@ public class UserController extends BaseController {
 				pd.put("NUMBER", listPd.get(i).getString("var0"));							//编号已存在就跳过
 				pd.put("PHONE", listPd.get(i).getString("var2"));							//手机号
 				
-				pd.put("PASSWORD", new SimpleHash("SHA-1", USERNAME, "123").toString());	//默认密码123
+				pd.put("PASSWORD", new SimpleHash("SHA-1", USERNAME, "erp123").toString());	//默认密码123
 				if(userService.findByUN(pd) != null){
 					continue;
 				}

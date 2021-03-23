@@ -69,7 +69,9 @@
 		SKIN,
 		EMAIL,
 		NUMBER,
-		PHONE
+		PHONE,
+		USER_PROPERTY,
+		IFTEMPACCOUNT
 	</sql>
 	
 	<!-- 字段 -->
@@ -89,7 +91,8 @@
 		EMAIL,
 		NUMBER,
 		PHONE,
-		USER_PROPERTY
+		USER_PROPERTY,
+		IFTEMPACCOUNT
 	</sql>
 	
 	<!-- 字段值 -->
@@ -110,7 +113,8 @@
 		#{EMAIL},
 		#{NUMBER},
 		#{PHONE},
-		#{USER_PROPERTY}
+		#{USER_PROPERTY},
+		#{IFTEMPACCOUNT}
 	</sql>
 	
 	<!-- 字段值 -->
@@ -130,7 +134,8 @@
 		#{EMAIL},
 		#{NUMBER},
 		#{PHONE},
-		#{USER_PROPERTY}
+		#{USER_PROPERTY},
+		#{IFTEMPACCOUNT}
 	</sql>
 	
 	<!-- 判断用户名和密码 -->
@@ -378,6 +383,58 @@
 		order by u.LAST_LOGIN desc
 	</select>
 	
+	
+	<!-- SAP用户列表 -->
+	<select id="listSapUsers" parameterType="page" resultType="pd" >
+		select  u.USER_ID,
+				u.USERNAME,
+				u.PASSWORD,
+				u.LAST_LOGIN,
+				u.NAME,
+				u.IP,
+				u.EMAIL,
+				u.NUMBER,
+				u.PHONE,
+				u.STATUS,
+				u.BZ,
+				u.USER_PROPERTY,
+				r.ROLE_ID,
+				r.ROLE_NAME,
+				u.DEPARTMENT_ID,
+				d.NAME DEPARTMENT_NAME,
+				u.UNIT_CODE,
+				e.NAME UNIT_NAME
+		from <include refid="tableName"></include> u 
+		left join
+		<include refid="roleTableName"></include> r 
+		on u.ROLE_ID = r.ROLE_ID 
+		left join
+		oa_department d 
+		on u.DEPARTMENT_ID = d.DEPARTMENT_CODE 	
+		left join
+		oa_department e 
+		on u.UNIT_CODE = e.DEPARTMENT_CODE 
+		<where> u.USER_PROPERTY=#{pd.USER_PROPERTY} 		
+			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+				and
+					(
+						 u.USERNAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+						 or 
+						 u.EMAIL LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+						 or
+						 u.NUMBER LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+						 or
+						 u.NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+						 or
+						 u.PHONE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					)
+			</if>
+			<if test="pd.UNIT_CODE != null and pd.UNIT_CODE != ''"><!-- 单位检索 -->
+				and u.UNIT_CODE=#{pd.UNIT_CODE} 
+			</if>
+		</where>
+		order by u.LAST_LOGIN desc
+	</select>
 	<!-- 用户列表(弹窗选择用) -->
 	<select id="userBystafflistPage" parameterType="page" resultType="pd" >
 		select  u.USER_ID,
@@ -480,7 +537,8 @@
 				EMAIL					= #{EMAIL},
 				NUMBER					= #{NUMBER},
 				PHONE					= #{PHONE},
-				STATUS					= #{STATUS}
+				STATUS					= #{STATUS},
+				USER_PROPERTY= 			#{USER_PROPERTY}
 			<if test="PASSWORD != null and PASSWORD != ''">
 				,PASSWORD				= #{PASSWORD}
 			</if>
@@ -642,4 +700,40 @@
 		UNIT_CODE=#{UNIT_CODE}
 		
 	</select>
+		<!-- 按员工编号查找用户-->
+	<select id="findByUserNum" parameterType="pd" resultType="pd" >
+			select  u.USER_ID,
+				u.USERNAME,
+				u.PASSWORD,
+				u.LAST_LOGIN,
+				u.NAME,
+				u.IP,
+				u.EMAIL,
+				u.NUMBER,
+				u.PHONE,
+				u.STATUS,
+				u.BZ,
+				r.ROLE_ID,
+				r.ROLE_NAME,
+				u.DEPARTMENT_ID,
+				d.NAME DEPARTMENT_NAME,
+				u.UNIT_CODE,
+				e.NAME UNIT_NAME
+		from <include refid="tableName"></include> u 
+		left join
+		<include refid="roleTableName"></include> r 
+		on u.ROLE_ID = r.ROLE_ID 
+		left join
+		oa_department d 
+		on u.DEPARTMENT_ID = d.DEPARTMENT_CODE 
+		
+		left join
+		oa_department e 
+		on u.UNIT_CODE = e.DEPARTMENT_CODE 
+		WHERE
+		u.USERNAME=#{USERNAME}		
+	</select>
+	
+
+	
 </mapper>
