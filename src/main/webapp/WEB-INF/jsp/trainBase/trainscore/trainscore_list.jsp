@@ -26,7 +26,7 @@
 		<div class="main-content">
 			<div class="main-content-inner">
 				<div class="page-content">
-					<form action="trainscore/list.do" method="post" name="Form" id="Form">
+					<form action="trainscore/listScore.do" method="post" name="Form" id="Form">
 						<div class="page-header">
 							<!-- 检索  -->
 							<label class="pull-left" style="padding: 5px;">筛选条件：</label>

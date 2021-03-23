@@ -16,7 +16,7 @@
 <!-- 下拉框 -->
 <link rel="stylesheet" href="static/ace/css/chosen.css" />
 <!-- jsp文件头和头部 -->
-<%@ include file="../index/top.jsp"%>
+<%@ include file="../../system/index/top.jsp"%>
 <!-- 日期框 -->
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
 
@@ -53,36 +53,7 @@
 										<i class="ace-icon fa fa-search nav-search-icon"></i>
 									</span>
 									</div>
-								</td>
-								<%-- <td style="padding-left:2px;"><input class="span10 date-picker" name="lastLoginStart" id="lastLoginStart"  value="${pd.lastLoginStart}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="开始日期" title="最近登录开始"/></td>
-								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastLoginEnd" name="lastLoginEnd"  value="${pd.lastLoginEnd}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="最近登录结束"/></td> --%>
-								<td style="vertical-align:top;padding-left:2px;">
-								 	<select class="chosen-select form-control" name="ROLE_ID" id="role_id" data-placeholder="请选择角色" style="vertical-align:top;width: 120px;">
-									<option value=""></option>
-									<option value="">全部</option>
-									<c:forEach items="${roleList}" var="role">
-										<option value="${role.ROLE_ID }" <c:if test="${pd.ROLE_ID==role.ROLE_ID}">selected</c:if>>${role.ROLE_NAME }</option>
-									</c:forEach>
-								  	</select>
-								</td>
-								<td style="vertical-align:top;padding-left:2px;"> 
-								 	<select class="chosen-select form-control" name="STATUS" id="STATUS" data-placeholder="状态" style="vertical-align:top;width: 79px;">
-									<option value=""></option>
-									<option value="">全部</option>
-									<option value="1" <c:if test="${pd.STATUS == '1' }">selected</c:if> >正常</option>
-									<option value="0" <c:if test="${pd.STATUS == '0' }">selected</c:if> >停用</option>
-									</select>
-								</td>
-								<c:if test="${userName == 'admin'}">
-									<td  style="padding-left:5px">
-										<div class="selectTree" id="selectTree"></div>
-									</td>
-								</c:if>
-								<td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
-								<td style="padding-left:6px;">		 
-									<label class="btn btn-sm btn-primary" onclick="importData()">
-										 <i class="ace-icon fa fa-cloud-upload  bigger-110"></i>导入
-									</label>	</td>
+								</td>							
 							</tr>
 						</table>
 					
@@ -104,8 +75,8 @@
 									<th class="center">手机号</th>
 									<th class="center">是否SAP账号</th>
 									<!-- <th class="center"><i class="ace-icon fa fa-envelope-o"></i>邮箱</th> -->
-									<th class="center"><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>最近登录</th>
-									<th class="center">上次登录IP</th>
+<!-- 									<th class="center"><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>最近登录</th> -->
+<!-- 									<th class="center">上次登录IP</th> -->
 									<th class="center">备注</th>
 									<th class="center">状态</th>
 									<th class="center">操作</th>
@@ -132,10 +103,13 @@
 											<td class="center">${user.UNIT_NAME }</td>
 											<td class="center">${user.DEPARTMENT_NAME }</td>
 											<td class="center">${user.PHONE }</td>
-											<td class="center">${user.USER_PROPERTY }</td>
+											<td class="center">
+											<c:if test="${user.USER_PROPERTY == '0' }"><span>否</span></c:if>
+												<c:if test="${user.USER_PROPERTY == '1' }"><span >是</span></c:if>
+											</td>
 											<%-- <td class="center"><a title="发送电子邮件" style="text-decoration:none;cursor:pointer;" <c:if test="${QX.email == 1 }">onclick="sendEmail('${user.EMAIL }');"</c:if>>${user.EMAIL }&nbsp;<i class="ace-icon fa fa-envelope-o"></i></a></td> --%>
-											<td class="center">${user.LAST_LOGIN}</td>
-											<td class="center">${user.IP}</td>
+<%-- 											<td class="center">${user.LAST_LOGIN}</td> --%>
+<%-- 											<td class="center">${user.IP}</td> --%>
 											<td class="center">${user.BZ }</td>
 											<td style="width: 60px;" class="center">
 												<c:if test="${user.STATUS == '0' }"><span class="label label-important arrowed-in">停用</span></c:if>
@@ -143,11 +117,17 @@
 											</td>
 											<td class="center">
 												<div class="hidden-sm hidden-xs btn-group">
-													<a class="btn btn-xs btn-success" title="编辑" onclick="editUser('${user.USER_ID}');">
-														<i class="ace-icon fa fa-pencil-square-o bigger-120" title="编辑"></i>
+												<a class="btn btn-xs btn-success" title="编辑" onclick="view('${user.USERNAME}');">
+<!-- 														<i class="ace-icon fa  fa-credit-card  bigger-120" title="查看删除申请"></i> -->
+														查看<br>删除申请
 													</a>
-													<a class="btn btn-xs btn-danger" onclick="delUser('${user.USER_ID }','${user.USERNAME }');">
-														<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
+													<a class="btn btn-xs btn-primary" onclick="create('${user.NAME }','${user.USERNAME }');">
+<!-- 														<i class="ace-icon fa fa-trash-o bigger-120" title="生成删除申请"></i> -->
+														生成<br>删除申请
+													</a>
+													<a class="btn btn-xs btn-danger" onclick="cancel('${user.NAME }','${user.USERNAME }');">
+<!-- 														<i class="ace-icon fa fa-trash-o bigger-120" title="撤销删除申请"></i> -->
+														撤销<br>删除申请
 													</a>
 												</div>
 												<div class="hidden-md hidden-lg">
@@ -164,7 +144,7 @@
 																</a>
 															</li>
 															<li>
-																<a style="cursor:pointer;" onclick="delUser('${user.USER_ID }','${user.USERNAME }');" class="tooltip-error" data-rel="tooltip" title="删除">
+																<a style="cursor:pointer;" onclick="edit('${user.USER_ID }','${user.USERNAME }');" class="tooltip-error" data-rel="tooltip" title="删除">
 																	<span class="red">
 																		<i class="ace-icon fa fa-trash-o bigger-120"></i>
 																	</span>
@@ -187,22 +167,7 @@
 							</tbody>
 						</table>
 						
-					<div class="page-header position-relative">
-					<table style="width:100%;">
-						<tr>
-							<td style="vertical-align:top;">
-								
-								<a class="btn btn-mini btn-success" onclick="add();">新增</a>
-								<%-- </c:if> --%>
-								<%-- <c:if test="${QX.FHSMS == 1 }"><a title="批量发送站内信" class="btn btn-mini btn-info" onclick="makeAll('确定要给选中的用户发送站内信吗?');"><i class="ace-icon fa fa-envelope-o bigger-120"></i></a></c:if>
-								<c:if test="${QX.email == 1 }"><a title="批量发送电子邮件" class="btn btn-mini btn-primary" onclick="makeAll('确定要给选中的用户发送邮件吗?');"><i class="ace-icon fa fa-envelope bigger-120"></i></a></c:if> 
-								<c:if test="${QX.sms == 1 }"><a title="批量发送短信" class="btn btn-mini btn-warning" onclick="makeAll('确定要给选中的用户发送短信吗?');"><i class="ace-icon fa fa-envelope-o bigger-120"></i></a></c:if>--%>
-								<a title="批量删除" class="btn btn-mini btn-danger" onclick="makeAll('确定要删除选中的数据吗?');" ><i class='ace-icon fa fa-trash-o bigger-120'></i></a>
-							</td>
-							<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
-						</tr>
-					</table>
-					</div>
+	
 					</form>
 						</div>
 						<!-- /.col -->
@@ -224,7 +189,7 @@
 
 	<!-- basic scripts -->
 	<!-- 页面底部js¨ -->
-	<%@ include file="../index/foot.jsp"%>
+	<%@ include file="../../system/index/foot.jsp"%>
 	<!-- 删除时确认窗口 -->
 	<script src="static/ace/js/bootbox.js"></script>
 	<!-- ace scripts -->
@@ -246,184 +211,47 @@ function searchs(){
 	$("#userForm").submit();
 }
 
-//删除
-function delUser(userId,msg){
-	bootbox.confirm("确定要删除["+msg+"]吗?", function(result) {
+//撤销删除申请
+function cancel(name,userName){
+	bootbox.confirm("确定要撤销员工编号：["+userName+"]姓名为：["+name+"]的ERP账号删除申请吗？", function(result) {
 		if(result) {
-			top.jzts();
-			var url = "<%=basePath%>user/deleteU.do?USER_ID="+userId+"&tm="+new Date().getTime();
+			var url = "<%=basePath%>erpdelacctapplication/cancelDel.do?STAFF_CODE="+userName;
 			$.get(url,function(data){
 				nextPage(${page.currentPage});
 			});
 		};
 	});
 }
-/**
- * 导入
- */
-function importData(){
-	   top.jzts();
-   var diag = new top.Dialog();
-   diag.Drag=true;
-   diag.Title ="SAP用户导入";
-   diag.URL = '<%=basePath%>user/goUploadExcel.do';
-   diag.Width = 300;
-   diag.Height = 150;
-   diag.CancelEvent = function(){ //关闭事件
-	  top.jzts();
-
-	  $(top.hangge());//关闭加载状态
-      diag.close();
-   };
-   diag.show();
+//打印
+function view(userName){
+	top.jzts();
+	 var diag = new top.Dialog();
+	 diag.Drag=true;
+	 diag.Title ="ERP帐号删除申请";
+	 diag.URL = '<%=basePath%>erpdelacctapplication/viewApply.do?STAFF_CODE='+userName; 
+	 diag.Width = 800;
+	 diag.Height = 350;
+	 diag.Modal = true;				//有无遮罩窗口
+	 diag. ShowMaxButton = true;	//最大化按钮
+    diag.ShowMinButton = true;		//最小化按钮 
+	 diag.show();
 }
-//新增
-function add(){
+//生成删除申请
+function create(name,userName){
 	 top.jzts();
 	 var diag = new top.Dialog();
 	 diag.Drag=true;
-	 diag.Title ="新增";
-	 diag.URL = '<%=basePath%>user/goAddU.do';
-	 diag.Width = 469;
-	 diag.Height = 555;
+	 diag.Title ="账号删除";
+	 diag.URL = '<%=basePath%>erpdelacctapplication/goEdit.do?USERNAME='+userName;
+	 diag.Width = 750;
+	 diag.Height = 300;
+	 diag.Modal = true;				//有无遮罩窗口
+	 diag. ShowMaxButton = true;	//最大化按钮
+     diag.ShowMinButton = true;		//最小化按钮 
 	 diag.CancelEvent = function(){ //关闭事件
 		 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
-			 if('${page.currentPage}' == '0'){
-				 top.jzts();
-				 setTimeout("self.location=self.location",100);
-			 }else{
-				 nextPage(${page.currentPage});
-			 }
+			 nextPage(${page.currentPage});
 		}
-		diag.close();
-	 };
-	 diag.show();
-}
-
-//修改
-function editUser(user_id){
-	 top.jzts();
-	 var diag = new top.Dialog();
-	 diag.Drag=true;
-	 diag.Title ="资料";
-	 diag.URL = '<%=basePath%>user/goEditU.do?USER_ID='+user_id;
-	 diag.Width = 469;
-	 diag.Height = 555;
-	 diag.CancelEvent = function(){ //关闭事件
-		 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
-			nextPage(${page.currentPage});
-		}
-		diag.close();
-	 };
-	 diag.show();
-}
-
-//批量操作
-function makeAll(msg){
-	bootbox.confirm(msg, function(result) {
-		if(result) {
-			var str = '';
-			var emstr = '';
-			var phones = '';
-			var username = '';
-			for(var i=0;i < document.getElementsByName('ids').length;i++)
-			{
-				  if(document.getElementsByName('ids')[i].checked){
-				  	if(str=='') str += document.getElementsByName('ids')[i].value;
-				  	else str += ',' + document.getElementsByName('ids')[i].value;
-				  	
-				  	if(emstr=='') emstr += document.getElementsByName('ids')[i].id;
-				  	else emstr += ';' + document.getElementsByName('ids')[i].id;
-				  	
-				  	if(phones=='') phones += document.getElementsByName('ids')[i].alt;
-				  	else phones += ';' + document.getElementsByName('ids')[i].alt;
-				  	
-				  	if(username=='') username += document.getElementsByName('ids')[i].title;
-				  	else username += ';' + document.getElementsByName('ids')[i].title;
-				  }
-			}
-			if(str==''){
-				bootbox.dialog({
-					message: "<span class='bigger-110'>您没有选择任何内容!</span>",
-					buttons: 			
-					{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
-				});
-				$("#zcheckbox").tips({
-					side:3,
-		            msg:'点这里全选',
-		            bg:'#AE81FF',
-		            time:8
-		        });
-				
-				return;
-			}else{
-				if(msg == '确定要删除选中的数据吗?'){
-					top.jzts();
-					$.ajax({
-						type: "POST",
-						url: '<%=basePath%>user/deleteAllU.do?tm='+new Date().getTime(),
-				    	data: {USER_IDS:str},
-						dataType:'json',
-						//beforeSend: validateData,
-						cache: false,
-						success: function(data){
-							 $.each(data.list, function(i, list){
-									nextPage(${page.currentPage});
-							 });
-						}
-					});
-				}else if(msg == '确定要给选中的用户发送邮件吗?'){
-					sendEmail(emstr);
-				}else if(msg == '确定要给选中的用户发送短信吗?'){
-					sendSms(phones);
-				}else if(msg == '确定要给选中的用户发送站内信吗?'){
-					sendFhsms(username);
-				}
-			}
-		}
-	});
-}
-
-//去发送短信页面
-function sendSms(phone){
-	 top.jzts();
-	 var diag = new top.Dialog();
-	 diag.Drag=true;
-	 diag.Title ="发送短信";
-	 diag.URL = '<%=basePath%>head/goSendSms.do?PHONE='+phone+'&msg=appuser';
-	 diag.Width = 600;
-	 diag.Height = 265;
-	 diag.CancelEvent = function(){ //关闭事件
-		diag.close();
-	 };
-	 diag.show();
-}
-
-//去发送电子邮件页面
-function sendEmail(EMAIL){
-	 top.jzts();
-	 var diag = new top.Dialog();
-	 diag.Drag=true;
-	 diag.Title ="发送电子邮件";
-	 diag.URL = '<%=basePath%>head/goSendEmail.do?EMAIL='+EMAIL;
-	 diag.Width = 660;
-	 diag.Height = 486;
-	 diag.CancelEvent = function(){ //关闭事件
-		diag.close();
-	 };
-	 diag.show();
-}
-
-//发站内信
-function sendFhsms(username){
-	 top.jzts();
-	 var diag = new top.Dialog();
-	 diag.Drag=true;
-	 diag.Title ="站内信";
-	 diag.URL = '<%=basePath%>fhsms/goAdd.do?username='+username;
-	 diag.Width = 660;
-	 diag.Height = 444;
-	 diag.CancelEvent = function(){ //关闭事件
 		diag.close();
 	 };
 	 diag.show();
@@ -527,31 +355,6 @@ function viewUser(USERNAME){
 	 diag.show();
 }
 		
-function initComplete(){
-	//下拉树
-	var defaultNodes = {"treeNodes":${zTreeNodes}};
-	//绑定change事件
-	$("#selectTree").bind("change",function(){
-		if(!$(this).attr("relValue")){
-	      //  top.Dialog.alert("没有选择节点");
-	    }else{
-			//alert("选中节点文本："+$(this).attr("relText")+"<br/>选中节点值："+$(this).attr("relValue"));
-			$("#DEPARTMENT_ID").val($(this).attr("relValue"));
-	    }
-	});
-	//赋给data属性
-	$("#selectTree").data("data",defaultNodes);  
-	$("#selectTree").render();
-	$("#selectTree2_input").val("${null==depname||''==depname?'请选择单位':depname}");
-	
-	$("#selectTree2_button").closest('.ali01').append("<input value=''  id='reset_button' type='button' class='selBtn' style='background-image: url(plugins/selectZtree/ztree/img/diy/2.png);border: 1px solid rgb(124,193,235);border-left: 0;background-position: center;' onclick='reset1()'>");
-}
 
-function reset1(){
-	/* console.log(${pd.DEPARTMENT_ID });
-	console.log('${pd.DEPARTMENT_ID }'); */
-	$("#DEPARTMENT_ID").val('');
-	$("#selectTree2_input").val("请选择单位");
-}
 </script>
 </html>

@@ -129,12 +129,12 @@ public class TrainScoreController extends BaseController {
 
 		Map_SetColumnsList.put("TEST_NAME", new TmplConfigDetail("TEST_NAME", "考试名称", "1", false));
 		Map_SetColumnsList.put("TEST_DATE", new TmplConfigDetail("TEST_DATE", "考试时间", "1", false));
-		Map_SetColumnsList.put("USERNAME", new TmplConfigDetail("USERNAME", "员工编号", "1", false));
-		Map_SetColumnsList.put("NAME1", new TmplConfigDetail("NAME1", "用户姓名", "1", false));
+		Map_SetColumnsList.put("USERNAME", new TmplConfigDetail("USERNAME", "员工编号(必输)", "1", false));
+		Map_SetColumnsList.put("NAME1", new TmplConfigDetail("NAME1", "用户姓名(必输)", "1", false));
 		Map_SetColumnsList.put("UNIT_CODE", new TmplConfigDetail("UNIT_CODE", "单位编码", "1", false));
-		Map_SetColumnsList.put("MODULE", new TmplConfigDetail("MODULE", "模块", "1", false));
-		Map_SetColumnsList.put("TEST_SCORE", new TmplConfigDetail("TEST_SCORE", "考试分数", "1", true));
-		Map_SetColumnsList.put("QUALIFIED_SCORE", new TmplConfigDetail("QUALIFIED_SCORE", "及格分数", "1", true));
+		Map_SetColumnsList.put("MODULE", new TmplConfigDetail("MODULE", "模块(必输)", "1", false));
+		Map_SetColumnsList.put("TEST_SCORE", new TmplConfigDetail("TEST_SCORE", "考试分数(必输)", "1", true));
+		Map_SetColumnsList.put("QUALIFIED_SCORE", new TmplConfigDetail("QUALIFIED_SCORE", "及格分数(必输)", "1", true));
 //		Map_SetColumnsList.put("IF_QUALIFIED", new TmplConfigDetail("IF_QUALIFIED", "是否及格", "1", false));	
 		return mv;
 	}

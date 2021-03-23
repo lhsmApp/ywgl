@@ -27,7 +27,8 @@
 		STATE,
 		BILL_USER,
 		USER_DEPART,
-		BILL_DATE
+		BILL_DATE,
+		IF_CREATE_FROM
 	</sql>
 	
 	<!-- 字段值 -->
@@ -50,7 +51,8 @@
 		#{STATE},
 		#{BILL_USER},
 		#{USER_DEPART},
-		#{BILL_DATE}
+		#{BILL_DATE},
+		#{IF_CREATE_FROM}
 	</sql>
 	
 	<!-- 新增-->
@@ -63,7 +65,16 @@
 			<include refid="FieldValue"></include>	
 		)
 	</insert>
-	
+			<!-- 新增SAP账号删除申请-->
+	<insert id="saveApply" parameterType="pd">
+			insert into 
+			<include refid="tableName"></include>
+		(
+			<include refid="Field"></include>
+		) value (
+			<include refid="FieldValue"></include>	
+		)
+	</insert>
 	<!-- 修改 -->
 	<update id="edit" parameterType="pd">
 		update
@@ -105,6 +116,7 @@
 			t0.ACCOUNT_DELETE_REASON,	
 			t0.NOTE,
 			t0.CONFIRM_STATE,
+			t0.IF_CREATE_FROM,
 			t1.NAME BILL_USERNAME,
 			t1.PHONE BILL_PHONE
 		from 
@@ -162,6 +174,7 @@
                  #{item}
 		</foreach>
 	</update>
+
 	<!-- *********************导入导出********************************* -->
 	<!-- 导出列表 -->
 	<select id="exportList" parameterType="Page" resultType="pd">
@@ -238,7 +251,8 @@
 				#{item.STATE},
 				#{item.BILL_USER},
 				#{item.USER_DEPART},
-				#{item.BILL_DATE}
+				#{item.BILL_DATE},
+				#{IF_CREATE_FROM}
 			);
 		</foreach>
 	</update>
@@ -252,5 +266,21 @@
 		where 
 			STATE = 1 
 		limit 1
+	</select>
+	<!-- 删除用户 -->
+	<delete id="deleteApply" parameterType="pd" flushCache="false">
+		delete from <include refid="tableName"></include>
+		where 
+			STAFF_CODE = #{STAFF_CODE}
+
+	</delete>
+		<!-- 通过user_id获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd" >
+		select 
+			<include refid="Field"></include>
+		from 
+			<include refid="tableName"></include>
+		where 
+			STAFF_CODE = #{STAFF_CODE}
 	</select>
 </mapper>

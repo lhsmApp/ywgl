@@ -27,13 +27,19 @@ public class ERPDelAcctApplicationService implements ERPDelAcctApplicationManage
 	public void save(PageData pd)throws Exception{
 		dao.save("ERPDelAcctApplicationMapper.save", pd);
 	}
-	
 	/**删除
 	 * @param pd
 	 * @throws Exception
 	 */
 	public void delete(PageData pd)throws Exception{
 		dao.delete("ERPDelAcctApplicationMapper.delete", pd);
+	}
+	/**撤销账号删除申请
+	 * @param pd
+	 * @throws Exception
+	 */
+	public void deleteApply(PageData pd)throws Exception{
+		dao.delete("ERPDelAcctApplicationMapper.deleteApply", pd);
 	}
 	
 	/**修改
@@ -43,7 +49,7 @@ public class ERPDelAcctApplicationService implements ERPDelAcctApplicationManage
 	public void edit(PageData pd)throws Exception{
 		dao.update("ERPDelAcctApplicationMapper.edit", pd);
 	}
-	
+
 	/**列表
 	 * @param page
 	 * @throws Exception
@@ -105,6 +111,14 @@ public class ERPDelAcctApplicationService implements ERPDelAcctApplicationManage
 	@SuppressWarnings("unchecked")
 	public List<PageData> listBusiDate(PageData pd) throws Exception {
 		return (List<PageData>)dao.findForList("ERPDelAcctApplicationMapper.listBusiDate", pd);
+	}
+	/**通过id获取数据
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public PageData findById(PageData pd)throws Exception{
+		return (PageData)dao.findForObject("ERPDelAcctApplicationMapper.findById", pd);
 	}
 }
 

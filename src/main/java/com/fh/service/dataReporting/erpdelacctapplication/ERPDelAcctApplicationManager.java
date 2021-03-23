@@ -24,6 +24,12 @@ public interface ERPDelAcctApplicationManager{
 	 */
 	public void delete(PageData pd)throws Exception;
 	
+	/**撤销账号删除申请
+	 * @param pd
+	 * @throws Exception
+	 */
+	public void deleteApply(PageData pd)throws Exception;
+	
 	/**修改
 	 * @param pd
 	 * @throws Exception
@@ -76,5 +82,11 @@ public interface ERPDelAcctApplicationManager{
 	 */
 	public List<PageData> listBusiDate(PageData pd)throws Exception;
 	
+	/**通过id获取数据
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public PageData findById(PageData pd)throws Exception;
 }
 

@@ -58,7 +58,7 @@
 								<tr>
 									<th class="center" style="width:50px;">序号</th>
 									<th class="center">考试时间</th>
-										<th class="center">考试试卷名称</th>
+									<th class="center">考试试卷名称</th>
 									<th class="center">题目数</th> 
 									<th class="center">考试人</th>
 									<th class="center">分数</th>

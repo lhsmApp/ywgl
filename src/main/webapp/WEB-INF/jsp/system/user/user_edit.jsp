@@ -123,7 +123,7 @@
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;"></td>
 											<td style="width:79px;text-align: left;padding-top: 13px;">
-												<input name="USER_PROPERTY" id="USER_PROPERTY" type="checkbox" class="ace"/>
+												<input name="USER_PROPERTY" id="USER_PROPERTY" type="checkbox" class="ace" />
 												
 											<span class="lbl">是否SAP账号</span>
 											</td>
@@ -169,6 +169,14 @@
 			$("#loginname").css("color","gray");
 		}
 	});
+	if("${pd.USER_PROPERTY}"=="1"){
+		$('#USER_PROPERTY').prop('checked','checked');
+		$('#USER_PROPERTY').val('1');
+	}
+	if("${pd.USER_PROPERTY}"=="0"){
+		$('#USER_PROPERTY').removeAttr("checked");
+		$('#USER_PROPERTY').val('0');
+	}
 	//保存
 	function save(){
 		var idValue =$("#loginname").val();

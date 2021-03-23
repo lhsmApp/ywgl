@@ -1,5 +1,6 @@
 package com.fh.controller.dataReporting.erpdelacctapplication;
 
+import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ import com.fh.service.dataReporting.erpdelacctapplication.ERPDelAcctApplicationM
 import com.fh.service.dataReporting.grcperson.GRCPersonManager;
 import com.fh.service.myPush.myPush.MyPushManager;
 import com.fh.service.sysConfig.sysconfig.SysConfigManager;
+import com.fh.service.system.user.UserManager;
 import com.fh.service.tmplconfig.tmplconfig.impl.TmplConfigService;
 import com.fh.util.Const;
 import com.fh.util.DateUtil;
@@ -65,6 +67,9 @@ public class ERPDelAcctApplicationController extends BaseController {
     private GRCPersonManager grcpersonService;
     @Resource(name = "myPushService")
 	private MyPushManager myPushService;
+    @Resource(name = "userService")
+	private UserManager userService;
+    
 
     Map<String, TableColumns> Map_HaveColumnsList = new LinkedHashMap<String, TableColumns>();
     Map<String, TmplConfigDetail> Map_SetColumnsList = new LinkedHashMap<String, TmplConfigDetail>();
@@ -125,7 +130,80 @@ public class ERPDelAcctApplicationController extends BaseController {
         commonBase.setCode(0);
         return commonBase;
     }
-
+	/**生成SAP用户删除申请
+	 * @param out
+	 * @throws Exception 
+	 */
+	@RequestMapping(value="/savedel")
+	public ModelAndView savedel(PrintWriter out) throws Exception{
+		logBefore(logger, Jurisdiction.getUsername()+"删除user");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		PageData pd1 = new PageData();
+		pd1.put("ACCOUNT_DELETE_REASON",pd.getString("ACCOUNT_DELETE_REASON"));//删除原因
+		pd=userService.findByUserNum(pd);
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);		
+		pd1.put("STAFF_CODE",pd.getString("USERNAME"));//员工编号
+		pd1.put("STAFF_NAME",pd.getString("NAME"));//员工姓名
+		pd1.put("USER_DEPART",pd.getString("UNIT_CODE"));//用户所属单位编码
+		pd1.put("DEPART_CODE",pd.getString("UNIT_CODE"));//单位编码
+		pd1.put("CONFIRM_STATE","1");//删除申请状态
+		pd1.put("IF_CREATE_FROM","1");//是否生成删除表单
+		pd1.put("BILL_USER",user.getNAME());//创建用户
+		pd1.put("BILL_DATE",DateUtils.getCurrentTime(DateFormatUtils.DATE_FORMAT1));//创建日期
+		pd1.put("STATE","1");//表单状态
+		pd1.put("APPLY_DATE",DateUtils.getCurrentTime(DateFormatUtils.DATE_FORMAT1));//申请日期
+		pd1.put("BUSI_DATE",DateUtils.getCurrentTime(DateFormatUtils.DATE_MONTH_FORMAT));//业务期间
+		erpdelacctapplicationService.save(pd1);
+		mv.addObject("msg","success");
+		mv.setViewName("save_result");
+		return mv;
+	}
+	 /**去修改页面
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/goEdit")
+	public ModelAndView goEdit()throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		pd=userService.findByUserNum(pd);
+		mv.addObject("pd",pd);//传入上级所有信息
+		mv.setViewName("dataReporting/erpaccountcancle/canclereason_edit");
+		mv.addObject("msg", "edit");
+		return mv;
+	}	
+	/**撤销删除申请
+	 * @param out
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/cancelDel")
+	public void cancelDel(PrintWriter out) throws Exception{
+		PageData pd = new PageData();	
+		pd = this.getPageData();
+		erpdelacctapplicationService.deleteApply(pd);	//执行删除
+		out.write("success");
+		out.close();
+	}
+	 /**查询删除申请点
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/viewApply")
+	public ModelAndView viewApply()throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		pd = erpdelacctapplicationService.findById(pd);	//根据ID读取
+		//JSONArray json = JSONArray.fromObject(pd); 
+		mv.setViewName("dataReporting/erpaccountcancle/erpaccountcanclePrintPage");
+		mv.addObject("pd", pd);
+		mv.addObject("billCode", pd.get("BILL_CODE"));
+		
+		return mv;
+	}
     /**
      * 列表
      * 
@@ -224,6 +302,7 @@ public class ERPDelAcctApplicationController extends BaseController {
         return commonBase;
     }
 
+	
     /**
      * 批量上报/撤销上报
      * 

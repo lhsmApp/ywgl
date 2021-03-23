@@ -99,6 +99,14 @@ public interface UserManager {
 	 */
 	public List<PageData> listUsers(Page page)throws Exception;
 	
+	/**SAP用户列表
+	 * @param page
+	 * @return
+	 * @throws Exception
+	 */
+	public List<PageData> listSapUsers(Page page)throws Exception;
+	
+	
 	/**用户列表(弹窗选择用)
 	 * @param page
 	 * @return
@@ -188,5 +196,11 @@ public interface UserManager {
 	 * @throws Exception
 	 */
 	public List<PageData> getUserValue(PageData pd)throws Exception;
-	
+
+	/**通过员工编号获取数据
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public PageData findByUserNum(PageData pd)throws Exception;
 }

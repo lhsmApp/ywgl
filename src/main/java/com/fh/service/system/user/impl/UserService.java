@@ -134,6 +134,15 @@ public class UserService implements UserManager{
 		return (List<PageData>) dao.findForList("UserMapper.userlistPage", page);
 	}
 	
+	/**SAP用户列表
+	 * @param page
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PageData> listSapUsers(Page page)throws Exception{
+		return (List<PageData>) dao.findForList("UserMapper.listSapUsers", page);
+	}
 	/**用户列表(弹窗选择用)
 	 * @param page
 	 * @return
@@ -253,4 +262,16 @@ public class UserService implements UserManager{
 	public List<PageData> getUserValue(PageData pd)throws Exception{
 		return (List<PageData>) dao.findForList("UserMapper.getUserValue",pd);
 	}
+	
+
+	
+	/**通过员工编号获取数据
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public PageData findByUserNum(PageData pd)throws Exception{
+		return (PageData)dao.findForObject("UserMapper.findByUserNum", pd);
+	}
+	
 }

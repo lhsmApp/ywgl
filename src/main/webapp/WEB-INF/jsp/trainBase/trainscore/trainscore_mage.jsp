@@ -46,12 +46,12 @@
 								<i class="ace-icon fa fa-search bigger-110"></i>
 							</button>
 								<button type="button" class="btn btn-xs btn-info" style="margin-right:5px;" onclick="importItems();">
-									<i class="ace-icon fa fa-credit-card  bigger-120"></i>
+									<i class="ace-icon fa fa-cloud-upload  bigger-120"></i>
 										导入
 								</button>
 								
 								<button type="button" class="btn btn-xs btn-info" style="margin-right:5px;" onclick="exportExcel();">
-									<i class="ace-icon fa fa-credit-card  bigger-120"></i>
+									<i class="ace-icon fa fa-cloud-download  bigger-120"></i>
 										导出
 								</button>
 						</div>
