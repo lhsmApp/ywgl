@@ -161,7 +161,14 @@
 <!-- 													</select></th> -->
 <%-- 												<th><input type="text" name="POSITION_LEVEL" id="POSITION_LEVEL" readonly="readonly" value="${var.POSITION_LEVEL}" maxlength="50" title="职级" style="width:100%;"/></th> --%>
 												<th><input type="text" name="STAFF_JOB" id="STAFF_JOB" readonly="readonly" value="${var.STAFF_JOB}" maxlength="10" title="岗位" style="width:100%;"/></th>
-												<th><input type="text" name="STAFF_MODULE" id="STAFF_MODULE" readonly="readonly" value="${var.STAFF_MODULE}" maxlength="20" title="模块" style="width:100%;"/></th>
+<%-- 												<th><input type="text" name="STAFF_MODULE" id="STAFF_MODULE" readonly="readonly" value="${var.STAFF_MODULE}" maxlength="20" title="模块" style="width:100%;"/></th> --%>
+													<th>
+												<input id="STAFF_MODULE" name="STAFF_MODULE"  list="MODULE"  value="${var.STAFF_MODULE}"> 
+													<datalist id="MODULE">
+														<option value="项目" >项目</option> 
+														<option value="财务" >财务</option>
+													</datalist>
+												</th>
 												<th><input type="text" name="PHONE" id="PHONE" readonly="readonly" value="${var.PHONE}" maxlength="30" title="联络电话" style="width:100%;"/></th>
 												<th><input type="text" name="MAIL" id="MAIL" readonly="readonly" value="${var.MAIL}" maxlength="30" title="电子邮箱" style="width:100%;"/></th>
 												<th><input type="text" name="IF_TRAINING" id="IF_TRAINING" readonly="readonly" value="${var.IF_TRAINING}" maxlength="1" title="是否培训" style="width:100%;"/></th>
@@ -231,7 +238,18 @@
 						</th>
 <!-- 						<th><input type="text" name="POSITION_LEVEL" id="POSITION_LEVEL" value="" maxlength="50" title="职级" style="width:100%;"/></th> -->
 						<th><input type="text" name="STAFF_JOB" id="STAFF_JOB" value="" maxlength="30" title="岗位" style="width:100%;"/></th>
-						<th><input type="text" name="STAFF_MODULE" id="STAFF_MODULE" value="" maxlength="20" title="模块" style="width:100%;"/></th>
+<!-- 						<th><input type="text" name="STAFF_MODULE" id="STAFF_MODULE" value="" maxlength="20" title="模块" style="width:100%;"/></th> -->
+						<th><input id="STAFF_MODULE" name="STAFF_MODULE"  list="MODULE"  value="${var.STAFF_MODULE}"> 
+							<datalist id="MODULE">
+								<option value="项目" >项目</option> 
+								<option value="财务" >财务</option>
+								<option value="资产" >资产</option> 
+								<option value="物资" >物资</option>
+								<option value="设备" >设备</option> 
+								<option value="生产" >生产</option>
+								<option value="生产" >销售</option>
+							</datalist>
+						</th>
 						<th><input type="text" name="PHONE" id="PHONE" value="" maxlength="30" title="联络电话" style="width:100%;"/></th>
 						<th><input type="text" name="MAIL" id="MAIL" value="" maxlength="30" title="电子邮箱" style="width:100%;"/></th>
 						<th><input type="text" name="IF_TRAINING" id="IF_TRAINING" value="" maxlength="1"  readonly="readonly" title="是否培训" style="width:100%;"/></th>
