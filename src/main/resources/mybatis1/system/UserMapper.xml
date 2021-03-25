@@ -448,6 +448,7 @@
 				u.PHONE,
 				u.STATUS,
 				u.BZ,
+				u.USER_PROPERTY,
 				r.ROLE_ID,
 				r.ROLE_NAME
 		from <include refid="tableName"></include> u, <include refid="roleTableName"></include> r 
@@ -608,6 +609,7 @@
 				u.PHONE,
 				u.STATUS,
 				u.BZ,
+				u.USER_PROPERTY,
 				r.ROLE_ID,
 				r.ROLE_NAME,
 				u.DEPARTMENT_ID,
@@ -713,6 +715,7 @@
 				u.PHONE,
 				u.STATUS,
 				u.BZ,
+				u.USER_PROPERTY,
 				r.ROLE_ID,
 				r.ROLE_NAME,
 				u.DEPARTMENT_ID,

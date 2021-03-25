@@ -50,11 +50,11 @@
 												<div class="btn-toolbar inline middle no-margin">
 													<div data-toggle="buttons" class="btn-group no-margin">
 														<button id="btnEdit" class="btn btn-info btn-xs" onclick="toERPOaa()">
-															<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP正式账号审批</span>
+															<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP新增账号审批</span>
 														</button>
-														<button id="btnEdit" class="btn btn-info btn-xs" onclick="toERPTaa()">
-															<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP临时账号审批</span>
-														</button>
+<!-- 														<button id="btnEdit" class="btn btn-info btn-xs" onclick="toERPTaa()"> -->
+<!-- 															<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP临时账号审批</span> -->
+<!-- 														</button> -->
 														<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toERPDaa()">
 															<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP删除账号审批</span>
 														</button>

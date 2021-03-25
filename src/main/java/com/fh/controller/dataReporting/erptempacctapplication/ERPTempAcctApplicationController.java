@@ -138,6 +138,31 @@ public class ERPTempAcctApplicationController extends BaseController {
 		Map_SetColumnsList.put("NOTE", new TmplConfigDetail("NOTE", "备注", "1", false));
 		return mv;
 	}
+	/**列表
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/listUsers")
+	public ModelAndView listUsers(Page page) throws Exception{
+		logBefore(logger, Jurisdiction.getUsername()+"列表ERPTempAcctApplication");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		PageData data = new PageData();
+		User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		pd = this.getPageData();	
+		pd.put("confirmState","3");
+		data.put("STATE","1");
+		data.put("SelectedDepartCode",user.getUNIT_CODE());
+		page.setPd(pd);	
+		List<PageData>	varList = erptempacctapplicationService.list(page);	//列出ERPTempAcctApplication列表
+		mv.setViewName("dataReporting/erpaccountdelay/erpaccountdelay_list");
+		mv.addObject("varList", varList);
+		mv.addObject("pd", pd);
+		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
+		
+		
+		return mv;
+	}
 	
 	/**保存与修改合并类
 	 * @param

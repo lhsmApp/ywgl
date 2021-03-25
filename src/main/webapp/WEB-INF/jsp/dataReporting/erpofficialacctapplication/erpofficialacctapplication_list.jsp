@@ -43,11 +43,11 @@
 											<div class="btn-toolbar inline middle no-margin">
 												<div data-toggle="buttons" class="btn-group no-margin">
 													<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toERPOfficialAcctApplication()">
-														<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP正式账号申请</span>
+														<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP账号新增申请</span>
 													</button>
-													<button id="btnEdit" class="btn btn-info btn-xs" onclick="toERPTempacctApplication()">
-														<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP临时账号申请</span>
-													</button>
+<!-- 													<button id="btnEdit" class="btn btn-info btn-xs" onclick="toERPTempacctApplication()"> -->
+<!-- 														<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP临时账号申请</span> -->
+<!-- 													</button> -->
 													<button id="btnEdit" class="btn btn-info btn-xs" onclick="toERPDelAcctApplication()">
 														<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP删除账号申请</span>
 													</button>
@@ -118,6 +118,7 @@
 										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">二级单位</th>
 										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">三级单位</th>
 										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">职务</th>
+										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">职级</th>
 										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">岗位</th>
 										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">模块</th>
 										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">联络电话</th>
@@ -130,6 +131,7 @@
 										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">UKey编号</th>
 										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">申请日期</th>
 										<th style="width:110px; text-align: center;">备注</th>
+										<th style="width:110px; text-align: center;">帐号类别</th>
 										<th style="width:110px; text-align: center;">审批状态</th>
 									</tr>
 								</thead>
@@ -139,13 +141,25 @@
 										<c:forEach items="${varList}" var="var" varStatus="vs">
 											<tr>
 												<td class='center'>
-													<label class="pos-rel"><input type='checkbox' name='ids' value="${var.ID}" class="ace" /><span class="lbl"></span></label>
+													<label class="pos-rel"><input type='checkbox' name='ids' value="${var.ID}&${var.ACCOUNT_SIGN}" class="ace" /><span class="lbl"></span></label>
 												</td>
 												<th><input type="text" class="ui-state-default ui-th-column ui-th-ltr" name="STAFF_CODE" id="STAFF_CODE" readonly="readonly" value="${var.STAFF_CODE}" maxlength="30" title="员工编号" style="width:100%;"/></th>
 												<th><input type="text" name="STAFF_NAME" id="STAFF_NAME" readonly="readonly" value="${var.STAFF_NAME}" maxlength="30" title="员工姓名" style="width:100%;"/></th>
 												<th><input type="text" name="DEPART_CODE" id="DEPART_CODE" readonly="readonly" value="${var.DEPART_CODE}" maxlength="30" title="二级单位" style="width:100%;"/></th>
 												<th><input type="text" name="UNITS_DEPART" id="UNITS_DEPART" readonly="readonly" value="${var.UNITS_DEPART}" maxlength="30" title="三级单位" style="width:100%;"/></th>
 												<th><input type="text" name="STAFF_POSITION" id="STAFF_POSITION" readonly="readonly" value="${var.STAFF_POSITION}" maxlength="50" title="职务" style="width:100%;"/></th>
+												<th>
+												<input id="POSITION_LEVEL" name="POSITION_LEVEL"  list="level"  value="${var.POSITION_LEVEL}"> 
+													<datalist id="level">
+														<option value="处级" >处级</option> 
+														<option value="非处级" >非处级</option>
+													</datalist>
+												</th>
+							<!-- 												<th><select class="form-control" id="POSITION_LEVEL" name="POSITION_LEVEL" style="width:150px;margin-left: 1px;" > -->
+<%-- 														<option value="1" <c:if test="${pd.POSITION_LEVEL == 1}">selected="selected"</c:if>>处级</option> --%>
+<%-- 														<option value="2" <c:if test="${pd.POSITION_LEVEL == 2}">selected="selected"</c:if>>非处级</option> --%>
+<!-- 													</select></th> -->
+<%-- 												<th><input type="text" name="POSITION_LEVEL" id="POSITION_LEVEL" readonly="readonly" value="${var.POSITION_LEVEL}" maxlength="50" title="职级" style="width:100%;"/></th> --%>
 												<th><input type="text" name="STAFF_JOB" id="STAFF_JOB" readonly="readonly" value="${var.STAFF_JOB}" maxlength="10" title="岗位" style="width:100%;"/></th>
 												<th><input type="text" name="STAFF_MODULE" id="STAFF_MODULE" readonly="readonly" value="${var.STAFF_MODULE}" maxlength="20" title="模块" style="width:100%;"/></th>
 												<th><input type="text" name="PHONE" id="PHONE" readonly="readonly" value="${var.PHONE}" maxlength="30" title="联络电话" style="width:100%;"/></th>
@@ -158,6 +172,11 @@
 												<th><input type="text" name="UKEY_NUM" id="UKEY_NUM" readonly="readonly" value="${var.UKEY_NUM}" maxlength="30" title="UKey编号" style="width:100%;"/></th>
 												<th><input type="text" name="APPLY_DATE" id="APPLY_DATE" readonly="readonly" value="${var.APPLY_DATE}" maxlength="30" title="申请日期" style="width:100%;"/></th>
 												<th><input type="text" name="NOTE" id="NOTE" readonly="readonly" value="${var.NOTE}" maxlength="30" title="备注" style="width:100%;"/></th>
+												<th class="center">
+													<input type="hidden" id="ACCOUNT_SIGN" name="ACCOUNT_SIGN" value="${var.ACCOUNT_SIGN}"/>
+													<c:if test="${var.ACCOUNT_SIGN == 1}"><span>正式帐号</span></c:if>
+													<c:if test="${var.ACCOUNT_SIGN == 2}"><span>临时帐号</span></c:if>
+												</th>
 												<th class="center">
 													<input type="hidden" id="CONFIRM_STATE" name="CONFIRM_STATE" value="${var.CONFIRM_STATE}"/>
 													<c:if test="${var.CONFIRM_STATE == 1}"><span class="label label-success arrowed">待上报</span></c:if>
@@ -203,18 +222,31 @@
 						<th><input type="text" name="DEPART_CODE" id="DEPART_CODE" value="${pd.DEPART_CODE}" maxlength="30" title="二级单位" style="width:100%;"/></th>
 						<th><input type="text" name="UNITS_DEPART" id="UNITS_DEPART" value="" maxlength="30" title="三级单位" style="width:100%;"/></th>
 						<th><input type="text" name="STAFF_POSITION" id="STAFF_POSITION" value="" maxlength="50" title="职务" style="width:100%;"/></th>
+						<th>
+							<input id="POSITION_LEVEL" name="POSITION_LEVEL"  list="level"  value="${var.POSITION_LEVEL}"> 
+							<datalist id="level">
+								<option value="处级" >处级</option> 
+								<option value="非处级" >非处级</option>
+							</datalist>
+						</th>
+<!-- 						<th><input type="text" name="POSITION_LEVEL" id="POSITION_LEVEL" value="" maxlength="50" title="职级" style="width:100%;"/></th> -->
 						<th><input type="text" name="STAFF_JOB" id="STAFF_JOB" value="" maxlength="30" title="岗位" style="width:100%;"/></th>
 						<th><input type="text" name="STAFF_MODULE" id="STAFF_MODULE" value="" maxlength="20" title="模块" style="width:100%;"/></th>
 						<th><input type="text" name="PHONE" id="PHONE" value="" maxlength="30" title="联络电话" style="width:100%;"/></th>
 						<th><input type="text" name="MAIL" id="MAIL" value="" maxlength="30" title="电子邮箱" style="width:100%;"/></th>
-						<th><input type="text" name="IF_TRAINING" id="IF_TRAINING" value="" maxlength="1" title="是否培训" style="width:100%;"/></th>
-						<th><input type="text" name="TRAINING_METHOD" id="TRAINING_METHOD" value="" maxlength="30" title="培训方式" style="width:100%;"/></th>
-						<th><input type="text" name="TRAINING_TIME" id="TRAINING_TIME" value="" maxlength="30" title="培训时间" style="width:100%;"/></th>
-						<th><input type="text" name="TRAINING_RECORD" id="TRAINING_RECORD" value="0" maxlength="30" title="培训成绩" style="width:100%;"/></th>
+						<th><input type="text" name="IF_TRAINING" id="IF_TRAINING" value="" maxlength="1"  readonly="readonly" title="是否培训" style="width:100%;"/></th>
+						<th><input type="text" name="TRAINING_METHOD" id="TRAINING_METHOD" value="" maxlength="30"  readonly="readonly" title="培训方式" style="width:100%;"/></th>
+						<th><input type="text" name="TRAINING_TIME" id="TRAINING_TIME" value="" maxlength="30"  readonly="readonly" title="培训时间" style="width:100%;"/></th>
+						<th><input type="text" name="TRAINING_RECORD" id="TRAINING_RECORD" value="0" maxlength="30"  readonly="readonly" title="培训成绩" style="width:100%;"/></th>
 						<th><input type="text" name="CERTIFICATE_NUM" id="CERTIFICATE_NUM" value="" maxlength="30" title="证书编号" style="width:100%;"/></th>
 						<th><input type="text" name="UKEY_NUM" id="UKEY_NUM" value="" maxlength="30" title="UKey编号" style="width:100%;"/></th>
 						<th><input type="text" name="APPLY_DATE" id="APPLY_DATE" value="" maxlength="30" title="申请日期" style="width:100%;"/></th>
 						<th><input type="text" name="NOTE" id="NOTE" value="" maxlength="30" title="备注" style="width:100%;"/></th>
+						<th class="center">
+									<input type="hidden" id="ACCOUNT_SIGN" name="ACCOUNT_SIGN" value="${var.ACCOUNT_SIGN}"/>
+									<c:if test="${var.ACCOUNT_SIGN == 1}"><span>正式帐号</span></c:if>
+									<c:if test="${var.ACCOUNT_SIGN == 2}"><span>临时帐号</span></c:if>
+								</th>
 						<th class="center"><span class="label label-success arrowed">待上报</span><input type="hidden" id="CONFIRM_STATE" name="CONFIRM_STATE" value="1"/></th>
 					</tr>
 				</tbody>
@@ -301,14 +333,15 @@
 	        "二级单位":"DEPART_CODE",
 	        "三级单位":"UNITS_DEPART",
 	        "职务":"STAFF_POSITION",
+	        "职级":"POSITION_LEVEL",	        
 	        "岗位":"STAFF_JOB",
 	        "模块":"STAFF_MODULE",
 	        "联络电话":"PHONE",
 	        "电子邮箱":"MAIL",
-	        "是否培训":"IF_TRAINING",
-	        "培训方式":"TRAINING_METHOD",
-	        "培训时间":"TRAINING_TIME",
-	        "培训成绩":"TRAINING_RECORD",
+// 	        "是否培训":"IF_TRAINING",
+// 	        "培训方式":"TRAINING_METHOD",
+// 	        "培训时间":"TRAINING_TIME",
+// 	        "培训成绩":"TRAINING_RECORD",
 	        "证书编号":"CERTIFICATE_NUM",
 	        "UKey编号":"UKEY_NUM",
 	        "申请日期":"APPLY_DATE",
@@ -316,19 +349,20 @@
 	    },
 	    fieldMandatory = {
 	        "ids":{isMust:false,valiType:''},
-	        'STAFF_CODE':{isMust:false,valiType:''},
+	        'STAFF_CODE':{isMust:false,valiType:'isEightNumber'},
 	        'STAFF_NAME':{isMust:false,valiType:''},
 	        "DEPART_CODE":{isMust:false,valiType:''},
 	        "UNITS_DEPART":{isMust:false,valiType:''},
 	        "STAFF_POSITION":{isMust:false,valiType:''},
+	        "POSITION_LEVEL":{isMust:false,valiType:''},
 	        "STAFF_JOB":{isMust:false,valiType:''},
 	        "STAFF_MODULE":{isMust:false,valiType:''},
 	        "PHONE":{isMust:false,valiType:'isTelOrMobile'},
 	        "MAIL":{isMust:false,valiType:'isEmail'},
-	        "IF_TRAINING":{isMust:false,valiType:''},
-            "TRAINING_METHOD":{isMust:false,valiType:''},
-            "TRAINING_TIME":{isMust:false,valiType:''},
-            "TRAINING_RECORD":{isMust:false,valiType:''},
+// 	        "IF_TRAINING":{isMust:false,valiType:''},
+//             "TRAINING_METHOD":{isMust:false,valiType:''},
+//             "TRAINING_TIME":{isMust:false,valiType:''},
+//             "TRAINING_RECORD":{isMust:false,valiType:''},
             "CERTIFICATE_NUM":{isMust:false,valiType:''},
             "UKEY_NUM":{isMust:false,valiType:''},
             "APPLY_DATE":{isMust:false,valiType:''},
@@ -401,7 +435,12 @@
 				return;
 			}
 			$('input,select,textarea',$('form[name="Form"]')).prop('readonly',false);
-		}
+			//培训相关内容不可编辑，由培训信息自动获取
+			$('#IF_TRAINING').prop('readonly',true);
+			$('#TRAINING_METHOD').prop('readonly',true);
+			$('#TRAINING_TIME').prop('readonly',true);
+			$('#TRAINING_RECORD').prop('readonly',true);
+	}
 		
 		/* 保存 */
 		function save(){
@@ -451,6 +490,14 @@
 	                                        time:3
 	                                    });
 	                                    return;
+	                            	}else if(fieldMandatory[fm]['valiType'] == 'isEightNumber'&&!isEightNumber(e.val())){
+	                            		e.tips({
+	                                        side:3,
+	                                        msg:'请输入8位员工编号',
+	                                        bg:'#cc0033',
+	                                        time:3
+	                                    });
+	                                    return;
 	                            	}
 	                            }
 	                        }
@@ -472,15 +519,32 @@
 				dataType:'json',
 				cache: false,
 				success: function(response){
+					debugger;
 					if(response.code==0){
 						$(top.hangge());//关闭加载状态
 						history.go(0); //刷新页面
 						$("#subTitle").tips({
 							side:3,
 				            msg:'添加修改成功',
-				            bg:'#009933',
+				            bg:'#cc0033',
 				            time:3
 				        });
+					}else if(response.code==2){
+						$(top.hangge());//关闭加载状态
+						bootbox.dialog({
+							message: "<span class='bigger-110'>该用户已存在！</span>",
+							buttons: 			
+							{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+						});
+						return;
+					}else if(response.code==3){
+						$(top.hangge());//关闭加载状态
+						bootbox.dialog({
+							message: "<span class='bigger-110'>该用户已存在,不能重复申请！</span>",
+							buttons: 			
+							{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+						});
+						return;
 					}else{
 						$(top.hangge());//关闭加载状态
 						$("#subTitle").tips({
@@ -502,7 +566,13 @@
 		    	}
 			});
 		}
-		
+		function isEightNumber (userValue){
+	        var reg = new RegExp(/^\d{8}$/);   //用户名必须是8位数字
+	        if(!reg.test(userValue)) {
+	        	  return false;
+	        }	       
+	            return true;
+		}
 		//批量操作
 		function makeAll(msg){
 			if(!checkPermission()){return;} //权限控制

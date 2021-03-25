@@ -50,11 +50,11 @@
 											<div class="btn-toolbar inline middle no-margin">
 												<div data-toggle="buttons" class="btn-group no-margin">
 													<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toERPOaa()">
-														<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP正式账号审批</span>
+														<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP新增账号审批</span>
 													</button>
-													<button id="btnEdit" class="btn btn-info btn-xs" onclick="toERPTaa()">
-														<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP临时账号审批</span>
-													</button>
+<!-- 													<button id="btnEdit" class="btn btn-info btn-xs" onclick="toERPTaa()"> -->
+<!-- 														<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP临时账号审批</span> -->
+<!-- 													</button> -->
 													<button id="btnEdit" class="btn btn-info btn-xs" onclick="toERPDaa()">
 														<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP删除账号审批</span>
 													</button>
@@ -126,6 +126,7 @@
 										<th style="width:110px;  text-align: center;padding-left: 12px;padding-right:12px;">UKey编号</th>
 										<th style="width:110px;  text-align: center;padding-left: 12px;padding-right:12px;">申请日期</th>
 										<th style="width:110px;  text-align: center;">备注</th>
+										<th style="width:110px; text-align: center;">帐号类别</th>
 										<th style="width:110px;  text-align: center;">上报人姓名</th>
 									<th style="width:110px;  text-align: center;">上报人手机号</th>
 										<th style="width:110px;  text-align: center;padding-left: 12px;padding-right:12px;">审批状态</th>
@@ -136,7 +137,7 @@
 										<c:forEach items="${varList}" var="var" varStatus="vs">
 											<tr>
 												<th class='center'>
-													<label class="pos-rel"><input type='checkbox' name='ids' value="${var.ID}" class="ace" /><span class="lbl"></span></label>
+													<label class="pos-rel"><input type='checkbox' name='ids' value="${var.ID}&${var.ACCOUNT_SIGN}" class="ace" /><span class="lbl"></span></label>
 												</th>
 												<th class='center'>
 													${vs.index+1}
@@ -159,6 +160,11 @@
 												<th>${var.UKEY_NUM}</th>
 												<th>${var.APPLY_DATE}</th>
 												<th>${var.NOTE}</th>
+													<th class="center">
+													<input type="hidden" id="ACCOUNT_SIGN" name="ACCOUNT_SIGN" value="${var.ACCOUNT_SIGN}"/>
+													<c:if test="${var.ACCOUNT_SIGN == 1}"><span>正式帐号</span></c:if>
+													<c:if test="${var.ACCOUNT_SIGN == 2}"><span>临时帐号</span></c:if>
+												</th>
 												<th>${var.BILL_USERNAME}</th>
 												<th>${var.BILL_PHONE}</th>
 												<th class="center">

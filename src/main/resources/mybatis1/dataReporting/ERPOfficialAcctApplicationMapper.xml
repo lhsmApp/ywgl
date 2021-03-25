@@ -15,6 +15,7 @@
 		DEPART_CODE,	
 		UNITS_DEPART,	
 		STAFF_POSITION,	
+		POSITION_LEVEL,
 		STAFF_JOB,	
 		STAFF_MODULE,	
 		PHONE,	
@@ -31,7 +32,8 @@
 		STATE,
 		BILL_USER,
 		USER_DEPART,
-		BILL_DATE
+		BILL_DATE,
+		ACCOUNT_SIGN
 	</sql>
 	
 	<!-- 字段值 -->
@@ -42,6 +44,7 @@
 		#{DEPART_CODE},	
 		#{UNITS_DEPART},	
 		#{STAFF_POSITION},	
+		#{POSITION_LEVEL},	
 		#{STAFF_JOB},	
 		#{STAFF_MODULE},	
 		#{PHONE},	
@@ -58,7 +61,8 @@
 		#{STATE},
 		#{BILL_USER},
 		#{USER_DEPART},
-		#{BILL_DATE}
+		#{BILL_DATE},
+		#{ACCOUNT_SIGN}
 	</sql>
 	
 	<!-- 新增-->
@@ -82,6 +86,7 @@
 			DEPART_CODE = #{DEPART_CODE},
 			UNITS_DEPART = #{UNITS_DEPART},
 			STAFF_POSITION = #{STAFF_POSITION},
+			POSITION_LEVEL = #{POSITION_LEVEL},
 			STAFF_JOB = #{STAFF_JOB},
 			STAFF_MODULE = #{STAFF_MODULE},
 			PHONE = #{PHONE},
@@ -93,7 +98,8 @@
 			CERTIFICATE_NUM = #{CERTIFICATE_NUM},
 			UKEY_NUM = #{UKEY_NUM},
 			APPLY_DATE = #{APPLY_DATE},
-			NOTE = #{NOTE}
+			NOTE = #{NOTE},
+			ACCOUNT_SIGN = #{ACCOUNT_SIGN}
 		where 
 			ID = #{ID}
 	</update>
@@ -107,6 +113,7 @@
 			t0.DEPART_CODE,	
 			t0.UNITS_DEPART,	
 			t0.STAFF_POSITION,	
+			t0.POSITION_LEVEL,	
 			t0.STAFF_JOB,	
 			t0.STAFF_MODULE,	
 			t0.PHONE,	
@@ -120,6 +127,7 @@
 			t0.APPLY_DATE,	
 			t0.NOTE,
 			t0.CONFIRM_STATE,
+			t0.ACCOUNT_SIGN,
 			t1.NAME BILL_USERNAME,
 			t1.PHONE BILL_PHONE
 		from 
@@ -143,7 +151,54 @@
 		and 
 			USER_DEPART = #{pd.USER_DEPART}
 		</if>
-		order by 
+		union
+			select
+			t0.ID,
+			t0.STAFF_CODE,
+			t0.STAFF_NAME,
+			t0.DEPART_CODE,
+			t0.UNITS_DEPART,
+			t0.STAFF_POSITION,
+			t0.POSITION_LEVEL,
+			t0.STAFF_JOB,
+			t0.STAFF_MODULE,
+			t0.PHONE,
+			t0.MAIL,
+			t0.IF_TRAINING,
+			t0.TRAINING_METHOD,
+			t0.TRAINING_TIME,
+			t0.TRAINING_RECORD,
+			t0.CERTIFICATE_NUM,
+			t0.UKEY_NUM,
+			t0.APPLY_DATE,
+			t0.NOTE,
+			t0.CONFIRM_STATE,
+			t0.ACCOUNT_SIGN,
+			t1.NAME BILL_USERNAME,
+			t1.PHONE BILL_PHONE
+
+		from 
+		tb_di_erp_taa t0
+		left join `sys_user` t1 on t1.USER_ID =t0.BILL_USER
+		where STATE=1
+		<if test="pd.SelectedDepartCode != null and pd.SelectedDepartCode != ''">
+		and 
+			USER_DEPART = #{pd.SelectedDepartCode}
+		</if>
+		
+		<if test="pd.confirmState != null and pd.confirmState != ''">
+		and 
+			CONFIRM_STATE IN (${pd.confirmState})
+		</if>
+		<if test="pd.busiDate != null and pd.busiDate != ''">
+		and 
+			BUSI_DATE = #{pd.busiDate}
+		</if>
+		<if test="pd.USER_DEPART != null and pd.USER_DEPART != ''">
+		and 
+			USER_DEPART = #{pd.USER_DEPART}
+		</if>
+		order by
 			CONFIRM_STATE ASC,
 			ID DESC
 	</select>
@@ -174,7 +229,7 @@
 			CONFIRM_STATE = #{CONFIRM_STATE}
 		where 
 			ID in
-		<foreach item="item" index="index" collection="arrayDATA_IDS" open="(" separator="," close=")">
+		<foreach item="item" index="index" collection="arrayDATA_IDS1" open="(" separator="," close=")">
                  #{item}
 		</foreach>
 	</update>
@@ -190,6 +245,7 @@
 			t0.DEPART_CODE,	
 			t0.UNITS_DEPART,	
 			t0.STAFF_POSITION,	
+			t0.POSITION_LEVEL,	
 			t0.STAFF_JOB,	
 			t0.STAFF_MODULE,	
 			t0.PHONE,	
@@ -246,7 +302,8 @@
 				#{item.STAFF_NAME},	
 				#{item.DEPART_CODE},	
 				#{item.UNITS_DEPART},	
-				#{item.STAFF_POSITION},	
+				#{item.STAFF_POSITION},		
+				#{item.POSITION_LEVEL},	
 				#{item.STAFF_JOB},	
 				#{item.STAFF_MODULE},	
 				#{item.PHONE},	

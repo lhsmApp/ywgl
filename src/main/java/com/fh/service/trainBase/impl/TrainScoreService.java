@@ -71,6 +71,14 @@ public class TrainScoreService implements TrainScoreManager{
 	public PageData findById(PageData pd)throws Exception{
 		return (PageData)dao.findForObject("TrainScoreMapper.findById", pd);
 	}
+	/**通过员工编号获取数据
+	 * @param pd
+	 * @throws Exception
+	 */
+	public PageData findByUserCode(PageData pd)throws Exception{
+		return (PageData)dao.findForObject("TrainScoreMapper.findByUserCode", pd);
+	}
+	
 	/**导出列表
 	 * @param page
 	 * @throws Exception

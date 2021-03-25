@@ -111,7 +111,15 @@
 			AND
 				MODULE = #{MODULE}
 	</select>
-	
+		<!-- 通过员工编号获取数据 -->
+	<select id="findByUserCode" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			USERNAME = #{USERNAME}
+	</select>
 	<!-- 列表 -->
 	<select id="datalistPage" parameterType="page" resultType="pd">
 		select A.*,unit.NAME UNIT_NAME,user.NAME  USER_NAME		

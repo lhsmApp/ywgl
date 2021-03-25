@@ -287,8 +287,31 @@ public class ERPController extends BaseController {
 		commonBase.setCode(-1);
 		if(null != DATA_IDS && !"".equals(DATA_IDS)){
 			String arrayDATA_IDS[] = DATA_IDS.split(",");
-			pd.put("arrayDATA_IDS", arrayDATA_IDS);
-			erpofficialacctapplicationService.editReportState(pd);
+			List<String> formalList=new ArrayList<String>();
+			List<String> tempList=new ArrayList<String>();
+		      for(int i=0;i<arrayDATA_IDS.length;i++){
+		    	  	int num=arrayDATA_IDS[i].indexOf("&");
+		    	  	String id=arrayDATA_IDS[i].substring(0, num);
+		    	  	String type=arrayDATA_IDS[i].substring(num+1, arrayDATA_IDS[i].length());
+		           if(type.equals("1")){// 正式帐号
+		        	   formalList.add(id);
+		           }else if (type.equals("2")){//临时帐号
+		        	   tempList.add(id);
+		           }
+		        }			
+		    String[] arrayDATA_IDS1 = formalList.toArray(new String[0]); 
+		    String[] arrayDATA_IDS2 = tempList.toArray(new String[0]); 
+			pd.put("arrayDATA_IDS1", arrayDATA_IDS1);
+			pd.put("arrayDATA_IDS2", arrayDATA_IDS2);
+			if(arrayDATA_IDS1.length>0){
+				erpofficialacctapplicationService.editReportState(pd);
+			}
+			if(arrayDATA_IDS2.length>0){
+				erptempacctapplicationService.editReportState(pd);
+			}						
+//			String arrayDATA_IDS[] = DATA_IDS.split(",");
+//			pd.put("arrayDATA_IDS", arrayDATA_IDS);
+			
 			commonBase.setCode(0);
 		}
 		

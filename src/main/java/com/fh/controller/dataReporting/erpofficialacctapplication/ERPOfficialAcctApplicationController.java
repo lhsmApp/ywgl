@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
@@ -29,10 +31,13 @@ import com.fh.entity.TmplConfigDetail;
 import com.fh.entity.system.User;
 import com.fh.exception.CustomException;
 import com.fh.service.dataReporting.erpofficialacctapplication.ERPOfficialAcctApplicationManager;
+import com.fh.service.dataReporting.erptempacctapplication.ERPTempAcctApplicationManager;
 import com.fh.service.dataReporting.grcperson.GRCPersonManager;
 import com.fh.service.myPush.myPush.MyPushManager;
 import com.fh.service.sysConfig.sysconfig.SysConfigManager;
+import com.fh.service.system.user.UserManager;
 import com.fh.service.tmplconfig.tmplconfig.impl.TmplConfigService;
+import com.fh.service.trainBase.TrainScoreManager;
 import com.fh.util.Const;
 import com.fh.util.DateUtil;
 import com.fh.util.Jurisdiction;
@@ -65,9 +70,14 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 	private SysConfigManager sysconfigService;
 	@Resource(name="grcpersonService")
 	private GRCPersonManager grcpersonService;
-	
+	@Resource(name = "userService")
+	private UserManager userService;
 	@Resource(name = "myPushService")
 	private MyPushManager myPushService;
+	@Resource(name="trainscoreService")
+	private TrainScoreManager trainscoreService;
+	@Resource(name="erptempacctapplicationService")
+	private ERPTempAcctApplicationManager erptempacctapplicationService;
 	
 	Map<String, TableColumns> Map_HaveColumnsList = new LinkedHashMap<String, TableColumns>();
 	Map<String, TmplConfigDetail> Map_SetColumnsList = new LinkedHashMap<String, TmplConfigDetail>();
@@ -93,6 +103,7 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 		JSONArray array = JSONArray.fromObject(listData);
 		@SuppressWarnings("unchecked")
 		List<String> listTransferData = (List<String>) JSONArray.toCollection(array, PageData.class);// 过时方法
+		PageData pd1 = new PageData();
 		for (int i = 0; i < listTransferData.size(); i++) {
 			staffId = listTransferData.get(i).trim();
 			PageData pageData = new PageData();
@@ -102,29 +113,88 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 			pageData.put("STATE","1");
 			pageData.put("BILL_USER",user.getUSER_ID());
 			pageData.put("BILL_DATE",DateUtils.getCurrentTime(DateFormatUtils.TIME_NOFUll_FORMAT));
-			pageData.put("ID",listTransferData.get(i++));
+			String str=listTransferData.get(i++);
+			if(!str.equals("")&&str!=null){
+				int num=str.indexOf("&");
+	    	  	String id=str.substring(0, num);
+				pageData.put("ID",id);
+			}else{
+				pageData.put("ID",str);
+			}
 			pageData.put("STAFF_CODE",listTransferData.get(i++).trim());
 			pageData.put("STAFF_NAME",listTransferData.get(i++).trim());
-			pageData.put("DEPART_CODE",listTransferData.get(i++).trim());
+			pageData.put("DEPART_CODE",listTransferData.get(i++).trim()); 
 			pageData.put("UNITS_DEPART",listTransferData.get(i++).trim());
 			pageData.put("STAFF_POSITION",listTransferData.get(i++).trim());
+			pageData.put("POSITION_LEVEL",listTransferData.get(i++).trim());
 			pageData.put("STAFF_JOB",listTransferData.get(i++).trim());
 			pageData.put("STAFF_MODULE",listTransferData.get(i++).trim());
 			pageData.put("PHONE",listTransferData.get(i++).trim());
 			pageData.put("MAIL",listTransferData.get(i++).trim());
-			pageData.put("IF_TRAINING",listTransferData.get(i++).trim());
-			pageData.put("TRAINING_METHOD",listTransferData.get(i++).trim());
-			pageData.put("TRAINING_TIME",listTransferData.get(i++).trim());
-			pageData.put("TRAINING_RECORD",listTransferData.get(i++).trim());
+
 			pageData.put("CERTIFICATE_NUM",listTransferData.get(i++).trim());
 			pageData.put("UKEY_NUM",listTransferData.get(i++).trim());
 			pageData.put("APPLY_DATE",listTransferData.get(i++).trim());
 			pageData.put("NOTE",listTransferData.get(i).trim());
-			if(null != staffId && !"".equals(staffId)) {//如果有ID则进行修改
-				erpofficialacctapplicationService.edit(pageData);
-			}else {//如果无ID则进行新增
-				erpofficialacctapplicationService.save(pageData);
+			pageData.put("USERNAME", pageData.get("STAFF_CODE"));
+			pd1=userService.findByUserNum(pageData);
+			if(pd1!=null&&!pd1.isEmpty()){
+				if(pd1.getString("USER_PROPERTY").equals("1")){//等于1用户已存在且为SAP用户
+					commonBase.setCode(2);
+					return commonBase;
+				}else{//等于0用户已存在且不是SAP用户
+					commonBase.setCode(3);
+					return commonBase;
+				}
 			}
+			//获取该用户培训及考试信息
+			PageData trainPd = new PageData();			
+			trainPd=trainscoreService.findByUserCode(pageData);
+			if(trainPd!=null&&!trainPd.isEmpty()){
+				pageData.put("IF_TRAINING","是");
+				pageData.put("TRAINING_METHOD",trainPd.getString("TRAIN_WAY"));//培训方式
+				pageData.put("TRAINING_TIME",trainPd.getString("TEST_DATE"));//培训时间
+				pageData.put("TRAINING_RECORD",trainPd.get("TEST_SCORE"));//考试分数
+				if(trainPd.get("TEST_SCORE")!=null&&trainPd.get("QUALIFIED_SCORE")!=null){
+					double socre=Double.parseDouble(trainPd.get("TEST_SCORE").toString())-Double.parseDouble(trainPd.get("QUALIFIED_SCORE").toString());
+					if(socre>0||pageData.getString("POSITION_LEVEL").equals("处级")){
+						pageData.put("ACCOUNT_SIGN",1);//正式账号标记
+						if(null != staffId && !"".equals(staffId)) {//如果有ID则进行修改
+								erpofficialacctapplicationService.edit(pageData);
+							}else {//如果无ID则进行新增
+								erpofficialacctapplicationService.save(pageData);
+							}
+					}else{
+						pageData.put("ACCOUNT_SIGN",2);//临时账号标记
+						if(null != staffId && !"".equals(staffId)) {//如果有ID则进行修改
+							erptempacctapplicationService.edit(pageData);
+						}else {//如果无ID则进行新增
+							erptempacctapplicationService.save(pageData);
+						}	
+					}
+				}
+			}else{
+				pageData.put("IF_TRAINING","否");
+				pageData.put("TRAINING_METHOD","");//培训方式
+				pageData.put("TRAINING_TIME","");//培训时间
+				pageData.put("TRAINING_RECORD",0);//考试分数
+				if(pageData.getString("POSITION_LEVEL").equals("处级")){				
+					pageData.put("ACCOUNT_SIGN",1);//正式账号标记
+					if(null != staffId && !"".equals(staffId)) {//如果有ID则进行修改
+						erpofficialacctapplicationService.edit(pageData);
+					}else {//如果无ID则进行新增
+						erpofficialacctapplicationService.save(pageData);
+					}
+				}else{
+					pageData.put("ACCOUNT_SIGN",2);//临时账号标记
+					if(null != staffId && !"".equals(staffId)) {//如果有ID则进行修改
+						erptempacctapplicationService.edit(pageData);
+					}else {//如果无ID则进行新增
+						erptempacctapplicationService.save(pageData);
+					}	
+				}
+			}
+				
 		}
 		commonBase.setCode(0);
 		return commonBase;
@@ -215,8 +285,25 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 		pd = this.getPageData();
 		String DATA_IDS = pd.getString("DATA_IDS");
 		if(null != DATA_IDS && !"".equals(DATA_IDS)){
-			String ArrayDATA_IDS[] = DATA_IDS.split(",");
-				erpofficialacctapplicationService.deleteAll(ArrayDATA_IDS);
+			String arrayDATA_IDS[] = DATA_IDS.split(",");
+			List<String> formalList=new ArrayList<String>();
+			List<String> tempList=new ArrayList<String>();
+		      for(int i=0;i<arrayDATA_IDS.length;i++){
+		    	  	int num=arrayDATA_IDS[i].indexOf("&");
+		    	  	String id=arrayDATA_IDS[i].substring(0, num);
+		    	  	String type=arrayDATA_IDS[i].substring(num+1, arrayDATA_IDS[i].length());
+		           if(type.equals("1")){// 正式帐号
+		        	   formalList.add(id);
+		           }else if (type.equals("2")){//临时帐号
+		        	   tempList.add(id);
+		           }
+
+		        }	
+		      String[] arrayDATA_IDS1 = formalList.toArray(new String[0]); 
+		      String[] arrayDATA_IDS2 = tempList.toArray(new String[0]); 
+			//String ArrayDATA_IDS[] = DATA_IDS.split(",");
+				erpofficialacctapplicationService.deleteAll(arrayDATA_IDS1);
+				erptempacctapplicationService.deleteAll(arrayDATA_IDS2);
 			commonBase.setCode(0);
 		}else{
 			commonBase.setCode(-1);
@@ -240,9 +327,29 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 		String DATA_IDS = pd.getString("DATA_IDS");
 		if(null != DATA_IDS && !"".equals(DATA_IDS)){
 			String arrayDATA_IDS[] = DATA_IDS.split(",");
-			pd.put("arrayDATA_IDS", arrayDATA_IDS);
-			erpofficialacctapplicationService.editReportState(pd);
-			
+			List<String> formalList=new ArrayList<String>();
+			List<String> tempList=new ArrayList<String>();
+		      for(int i=0;i<arrayDATA_IDS.length;i++){
+		    	  	int num=arrayDATA_IDS[i].indexOf("&");
+		    	  	String id=arrayDATA_IDS[i].substring(0, num);
+		    	  	String type=arrayDATA_IDS[i].substring(num+1, arrayDATA_IDS[i].length());
+		           if(type.equals("1")){// 正式帐号
+		        	   formalList.add(id);
+		           }else if (type.equals("2")){//临时帐号
+		        	   tempList.add(id);
+		           }
+		        }			
+		    String[] arrayDATA_IDS1 = formalList.toArray(new String[0]); 
+		    String[] arrayDATA_IDS2 = tempList.toArray(new String[0]); 
+			pd.put("arrayDATA_IDS1", arrayDATA_IDS1);
+			pd.put("arrayDATA_IDS2", arrayDATA_IDS2);
+			if(arrayDATA_IDS1.length>0){
+				erpofficialacctapplicationService.editReportState(pd);
+			}
+			if(arrayDATA_IDS2.length>0){
+				erptempacctapplicationService.editReportState(pd);
+			}
+	
 			if("2".equals(pd.get("CONFIRM_STATE"))) {
 				//推送给管理员
 				PageData pd2 = new PageData();
@@ -411,9 +518,19 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 		if (listUploadAndRead != null && !"[]".equals(listUploadAndRead.toString()) && listUploadAndRead.size() >= 1) {
 			judgement = true;
 		}
-		if (judgement) {
+		out:if (judgement) {
 			User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 			for (PageData pageData : listUploadAndRead) {
+				if(!isNumericUserCose(pageData.getString("STAFF_CODE"))){
+					commonBase.setCode(2);
+					commonBase.setMessage("员工编号必须为8为数字,请确认！");	
+					break out;
+				}
+				if(!isNumericMobile(pageData.getString("PHONE"))){
+					commonBase.setCode(2);
+					commonBase.setMessage("联络电话必须为7或11位数字,请确认！");	
+					 break out;
+				}
 			//将每条数据插入新内容
 				pageData.put("CONFIRM_STATE", "1"); //1未上报 2已上报 3撤销上报 4已驳回
 				pageData.put("USER_DEPART",StringUtil.toString(user.getUNIT_CODE(), ""));
@@ -435,6 +552,28 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 		mv.addObject("commonMessage", commonBase.getMessage());
 		return mv;
 	}
+	//判断文本串是否是7或11位的数字文本
+    private boolean isNumericMobile(String str)
+    {
+          Pattern pattern = Pattern.compile("\\d{7}|\\d{11}");
+          Matcher isNum = pattern.matcher(str);
+          if( !isNum.matches() )
+          {
+                return false;
+          }
+          return true;
+    }
+	//判断文本串是否是8位的数字文本
+    private boolean isNumericUserCose(String str)
+    {
+          Pattern pattern = Pattern.compile("\\d{8}");
+          Matcher isNum = pattern.matcher(str);
+          if( !isNum.matches() )
+          {
+                return false;
+          }
+          return true;
+    }
 	@InitBinder
 	public void initBinder(WebDataBinder binder){
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");

@@ -55,6 +55,11 @@ public interface TrainScoreManager{
 	 */
 	public PageData findById(PageData pd)throws Exception;
 	
+	/**通过员工编号获取数据
+	 * @param pd
+	 * @throws Exception
+	 */
+	public PageData findByUserCode(PageData pd)throws Exception;
 	/**导出列表
 	 * @param page
 	 * @throws Exception

@@ -28,7 +28,14 @@
 		STATE,
 		BILL_USER,
 		USER_DEPART,
-		BILL_DATE
+		BILL_DATE,
+		ACCOUNT_SIGN,
+		IF_TRAINING,	
+		TRAINING_METHOD,	
+		TRAINING_TIME,	
+		TRAINING_RECORD,	
+		CERTIFICATE_NUM,
+		POSITION_LEVEL
 	</sql>
 	
 	<!-- 字段值 -->
@@ -52,7 +59,14 @@
 		#{STATE},
 		#{BILL_USER},
 		#{USER_DEPART},
-		#{BILL_DATE}
+		#{BILL_DATE},
+		#{ACCOUNT_SIGN},
+		#{IF_TRAINING},	
+		#{TRAINING_METHOD},	
+		#{TRAINING_TIME},	
+		#{TRAINING_RECORD},	
+		#{CERTIFICATE_NUM},	
+		#{POSITION_LEVEL}
 	</sql>
 	
 	<!-- 新增-->
@@ -84,7 +98,14 @@
 			CANCEL_DATE = #{CANCEL_DATE},
 			APPLY_TEMP_REASON = #{APPLY_TEMP_REASON},
 			UKEY_NUM = #{UKEY_NUM},
-			NOTE = #{NOTE}
+			NOTE = #{NOTE},
+			ACCOUNT_SIGN = #{ACCOUNT_SIGN},
+			POSITION_LEVEL = #{POSITION_LEVEL},			
+			IF_TRAINING = #{IF_TRAINING},
+			TRAINING_METHOD = #{TRAINING_METHOD},
+			TRAINING_TIME = #{TRAINING_TIME},
+			TRAINING_RECORD = #{TRAINING_RECORD},
+			CERTIFICATE_NUM = #{CERTIFICATE_NUM}
 		where 
 			ID = #{ID}
 	</update>
@@ -108,8 +129,15 @@
 			t0.UKEY_NUM,	
 			t0.NOTE,
 			t0.CONFIRM_STATE,
+			t0.ACCOUNT_SIGN,
 			t1.NAME BILL_USERNAME,
-			t1.PHONE BILL_PHONE
+			t1.PHONE BILL_PHONE,
+			t0.IF_TRAINING,	
+			t0.TRAINING_METHOD,	
+			t0.TRAINING_TIME,	
+			t0.TRAINING_RECORD,	
+			t0.CERTIFICATE_NUM,	
+			t0.POSITION_LEVEL
 		from 
 		<include refid="tableName"></include> t0
 		left join `sys_user` t1 on t1.USER_ID =t0.BILL_USER
@@ -162,7 +190,7 @@
 			CONFIRM_STATE = #{CONFIRM_STATE}
 		where 
 			ID in
-		<foreach item="item" index="index" collection="arrayDATA_IDS" open="(" separator="," close=")">
+		<foreach item="item" index="index" collection="arrayDATA_IDS2" open="(" separator="," close=")">
                  #{item}
 		</foreach>
 	</update>
