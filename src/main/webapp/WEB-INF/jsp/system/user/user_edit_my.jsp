@@ -92,12 +92,38 @@
 			$("#loginname").css("color","gray");
 		}
 	});
+	function getLvl(txt) {
+	    var lvl = 0;
+	    //判断这个字符串中有没有数字
+	    if (/[0-9]/.test(txt)) {
+	        lvl++;
+	    }
+	    //判断字符串中有没有字母
+	    if (/[a-zA-Z]/.test(txt)) {
+	        lvl++;
+	    }
+	    //判断字符串中有没有特殊符号
+	    if (/[^0-9a-zA-Z_]/.test(txt)) {
+	        lvl++;
+	    }
+	    return lvl;
+	}
 	//保存
 	function save(){
 		if($("#user_id").val()=="" && $("#password").val()==""){
 			$("#password").tips({
 				side:3,
 	            msg:'输入密码',
+	            bg:'#AE81FF',
+	            time:2
+	        });
+			$("#password").focus();
+			return false;
+		}
+		if(getLvl($("#password").val())!=3){
+			$("#password").tips({
+				side:3,
+	            msg:'密码必须包括数字、字母、特殊字符',
 	            bg:'#AE81FF',
 	            time:2
 	        });

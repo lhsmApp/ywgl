@@ -10,7 +10,6 @@
 <head>
 <title>${pd.SYSNAME}</title>
 <!-- 页面顶部¨ -->
-<%@ include file="head.jsp"%>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -379,6 +378,7 @@
 		       diag.Height = 320;
 		       diag.CancelEvent = function(){ //关闭事件
 		        diag.close();
+		        changeCode1();
 		       };
 		       diag.show();
 		    }
