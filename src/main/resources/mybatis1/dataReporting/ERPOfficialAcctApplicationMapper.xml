@@ -598,7 +598,7 @@
 		left join `sys_user` t1 on t1.USER_ID =t0.BILL_USER
 		where
 		
-		and  STATE=1
+	  STATE=1
 		<if test="pd.SelectedDepartCode != null and pd.SelectedDepartCode != ''">
 		and 
 			USER_DEPART = #{pd.SelectedDepartCode}
