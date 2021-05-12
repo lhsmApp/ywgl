@@ -194,7 +194,7 @@ function editUserH(){
 	 diag.Title ="个人资料";
 	 diag.URL = locat+'/user/goEditMy.do';
 	 diag.Width = 469;
-	 diag.Height = 320;
+	 diag.Height = 360;
 	 diag.CancelEvent = function(){ //关闭事件
 		diag.close();
 	 };

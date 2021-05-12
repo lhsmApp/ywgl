@@ -20,7 +20,9 @@
 		CREAT_USER,
 		CREAT_DATE,
 		QUALIFIED_SCORE,
-		STATE
+		STATE,
+		CERTIFICATE_NUM,
+		REMARK
 	</sql>
 	
 	<!-- 字段 -->
@@ -36,7 +38,9 @@
 		CREAT_USER,
 		CREAT_DATE,
 		QUALIFIED_SCORE,
-		STATE
+		STATE,
+		CERTIFICATE_NUM,
+		REMARK
 	</sql>
 	
 	<!-- 字段值 -->
@@ -52,7 +56,9 @@
 		#{CREAT_USER},
 		#{CREAT_DATE},
 		#{QUALIFIED_SCORE},
-		#{STATE}
+		#{STATE},
+		#{CERTIFICATE_NUM},
+		#{REMARK}
 	</sql>
 	
 	<!-- 新增-->
@@ -72,8 +78,8 @@
 		<include refid="tableName"></include>
 		where 
 			USERNAME = #{USERNAME}
-			AND
-				MODULE = #{MODULE}
+<!-- 			AND -->
+<!-- 				MODULE = #{MODULE} -->
 	</delete>
 	
 	<!-- 修改 -->
@@ -89,15 +95,17 @@
 			TEST_NAME=#{TEST_NAME},
 			TEST_DATE=#{TEST_DATE},
 			IF_QUALIFIED=#{IF_QUALIFIED},
-			CREAT_USER=#{CREAT_USER},
-			CREAT_DATE=#{CREAT_DATE},
+<!-- 			CREAT_USER=#{CREAT_USER}, -->
+<!-- 			CREAT_DATE=#{CREAT_DATE}, -->
 			QUALIFIED_SCORE=#{QUALIFIED_SCORE},
-			STATE=#{STATE}
+			STATE=#{STATE},
+			CERTIFICATE_NUM=#{CERTIFICATE_NUM},
+			REMARK=#{REMARK}
 
 		where 
 		USERNAME = #{USERNAME}
-			AND
-				MODULE = #{MODULE}
+<!-- 			AND -->
+<!-- 				MODULE = #{MODULE} -->
 	</update>
 	
 	<!-- 通过ID获取数据 -->
@@ -131,6 +139,9 @@
 		ON A.UNIT_CODE=unit.DEPARTMENT_CODE
 		
 		<where>
+			<if test="pd.UNIT_CODE!= null and pd.UNIT_CODE != ''">
+				and A.UNIT_CODE = #{pd.UNIT_CODE}
+			</if>
 			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
 				and
 					(
@@ -139,10 +150,13 @@
 						unit.NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 						 or 
 						A.TEST_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+						 or 
+						A.USERNAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
 				
 					)
 			</if>
 		</where>
+		order by convert(NAME1 using GBK) 
 	</select>
 	
 	<!-- 列表(全部) -->
@@ -165,26 +179,41 @@
 	</delete>
 	<!-- 导出列表 -->
 	<select id="exportList" parameterType="jqPage" resultType="pd">
-		select * 
-		from <include refid="tableName"></include>
+		select A.*,unit.NAME UNIT_NAME,user.NAME  USER_NAME		
+		from 
+		<include refid="tableName"></include> A
+		LEFT JOIN  sys_user user
+		ON A.USERNAME=user.USERNAME
+		LEFT JOIN oa_department unit
+		ON A.UNIT_CODE=unit.DEPARTMENT_CODE
 		<where>
-<!-- 			<if test="pd.keywords!= null and pd.keywords != ''">关键词检索 -->
-<!-- 				and (CON_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')) -->
-<!-- 			</if> -->
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+				and
+					(
+						A.NAME1 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+	 					or
+						unit.NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+						 or 
+						A.TEST_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+						 or 
+						A.USERNAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+				
+					)
+			</if>
 			<if test="pd.UNIT_CODE!= null and pd.UNIT_CODE != ''">
-				and UNIT_CODE = #{pd.UNIT_CODE}
+				and A.UNIT_CODE = #{pd.UNIT_CODE}
 			</if>
 			<if test="pd.MODULE!= null and pd.MODULE != ''">
-				and MODULE = #{pd.MODULE}
+				and A.MODULE = #{pd.MODULE}
 			</if>
 			<if test="pd.start!= null and pd.start != ''">
-				and TEST_DATE >= #{pd.start}
+				and A.TEST_DATE >= #{pd.start}
 			</if>
 			<if test="pd.end!= null and pd.end != ''">
-				and TEST_DATE &lt;= #{pd.end}
+				and A.TEST_DATE &lt;= #{pd.end}
 			</if>
 		</where>
-		order by MODULE,  UNIT_CODE
+		order by MODULE,  UNIT_CODE, convert(NAME1 using GBK) 
 	</select>
 	<!-- 导出模板 -->
 	<select id="exportModel" parameterType="pd" resultType="pd">
@@ -199,14 +228,16 @@
 				delete from tb_train_score where USERNAME = #{item.USERNAME} AND MODULE = #{item.MODULE};
 				insert into tb_train_score
 				( 
-				 USERNAME, NAME1,UNIT_CODE,TEST_SCORE,MODULE,TEST_NAME,TEST_DATE,CREAT_USER,CREAT_DATE,QUALIFIED_SCORE
+				 USERNAME, NAME1,UNIT_CODE,TEST_SCORE,MODULE,TEST_NAME,TEST_DATE,CREAT_USER,CREAT_DATE,QUALIFIED_SCORE,CERTIFICATE_NUM,REMARK
 				) values (
 				#{item.USERNAME,jdbcType=VARCHAR},#{item.NAME1,jdbcType=VARCHAR},
 				#{item.UNIT_CODE,jdbcType=VARCHAR},#{item.TEST_SCORE,jdbcType=VARCHAR},
 				#{item.MODULE,jdbcType=VARCHAR},#{item.TEST_NAME,jdbcType=VARCHAR},
 				#{item.TEST_DATE,jdbcType=VARCHAR},#{item.CREAT_USER,jdbcType=VARCHAR},
-				#{item.CREAT_DATE,jdbcType=VARCHAR},#{item.QUALIFIED_SCORE,jdbcType=VARCHAR})		
-			</if>
+				#{item.CREAT_DATE,jdbcType=VARCHAR},#{item.QUALIFIED_SCORE,jdbcType=VARCHAR},
+				#{item.CERTIFICATE_NUM,jdbcType=VARCHAR},#{item.REMARK,jdbcType=VARCHAR}
+				)		
+			</if>	
 		</foreach>
 	</insert>
 			

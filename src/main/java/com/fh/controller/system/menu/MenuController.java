@@ -331,6 +331,6 @@ public class MenuController extends BaseController {
 		
 		pd.put("ip",ip);
 		
-		menuService.saveLog(pd);
+		//menuService.saveLog(pd);
 	}
 }

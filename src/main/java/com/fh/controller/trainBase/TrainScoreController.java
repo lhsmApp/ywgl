@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import com.fh.controller.base.BaseController;
 import com.fh.controller.common.Common;
+import com.fh.controller.common.DictsUtil;
 import com.fh.entity.CommonBase;
 import com.fh.entity.JqPage;
 import com.fh.entity.Page;
@@ -41,6 +42,7 @@ import com.fh.util.date.DateFormatUtils;
 import com.fh.util.date.DateUtils;
 import com.fh.util.excel.LeadingInExcelToPageData;
 import com.fh.util.excel.TransferSbcDbc;
+import com.fh.service.fhoa.department.DepartmentManager;
 import com.fh.service.tmplconfig.tmplconfig.impl.TmplConfigService;
 import com.fh.service.trainBase.TrainScoreManager;
 
@@ -60,6 +62,8 @@ public class TrainScoreController extends BaseController {
 	@Resource(name = "tmplconfigService")
 	private TmplConfigService tmplconfigService;
 	
+	@Resource(name="departmentService")
+	private DepartmentManager departmentService;
 	// 表名
 	String TableNameDetail = "TB_TRAIN_SCORE";
 	Map<String, TableColumns> Map_HaveColumnsList = new LinkedHashMap<String, TableColumns>();
@@ -73,6 +77,9 @@ public class TrainScoreController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		pd.put("CREAT_USER", user.getUSER_ID());
+		pd.put("CREAT_DATE", DateUtils.getCurrentTime());
 		trainscoreService.save(pd);
 		mv.addObject("msg","success");
 		mv.setViewName("save_result");
@@ -133,8 +140,10 @@ public class TrainScoreController extends BaseController {
 		Map_SetColumnsList.put("NAME1", new TmplConfigDetail("NAME1", "用户姓名(必输)", "1", false));
 		Map_SetColumnsList.put("UNIT_CODE", new TmplConfigDetail("UNIT_CODE", "单位编码", "1", false));
 		Map_SetColumnsList.put("MODULE", new TmplConfigDetail("MODULE", "模块(必输)", "1", false));
-		Map_SetColumnsList.put("TEST_SCORE", new TmplConfigDetail("TEST_SCORE", "考试分数(必输)", "1", true));
-		Map_SetColumnsList.put("QUALIFIED_SCORE", new TmplConfigDetail("QUALIFIED_SCORE", "及格分数(必输)", "1", true));
+		Map_SetColumnsList.put("TEST_SCORE", new TmplConfigDetail("TEST_SCORE", "考试分数", "1", true));
+		Map_SetColumnsList.put("CERTIFICATE_NUM", new TmplConfigDetail("CERTIFICATE_NUM", "证书编号", "1", false));
+		Map_SetColumnsList.put("REMARK", new TmplConfigDetail("REMARK", "备注", "1", false));
+//		Map_SetColumnsList.put("QUALIFIED_SCORE", new TmplConfigDetail("QUALIFIED_SCORE", "及格分数(必输)", "1", true));
 //		Map_SetColumnsList.put("IF_QUALIFIED", new TmplConfigDetail("IF_QUALIFIED", "是否及格", "1", false));	
 		return mv;
 	}
@@ -148,10 +157,14 @@ public class TrainScoreController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		String keywords = pd.getString("keywords");								//关键词检索条件
+		String keywords = pd.getString("keywords");		
+		//关键词检索条件
 		if(null != keywords && !"".equals(keywords)){
 			pd.put("keywords", keywords.trim());
 		}
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+	    String unitCode=user.getUNIT_CODE();
+	    pd.put("UNIT_CODE", unitCode);
 		page.setPd(pd);
 		mv.addObject("keywords",keywords);
 		List<PageData>	varList = trainscoreService.list(page);			//列出CourseType列表
@@ -166,8 +179,10 @@ public class TrainScoreController extends BaseController {
 		Map_SetColumnsList.put("UNIT_CODE", new TmplConfigDetail("UNIT_CODE", "单位编码", "1", false));
 		Map_SetColumnsList.put("MODULE", new TmplConfigDetail("MODULE", "模块", "1", false));
 		Map_SetColumnsList.put("TEST_SCORE", new TmplConfigDetail("TEST_SCORE", "考试分数", "1", true));
-		Map_SetColumnsList.put("QUALIFIED_SCORE", new TmplConfigDetail("QUALIFIED_SCORE", "及格分数", "1", true));
-		Map_SetColumnsList.put("IF_QUALIFIED", new TmplConfigDetail("IF_QUALIFIED", "是否及格", "1", false));	
+		Map_SetColumnsList.put("CERTIFICATE_NUM", new TmplConfigDetail("CERTIFICATE_NUM", "证书编号", "1", false));
+		Map_SetColumnsList.put("REMARK", new TmplConfigDetail("REMARK", "备注", "1", false));
+//		Map_SetColumnsList.put("QUALIFIED_SCORE", new TmplConfigDetail("QUALIFIED_SCORE", "及格分数", "1", true));
+//		Map_SetColumnsList.put("IF_QUALIFIED", new TmplConfigDetail("IF_QUALIFIED", "是否及格", "1", false));	
 		return mv;
 	}
 	
@@ -188,6 +203,7 @@ public class TrainScoreController extends BaseController {
 		mv.addObject("pd", pd);			
 		mv.addObject("COURSETYPE_ID", COURSETYPE_ID);			//传入ID，作为子级ID用
 		mv.setViewName("trainBase/trainscore/trainscore_edit");
+		mv.addObject("itemUnitList", DictsUtil.getDepartmentSelectTreeSourceList(departmentService));// 获取单位名称
 		mv.addObject("msg", "save");
 		return mv;
 	}	
@@ -203,6 +219,7 @@ public class TrainScoreController extends BaseController {
 		pd = this.getPageData();
 		mv.addObject("pd",trainscoreService.findById(pd));//传入上级所有信息
 		mv.setViewName("trainBase/trainscore/trainscore_edit");
+		mv.addObject("itemUnitList", DictsUtil.getDepartmentSelectTreeSourceList(departmentService));// 获取单位名称
 		mv.addObject("msg", "edit");
 		return mv;
 	}	
@@ -215,6 +232,14 @@ public class TrainScoreController extends BaseController {
 	@RequestMapping(value = "/exportScore")
 	public ModelAndView exportScore(JqPage page) throws Exception {
 		PageData getPd = this.getPageData();
+		String keywords = getPd.getString("keywords");		
+		//关键词检索条件
+		if(null != keywords && !"".equals(keywords)){
+			getPd.put("keywords", keywords.trim());
+		}
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+	    String unitCode=user.getUNIT_CODE();
+	    getPd.put("UNIT_CODE", unitCode);
 		page.setPd(getPd);
 		List<PageData> varOList = trainscoreService.exportList(page);
 		return export(varOList, "考试成绩_"+DateUtils.getCurrentTime(DateFormatUtils.DATE_FORMAT1), Map_SetColumnsList);
@@ -344,10 +369,30 @@ public class TrainScoreController extends BaseController {
 		if (listUploadAndRead != null && !"[]".equals(listUploadAndRead.toString()) && listUploadAndRead.size() >= 1) {
 			judgement = true;
 		}
-		if (judgement) {
+		out:if (judgement) {
 			PageData pdSave = new PageData();
 			User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
-			for (PageData pdItem : listUploadAndRead) {		
+			for (PageData pdItem : listUploadAndRead) {	
+				if(null==pdItem.getString("USERNAME")||pdItem.getString("USERNAME").equals("")){
+					commonBase.setCode(2);
+					commonBase.setMessage("员工编号不能为空,请确认！");	
+					break out;
+				}
+				if(null==pdItem.getString("NAME1")||pdItem.getString("NAME1").equals("")){
+					commonBase.setCode(2);
+					commonBase.setMessage("用户姓名不能为空,请确认！");	
+					break out;
+				}
+				if(null==pdItem.getString("MODULE")||pdItem.getString("MODULE").equals("")){
+					commonBase.setCode(2);
+					commonBase.setMessage("模块不能为空,请确认！");	
+					break out;
+				}
+//				if(null==pdItem.getString("TEST_SCORE")||pdItem.getString("TEST_SCORE").equals("")){
+//					commonBase.setCode(2);
+//					commonBase.setMessage("考试分数不能为空,请确认！");	
+//					break out;
+//				}
 				pdItem.put("CREAT_USER", user.getUSER_ID());
 				pdItem.put("CREAT_DATE", DateUtils.getCurrentTime());
 			}
@@ -375,5 +420,14 @@ public class TrainScoreController extends BaseController {
 	public void initBinder(WebDataBinder binder){
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(format,true));
+	}
+	//根据员工编号获取考试成绩
+	@RequestMapping(value="/getTrainScore")
+	@ResponseBody 
+	public  PageData getTrainScore() throws Exception{
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		pd = trainscoreService.findByUserCode(pd);		
+		return 	pd;
 	}
 }

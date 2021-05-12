@@ -5,9 +5,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -103,6 +105,12 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 		JSONArray array = JSONArray.fromObject(listData);
 		@SuppressWarnings("unchecked")
 		List<String> listTransferData = (List<String>) JSONArray.toCollection(array, PageData.class);// 过时方法
+		//当本次提交的数据集合中存在重复字段时
+//		Set<String> stringSet=new HashSet<>(listTransferData);
+//	    if (listTransferData.size() != stringSet.size()) {
+//	    	commonBase.setCode(6);
+//			return commonBase;
+//	    } 
 		PageData pd1 = new PageData();
 		for (int i = 0; i < listTransferData.size(); i++) {
 			staffId = listTransferData.get(i).trim();
@@ -135,7 +143,11 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 			pageData.put("CERTIFICATE_NUM",listTransferData.get(i++).trim());
 			pageData.put("UKEY_NUM",listTransferData.get(i++).trim());
 			pageData.put("APPLY_DATE",listTransferData.get(i++).trim());
-			pageData.put("NOTE",listTransferData.get(i).trim());
+			pageData.put("APPLY_DATE",DateUtils.getCurrentTime(DateFormatUtils.DATE_NOFUll_FORMAT));
+			pageData.put("NOTE",listTransferData.get(i++).trim());
+			pageData.put("APPLY_TYPE","1");//申请类别为新增正式账号
+			String account_type = listTransferData.get(i).trim();//获取账号类别
+			//判断用户是否存在
 			pageData.put("USERNAME", pageData.get("STAFF_CODE"));
 			pd1=userService.findByUserNum(pageData);
 			if(pd1!=null&&!pd1.isEmpty()){
@@ -147,33 +159,59 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 					return commonBase;
 				}
 			}
+			//只有第一次新增账号是才做此判断
+			if(!"1".equals(account_type)&&!"2".equals(account_type)){
+				//判断该用户是否存在有效的正式账号申请单
+				pd1=erpofficialacctapplicationService.findByStaffCode(pageData);
+				if(pd1!=null&&!pd1.isEmpty()){
+					commonBase.setCode(4);
+					return commonBase;
+				}
+				//判断该用户是否存在有效的临时账号申请单
+				pd1=erptempacctapplicationService.findByStaffCode(pageData);
+				if(pd1!=null&&!pd1.isEmpty()){
+					commonBase.setCode(5);
+					return commonBase;
+				}
+			}
+
 			//获取该用户培训及考试信息
 			PageData trainPd = new PageData();			
 			trainPd=trainscoreService.findByUserCode(pageData);
-			if(trainPd!=null&&!trainPd.isEmpty()){
+			if(trainPd!=null&&!trainPd.isEmpty()){//有考试成绩
 				pageData.put("IF_TRAINING","是");
 				pageData.put("TRAINING_METHOD",trainPd.getString("TRAIN_WAY"));//培训方式
 				pageData.put("TRAINING_TIME",trainPd.getString("TEST_DATE"));//培训时间
 				pageData.put("TRAINING_RECORD",trainPd.get("TEST_SCORE"));//考试分数
-				if(trainPd.get("TEST_SCORE")!=null&&trainPd.get("QUALIFIED_SCORE")!=null){
-					double socre=Double.parseDouble(trainPd.get("TEST_SCORE").toString())-Double.parseDouble(trainPd.get("QUALIFIED_SCORE").toString());
-					if(socre>0||pageData.getString("POSITION_LEVEL").equals("处级")){
-						pageData.put("ACCOUNT_SIGN",1);//正式账号标记
-						if(null != staffId && !"".equals(staffId)) {//如果有ID则进行修改
-								erpofficialacctapplicationService.edit(pageData);
-							}else {//如果无ID则进行新增
-								erpofficialacctapplicationService.save(pageData);
-							}
-					}else{
-						pageData.put("ACCOUNT_SIGN",2);//临时账号标记
-						if(null != staffId && !"".equals(staffId)) {//如果有ID则进行修改
-							erptempacctapplicationService.edit(pageData);
-						}else {//如果无ID则进行新增
-							erptempacctapplicationService.save(pageData);
-						}	
+//				if(trainPd.get("TEST_SCORE")!=null&&trainPd.get("QUALIFIED_SCORE")!=null){
+//					double socre=Double.parseDouble(trainPd.get("TEST_SCORE").toString())-Double.parseDouble(trainPd.get("QUALIFIED_SCORE").toString());
+				//if(socre>0||pageData.getString("POSITION_LEVEL").equals("处级")){
+				//根据有没有证书（有证书）或者职级（为处级）确定为正式账号，否则为临时账号
+				if((null!=trainPd.get("CERTIFICATE_NUM")&&!"".equals(trainPd.get("CERTIFICATE_NUM")))||pageData.getString("POSITION_LEVEL").equals("处级")){
+					pageData.put("ACCOUNT_SIGN",1);//正式账号标记
+					if(null != staffId && !"".equals(staffId)) {//如果有ID则进行修改
+						//当修改员工编号或职级等信息后，用户账号性质可能发生变化，判断是否不一致
+						if(account_type.equals(pageData.get("ACCOUNT_SIGN").toString())){//一致
+							erpofficialacctapplicationService.edit(pageData);
+						}else{
+							erpofficialacctapplicationService.delTempAndInsertData(pageData);//不一致则删除原临时账号新增正式账号新增
+						}							
+					}else {//如果无ID则进行新增
+						erpofficialacctapplicationService.save(pageData);
 					}
+				}else{//没有证书且为非处级，账号性质应为临时账号
+					pageData.put("ACCOUNT_SIGN",2);//临时账号标记				 					
+					if(null != staffId && !"".equals(staffId)) {//如果有ID则进行修改
+						if(account_type.equals(pageData.get("ACCOUNT_SIGN").toString())){//一致
+							erptempacctapplicationService.edit(pageData);
+						}else{
+							erptempacctapplicationService.delAndInsertTempData(pageData);//不一致则删除原正式账号新增临时账号新增
+						}						
+					}else {//如果无ID则进行新增
+						erptempacctapplicationService.save(pageData);
+					}	
 				}
-			}else{
+			}else{//无考试成绩
 				pageData.put("IF_TRAINING","否");
 				pageData.put("TRAINING_METHOD","");//培训方式
 				pageData.put("TRAINING_TIME","");//培训时间
@@ -181,14 +219,23 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 				if(pageData.getString("POSITION_LEVEL").equals("处级")){				
 					pageData.put("ACCOUNT_SIGN",1);//正式账号标记
 					if(null != staffId && !"".equals(staffId)) {//如果有ID则进行修改
-						erpofficialacctapplicationService.edit(pageData);
+						//当修改员工编号或职级等信息后，用户账号性质可能发生变化，判断是否不一致
+						if(account_type.equals(pageData.get("ACCOUNT_SIGN").toString())){//一致
+							erpofficialacctapplicationService.edit(pageData);
+						}else{
+							erpofficialacctapplicationService.delTempAndInsertData(pageData);//不一致则删除原临时账号新增正式账号新增
+						}							
 					}else {//如果无ID则进行新增
 						erpofficialacctapplicationService.save(pageData);
 					}
 				}else{
 					pageData.put("ACCOUNT_SIGN",2);//临时账号标记
 					if(null != staffId && !"".equals(staffId)) {//如果有ID则进行修改
-						erptempacctapplicationService.edit(pageData);
+						if(account_type.equals(pageData.get("ACCOUNT_SIGN").toString())){//一致
+							erptempacctapplicationService.edit(pageData);
+						}else{
+							erptempacctapplicationService.delAndInsertTempData(pageData);//不一致则删除原正式账号新增临时账号新增
+						}						
 					}else {//如果无ID则进行新增
 						erptempacctapplicationService.save(pageData);
 					}	
@@ -211,7 +258,8 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		PageData data = new PageData();
-		User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		User user = (User)Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);	
+		String userRole=user.getRole().getROLE_ID();//获取用户角色
 		pd = this.getPageData();
 		String confirmState = pd.getString("confirmState");
 		String busiDate = pd.getString("busiDate");
@@ -240,6 +288,13 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 		if(null != pageData && pageData.size()>0) {
 			pd.putAll(pageData);
 		}
+		pd.put("KEY_CODE", "ejdwxtglyjs");//获取配置表中二级单位系统管理员角色
+		String userRoldId = sysconfigService.getSysConfigByKey(pd);
+		if(userRole.equals(userRoldId)){
+			pd.put("ROLE_TYPE", "ejdw");//角色类型为二级单位
+		}else{
+			pd.put("ROLE_TYPE", "gly");//角色类型为管理员
+		}
 		List<PageData> listBusiDate = DateUtil.getMonthList("BUSI_DATE", date);
 		List<PageData>	varList = erpofficialacctapplicationService.list(page);	//列出ERPOfficialAcctApplication列表
 		mv.setViewName("dataReporting/erpofficialacctapplication/erpofficialacctapplication_list");
@@ -255,6 +310,7 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 		Map_SetColumnsList.put("DEPART_CODE", new TmplConfigDetail("DEPART_CODE", "二级单位", "1", false));
 		Map_SetColumnsList.put("UNITS_DEPART", new TmplConfigDetail("UNITS_DEPART", "三级单位", "1", false));
 		Map_SetColumnsList.put("STAFF_POSITION", new TmplConfigDetail("STAFF_POSITION", "职务", "1", false));
+		Map_SetColumnsList.put("POSITION_LEVEL", new TmplConfigDetail("POSITION_LEVEL", "职级", "1", false));
 		Map_SetColumnsList.put("STAFF_JOB", new TmplConfigDetail("STAFF_JOB", "岗位", "1", false));
 		Map_SetColumnsList.put("STAFF_MODULE", new TmplConfigDetail("STAFF_MODULE", "模块", "1", false));
 		Map_SetColumnsList.put("PHONE", new TmplConfigDetail("PHONE", "联络电话", "1", false));
@@ -302,8 +358,12 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 		      String[] arrayDATA_IDS1 = formalList.toArray(new String[0]); 
 		      String[] arrayDATA_IDS2 = tempList.toArray(new String[0]); 
 			//String ArrayDATA_IDS[] = DATA_IDS.split(",");
-				erpofficialacctapplicationService.deleteAll(arrayDATA_IDS1);
+		      if(arrayDATA_IDS1.length>0){
+		    	  erpofficialacctapplicationService.deleteAll(arrayDATA_IDS1);
+		      }
+		      if(arrayDATA_IDS2.length>0){	
 				erptempacctapplicationService.deleteAll(arrayDATA_IDS2);
+		      }
 			commonBase.setCode(0);
 		}else{
 			commonBase.setCode(-1);
@@ -538,6 +598,7 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 				pageData.put("STATE","1");
 				pageData.put("BILL_USER",user.getUSER_ID());
 				pageData.put("BILL_DATE",DateUtils.getCurrentTime(DateFormatUtils.TIME_NOFUll_FORMAT));
+				pageData.put("APPLY_TYPE","1");//申请类别为新增正式账号
 			}
 			erpofficialacctapplicationService.grcUpdateDatabase(listUploadAndRead);
 			commonBase.setCode(0);

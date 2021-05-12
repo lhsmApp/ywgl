@@ -34,30 +34,30 @@
 			<div class="main-content-inner">
 				<div class="page-content">
 					<div class="page-header">
-						<table style="width:100%;">
-							<tbody>
-							<tr>
-								<td>
-									<div class="pull-right">
-										<span class="green middle bolder">填报类型: &nbsp;</span>
-											<div class="btn-toolbar inline middle no-margin">
-												<div data-toggle="buttons" class="btn-group no-margin">
-													<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toERPOfficialAcctApplication()">
-														<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP账号新增申请</span>
-													</button>
-<!-- 													<button id="btnEdit" class="btn btn-info btn-xs" onclick="toERPTempacctApplication()"> -->
-<!-- 														<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP临时账号申请</span> -->
+<!-- 						<table style="width:100%;"> -->
+<!-- 							<tbody> -->
+<!-- 							<tr> -->
+<!-- 								<td> -->
+<!-- 									<div class="pull-right"> -->
+<!-- 										<span class="green middle bolder">填报类型: &nbsp;</span> -->
+<!-- 											<div class="btn-toolbar inline middle no-margin"> -->
+<!-- 												<div data-toggle="buttons" class="btn-group no-margin"> -->
+<!-- 													<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toERPOfficialAcctApplication()"> -->
+<!-- 														<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP账号新增申请</span> -->
 <!-- 													</button> -->
-													<button id="btnEdit" class="btn btn-info btn-xs" onclick="toERPDelAcctApplication()">
-														<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP删除账号申请</span>
-													</button>
-												</div>
-											</div>
-										</div>
-									</td>
-								</tr>
-							</tbody>
-						</table>
+<!-- 													<button id="btnEdit" class="btn btn-info btn-xs" onclick="toERPTempacctApplication()"> -->
+<!--  														<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP临时账号申请</span> --> 
+<!--  													</button> --> 
+<!-- 													<button id="btnEdit" class="btn btn-info btn-xs" onclick="toERPDelAcctApplication()"> -->
+<!-- 														<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP删除账号申请</span> -->
+<!-- 													</button> -->
+<!-- 												</div> -->
+<!-- 											</div> -->
+<!-- 										</div> -->
+<!-- 									</td> -->
+<!-- 								</tr> -->
+<!-- 							</tbody> -->
+<!-- 						</table> -->
 					</div>
 					<div class="row">
 						<form action="erpofficialacctapplication/list.do" method="post" name="Form" id="Form">
@@ -107,32 +107,32 @@
 								</tr>
 							</table>
 							<div style="width:100%; overflow-x:scroll;min-height: 500px;">
-							<table id="simple-table" class="mtable table table-bordered" style="margin-top:5px; width:2015px;">	
+							<table id="simple-table" class="mtable table table-bordered" style="margin-top:5px; width:5000px;">	
 								<thead>
 									<tr>
 										<th class="center" style="width:35px; padding-left: 5px;padding-right:5px;">
 										<label class="pos-rel"><input type="checkbox" class="ace" id="zcheckbox" /><span class="lbl"></span></label>
 										</th>
-										<th style="width:110px; height:30px; text-align: center; padding-left: 12px;padding-right:12px;">员工编号</th>
-										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">员工姓名</th>
-										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">二级单位</th>
-										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">三级单位</th>
-										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">职务</th>
-										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">职级</th>
-										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">岗位</th>
-										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">模块</th>
-										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">联络电话</th>
-										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">电子邮箱</th>
-										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">是否培训</th>
-										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">培训方式</th>
-										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">培训时间</th>
-										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">培训成绩</th>
-										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">证书编号</th>
-										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">UKey编号</th>
-										<th style="width:110px; text-align: center;padding-left: 12px;padding-right:12px;">申请日期</th>
-										<th style="width:110px; text-align: center;">备注</th>
-										<th style="width:110px; text-align: center;">帐号类别</th>
-										<th style="width:110px; text-align: center;">审批状态</th>
+										<th style="width:210px; height:30px; text-align: center; padding-left: 2px;padding-right:2px;">员工编号</th>
+										<th style="width:210px; text-align: center;padding-left: 2px;padding-right:2px;">员工姓名</th>
+										<th style="width:210px; text-align: center;padding-left: 2px;padding-right:2px;">二级单位</th>
+										<th style="width:210px; text-align: center;padding-left: 2px;padding-right:2px;">三级单位</th>
+										<th style="width:150px; text-align: center;padding-left: 2px;padding-right:2px;">职务</th>
+										<th style="width:150px; text-align: center;padding-left: 2px;padding-right:2px;">职级</th>
+										<th style="width:150px; text-align: center;padding-left: 2px;padding-right:2px;">岗位</th>
+										<th style="width:150px; text-align: center;padding-left: 2px;padding-right:2px;">模块</th>
+										<th style="width:210px; text-align: center;padding-left: 2px;padding-right:2px;">联络电话</th>
+										<th style="width:210px; text-align: center;padding-left: 2px;padding-right:2px;">电子邮箱</th>
+										<th style="width:210px; text-align: center;padding-left: 2px;padding-right:2px;">是否培训</th>
+										<th style="width:210px; text-align: center;padding-left: 2px;padding-right:2px;">培训方式</th>
+										<th style="width:210px; text-align: center;padding-left: 2px;padding-right:2px;">培训时间</th>
+										<th style="width:210px; text-align: center;padding-left: 2px;padding-right:2px;">培训成绩</th>
+										<th style="width:210px; text-align: center;padding-left: 2px;padding-right:2px;">证书编号</th>
+										<th style="width:210px; text-align: center;padding-left: 2px;padding-right:2px;">UKey编号</th>
+										<th style="width:210px; text-align: center;padding-left: 2px;padding-right:2px;">申请日期</th>
+										<th style="width:210px; text-align: center;">备注</th>
+										<th style="width:210px; text-align: center;">帐号类别</th>
+										<th style="width:210px; text-align: center;">审批状态</th>
 									</tr>
 								</thead>
 														
@@ -167,6 +167,11 @@
 													<datalist id="MODULE">
 														<option value="项目" >项目</option> 
 														<option value="财务" >财务</option>
+														<option value="资产" >资产</option> 
+														<option value="销售" >销售</option>
+														<option value="生产" >生产</option> 
+														<option value="物资" >物资</option>
+														<option value="设备" >设备</option>
 													</datalist>
 												</th>
 												<th><input type="text" name="PHONE" id="PHONE" readonly="readonly" value="${var.PHONE}" maxlength="30" title="联络电话" style="width:100%;"/></th>
@@ -226,7 +231,14 @@
 						</td>
 						<th><input type="text" name="STAFF_CODE" id="STAFF_CODE" value="" maxlength="30" title="员工编号" style="width:100%;"/></th>
 						<th><input type="text" name="STAFF_NAME" id="STAFF_NAME" value="" maxlength="30" title="员工姓名" style="width:100%;"/></th>
-						<th><input type="text" name="DEPART_CODE" id="DEPART_CODE" value="${pd.DEPART_CODE}" maxlength="30" title="二级单位" style="width:100%;"/></th>
+						<th>
+						 <c:if test="${pd.ROLE_TYPE  == 'ejdw'}">
+						<input type="text" name="DEPART_CODE" id="DEPART_CODE"  readonly="readonly" value="${pd.DEPART_CODE}" maxlength="30" title="二级单位" style="width:100%;"/>
+						</c:if>	 
+						 <c:if test="${pd.ROLE_TYPE  == 'gly'}">
+						<input type="text" name="DEPART_CODE" id="DEPART_CODE"  value="${pd.DEPART_CODE}" maxlength="30" title="二级单位" style="width:100%;"/>
+						</c:if>	 
+						</th>
 						<th><input type="text" name="UNITS_DEPART" id="UNITS_DEPART" value="" maxlength="30" title="三级单位" style="width:100%;"/></th>
 						<th><input type="text" name="STAFF_POSITION" id="STAFF_POSITION" value="" maxlength="50" title="职务" style="width:100%;"/></th>
 						<th>
@@ -384,7 +396,9 @@
             "CERTIFICATE_NUM":{isMust:false,valiType:''},
             "UKEY_NUM":{isMust:false,valiType:''},
             "APPLY_DATE":{isMust:false,valiType:''},
-            "NOTE":{isMust:false,valiType:''}
+            "NOTE":{isMust:false,valiType:''},
+            "ACCOUNT_SIGN":{isMust:false,valiType:''}
+            
 	    }
 	    
 	    valida.initWhoIsMandatory(mandatory)//必填字段初始化
@@ -537,7 +551,7 @@
 				dataType:'json',
 				cache: false,
 				success: function(response){
-					debugger;
+					//debugger;
 					if(response.code==0){
 						$(top.hangge());//关闭加载状态
 						history.go(0); //刷新页面
@@ -559,6 +573,30 @@
 						$(top.hangge());//关闭加载状态
 						bootbox.dialog({
 							message: "<span class='bigger-110'>该用户已存在,不能重复申请！</span>",
+							buttons: 			
+							{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+						});
+						return;
+					}else if(response.code==4){
+						$(top.hangge());//关闭加载状态
+						bootbox.dialog({
+							message: "<span class='bigger-110'>该用户已存在有效的正式帐号申请单，不能重复申请！</span>",
+							buttons: 			
+							{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+						});
+						return;
+					}else if(response.code==5){
+						$(top.hangge());//关闭加载状态
+						bootbox.dialog({
+							message: "<span class='bigger-110'>该用户已存在有效的临时帐号申请单，不能重复申请！</span>",
+							buttons: 			
+							{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+						});
+						return;
+					}else if(response.code==6){
+						$(top.hangge());//关闭加载状态
+						bootbox.dialog({
+							message: "<span class='bigger-110'>该用户已存帐号申请单，不能重复申请！</span>",
 							buttons: 			
 							{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
 						});

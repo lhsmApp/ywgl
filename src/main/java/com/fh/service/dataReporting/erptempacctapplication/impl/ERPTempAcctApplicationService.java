@@ -87,7 +87,13 @@ public class ERPTempAcctApplicationService implements ERPTempAcctApplicationMana
 	public void grcUpdateDatabase(List<PageData> listData) throws Exception {
 		dao.update("ERPTempAcctApplicationMapper.delAndIns", listData);
 	}
-
+	/**删除正式帐号插入临时帐号
+	 * @param List<PageData>
+	 * @throws Exception
+	 */
+	public void delAndInsertTempData(PageData pd) throws Exception {
+		dao.update("ERPTempAcctApplicationMapper.delAndInsertTempData", pd);
+	}
 	/**
 	 * 批量审批/驳回
 	 * @param pd
@@ -107,5 +113,13 @@ public class ERPTempAcctApplicationService implements ERPTempAcctApplicationMana
 	public List<PageData> listBusiDate(PageData pd) throws Exception {
 		return (List<PageData>)dao.findForList("ERPTempAcctApplicationMapper.listBusiDate", pd);
 	}
+	/**按员工编号查找
+	 * @param pd
+	 * @throws Exception
+	 */
+	public PageData findByStaffCode(PageData pd)throws Exception{
+		return (PageData)dao.findForObject("ERPTempAcctApplicationMapper.findByStaffCode", pd);
+	}
+	
 }
 

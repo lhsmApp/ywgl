@@ -121,6 +121,7 @@ public class ERPDelAcctApplicationController extends BaseController {
             pageData.put("APPLY_DATE", listTransferData.get(i++).trim());
             pageData.put("ACCOUNT_DELETE_REASON", listTransferData.get(i++).trim());
             pageData.put("NOTE", listTransferData.get(i).trim());
+			pageData.put("APPLY_TYPE","2");//申请类别为删除
             if (null != staffId && !"".equals(staffId)) {// 如果有ID则进行修改
                 erpdelacctapplicationService.edit(pageData);
             } else {// 如果无ID则进行新增
@@ -503,6 +504,7 @@ public class ERPDelAcctApplicationController extends BaseController {
                 pageData.put("STATE", "1");
                 pageData.put("BILL_USER", user.getUSER_ID());
                 pageData.put("BILL_DATE", DateUtils.getCurrentTime(DateFormatUtils.TIME_NOFUll_FORMAT));
+        		pageData.put("APPLY_TYPE","2");//申请类别为删除
             }
             erpdelacctapplicationService.grcUpdateDatabase(listUploadAndRead);
             commonBase.setCode(0);

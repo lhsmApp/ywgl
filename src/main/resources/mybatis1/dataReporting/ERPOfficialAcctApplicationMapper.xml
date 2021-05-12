@@ -33,7 +33,8 @@
 		BILL_USER,
 		USER_DEPART,
 		BILL_DATE,
-		ACCOUNT_SIGN
+		ACCOUNT_SIGN,
+		APPLY_TYPE
 	</sql>
 	
 	<!-- 字段值 -->
@@ -62,7 +63,8 @@
 		#{BILL_USER},
 		#{USER_DEPART},
 		#{BILL_DATE},
-		#{ACCOUNT_SIGN}
+		#{ACCOUNT_SIGN},
+		#{APPLY_TYPE}
 	</sql>
 	
 	<!-- 新增-->
@@ -202,7 +204,7 @@
 			CONFIRM_STATE ASC,
 			ID DESC
 	</select>
-	
+
 	<!--业务期间集合  -->
 	<select id="listBusiDate" parameterType="pd" resultType="pd">
 		select BUSI_DATE from  <include refid="tableName"></include> group by BUSI_DATE
@@ -235,7 +237,7 @@
 	</update>
 	
 	<!-- *********************导入导出********************************* -->
-	<!-- 导出列表 -->
+	<!-- 导出列表(原) -->
 	<select id="exportList" parameterType="Page" resultType="pd">
 		select
 			t0.ID,
@@ -302,7 +304,7 @@
 				#{item.STAFF_NAME},	
 				#{item.DEPART_CODE},	
 				#{item.UNITS_DEPART},	
-				#{item.STAFF_POSITION},		
+				#{item.STAFF_POSITION},	
 				#{item.POSITION_LEVEL},	
 				#{item.STAFF_JOB},	
 				#{item.STAFF_MODULE},	
@@ -315,12 +317,14 @@
 				#{item.CERTIFICATE_NUM},	
 				#{item.UKEY_NUM},	
 				#{item.APPLY_DATE},	
-				#{item.NOTE},	
-				#{item.CONFIRM_STATE},	
+				#{item.NOTE},
+				#{item.CONFIRM_STATE},
 				#{item.STATE},
 				#{item.BILL_USER},
 				#{item.USER_DEPART},
-				#{item.BILL_DATE}
+				#{item.BILL_DATE},
+				#{item.ACCOUNT_SIGN},
+				#{item.APPLY_TYPE}
 			);
 		</foreach>
 	</update>
@@ -334,5 +338,295 @@
 		where 
 			STATE = 1 
 		limit 1
+	</select>
+	<!-- 删除临时帐号插入正式帐号 -->
+	<update id="delTempAndInsertData" parameterType="pd">
+		    delete from  tb_di_erp_taa
+		    where ID = #{ID};
+	        insert into 
+	        	<include refid="tableName"></include>
+		    (  
+		       	<include refid="Field"></include>
+			) values (
+				#{BUSI_DATE},
+				#{STAFF_CODE},	
+				#{STAFF_NAME},	
+				#{DEPART_CODE},	
+				#{UNITS_DEPART},	
+				#{STAFF_POSITION},		
+				#{POSITION_LEVEL},	
+				#{STAFF_JOB},	
+				#{STAFF_MODULE},	
+				#{PHONE},	
+				#{MAIL},	
+				#{IF_TRAINING},	
+				#{TRAINING_METHOD},	
+				#{TRAINING_TIME},	
+				#{TRAINING_RECORD},	
+				#{CERTIFICATE_NUM},	
+				#{UKEY_NUM},	
+				#{APPLY_DATE},	
+				#{NOTE},	
+				#{CONFIRM_STATE},	
+				#{STATE},
+				#{BILL_USER},
+				#{USER_DEPART},
+				#{BILL_DATE},
+				#{ACCOUNT_SIGN}
+			);
+	</update>
+		<!-- 根据员工编号查找 -->
+	<select id="findByStaffCode" parameterType="pd" resultType="pd">
+		select 
+			<include refid="Field"></include> 
+		from 
+			<include refid="tableName"></include>
+		where 
+		STAFF_CODE = #{USERNAME}
+	</select>
+	<!-- 新增和删除表单列表 -->
+	<select id="listAllForm" parameterType="page" resultType="pd">
+		select
+			t0.ID,
+			t0.STAFF_CODE,	
+			t0.STAFF_NAME,
+			t0.APPLY_TYPE,	
+			t0.APPLY_DATE,		
+			t0.DEPART_CODE,			
+			t0.STAFF_MODULE,	
+			t0.PHONE,	
+			t0.APPLY_TYPE,	
+			t0.BILL_USER,
+			t0.NOTE,
+			t0.CONFIRM_STATE,
+			t0.ACCOUNT_SIGN,
+			t1.NAME BILL_USERNAME,
+			t1.PHONE BILL_PHONE
+		from 
+		<include refid="tableName"></include> t0
+		left join `sys_user` t1 on t1.USER_ID =t0.BILL_USER
+		where STATE=1
+		<if test="pd.SelectedDepartCode != null and pd.SelectedDepartCode != ''">
+		and 
+			USER_DEPART = #{pd.SelectedDepartCode}
+		</if>
+		
+		<if test="pd.confirmState != null and pd.confirmState != ''">
+		and 
+			CONFIRM_STATE IN (${pd.confirmState})
+		</if>
+		<if test="pd.busiDate != null and pd.busiDate != ''">
+		and 
+			BUSI_DATE = #{pd.busiDate}
+		</if>
+		<if test="pd.USER_DEPART != null and pd.USER_DEPART != ''">
+		and 
+			USER_DEPART = #{pd.USER_DEPART}
+		</if>
+		<if test="pd.APPLY_TYPE != null and pd.APPLY_TYPE != ''">
+		and 
+			APPLY_TYPE = #{pd.APPLY_TYPE}
+		</if>
+		union
+				select
+			t0.ID,
+			t0.STAFF_CODE,	
+			t0.STAFF_NAME,
+			t0.APPLY_TYPE,	
+			t0.APPLY_DATE,		
+			t0.DEPART_CODE,			
+			t0.STAFF_MODULE,	
+			t0.PHONE,	
+			t0.APPLY_TYPE,	
+			t0.BILL_USER,
+			t0.NOTE,
+			t0.CONFIRM_STATE,
+			t0.ACCOUNT_SIGN,
+			t1.NAME BILL_USERNAME,
+			t1.PHONE BILL_PHONE
+		from 
+		tb_di_erp_taa t0
+		left join `sys_user` t1 on t1.USER_ID =t0.BILL_USER
+		where STATE=1
+		<if test="pd.SelectedDepartCode != null and pd.SelectedDepartCode != ''">
+		and 
+			USER_DEPART = #{pd.SelectedDepartCode}
+		</if>
+		
+		<if test="pd.confirmState != null and pd.confirmState != ''">
+		and 
+			CONFIRM_STATE IN (${pd.confirmState})
+		</if>
+		<if test="pd.busiDate != null and pd.busiDate != ''">
+		and 
+			BUSI_DATE = #{pd.busiDate}
+		</if>
+		<if test="pd.USER_DEPART != null and pd.USER_DEPART != ''">
+		and 
+			USER_DEPART = #{pd.USER_DEPART}
+		</if>
+		<if test="pd.APPLY_TYPE != null and pd.APPLY_TYPE != ''">
+		and 
+			APPLY_TYPE = #{pd.APPLY_TYPE1}
+		</if>
+		union
+				select
+			t0.ID,
+			t0.STAFF_CODE,	
+			t0.STAFF_NAME,
+			t0.APPLY_TYPE,	
+			t0.APPLY_DATE,		
+			t0.DEPART_CODE,			
+			t0.STAFF_MODULE,	
+			t0.PHONE,	
+			t0.APPLY_TYPE,	
+			t0.BILL_USER,
+			t0.NOTE,
+			t0.CONFIRM_STATE,
+			'' ACCOUNT_SIGN,
+			t1.NAME BILL_USERNAME,
+			t1.PHONE BILL_PHONE
+		from 
+		tb_di_erp_daa t0
+		left join `sys_user` t1 on t1.USER_ID =t0.BILL_USER
+		where STATE=1
+		<if test="pd.SelectedDepartCode != null and pd.SelectedDepartCode != ''">
+		and 
+			USER_DEPART = #{pd.SelectedDepartCode}
+		</if>
+		
+		<if test="pd.confirmState != null and pd.confirmState != ''">
+		and 
+			CONFIRM_STATE IN (${pd.confirmState})
+		</if>
+		<if test="pd.busiDate != null and pd.busiDate != ''">
+		and 
+			BUSI_DATE = #{pd.busiDate}
+		</if>
+		<if test="pd.USER_DEPART != null and pd.USER_DEPART != ''">
+		and 
+			USER_DEPART = #{pd.USER_DEPART}
+		</if>
+		<if test="pd.APPLY_TYPE != null and pd.APPLY_TYPE != ''">
+		and 
+			APPLY_TYPE = #{pd.APPLY_TYPE}
+		</if>
+		order by
+			CONFIRM_STATE ASC,
+			ID DESC
+	</select>
+	<!-- 导出列表 -->
+	<select id="exportListAdd" parameterType="Page" resultType="pd">
+		select
+			t0.ID,t0.STAFF_CODE,t0.STAFF_NAME,t0.APPLY_TYPE,t0.APPLY_DATE,t0.DEPART_CODE,t0.STAFF_MODULE,	
+			t0.PHONE,t0.APPLY_TYPE,	t0.BILL_USER,t0.NOTE,t0.CONFIRM_STATE,t0.ACCOUNT_SIGN,t1.NAME BILL_USERNAME,t1.PHONE BILL_PHONE
+		from 
+		<include refid="tableName"></include> t0
+		left join `sys_user` t1 on t1.USER_ID =t0.BILL_USER
+		where STATE=1
+		<if test="pd.SelectedDepartCode != null and pd.SelectedDepartCode != ''">
+		and 
+			USER_DEPART = #{pd.SelectedDepartCode}
+		</if>
+		
+		<if test="pd.confirmState != null and pd.confirmState != ''">
+		and 
+			CONFIRM_STATE IN (${pd.confirmState})
+		</if>
+		<if test="pd.busiDate != null and pd.busiDate != ''">
+		and 
+			BUSI_DATE = #{pd.busiDate}
+		</if>
+		<if test="pd.USER_DEPART != null and pd.USER_DEPART != ''">
+		and 
+			USER_DEPART = #{pd.USER_DEPART}
+		</if>
+		<if test="pd.APPLY_TYPE != null and pd.APPLY_TYPE != ''">
+		and 
+			APPLY_TYPE = #{pd.APPLY_TYPE}
+		</if>
+		<if test="pd.arrayDATA_IDS1 != null and pd.arrayDATA_IDS1 != ''">
+			and ID in
+			<foreach item="item" index="index" collection="pd.arrayDATA_IDS1" open="(" separator="," close=")">
+	                 #{item}
+			</foreach>
+		</if>
+		union
+				select
+			t0.ID,t0.STAFF_CODE,t0.STAFF_NAME,t0.APPLY_TYPE,t0.APPLY_DATE,t0.DEPART_CODE,t0.STAFF_MODULE,t0.PHONE,	
+			t0.APPLY_TYPE,t0.BILL_USER,t0.NOTE,t0.CONFIRM_STATE,t0.ACCOUNT_SIGN,t1.NAME BILL_USERNAME,t1.PHONE BILL_PHONE
+		from 
+		tb_di_erp_taa t0
+		left join `sys_user` t1 on t1.USER_ID =t0.BILL_USER
+		where STATE=1
+		<if test="pd.SelectedDepartCode != null and pd.SelectedDepartCode != ''">
+		and 
+			USER_DEPART = #{pd.SelectedDepartCode}
+		</if>
+		
+		<if test="pd.confirmState != null and pd.confirmState != ''">
+		and 
+			CONFIRM_STATE IN (${pd.confirmState})
+		</if>
+		<if test="pd.busiDate != null and pd.busiDate != ''">
+		and 
+			BUSI_DATE = #{pd.busiDate}
+		</if>
+		<if test="pd.USER_DEPART != null and pd.USER_DEPART != ''">
+		and 
+			USER_DEPART = #{pd.USER_DEPART}
+		</if>
+		<if test="pd.APPLY_TYPE != null and pd.APPLY_TYPE != ''">
+		and 
+			APPLY_TYPE = #{pd.APPLY_TYPE1}
+		</if>
+		<if test="pd.arrayDATA_IDS2 != null and pd.arrayDATA_IDS2 != ''">
+			and ID in
+			<foreach item="item" index="index" collection="pd.arrayDATA_IDS2" open="(" separator="," close=")">
+	                 #{item}
+			</foreach>
+		</if>
+		order by
+			CONFIRM_STATE ASC
+	</select>
+	<!-- 导出列表 -->
+	<select id="exportListDel" parameterType="Page" resultType="pd">
+		select t0.ID,t0.STAFF_CODE,	t0.STAFF_NAME,t0.APPLY_TYPE,t0.APPLY_DATE,t0.DEPART_CODE,t0.STAFF_MODULE,	
+			t0.PHONE,t0.APPLY_TYPE,	t0.BILL_USER,t0.NOTE,t0.CONFIRM_STATE,'' ACCOUNT_SIGN,t1.NAME BILL_USERNAME,t1.PHONE BILL_PHONE
+		from 
+		tb_di_erp_daa t0
+		left join `sys_user` t1 on t1.USER_ID =t0.BILL_USER
+		where
+		
+		and  STATE=1
+		<if test="pd.SelectedDepartCode != null and pd.SelectedDepartCode != ''">
+		and 
+			USER_DEPART = #{pd.SelectedDepartCode}
+		</if>
+		
+		<if test="pd.confirmState != null and pd.confirmState != ''">
+		and 
+			CONFIRM_STATE IN (${pd.confirmState})
+		</if>
+		<if test="pd.busiDate != null and pd.busiDate != ''">
+		and 
+			BUSI_DATE = #{pd.busiDate}
+		</if>
+		<if test="pd.USER_DEPART != null and pd.USER_DEPART != ''">
+		and 
+			USER_DEPART = #{pd.USER_DEPART}
+		</if>
+		<if test="pd.APPLY_TYPE != null and pd.APPLY_TYPE != ''">
+		and 
+			APPLY_TYPE = #{pd.APPLY_TYPE}
+		</if>
+		<if test="pd.arrayDATA_IDS3 != null and pd.arrayDATA_IDS3 != ''">
+		and ID in
+			<foreach item="item" index="index" collection="pd.arrayDATA_IDS3" open="(" separator="," close=")">
+	                 #{item}
+			</foreach>
+		</if>	
+		order by
+			CONFIRM_STATE ASC
 	</select>
 </mapper>

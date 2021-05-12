@@ -159,7 +159,7 @@ Dialog.prototype.attachBehaviors = function () {
     }
 };
 Dialog.prototype.displacePath = function () {
-    if (this.URL.substr(0, 7) == "http://" || this.URL.substr(0, 1) == "/" || this.URL.substr(0, 11) == "javascript:") {
+    if (this.URL.substr(0, 7) == "http://" || this.URL.substr(0, 8) == "https://" || this.URL.substr(0, 1) == "/" || this.URL.substr(0, 11) == "javascript:") {
         return this.URL;
     } else {
         var thisPath = this.URL;

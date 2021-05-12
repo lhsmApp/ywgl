@@ -47,19 +47,44 @@ public interface ERPOfficialAcctApplicationManager{
 	 * @throws Exception
 	 */
 	public List<PageData> exportModel(PageData getPd) throws Exception;
+	
+	/**导出列表
+	 * @param page
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PageData> exportList(Page page)throws Exception;
+	/**
+	 * 导出列表
+	 * @param page
+	 * @throws Exception
+	 */
+	public List<PageData> exportListAdd(Page page) throws Exception;
 
 	/**
 	 * 导出列表
 	 * @param page
 	 * @throws Exception
 	 */
-	public List<PageData> exportList(Page page) throws Exception;
+	public List<PageData> exportListDel(Page page) throws Exception;
+	
+	/**按员工编号查找
+	 * @param pd
+	 * @throws Exception
+	 */
+	public PageData findByStaffCode(PageData pd)throws Exception;
 	
 	/**更新数据
 	 * @param List<PageData>
 	 * @throws Exception
 	 */
 	public void grcUpdateDatabase(List<PageData> listData) throws Exception;
+	
+	/**删除临时帐号并插入正式帐号
+	 * @param List<PageData>
+	 * @throws Exception
+	 */
+	public void delTempAndInsertData(PageData pd) throws Exception;
 	
 	/**
 	 *  批量审批
@@ -75,6 +100,10 @@ public interface ERPOfficialAcctApplicationManager{
 	 * @throws Exception
 	 */
 	public List<PageData> listBusiDate(PageData pd)throws Exception;
-	
+	/**列表(新增和删除等所有表单)
+	 * @param page
+	 * @throws Exception
+	 */
+	public List<PageData> listAllForm(Page page)throws Exception;
 }
 

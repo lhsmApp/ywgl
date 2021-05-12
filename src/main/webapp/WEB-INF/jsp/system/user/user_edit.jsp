@@ -89,15 +89,19 @@
 										</tr> --%>
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">密码:</td>
-											<td><input type="password" name="PASSWORD" id="password"  maxlength="32" placeholder="输入密码" title="密码" value="erp123" readonly= "readonly" style="width:98%;"/></td>
+											<td><input type="password" name="PASSWORD" id="password"  maxlength="32" placeholder="输入密码" title="密码" value="erp123" style="width:98%;"/></td>
 										</tr>
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">确认密码:</td>
-											<td><input type="password" name="chkpwd" id="chkpwd"  maxlength="32" placeholder="确认密码" title="确认密码" value="erp123" readonly= "readonly" style="width:98%;"/></td>
+											<td><input type="password" name="chkpwd" id="chkpwd"  maxlength="32" placeholder="确认密码" title="确认密码" value="erp123"  style="width:98%;"/></td>
 										</tr>
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">姓名:</td>
 											<td><input type="text" name="NAME" id="name"  value="${pd.NAME }"  maxlength="32" placeholder="这里输入姓名" title="姓名" style="width:98%;"/></td>
+										</tr>
+										<tr>
+											<td style="width:79px;text-align: right;padding-top: 13px;">办公电话:</td>
+											<td><input type="text" name="WORK_PHONE" id="WORK_PHONE"  value="${pd.WORK_PHONE }"  maxlength="32" placeholder="这里输入办公电话" title="手机号" style="width:98%;"/></td>
 										</tr>
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">手机号:</td>
@@ -123,7 +127,7 @@
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;"></td>
 											<td style="width:79px;text-align: left;padding-top: 13px;">
-												<input name="USER_PROPERTY" id="USER_PROPERTY" type="checkbox" class="ace" />
+												<input name="USER_PROPERTY" id="USER_PROPERTY" type="checkbox" class="ace" readonly="readonly" />
 												
 											<span class="lbl">是否SAP账号</span>
 											</td>
@@ -267,6 +271,16 @@
 	            time:3
 	        });
 			$("#name").focus();
+			return false;
+		}
+		if($("#WORK_PHONE").val()==""){
+			$("#WORK_PHONE").tips({
+				side:3,
+	            msg:'输入办公电话',
+	            bg:'#AE81FF',
+	            time:3
+	        });
+			$("#WORK_PHONE").focus();
 			return false;
 		}
 		/*var myreg = /^(((13[0-9]{1})|159)+\d{8})$/;

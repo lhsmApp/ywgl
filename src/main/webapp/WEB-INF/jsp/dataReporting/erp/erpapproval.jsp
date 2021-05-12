@@ -41,33 +41,10 @@
 			<div class="main-content-inner">
 				<div class="page-content">
 					<div class="page-header">
-						<table style="width:100%;">
-							<tbody>
-								<tr>
-									<td>
-										<div class="pull-right">
-											<span class="green middle bolder">审批类型: &nbsp;</span>
-											<div class="btn-toolbar inline middle no-margin">
-												<div data-toggle="buttons" class="btn-group no-margin">
-													<button id="btnEdit" class="btn btn-primary btn-xs" onclick="toERPOaa()">
-														<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP新增账号审批</span>
-													</button>
-<!-- 													<button id="btnEdit" class="btn btn-info btn-xs" onclick="toERPTaa()"> -->
-<!-- 														<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP临时账号审批</span> -->
-<!-- 													</button> -->
-													<button id="btnEdit" class="btn btn-info btn-xs" onclick="toERPDaa()">
-														<i class="ace-icon fa fa-chevron-right bigger-110"></i> <span>ERP删除账号审批</span>
-													</button>
-												</div>
-											</div>
-										</div>
-									</td>
-								</tr>
-							</tbody>
-						</table>
+			
 					</div>
 					<div class="row">
-						<form action="erp/erpOaaList.do" method="post" name="Form" id="Form">
+						<form action="erp/erpApprovalList.do" method="post" name="Form" id="Form">
 							<table style="margin-bottom:6px; float:left;">
 								<tr>
 									<td>
@@ -90,12 +67,19 @@
 											<option value="2" <c:if test="${pd.confirmState == 2}">selected="selected"</c:if>>待审批</option>
 											<option value="3" <c:if test="${pd.confirmState == 3}">selected="selected"</c:if>>已审批</option>
 										</select>
+									</td>	<td>
+										<select class="form-control" id="APPLY_TYPE" name="APPLY_TYPE" style="width:150px;" onchange="tosearch()">
+											<option value="1" <c:if test="${pd.APPLY_TYPE ==1||pd.APPLY_TYPE ==3}">selected="selected"</c:if>>新增</option>
+											<option value="2" <c:if test="${pd.APPLY_TYPE == 2}">selected="selected"</c:if>>删除</option>
+										</select>
 									</td>
 									<td style="vertical-align:top;padding-left:3px;">
 										<a class="btn btn-info btn-sm" onclick="tosearch()"><i class="ace-icon fa fa-search bigger-110"></i></a>
 										<c:if test="${pd.confirmState == 2}">
-										<a class="btn btn-white btn-info btn-bold" onclick="oaaReport('确定要审批通过当前选中的申请吗?')"><i class="ace-icon fa fa-check-square-o bigger-110"></i>批量审批</a>
-										<a class="btn btn-white btn-info btn-bold" onclick="oaaBackReport('确定要驳回当前选中的申请吗?');" title="批量驳回" ><i class="ace-icon fa fa-exclamation-triangle red bigger-110"></i>批量驳回</a>
+											<a class="btn btn-white btn-info btn-bold" onclick="oaaReport('确定要审批通过当前选中的申请吗?')"><i class="ace-icon fa fa-check-square-o bigger-110"></i>批量审批</a>
+										</c:if>
+										<c:if test="${pd.confirmState == 3}">
+											<a class="btn btn-white btn-info btn-bold" onclick="oaaBackReport('确定要驳回当前选中的申请吗?');" title="批量驳回" ><i class="ace-icon fa fa-exclamation-triangle red bigger-110"></i>批量驳回</a>
 										</c:if>
 										<a class="btn btn-white btn-info btn-bold" onclick="toExcel()"><span class="ace-icon fa fa-cloud-download"></span>导出</a>
 									</td>
@@ -109,26 +93,17 @@
 										<label class="pos-rel"><input type="checkbox" class="ace" id="zcheckbox" /><span class="lbl"></span></label>
 										</th>
 										<th class="center" style="width:45px;  padding-left: 5px;padding-right:5px;">序号</th>
+										<th style="width:110px; height:30px;  text-align: center; padding-left: 12px;padding-right:12px;height: 30px;">日期</th>
+										<th style="width:110px; height:30px;  text-align: center; padding-left: 12px;padding-right:12px;height: 30px;">申请类别</th>
 										<th style="width:110px; height:30px;  text-align: center; padding-left: 12px;padding-right:12px;height: 30px;">员工编号</th>
-										<th style="width:110px;  text-align: center;padding-left: 12px;padding-right:12px;">员工姓名</th>
-										<th style="width:110px;  text-align: center;padding-left: 12px;padding-right:12px;">二级单位</th>
-										<th style="width:110px;  text-align: center;padding-left: 12px;padding-right:12px;">三级单位</th>
-										<th style="width:110px;  text-align: center;padding-left: 12px;padding-right:12px;">职务</th>
-										<th style="width:110px;  text-align: center;padding-left: 12px;padding-right:12px;">岗位</th>
+										<th style="width:110px;  text-align: center;padding-left: 12px;padding-right:12px;">姓名</th>
+										<th style="width:110px;  text-align: center;padding-left: 12px;padding-right:12px;">单位</th>
 										<th style="width:110px;  text-align: center;padding-left: 12px;padding-right:12px;">模块</th>
-										<th style="width:110px;  text-align: center;padding-left: 12px;padding-right:12px;">联络电话</th>
-										<th style="width:110px;  text-align: center;padding-left: 12px;padding-right:12px;">电子邮件</th>
-										<th style="width:110px;  text-align: center;padding-left: 12px;padding-right:12px;">是否培训</th>
-										<th style="width:110px;  text-align: center;padding-left: 12px;padding-right:12px;">培训方式</th>
-										<th style="width:110px;  text-align: center;padding-left: 12px;padding-right:12px;">培训时间</th>
-										<th style="width:110px;  text-align: center;padding-left: 12px;padding-right:12px;">培训成绩</th>
-										<th style="width:110px;  text-align: center;padding-left: 12px;padding-right:12px;">证书编号</th>
-										<th style="width:110px;  text-align: center;padding-left: 12px;padding-right:12px;">UKey编号</th>
-										<th style="width:110px;  text-align: center;padding-left: 12px;padding-right:12px;">申请日期</th>
-										<th style="width:110px;  text-align: center;">备注</th>
-										<th style="width:110px; text-align: center;">帐号类别</th>
-										<th style="width:110px;  text-align: center;">上报人姓名</th>
-									<th style="width:110px;  text-align: center;">上报人手机号</th>
+										<th style="width:110px;  text-align: center;padding-left: 12px;padding-right:12px;">联系电话</th>
+										<th style="width:110px;  text-align: center;padding-left: 12px;padding-right:12px;">帐号类别</th>
+										<th style="width:110px;  text-align: center;padding-left: 12px;padding-right:12px;">上报人</th>
+										<th style="width:110px;  text-align: center;padding-left: 12px;padding-right:12px;">上报人电话</th>
+										<th style="width:110px;  text-align: center;padding-left: 12px;padding-right:12px;">备注</th>
 										<th style="width:110px;  text-align: center;padding-left: 12px;padding-right:12px;">审批状态</th>
 									</tr>
 								</thead>
@@ -143,30 +118,29 @@
 													${vs.index+1}
 													<input type="hidden" name='ids' value="${var.ID}" class="ace" />
 												</th>
+												
+												<th style="height: 30px;">${var.APPLY_DATE}</th>
+												<th style="height: 30px;">
+													<c:if test="${var.APPLY_TYPE==2}">
+													<span>刪除 </span>
+													</c:if>
+													<c:if test="${var.APPLY_TYPE ==1||var.APPLY_TYPE ==3}">
+														<span>新增</span>
+													</c:if>
+												</th>
 												<th style="height: 30px;">${var.STAFF_CODE}</th>
 												<th>${var.STAFF_NAME}</th>
 												<th>${var.DEPART_CODE}</th>
-												<th>${var.UNITS_DEPART}</th>
-												<th>${var.STAFF_POSITION}</th>
-												<th>${var.STAFF_JOB}</th>
 												<th>${var.STAFF_MODULE}</th>
 												<th>${var.PHONE}</th>
-												<th>${var.MAIL}</th>
-												<th>${var.IF_TRAINING}</th>
-												<th>${var.TRAINING_METHOD}</th>
-												<th>${var.TRAINING_TIME}</th>
-												<th>${var.TRAINING_RECORD}</th>
-												<th>${var.CERTIFICATE_NUM}</th>
-												<th>${var.UKEY_NUM}</th>
-												<th>${var.APPLY_DATE}</th>
-												<th>${var.NOTE}</th>
-												<th class="center">
+													<th class="center">
 													<input type="hidden" id="ACCOUNT_SIGN" name="ACCOUNT_SIGN" value="${var.ACCOUNT_SIGN}"/>
 													<c:if test="${var.ACCOUNT_SIGN == 1}"><span>正式帐号</span></c:if>
 													<c:if test="${var.ACCOUNT_SIGN == 2}"><span>临时帐号</span></c:if>
 												</th>
 												<th>${var.BILL_USERNAME}</th>
-												<th>${var.BILL_PHONE}</th>
+													<th>${var.PHONE}</th>
+												<th>${var.NOTE}</th>
 												<th class="center">
 													<c:if test="${var.CONFIRM_STATE == 2}"><span class="label label-warning arrowed">待审批</span></c:if>
 													<c:if test="${var.CONFIRM_STATE == 3}"><span class="label label-success arrowed">已审批</span></c:if>
@@ -298,10 +272,16 @@
 						});
 						return;
 					}
+					var url;
+					if('${pd.APPLY_TYPE}'==2){
+						url='<%=basePath%>erp/daaReport.do?tm='+new Date().getTime()
+					}else{
+						url='<%=basePath%>erp/oaaReport.do?tm='+new Date().getTime()
+					}
 						top.jzts();
 						$.ajax({
 							type: "POST",
-							url: '<%=basePath%>erp/oaaReport.do?tm='+new Date().getTime(),
+							url: url,
 					    	data: {DATA_IDS:str,"CONFIRM_STATE":"3"},
 							dataType:'json',
 							cache: false,
@@ -349,13 +329,19 @@
 						});
 						return;
 				  	} 
-					if($("#confirmState").val() != 2){
+					if($("#confirmState").val() != 3){
 						bootbox.dialog({
 							message: "<span class='bigger-110'>只能对未审批数据进行操作!</span>",
 							buttons: 			
 							{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
 						});
 						return;
+					}
+					var url;
+					if('${pd.APPLY_TYPE}'==2){
+						url='<%=basePath%>erp/daaReport.do?tm='+new Date().getTime()
+					}else{
+						url='<%=basePath%>erp/oaaReport.do?tm='+new Date().getTime()
 					}
 						top.jzts();
 						$.ajax({
@@ -391,9 +377,17 @@
 		
 		//导出excel
 		function toExcel(){
-			window.location.href='<%=basePath%>erp/oaaExcel.do?confirmState='+$("#confirmState").val()+'&busiDate='+$("#busiDate").val()+'&USER_DEPART='+$("#SelectedDepartCode").val();
-		}
-		
+			debugger;
+			var str = '';
+			for(var i=0;i < document.getElementsByName('ids').length;i++){
+				if(document.getElementsByName('ids')[i].checked){
+				  	if(str=='') str += document.getElementsByName('ids')[i].value;
+				  	else str += ',' + document.getElementsByName('ids')[i].value;
+				}
+			}
+			str=str.replace(/\&/g,"%26");
+			window.location.href='<%=basePath%>erp/oaaExcel.do?confirmState='+$("#confirmState").val()+'&APPLY_TYPE='+$("#APPLY_TYPE").val()+'&busiDate='+$("#busiDate").val()+'&USER_DEPART='+$("#SelectedDepartCode").val()+'&DATA_IDS='+str;
+		}		
 		//下拉树
 		var defaultNodes = {"treeNodes":eval('${zTreeNodes}')};
 		var name = "${pd.name}";

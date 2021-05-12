@@ -110,7 +110,8 @@ public class UserController extends BaseController {
 		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
 		String userName = user.getUSERNAME();
 		String unitCode=user.getUNIT_CODE();	
-		
+		String userRole=user.getRole().getROLE_ID();//获取用户角色
+		//当用户角色为二级单位管理员时，不显示导入按钮
 		if(userName.equals("admin")){
 			pd.put("UNIT_CODE", pd.getString("DEPARTMENT_ID"));
 		}else{
@@ -133,6 +134,13 @@ public class UserController extends BaseController {
 		PageData dpd = departmentService.findByBianma(pd);
 		if(null != dpd){
 			ZDEPARTMENT_ID = dpd.getString("NAME");
+		}
+		pd.put("KEY_CODE", "ejdwxtglyjs");//获取配置表中二级单位系统管理员角色
+		String userRoldId = sysconfigService.getSysConfigByKey(pd);
+		if(userRole.equals(userRoldId)){
+			pd.put("ROLE_TYPE", "ejdw");//角色类型为二级单位
+		}else{
+			pd.put("ROLE_TYPE", "gly");//角色类型为管理员
 		}
 		mv.addObject("depname", ZDEPARTMENT_ID);
 		
@@ -169,7 +177,7 @@ public class UserController extends BaseController {
 		pd.put("USER_PROPERTY", "1");
 		page.setPd(pd);
 		List<PageData>	userList = userService.listSapUsers(page);	//列出用户列表
-		mv.setViewName("dataReporting/erpaccountcancle/erpaccountcancle_list");
+		mv.setViewName("dataReporting/erpaccountcancle/erpaccountcancle_query");
 		mv.addObject("userList", userList);
 		mv.addObject("pd", pd);
 		mv.addObject("userName", Jurisdiction.getUsername());		

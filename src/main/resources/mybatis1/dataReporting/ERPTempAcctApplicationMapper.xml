@@ -35,7 +35,8 @@
 		TRAINING_TIME,	
 		TRAINING_RECORD,	
 		CERTIFICATE_NUM,
-		POSITION_LEVEL
+		POSITION_LEVEL,
+		APPLY_TYPE
 	</sql>
 	
 	<!-- 字段值 -->
@@ -66,7 +67,8 @@
 		#{TRAINING_TIME},	
 		#{TRAINING_RECORD},	
 		#{CERTIFICATE_NUM},	
-		#{POSITION_LEVEL}
+		#{POSITION_LEVEL},
+		#{APPLY_TYPE}
 	</sql>
 	
 	<!-- 新增-->
@@ -275,7 +277,15 @@
 					#{item.STATE},
 					#{item.BILL_USER},
 					#{item.USER_DEPART},
-					#{item.BILL_DATE}
+					#{item.BILL_DATE},
+					#{ACCOUNT_SIGN},
+					#{IF_TRAINING},	
+					#{TRAINING_METHOD},	
+					#{TRAINING_TIME},	
+					#{TRAINING_RECORD},	
+					#{CERTIFICATE_NUM},	
+					#{POSITION_LEVEL},
+					#{APPLY_TYPE}
 			);
 		</foreach>
 	</update>
@@ -289,5 +299,52 @@
 		where 
 			STATE = 1 
 		limit 1
+	</select>
+	<!-- 删除正式帐号插入临时帐号 -->
+	<update id="delAndInsertTempData" parameterType="pd">
+		    delete from  tb_di_erp_oaa
+		    where ID = #{ID};
+	        insert into 
+	        	<include refid="tableName"></include>
+		    (  
+		       	<include refid="Field"></include>
+			) values (
+				#{BUSI_DATE},
+				#{STAFF_CODE},	
+				#{STAFF_NAME},	
+				#{DEPART_CODE},	
+				#{UNITS_DEPART},	
+				#{STAFF_POSITION},	
+				#{STAFF_JOB},	
+				#{STAFF_MODULE},	
+				#{PHONE},	
+				#{MAIL},	
+				#{APPLY_DATE},	
+				#{CANCEL_DATE},	
+				#{APPLY_TEMP_REASON},	
+				#{UKEY_NUM},	
+				#{NOTE},
+				#{CONFIRM_STATE},
+				#{STATE},
+				#{BILL_USER},
+				#{USER_DEPART},
+				#{BILL_DATE},
+				#{ACCOUNT_SIGN},
+				#{IF_TRAINING},	
+				#{TRAINING_METHOD},	
+				#{TRAINING_TIME},	
+				#{TRAINING_RECORD},	
+				#{CERTIFICATE_NUM},	
+				#{POSITION_LEVEL}
+			);
+	</update>
+			<!-- 根据员工编号查找 -->
+	<select id="findByStaffCode" parameterType="pd" resultType="pd">
+		select 
+			<include refid="Field"></include> 
+		from 
+			<include refid="tableName"></include>
+		where 
+		STAFF_CODE = #{USERNAME}
 	</select>
 </mapper>

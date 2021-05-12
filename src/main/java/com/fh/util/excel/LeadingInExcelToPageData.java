@@ -377,7 +377,7 @@ public class LeadingInExcelToPageData<T> {
                     	value = bolValue.toString().trim();
                         break;  
                     case Cell.CELL_TYPE_NUMERIC:  
-                    	if(COL_CODE.equals("USER_CODE") || COL_CODE.equals("BUSI_DATE") || COL_CODE.equals("STAFF_IDENT")){
+                    	if(COL_CODE.equals("USER_CODE") || COL_CODE.equals("BUSI_DATE") || COL_CODE.equals("STAFF_IDENT")|| COL_CODE.equals("TEST_DATE")){
                     		cell.setCellType(Cell.CELL_TYPE_STRING);
     						String temp = cell.getStringCellValue();
     						value = temp.trim();

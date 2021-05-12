@@ -375,7 +375,7 @@
 		       console.log(diag.URL+'111111');
 		       console.log(loginname);
 		       diag.Width = 469;
-		       diag.Height = 320;
+		       diag.Height = 380;
 		       diag.CancelEvent = function(){ //关闭事件
 		        diag.close();
 		        changeCode1();

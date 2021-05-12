@@ -48,8 +48,12 @@
 											<td><input type="text" name="NAME" id="name"  value="${pd.NAME }"  maxlength="32" readonly="readonly" placeholder="这里输入姓名" title="姓名" style="width:98%;"/></td>
 										</tr>
 										<tr>
+											<td style="width:79px;text-align: right;padding-top: 13px;">办公电话:</td>
+											<td><input type="text" name="WORK_PHONE" id="WORK_PHONE"  value="${pd.WORK_PHONE }"  maxlength="32" placeholder="这里输入办公电话" title="手机号" style="width:98%;"/></td>
+										</tr>
+										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">手机号:</td>
-											<td><input type="number" name="PHONE" id="PHONE"  value="${pd.PHONE }"  maxlength="32" readonly="readonly" placeholder="这里输入手机号" title="手机号" style="width:98%;"/></td>
+											<td><input type="text" name="PHONE" id="PHONE"  value="${pd.PHONE }"  maxlength="32" readonly="readonly" placeholder="这里输入手机号" title="手机号" style="width:98%;"/></td>
 										</tr>
 										<%-- <tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">邮箱:</td>
@@ -150,6 +154,26 @@
 	            time:3
 	        });
 			$("#name").focus();
+			return false;
+		}
+		if($("#PHONE").val()==""){
+			$("#PHONE").tips({
+				side:3,
+	            msg:'输入手机号',
+	            bg:'#AE81FF',
+	            time:3
+	        });
+			$("#PHONE").focus();
+			return false;
+		}
+		if($("#WORK_PHONE").val()==""){
+			$("#WORK_PHONE").tips({
+				side:3,
+	            msg:'输入办公电话',
+	            bg:'#AE81FF',
+	            time:3
+	        });
+			$("#WORK_PHONE").focus();
 			return false;
 		}
 		/*var myreg = /^(((13[0-9]{1})|159)+\d{8})$/;

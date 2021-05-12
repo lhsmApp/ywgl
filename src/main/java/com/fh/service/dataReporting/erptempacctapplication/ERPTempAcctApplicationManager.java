@@ -61,6 +61,12 @@ public interface ERPTempAcctApplicationManager{
 	 */
 	public void grcUpdateDatabase(List<PageData> listData) throws Exception;
 	
+	/**删除正式帐号插入临时帐号
+	 * @param List<PageData>
+	 * @throws Exception
+	 */
+	public void delAndInsertTempData(PageData pd) throws Exception;
+	
 	/**
 	 * 批量审批/驳回
 	 * @param pd
@@ -76,5 +82,10 @@ public interface ERPTempAcctApplicationManager{
 	 */
 	public List<PageData> listBusiDate(PageData pd)throws Exception;
 	
+	/**按员工编号查找
+	 * @param pd
+	 * @throws Exception
+	 */
+	public PageData findByStaffCode(PageData pd)throws Exception;
 }
 

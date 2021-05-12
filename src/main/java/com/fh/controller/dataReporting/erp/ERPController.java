@@ -63,7 +63,73 @@ public class ERPController extends BaseController {
 	Map<String, TableColumns> Map_HaveColumnsList = new LinkedHashMap<String, TableColumns>();
 	Map<String, TmplConfigDetail> Map_SetColumnsList = new LinkedHashMap<String, TmplConfigDetail>();
 	
-	
+	/**列表
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/erpApprovalList")
+	public ModelAndView erpApprovalList(Page page) throws Exception{
+		logBefore(logger, Jurisdiction.getUsername()+"列表erpOaaList");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		String confirmState = pd.getString("confirmState");
+		String  applyType = pd.getString("APPLY_TYPE");
+		String busiDate = pd.getString("busiDate");
+		pd.put("KEY_CODE","SystemDataTime");
+		Date dNow = new Date( );
+	    SimpleDateFormat ft = new SimpleDateFormat ("yyyyMM");
+		String date = ft.format(dNow);
+		if(null == confirmState || StringUtil.isEmpty(confirmState)) {
+			pd.put("confirmState", "2"); //2待审批 3已审批
+		}
+		if(null == applyType || StringUtil.isEmpty(applyType)||"1".equals(applyType)) {
+			pd.put("APPLY_TYPE", "1"); 
+			pd.put("APPLY_TYPE1", "3"); 
+		}else{
+			pd.put("APPLY_TYPE1", ""); 
+		}
+		if(null == busiDate || StringUtil.isEmpty(busiDate)) {
+//			pd.put("busiDate",date);
+		}
+		page.setPd(pd);
+		//获取业务期间
+		List<PageData>  listBusiDate = DateUtil.getMonthList("BUSI_DATE", date);
+		List<PageData>	varList = erpofficialacctapplicationService.listAllForm(page);	//列出ERPOfficialAcctApplication列表
+		
+		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
+		JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0", zdepartmentPdList));
+		mv.addObject("zTreeNodes", (null == arr ? "" : arr.toString()));
+		mv.setViewName("dataReporting/erp/erpapproval");
+		mv.addObject("listBusiDate",listBusiDate);
+		mv.addObject("varList", varList);
+		mv.addObject("pd", pd);
+		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
+		
+		//***********************************************************
+		Map_SetColumnsList.clear();//清空,重新添加防止导出时污染输出源
+		Map_SetColumnsList.put("BUSI_DATE", new TmplConfigDetail("BUSI_DATE", "录入时间", "1", false));
+		Map_SetColumnsList.put("STAFF_CODE", new TmplConfigDetail("STAFF_CODE", "员工编号", "1", false));
+		Map_SetColumnsList.put("STAFF_NAME", new TmplConfigDetail("STAFF_NAME", "员工姓名", "1", false));
+		Map_SetColumnsList.put("DEPART_CODE", new TmplConfigDetail("DEPART_CODE", "二级单位", "1", false));
+		Map_SetColumnsList.put("UNITS_DEPART", new TmplConfigDetail("UNITS_DEPART", "三级单位", "1", false));
+		Map_SetColumnsList.put("STAFF_POSITION", new TmplConfigDetail("STAFF_POSITION", "职务", "1", false));
+		Map_SetColumnsList.put("STAFF_JOB", new TmplConfigDetail("STAFF_JOB", "岗位", "1", false));
+		Map_SetColumnsList.put("STAFF_MODULE", new TmplConfigDetail("STAFF_MODULE", "模块", "1", false));
+		Map_SetColumnsList.put("PHONE", new TmplConfigDetail("PHONE", "联络电话", "1", false));
+		Map_SetColumnsList.put("MAIL", new TmplConfigDetail("MAIL", "电子邮件", "1", false));
+		Map_SetColumnsList.put("IF_TRAINING", new TmplConfigDetail("IF_TRAINING", "是否培训", "1", false));
+		Map_SetColumnsList.put("TRAINING_METHOD", new TmplConfigDetail("TRAINING_METHOD", "培训方式", "1", false));
+		Map_SetColumnsList.put("TRAINING_TIME", new TmplConfigDetail("TRAINING_TIME", "培训时间", "1", false));
+		Map_SetColumnsList.put("TRAINING_RECORD", new TmplConfigDetail("TRAINING_RECORD", "培训成绩", "1", false));
+		Map_SetColumnsList.put("CERTIFICATE_NUM", new TmplConfigDetail("CERTIFICATE_NUM", "证书编号", "1", false));
+		Map_SetColumnsList.put("UKEY_NUM", new TmplConfigDetail("UKEY_NUM", "UKey编号", "1", false));
+		Map_SetColumnsList.put("APPLY_DATE", new TmplConfigDetail("APPLY_DATE", "申请日期", "1", false));
+		Map_SetColumnsList.put("NOTE", new TmplConfigDetail("NOTE", "备注", "1", false));
+		Map_SetColumnsList.put("BILL_USERNAME", new TmplConfigDetail("BILL_USERNAME", "上报人姓名", "1", false));
+		Map_SetColumnsList.put("BILL_PHONE", new TmplConfigDetail("BILL_PHONE", "上报人手机号", "1", false));
+		return mv;
+	}
 	/**列表
 	 * @param page
 	 * @throws Exception
@@ -170,7 +236,7 @@ public class ERPController extends BaseController {
 //		} else {
 //			pd.put("departTreeSource", 1);
 //		}
-		mv.setViewName("dataReporting/erp/erpoaa_list");
+		mv.setViewName("dataReporting/erp/erpapproval");
 //		mv.addObject("zTreeNodes", DepartmentSelectTreeSource);
 		mv.addObject("listBusiDate",listBusiDate);
 		mv.addObject("varList", varList);
@@ -361,7 +427,12 @@ public class ERPController extends BaseController {
 		String DATA_IDS = pd.getString("DATA_IDS");
 		commonBase.setCode(-1);
 		if(null != DATA_IDS && !"".equals(DATA_IDS)){
-			String arrayDATA_IDS[] = DATA_IDS.split(",");
+			String arrayDATA_IDS1[] = DATA_IDS.split(",");
+			 String arrayDATA_IDS[] = new String[arrayDATA_IDS1.length];
+			 for(int i=0;i<arrayDATA_IDS1.length;i++){
+		    	  	String id=arrayDATA_IDS1[i].replace("&", "");
+		   				 arrayDATA_IDS[i]=id;
+		        }	
 			pd.put("arrayDATA_IDS", arrayDATA_IDS);
 			erpdelacctapplicationService.editReportState(pd);
 			commonBase.setCode(0);
@@ -383,11 +454,53 @@ public class ERPController extends BaseController {
 		logBefore(logger, Jurisdiction.getUsername() + "导出ERP审批数据到excel");
 		PageData pd = this.getPageData();
 		pd.put("confirmState", pd.get("confirmState")); //2待审批 3已审批
-		pd.put("BUSI_DATE", pd.get("busiDate"));
-		
-		page.setPd(pd);
-		List<PageData> varOList = erpofficialacctapplicationService.exportList(page);
-		return export(varOList, "", Map_SetColumnsList);
+		String DATA_IDS = pd.getString("DATA_IDS");
+		pd.put("BUSI_DATE", pd.get("busiDate"));	
+		List<PageData> varOList=new ArrayList<PageData>();
+		if("1".equals( pd.get("APPLY_TYPE"))) {
+			pd.put("APPLY_TYPE", "1"); 
+			pd.put("APPLY_TYPE1", "3"); 
+			if(null != DATA_IDS && !"".equals(DATA_IDS)){
+				String arrayDATA_IDS[] = DATA_IDS.split(",");
+				List<String> formalList=new ArrayList<String>();
+				List<String> tempList=new ArrayList<String>();
+			      for(int i=0;i<arrayDATA_IDS.length;i++){
+			    	  	int num=arrayDATA_IDS[i].indexOf("&");
+			    	  	String id=arrayDATA_IDS[i].substring(0, num);
+			    	  	String type=arrayDATA_IDS[i].substring(num+1, arrayDATA_IDS[i].length());
+			           if(type.equals("1")){// 正式帐号
+			        	   formalList.add(id);
+			           }else if (type.equals("2")){//临时帐号
+			        	   tempList.add(id);
+			           }
+			        }	
+			      if(formalList.size()>0&&null!=formalList){
+			    	  String[] arrayDATA_IDS1 = formalList.toArray(new String[0]);
+			    	  pd.put("arrayDATA_IDS1", arrayDATA_IDS1);
+			      }
+			      if(tempList.size()>0&&null!=tempList){
+			    	  String[] arrayDATA_IDS2 = tempList.toArray(new String[0]); 				
+			    	  pd.put("arrayDATA_IDS2", arrayDATA_IDS2);	
+			      }
+			}
+		      page.setPd(pd);
+				varOList = erpofficialacctapplicationService.exportListAdd(page);
+				
+		}else{
+			pd.put("APPLY_TYPE1", ""); 
+			if(null != DATA_IDS && !"".equals(DATA_IDS)){
+				String arrayDATA_IDS1[] = DATA_IDS.split(",");
+				 String arrayDATA_IDS[] = new String[arrayDATA_IDS1.length];
+				 for(int i=0;i<arrayDATA_IDS1.length;i++){
+			    	  	String id=arrayDATA_IDS1[i].replace("&", "");
+			   				 arrayDATA_IDS[i]=id;
+			        }	
+					pd.put("arrayDATA_IDS3", arrayDATA_IDS);
+			}
+			page.setPd(pd);
+			varOList = erpofficialacctapplicationService.exportListDel(page);
+		}
+		return export(varOList, "", Map_SetColumnsList);	
 	}
 	
 	/**

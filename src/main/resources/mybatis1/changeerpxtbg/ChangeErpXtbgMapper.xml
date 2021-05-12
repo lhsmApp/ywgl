@@ -307,6 +307,7 @@
 
 		</if>
 		</where>
+		order by BILL_DATE desc
 	</select>
 	<select id="datalistPage1" parameterType="page" resultType="pd">
 		SELECT * FROM 

@@ -64,8 +64,9 @@
 									<th class="center">考生单位</th> 
 									<th class="center">模块</th>
 									<th class="center">考试分数</th>
-									<th class="center">及格分数</th>
+									<th class="center">证书编号</th>
 									<th class="center">是否合格</th>
+									<th class="center">备注</th>
 								</tr>
 							</thead>
 													
@@ -86,11 +87,12 @@
 											<td class='center'>${var.UNIT_NAME}</td>
 											<td class='center'>${var.MODULE}</td>
 											<td class='center'>${var.TEST_SCORE}</td>
-											<td class='center'>${var.QUALIFIED_SCORE}</td>
+											<td class='center'>${var.CERTIFICATE_NUM}</td>										
 											<td class='center'>
-												<c:if test="${var.TEST_SCORE-var.QUALIFIED_SCORE < 0}"><span class="lbl red">不及格</span></c:if>
-												<c:if test="${var.TEST_SCORE-var.QUALIFIED_SCORE > 0}"><span class="lbl green">及格</span></c:if>
+												<c:if test="${empty var.CERTIFICATE_NUM}"><span class="lbl red">不及格</span></c:if>
+												<c:if test="${not empty var.CERTIFICATE_NUM}"><span class="lbl green">及格</span></c:if>
 											</td>
+											<td class='center'>${var.REMARK}</td>
 										</tr>
 									</c:forEach>
 								</c:when>
@@ -281,6 +283,7 @@
     	   diag.CancelEvent = function(){ //关闭事件
     		  top.jzts();
 //     		  $(gridBase_selector).trigger("reloadGrid");  
+ 			  nextPage(${page.currentPage});
     		  $(top.hangge());//关闭加载状态
     	      diag.close();
            };
@@ -288,7 +291,9 @@
         }
 		//导出excel
 		function exportExcel(){
-			var keywords=$("#keywords").val();
+			debugger;
+			var keywords=$("#nav-search-input").val();
+			console.log(keywords);
 // 			var conDept=$("#CON_DEPT").val();
 // 		    var start=$("#start").val();
 // 			var end=$("#end").val();

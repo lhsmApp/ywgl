@@ -53,14 +53,16 @@
 										<i class="ace-icon fa fa-search nav-search-icon"></i>
 									</span>
 									</div>
-								</td>							
+								</td>				
+								<td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
+						
 							</tr>
 						</table>
 					
 						<!-- 检索  -->
 					
 						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
-							<thead>
+									<thead>
 								<tr>
 									<th class="center" style="width:35px;">
 									<label class="pos-rel"><input type="checkbox" class="ace" id="zcheckbox" /><span class="lbl"></span></label>
@@ -71,19 +73,18 @@
 									<th class="center">姓名</th>
 									<th class="center">角色</th>
 									<th class="center">单位</th>
-									<th class="center">部门</th>
+<!-- 									<th class="center">部门</th> -->
 									<th class="center">手机号</th>
 									<th class="center">是否SAP账号</th>
 									<!-- <th class="center"><i class="ace-icon fa fa-envelope-o"></i>邮箱</th> -->
 <!-- 									<th class="center"><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>最近登录</th> -->
 <!-- 									<th class="center">上次登录IP</th> -->
-									<th class="center">备注</th>
+<!-- 									<th class="center">备注</th> -->
 									<th class="center">是否生成单据</th>
 									<th class="center">单据状态</th>
-									<th class="center">操作</th>
+									<th class="center">刪除申请操作</th>
 								</tr>
-							</thead>
-													
+							</thead>		
 							<tbody>
 								
 							<!-- 开始循环 -->	
@@ -102,16 +103,13 @@
 											<td class="center">${user.NAME }</td>
 											<td class="center">${user.ROLE_NAME }</td>
 											<td class="center">${user.UNIT_NAME }</td>
-											<td class="center">${user.DEPARTMENT_NAME }</td>
+<%-- 											<td class="center">${user.DEPARTMENT_NAME }</td> --%>
 											<td class="center">${user.PHONE }</td>
 											<td class="center">
 											<c:if test="${user.USER_PROPERTY == '0' }"><span>否</span></c:if>
 												<c:if test="${user.USER_PROPERTY == '1' }"><span >是</span></c:if>
 											</td>
-											<%-- <td class="center"><a title="发送电子邮件" style="text-decoration:none;cursor:pointer;" <c:if test="${QX.email == 1 }">onclick="sendEmail('${user.EMAIL }');"</c:if>>${user.EMAIL }&nbsp;<i class="ace-icon fa fa-envelope-o"></i></a></td> --%>
-<%-- 											<td class="center">${user.LAST_LOGIN}</td> --%>
-<%-- 											<td class="center">${user.IP}</td> --%>
-											<td class="center">${user.BZ }</td>
+<%-- 											<td class="center">${user.BZ }</td> --%>
 											<td style="width: 60px;" class="center">
 												<c:if test="${user.IF_CREATE_FROM == '0' }"><span>否</span></c:if>
 												<c:if test="${user.IF_CREATE_FROM == '1' }"><span>是</span></c:if>
@@ -123,17 +121,14 @@
 											</td>
 											<td class="center">
 												<div class="hidden-sm hidden-xs btn-group">
-												<a class="btn btn-xs btn-success" title="编辑" onclick="view('${user.USERNAME}');">
-<!-- 														<i class="ace-icon fa  fa-credit-card  bigger-120" title="查看删除申请"></i> -->
-														查看<br>删除申请
+												<a class="btn btn-xs btn-success" title="编辑" onclick="view('${user.USERNAME}','${user.IF_CREATE_FROM }');">
+														查看
 													</a>
-													<a class="btn btn-xs btn-primary" onclick="create('${user.NAME }','${user.USERNAME }');">
-<!-- 														<i class="ace-icon fa fa-trash-o bigger-120" title="生成删除申请"></i> -->
-														生成<br>删除申请
+													<a class="btn btn-xs btn-primary" onclick="create('${user.NAME }','${user.USERNAME }','${user.IF_CREATE_FROM }');">
+														生成
 													</a>
-													<a class="btn btn-xs btn-danger" onclick="cancel('${user.NAME }','${user.USERNAME }');">
-<!-- 														<i class="ace-icon fa fa-trash-o bigger-120" title="撤销删除申请"></i> -->
-														撤销<br>删除申请
+													<a class="btn btn-xs btn-danger" onclick="cancel('${user.NAME }','${user.USERNAME }','${user.IF_CREATE_FROM }');">
+														撤销
 													</a>
 												</div>
 											</td>
@@ -148,15 +143,7 @@
 								</c:otherwise>
 							</c:choose>
 							</tbody>
-						</table>
-							<div class="position-relative page-header pull-right">
-									<table style="width:100%;">
-										<tr>
-											<td style="vertical-align:top;"><div class="pagination">${page.pageStr}</div></td>
-										</tr>
-									</table>
-								</div>
-	
+						</table>					
 					</form>
 						</div>
 						<!-- /.col -->
@@ -201,13 +188,22 @@ function searchs(){
 }
 
 //撤销删除申请
-function cancel(name,userName){
+function cancel(name,userName,ifCreat){
+	if(ifCreat!=1){
+		bootbox.dialog({
+			message: "<span class='bigger-110'>帐号"+userName+"还未生成删除申请！</span>",
+			buttons: 			
+			{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+		});
+		return;
+	}
+
 	bootbox.confirm("确定要撤销员工编号：["+userName+"]姓名为：["+name+"]的ERP账号删除申请吗？", function(result) {
 		if(result) {
 			var url = "<%=basePath%>erpdelacctapplication/cancelDel.do?STAFF_CODE="+userName;
 			$.get(url,function(data){
 				//nextPage(${page.currentPage});
-<%-- 				//window.location.href='<%=basePath%>user/listSapUsers.do'; --%>
+				window.location.href='<%=basePath%>user/listSapUsers.do';
 		bootbox.dialog({
 			message: "<span class='bigger-110'>帐号"+userName+"删除申请撤销成功！</span>",
 			buttons: 			
@@ -218,7 +214,15 @@ function cancel(name,userName){
 	});
 }
 //打印
-function view(userName){
+function view(userName,ifCreat){
+	if(ifCreat!=1){
+		bootbox.dialog({
+			message: "<span class='bigger-110'>帐号"+userName+"还未生成删除申请！</span>",
+			buttons: 			
+			{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+		});
+		return;
+	}
 	top.jzts();
 	 var diag = new top.Dialog();
 	 diag.Drag=true;
@@ -232,7 +236,15 @@ function view(userName){
 	 diag.show();
 }
 //生成删除申请
-function create(name,userName){
+function create(name,userName,ifCreat){
+	if(ifCreat==1){
+		bootbox.dialog({
+			message: "<span class='bigger-110'>帐号"+userName+"已生成删除申请，不能重复生成！</span>",
+			buttons: 			
+			{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+		});
+		return;
+	}
 	 top.jzts();
 	 var diag = new top.Dialog();
 	 diag.Drag=true;
@@ -252,6 +264,7 @@ function create(name,userName){
 							{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
 						});
 		}
+			window.location.href='<%=basePath%>user/listSapUsers.do';
 		diag.close();
 	 };
 	 diag.show();

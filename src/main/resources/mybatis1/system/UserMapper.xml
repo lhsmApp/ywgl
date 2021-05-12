@@ -71,7 +71,8 @@
 		NUMBER,
 		PHONE,
 		USER_PROPERTY,
-		IFTEMPACCOUNT
+		IFTEMPACCOUNT,
+		WORK_PHONE
 	</sql>
 	
 	<!-- 字段 -->
@@ -92,7 +93,8 @@
 		NUMBER,
 		PHONE,
 		USER_PROPERTY,
-		IFTEMPACCOUNT
+		IFTEMPACCOUNT,
+		WORK_PHONE
 	</sql>
 	
 	<!-- 字段值 -->
@@ -114,7 +116,8 @@
 		#{NUMBER},
 		#{PHONE},
 		#{USER_PROPERTY},
-		#{IFTEMPACCOUNT}
+		#{IFTEMPACCOUNT},
+		#{WORK_PHONE}
 	</sql>
 	
 	<!-- 字段值 -->
@@ -135,7 +138,8 @@
 		#{NUMBER},
 		#{PHONE},
 		#{USER_PROPERTY},
-		#{IFTEMPACCOUNT}
+		#{IFTEMPACCOUNT},
+		#{WORK_PHONE}
 	</sql>
 	
 	<!-- 判断用户名和密码 -->
@@ -324,8 +328,11 @@
 				u.EMAIL,
 				u.NUMBER,
 				u.PHONE,
+				u.WORK_PHONE,
 				u.STATUS,
 				u.BZ,
+				u.USER_PROPERTY,
+				u.IFTEMPACCOUNT,
 				r.ROLE_ID,
 				r.ROLE_NAME,
 				u.DEPARTMENT_ID,
@@ -395,6 +402,7 @@
 				u.EMAIL,
 				u.NUMBER,
 				u.PHONE,
+				u.WORK_PHONE,
 				u.STATUS,
 				u.BZ,
 				u.USER_PROPERTY,
@@ -403,7 +411,9 @@
 				u.DEPARTMENT_ID,
 				d.NAME DEPARTMENT_NAME,
 				u.UNIT_CODE,
-				e.NAME UNIT_NAME
+				e.NAME UNIT_NAME,
+				f.IF_CREATE_FROM,
+				f.CONFIRM_STATE
 		from <include refid="tableName"></include> u 
 		left join
 		<include refid="roleTableName"></include> r 
@@ -414,6 +424,8 @@
 		left join
 		oa_department e 
 		on u.UNIT_CODE = e.DEPARTMENT_CODE 
+		left join tb_di_erp_daa f
+		on u.USERNAME=f.STAFF_CODE
 		<where> u.USER_PROPERTY=#{pd.USER_PROPERTY} 		
 			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
 				and
@@ -433,7 +445,7 @@
 				and u.UNIT_CODE=#{pd.UNIT_CODE} 
 			</if>
 		</where>
-		order by u.LAST_LOGIN desc
+		order by f.IF_CREATE_FROM desc
 	</select>
 	<!-- 用户列表(弹窗选择用) -->
 	<select id="userBystafflistPage" parameterType="page" resultType="pd" >
@@ -446,6 +458,7 @@
 				u.EMAIL,
 				u.NUMBER,
 				u.PHONE,
+				u.WORK_PHONE,
 				u.STATUS,
 				u.BZ,
 				u.USER_PROPERTY,
@@ -538,6 +551,7 @@
 				EMAIL					= #{EMAIL},
 				NUMBER					= #{NUMBER},
 				PHONE					= #{PHONE},
+				WORK_PHONE				= #{WORK_PHONE},
 				STATUS					= #{STATUS},
 				USER_PROPERTY= 			#{USER_PROPERTY}
 			<if test="PASSWORD != null and PASSWORD != ''">
@@ -551,7 +565,8 @@
 	<update id="editUMy" parameterType="pd" >
 		update  <include refid="tableName"></include>
 			set NAME 					= #{NAME},
-				PHONE					= #{PHONE}
+				PHONE					= #{PHONE},
+				WORK_PHONE				= #{WORK_PHONE}
 			<if test="PASSWORD != null and PASSWORD != ''">
 				,PASSWORD				= #{PASSWORD}
 			</if>
@@ -607,6 +622,7 @@
 				u.EMAIL,
 				u.NUMBER,
 				u.PHONE,
+				u.WORK_PHONE,
 				u.STATUS,
 				u.BZ,
 				u.USER_PROPERTY,
@@ -713,6 +729,7 @@
 				u.EMAIL,
 				u.NUMBER,
 				u.PHONE,
+				u.WORK_PHONE,
 				u.STATUS,
 				u.BZ,
 				u.USER_PROPERTY,

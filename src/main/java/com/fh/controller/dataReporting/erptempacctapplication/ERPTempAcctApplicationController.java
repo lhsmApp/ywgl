@@ -205,10 +205,12 @@ public class ERPTempAcctApplicationController extends BaseController {
 			pageData.put("PHONE",listTransferData.get(i++).trim());
 			pageData.put("MAIL",listTransferData.get(i++).trim());
 			pageData.put("APPLY_DATE",listTransferData.get(i++).trim());
+			pageData.put("APPLY_DATE",DateUtils.getCurrentTime(DateFormatUtils.DATE_NOFUll_FORMAT));
 			pageData.put("CANCEL_DATE",listTransferData.get(i++).trim());
 			pageData.put("APPLY_TEMP_REASON",listTransferData.get(i++).trim());
 			pageData.put("UKEY_NUM",listTransferData.get(i++).trim());
 			pageData.put("NOTE",listTransferData.get(i).trim());
+			pageData.put("APPLY_TYPE","3");//申请类别为新增临时账号
 			if(null != staffId && !"".equals(staffId)) {//如果有ID则进行修改
 				erptempacctapplicationService.edit(pageData);
 			}else {//如果无ID则进行新增
@@ -439,6 +441,7 @@ public class ERPTempAcctApplicationController extends BaseController {
 				pageData.put("STATE","1");
 				pageData.put("BILL_USER",user.getUSER_ID());
 				pageData.put("BILL_DATE",DateUtils.getCurrentTime(DateFormatUtils.TIME_NOFUll_FORMAT));
+				pageData.put("APPLY_TYPE","3");//申请类别为新增临时账号
 			}
 			erptempacctapplicationService.grcUpdateDatabase(listUploadAndRead);
 			commonBase.setCode(0);

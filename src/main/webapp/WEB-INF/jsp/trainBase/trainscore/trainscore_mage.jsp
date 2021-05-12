@@ -73,8 +73,9 @@
 									<th class="center">考生单位</th> 
 									<th class="center">模块</th>
 									<th class="center">考试分数</th>
-									<th class="center">及格分数</th>
+									<th class="center">证书编号</th>
 									<th class="center">是否合格</th>
+									<th class="center">备注</th>
 									<th class="center">操作</th>
 								</tr>
 							</thead>
@@ -96,11 +97,12 @@
 											<td class='center'>${var.UNIT_NAME}</td>
 											<td class='center'>${var.MODULE}</td>
 											<td class='center'>${var.TEST_SCORE}</td>
-											<td class='center'>${var.QUALIFIED_SCORE}</td>
+											<td class='center'>${var.CERTIFICATE_NUM}</td>
 											<td class='center'>
-												<c:if test="${var.TEST_SCORE-var.QUALIFIED_SCORE < 0}"><span class="lbl red">不及格</span></c:if>
-												<c:if test="${var.TEST_SCORE-var.QUALIFIED_SCORE > 0}"><span class="lbl green">及格</span></c:if>
+												<c:if test="${empty var.CERTIFICATE_NUM}"><span class="lbl red">不及格</span></c:if>
+												<c:if test="${not empty var.CERTIFICATE_NUM}"><span class="lbl green">及格</span></c:if>
 											</td>
+											<td class='center'>${var.REMARK}</td>
 											<td class="center">
 												<div class="hidden-sm hidden-xs btn-group">
 													<a class="btn btn-xs btn-success" title="编辑" onClick="edit('${var.USERNAME}','${var.MODULE}')">
@@ -196,7 +198,7 @@
 			 diag.Drag=true;
 			 diag.Title ="新增";
 			 diag.URL = '<%=basePath%>trainscore/goAdd.do';
-			 diag.Width = 750;
+			 diag.Width =450;
 			 diag.Height = 500;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮
@@ -220,7 +222,7 @@
 			bootbox.confirm("确定要删除吗?", function(result) {
 				if(result) {
 					top.jzts();
-					var url = '<%=basePath%>trainscore/delete.do?USERNAME='+user+'&MODULE='+module;					
+					var url = '<%=basePath%>trainscore/delete.do?USERNAME='+user;					
 					$.get(url,function(data){
 						nextPage(${page.currentPage});
 					});
@@ -235,7 +237,7 @@
 			 diag.Drag=true;
 			 diag.Title ="编辑";
 			 diag.URL = '<%=basePath%>trainscore/goEdit.do?USERNAME='+user+'&MODULE='+module;
-			 diag.Width = 750;
+			 diag.Width = 450;
 			 diag.Height = 500;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮
@@ -306,7 +308,7 @@
     	   diag.Height = 150;
     	   diag.CancelEvent = function(){ //关闭事件
     		  top.jzts();
-    			nextPage(${page.currentPage});
+    		  window.location.href='<%=basePath%>trainscore/list.do';
     		  $(top.hangge());//关闭加载状态
     	      diag.close();
            };

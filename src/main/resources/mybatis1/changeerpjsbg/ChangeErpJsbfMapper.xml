@@ -294,6 +294,7 @@
 				)
 			</if>
 		</where>
+			order by BILL_DATE desc
 	</select>
 	
 	<!-- 列表(全部) -->

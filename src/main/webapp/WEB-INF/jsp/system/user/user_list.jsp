@@ -79,10 +79,11 @@
 									</td>
 								</c:if>
 								<td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
-								<td style="padding-left:6px;">		 
+								<td style="padding-left:6px;">	
+									<c:if test="${pd.ROLE_TYPE  == 'gly'}">
 									<label class="btn btn-sm btn-primary" onclick="importData()">
 										 <i class="ace-icon fa fa-cloud-upload  bigger-110"></i>导入
-									</label>	</td>
+									</label></c:if>	 	</td>
 							</tr>
 						</table>
 					
@@ -132,7 +133,11 @@
 											<td class="center">${user.UNIT_NAME }</td>
 											<td class="center">${user.DEPARTMENT_NAME }</td>
 											<td class="center">${user.PHONE }</td>
-											<td class="center">${user.USER_PROPERTY }</td>
+											<td class="center">
+												<c:if test="${user.USER_PROPERTY  == 1}"><span>是</span></c:if>
+												<c:if test="${user.USER_PROPERTY  == 0}"><span>否</span></c:if>
+												<c:if test="${user.USER_PROPERTY  == null}"><span style="color:red">未维护</span></c:if>
+													</td>
 											<%-- <td class="center"><a title="发送电子邮件" style="text-decoration:none;cursor:pointer;" <c:if test="${QX.email == 1 }">onclick="sendEmail('${user.EMAIL }');"</c:if>>${user.EMAIL }&nbsp;<i class="ace-icon fa fa-envelope-o"></i></a></td> --%>
 											<td class="center">${user.LAST_LOGIN}</td>
 											<td class="center">${user.IP}</td>
@@ -142,13 +147,20 @@
 												<c:if test="${user.STATUS == '1' }"><span class="label label-success arrowed">正常</span></c:if>
 											</td>
 											<td class="center">
-												<div class="hidden-sm hidden-xs btn-group">
+												<div class="hidden-sm hidden-xs btn-group" >
 													<a class="btn btn-xs btn-success" title="编辑" onclick="editUser('${user.USER_ID}');">
 														<i class="ace-icon fa fa-pencil-square-o bigger-120" title="编辑"></i>
 													</a>
-													<a class="btn btn-xs btn-danger" onclick="delUser('${user.USER_ID }','${user.USERNAME }');">
-														<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
-													</a>
+													<c:if test="${user.USER_PROPERTY  != 1}">
+														<a class="btn btn-xs btn-danger" onclick="delUser('${user.USER_ID }','${user.USERNAME }');">
+															<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
+														</a>
+													</c:if>
+													<c:if test="${user.USER_PROPERTY  == 1}">
+														<a   class="btn btn-xs btn-danger" onclick="delSapUser();">
+															<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
+														</a>
+													</c:if>
 												</div>
 												<div class="hidden-md hidden-lg">
 													<div class="inline pos-rel">
@@ -164,7 +176,7 @@
 																</a>
 															</li>
 															<li>
-																<a style="cursor:pointer;" onclick="delUser('${user.USER_ID }','${user.USERNAME }');" class="tooltip-error" data-rel="tooltip" title="删除">
+																<a istyle="cursor:pointer;" onclick="delUser('${user.USER_ID }','${user.USERNAME }');" class="tooltip-error" data-rel="tooltip" title="删除">
 																	<span class="red">
 																		<i class="ace-icon fa fa-trash-o bigger-120"></i>
 																	</span>
@@ -258,6 +270,14 @@ function delUser(userId,msg){
 		};
 	});
 }
+function delSapUser(){
+
+	bootbox.dialog({
+		message: "<span class='bigger-110'>该用户为SAP用户，需要按照ERP账号删除流程进行删除!</span>",
+		buttons: 			
+		{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+	});
+}
 /**
  * 导入
  */
@@ -285,7 +305,7 @@ function add(){
 	 diag.Title ="新增";
 	 diag.URL = '<%=basePath%>user/goAddU.do';
 	 diag.Width = 469;
-	 diag.Height = 555;
+	 diag.Height = 600;
 	 diag.CancelEvent = function(){ //关闭事件
 		 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
 			 if('${page.currentPage}' == '0'){
@@ -308,7 +328,7 @@ function editUser(user_id){
 	 diag.Title ="资料";
 	 diag.URL = '<%=basePath%>user/goEditU.do?USER_ID='+user_id;
 	 diag.Width = 469;
-	 diag.Height = 555;
+	 diag.Height = 600;
 	 diag.CancelEvent = function(){ //关闭事件
 		 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
 			nextPage(${page.currentPage});

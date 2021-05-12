@@ -62,6 +62,7 @@ public class ERPOfficialAcctApplicationService implements ERPOfficialAcctApplica
 		return (List<PageData>)dao.findForList("ERPOfficialAcctApplicationMapper.listAll", pd);
 	}
 	
+
 	/**批量删除
 	 * @param ArrayDATA_IDS
 	 * @throws Exception
@@ -87,7 +88,22 @@ public class ERPOfficialAcctApplicationService implements ERPOfficialAcctApplica
 	public List<PageData> exportList(Page page)throws Exception{
 		return (List<PageData>)dao.findForList("ERPOfficialAcctApplicationMapper.exportList", page);
 	}
-	
+	/**导出列表
+	 * @param page
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PageData> exportListAdd(Page page)throws Exception{
+		return (List<PageData>)dao.findForList("ERPOfficialAcctApplicationMapper.exportListAdd", page);
+	}
+	/**导出列表
+	 * @param page
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PageData> exportListDel(Page page)throws Exception{
+		return (List<PageData>)dao.findForList("ERPOfficialAcctApplicationMapper.exportListDel", page);
+	}
 	/**更新数据
 	 * @param List<PageData>
 	 * @throws Exception
@@ -95,7 +111,13 @@ public class ERPOfficialAcctApplicationService implements ERPOfficialAcctApplica
 	public void grcUpdateDatabase(List<PageData> listData) throws Exception {
 		dao.update("ERPOfficialAcctApplicationMapper.delAndIns", listData);
 	}
-	
+	/**删除并插入数据
+	 * @param List<PageData>
+	 * @throws Exception
+	 */
+	public void delTempAndInsertData(PageData pd) throws Exception {
+		dao.update("ERPOfficialAcctApplicationMapper.delTempAndInsertData", pd);
+	}
 	/**
 	 *  批量审批
 	 * @param pageData
@@ -115,5 +137,21 @@ public class ERPOfficialAcctApplicationService implements ERPOfficialAcctApplica
 	public List<PageData> listBusiDate(PageData pd) throws Exception {
 		return (List<PageData>)dao.findForList("ERPOfficialAcctApplicationMapper.listBusiDate", pd);
 	}
+	/**按员工编号查找
+	 * @param pd
+	 * @throws Exception
+	 */
+	public PageData findByStaffCode(PageData pd)throws Exception{
+		return (PageData)dao.findForObject("ERPOfficialAcctApplicationMapper.findByStaffCode", pd);
+	}
+	/**列表(新增和删除等所有表单)
+	 * @param page
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PageData> listAllForm(Page page)throws Exception{
+		return (List<PageData>)dao.findForList("ERPOfficialAcctApplicationMapper.listAllForm", page);
+	}
+	
 }
 
