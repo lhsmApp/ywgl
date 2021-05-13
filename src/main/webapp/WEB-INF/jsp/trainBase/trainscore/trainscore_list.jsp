@@ -32,7 +32,7 @@
 							<label class="pull-left" style="padding: 5px;">筛选条件：</label>
 							<span class="input-icon nav-search" style="margin-left: 14px;">
 								<i class="ace-icon fa fa-search nav-search-icon"></i>
-								<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords}" placeholder="请输入查询条件" />
+								<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${keywords}" placeholder="请输入查询条件" />
 							</span>
 							<span style="margin-left:-15px;"> 
 							</span>

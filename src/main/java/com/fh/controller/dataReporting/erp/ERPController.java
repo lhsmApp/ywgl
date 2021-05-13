@@ -61,8 +61,8 @@ public class ERPController extends BaseController {
 	@Resource(name = "sysconfigService")
 	private SysConfigManager sysconfigService;
 	Map<String, TableColumns> Map_HaveColumnsList = new LinkedHashMap<String, TableColumns>();
-	Map<String, TmplConfigDetail> Map_SetColumnsList = new LinkedHashMap<String, TmplConfigDetail>();
-	
+	Map<String, TmplConfigDetail> Map_SetAddColumnsList = new LinkedHashMap<String, TmplConfigDetail>();
+	Map<String, TmplConfigDetail> Map_SetDelColumnsList = new LinkedHashMap<String, TmplConfigDetail>();
 	/**列表
 	 * @param page
 	 * @throws Exception
@@ -106,28 +106,50 @@ public class ERPController extends BaseController {
 		mv.addObject("pd", pd);
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		
-		//***********************************************************
-		Map_SetColumnsList.clear();//清空,重新添加防止导出时污染输出源
-		Map_SetColumnsList.put("BUSI_DATE", new TmplConfigDetail("BUSI_DATE", "录入时间", "1", false));
-		Map_SetColumnsList.put("STAFF_CODE", new TmplConfigDetail("STAFF_CODE", "员工编号", "1", false));
-		Map_SetColumnsList.put("STAFF_NAME", new TmplConfigDetail("STAFF_NAME", "员工姓名", "1", false));
-		Map_SetColumnsList.put("DEPART_CODE", new TmplConfigDetail("DEPART_CODE", "二级单位", "1", false));
-		Map_SetColumnsList.put("UNITS_DEPART", new TmplConfigDetail("UNITS_DEPART", "三级单位", "1", false));
-		Map_SetColumnsList.put("STAFF_POSITION", new TmplConfigDetail("STAFF_POSITION", "职务", "1", false));
-		Map_SetColumnsList.put("STAFF_JOB", new TmplConfigDetail("STAFF_JOB", "岗位", "1", false));
-		Map_SetColumnsList.put("STAFF_MODULE", new TmplConfigDetail("STAFF_MODULE", "模块", "1", false));
-		Map_SetColumnsList.put("PHONE", new TmplConfigDetail("PHONE", "联络电话", "1", false));
-		Map_SetColumnsList.put("MAIL", new TmplConfigDetail("MAIL", "电子邮件", "1", false));
-		Map_SetColumnsList.put("IF_TRAINING", new TmplConfigDetail("IF_TRAINING", "是否培训", "1", false));
-		Map_SetColumnsList.put("TRAINING_METHOD", new TmplConfigDetail("TRAINING_METHOD", "培训方式", "1", false));
-		Map_SetColumnsList.put("TRAINING_TIME", new TmplConfigDetail("TRAINING_TIME", "培训时间", "1", false));
-		Map_SetColumnsList.put("TRAINING_RECORD", new TmplConfigDetail("TRAINING_RECORD", "培训成绩", "1", false));
-		Map_SetColumnsList.put("CERTIFICATE_NUM", new TmplConfigDetail("CERTIFICATE_NUM", "证书编号", "1", false));
-		Map_SetColumnsList.put("UKEY_NUM", new TmplConfigDetail("UKEY_NUM", "UKey编号", "1", false));
-		Map_SetColumnsList.put("APPLY_DATE", new TmplConfigDetail("APPLY_DATE", "申请日期", "1", false));
-		Map_SetColumnsList.put("NOTE", new TmplConfigDetail("NOTE", "备注", "1", false));
-		Map_SetColumnsList.put("BILL_USERNAME", new TmplConfigDetail("BILL_USERNAME", "上报人姓名", "1", false));
-		Map_SetColumnsList.put("BILL_PHONE", new TmplConfigDetail("BILL_PHONE", "上报人手机号", "1", false));
+		//***********************************************************新增账号申请导出列
+		Map_SetAddColumnsList.clear();//清空,重新添加防止导出时污染输出源
+		//Map_SetAddColumnsList.put("BUSI_DATE", new TmplConfigDetail("BUSI_DATE", "录入时间", "1", false));
+		Map_SetAddColumnsList.put("STAFF_ID", new TmplConfigDetail("STAFF_ID", "用户ID", "1", false));
+		Map_SetAddColumnsList.put("YG_TYPE", new TmplConfigDetail("YG_TYPE", "员工类型", "1", false));
+		Map_SetAddColumnsList.put("GS", new TmplConfigDetail("GS", "公司", "1", false));
+		Map_SetAddColumnsList.put("GLY", new TmplConfigDetail("GLY", "管理员", "1", false));
+		Map_SetAddColumnsList.put("MING", new TmplConfigDetail("MING", "名", "1", false));
+		Map_SetAddColumnsList.put("SNC_NAME", new TmplConfigDetail("SNC_NAME", "SNC名", "1", false));
+		Map_SetAddColumnsList.put("UNSEC_SNC", new TmplConfigDetail("UNSEC_SNC", "UNSEC_SNC", "1", false));
+		Map_SetAddColumnsList.put("ACCNO", new TmplConfigDetail("ACCNO", "ACCNO", "1", false));
+		Map_SetAddColumnsList.put("USER_DEPART", new TmplConfigDetail("USER_DEPART", "用户组", "1", false));
+		Map_SetAddColumnsList.put("STAFF_NAME", new TmplConfigDetail("STAFF_NAME", "姓名", "1", false));
+		Map_SetAddColumnsList.put("ZW", new TmplConfigDetail("ZW", "职位", "1", false));
+		Map_SetAddColumnsList.put("EMPJOB", new TmplConfigDetail("EMPJOB", "EMPJOB", "1", false));				
+		Map_SetAddColumnsList.put("STAFF_CODE", new TmplConfigDetail("STAFF_CODE", "人员编号", "1", false));
+		Map_SetAddColumnsList.put("PERSONNELAREA", new TmplConfigDetail("PERSONNELAREA", "PERSONNELAREA", "1", false));		
+		Map_SetAddColumnsList.put("MAIL", new TmplConfigDetail("MAIL", "电子邮件", "1", false));
+		Map_SetAddColumnsList.put("PHONE", new TmplConfigDetail("PHONE", "电话号码", "1", false));
+		Map_SetAddColumnsList.put("USER_DEPART", new TmplConfigDetail("USER_DEPART", "部门", "1", false));
+		Map_SetAddColumnsList.put("POSITION", new TmplConfigDetail("POSITION", "位置", "1", false));
+		Map_SetAddColumnsList.put("COSTCENTER", new TmplConfigDetail("COSTCENTER", "COSTCENTER", "1", false));		
+		Map_SetAddColumnsList.put("ORZ", new TmplConfigDetail("ORZ", "组织", "1", false));	
+		Map_SetAddColumnsList.put("FULL_NAME", new TmplConfigDetail("FULL_NAME", "全名", "1", false));	
+		Map_SetAddColumnsList.put("FAX", new TmplConfigDetail("FAX", "传真", "1", false));
+		Map_SetAddColumnsList.put("ACADEMIC_TITLE", new TmplConfigDetail("ACADEMIC_TITLE", "ACADEMIC_TITLE", "1", false));
+		Map_SetAddColumnsList.put("COMM_METHOD", new TmplConfigDetail("COMM_METHOD", "COMM_METHOD", "1", false));		
+		Map_SetAddColumnsList.put("BM", new TmplConfigDetail("BM", "别名", "1", false));
+		Map_SetAddColumnsList.put("YWFW", new TmplConfigDetail("YWFW", "业务范围", "1", false));		
+		Map_SetAddColumnsList.put("KSCD", new TmplConfigDetail("KSCD", "开始菜单", "1", false));		
+		Map_SetAddColumnsList.put("LAG", new TmplConfigDetail("LAG", "语言", "1", false));
+		Map_SetAddColumnsList.put("SZGS", new TmplConfigDetail("SZGS", "数字格式", "1", false));
+		Map_SetAddColumnsList.put("RQGS", new TmplConfigDetail("RQGS", "日期格式", "1", false));
+		Map_SetAddColumnsList.put("GN", new TmplConfigDetail("GN", "功能,", "1", false));
+		Map_SetAddColumnsList.put("ROOM_NUM", new TmplConfigDetail("ROOM_NUM", "房间号", "1", false));
+		Map_SetAddColumnsList.put("FLOORS", new TmplConfigDetail("FLOORS", "楼层", "1", false));
+		Map_SetAddColumnsList.put("BUILDING", new TmplConfigDetail("BUILDING", "办公楼", "1", false));
+		Map_SetAddColumnsList.put("USER_TYPE", new TmplConfigDetail("USER_TYPE", "用户类型", "1", false));
+		//***********************************************************删除账号申请导出列		
+		Map_SetDelColumnsList.clear();
+		Map_SetDelColumnsList.put("STAFF_NAME", new TmplConfigDetail("STAFF_NAME", "姓名", "1", false));
+		Map_SetDelColumnsList.put("STAFF_ID", new TmplConfigDetail("STAFF_ID", "用户帐号", "1", false));
+		Map_SetDelColumnsList.put("MAIL", new TmplConfigDetail("MAIL", "电子邮件", "1", false));
+		Map_SetDelColumnsList.put("STAFF_CODE", new TmplConfigDetail("STAFF_CODE", "人员编号", "1", false));
 		return mv;
 	}
 	/**列表
@@ -176,23 +198,23 @@ public class ERPController extends BaseController {
 		mv.addObject("pd", pd);
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		
-		Map_SetColumnsList.clear();
-        Map_SetColumnsList.put("BUSI_DATE", new TmplConfigDetail("BUSI_DATE", "录入时间", "1", false));
-		Map_SetColumnsList.put("STAFF_CODE", new TmplConfigDetail("STAFF_CODE", "员工编号", "1", false));
-		Map_SetColumnsList.put("STAFF_NAME", new TmplConfigDetail("STAFF_NAME", "员工姓名", "1", false));
-		Map_SetColumnsList.put("DEPART_CODE", new TmplConfigDetail("DEPART_CODE", "二级单位", "1", false));
-		Map_SetColumnsList.put("UNITS_DEPART", new TmplConfigDetail("UNITS_DEPART", "三级单位", "1", false));
-		Map_SetColumnsList.put("STAFF_POSITION", new TmplConfigDetail("STAFF_POSITION", "职务", "1", false));
-		Map_SetColumnsList.put("STAFF_JOB", new TmplConfigDetail("STAFF_JOB", "岗位", "1", false));
-		Map_SetColumnsList.put("STAFF_MODULE", new TmplConfigDetail("STAFF_MODULE", "模块", "1", false));
-		Map_SetColumnsList.put("PHONE", new TmplConfigDetail("PHONE", "联络电话", "1", false));
-		Map_SetColumnsList.put("MAIL", new TmplConfigDetail("MAIL", "电子邮件", "1", false));
-		Map_SetColumnsList.put("PERMISSION_CHANGE", new TmplConfigDetail("PERMISSION_CHANGE", "权限变更", "1", false));
-		Map_SetColumnsList.put("APPLY_DATE", new TmplConfigDetail("APPLY_DATE", "申请日期", "1", false));
-		Map_SetColumnsList.put("ACCOUNT_DELETE_REASON", new TmplConfigDetail("ACCOUNT_DELETE_REASON", "账号删除原因", "1", false));
-		Map_SetColumnsList.put("NOTE", new TmplConfigDetail("NOTE", "备注", "1", false));
-		Map_SetColumnsList.put("BILL_USERNAME", new TmplConfigDetail("BILL_USERNAME", "上报人姓名", "1", false));
-		Map_SetColumnsList.put("BILL_PHONE", new TmplConfigDetail("BILL_PHONE", "上报人手机号", "1", false));
+		Map_SetAddColumnsList.clear();
+        Map_SetAddColumnsList.put("BUSI_DATE", new TmplConfigDetail("BUSI_DATE", "录入时间", "1", false));
+		Map_SetAddColumnsList.put("STAFF_CODE", new TmplConfigDetail("STAFF_CODE", "员工编号", "1", false));
+		Map_SetAddColumnsList.put("STAFF_NAME", new TmplConfigDetail("STAFF_NAME", "员工姓名", "1", false));
+		Map_SetAddColumnsList.put("DEPART_CODE", new TmplConfigDetail("DEPART_CODE", "二级单位", "1", false));
+		Map_SetAddColumnsList.put("UNITS_DEPART", new TmplConfigDetail("UNITS_DEPART", "三级单位", "1", false));
+		Map_SetAddColumnsList.put("STAFF_POSITION", new TmplConfigDetail("STAFF_POSITION", "职务", "1", false));
+		Map_SetAddColumnsList.put("STAFF_JOB", new TmplConfigDetail("STAFF_JOB", "岗位", "1", false));
+		Map_SetAddColumnsList.put("STAFF_MODULE", new TmplConfigDetail("STAFF_MODULE", "模块", "1", false));
+		Map_SetAddColumnsList.put("PHONE", new TmplConfigDetail("PHONE", "联络电话", "1", false));
+		Map_SetAddColumnsList.put("MAIL", new TmplConfigDetail("MAIL", "电子邮件", "1", false));
+		Map_SetAddColumnsList.put("PERMISSION_CHANGE", new TmplConfigDetail("PERMISSION_CHANGE", "权限变更", "1", false));
+		Map_SetAddColumnsList.put("APPLY_DATE", new TmplConfigDetail("APPLY_DATE", "申请日期", "1", false));
+		Map_SetAddColumnsList.put("ACCOUNT_DELETE_REASON", new TmplConfigDetail("ACCOUNT_DELETE_REASON", "账号删除原因", "1", false));
+		Map_SetAddColumnsList.put("NOTE", new TmplConfigDetail("NOTE", "备注", "1", false));
+		Map_SetAddColumnsList.put("BILL_USERNAME", new TmplConfigDetail("BILL_USERNAME", "上报人姓名", "1", false));
+		Map_SetAddColumnsList.put("BILL_PHONE", new TmplConfigDetail("BILL_PHONE", "上报人手机号", "1", false));
 		
 		return mv;
 	}
@@ -244,27 +266,27 @@ public class ERPController extends BaseController {
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		
 		//***********************************************************
-		Map_SetColumnsList.clear();//清空,重新添加防止导出时污染输出源
-		Map_SetColumnsList.put("BUSI_DATE", new TmplConfigDetail("BUSI_DATE", "录入时间", "1", false));
-		Map_SetColumnsList.put("STAFF_CODE", new TmplConfigDetail("STAFF_CODE", "员工编号", "1", false));
-		Map_SetColumnsList.put("STAFF_NAME", new TmplConfigDetail("STAFF_NAME", "员工姓名", "1", false));
-		Map_SetColumnsList.put("DEPART_CODE", new TmplConfigDetail("DEPART_CODE", "二级单位", "1", false));
-		Map_SetColumnsList.put("UNITS_DEPART", new TmplConfigDetail("UNITS_DEPART", "三级单位", "1", false));
-		Map_SetColumnsList.put("STAFF_POSITION", new TmplConfigDetail("STAFF_POSITION", "职务", "1", false));
-		Map_SetColumnsList.put("STAFF_JOB", new TmplConfigDetail("STAFF_JOB", "岗位", "1", false));
-		Map_SetColumnsList.put("STAFF_MODULE", new TmplConfigDetail("STAFF_MODULE", "模块", "1", false));
-		Map_SetColumnsList.put("PHONE", new TmplConfigDetail("PHONE", "联络电话", "1", false));
-		Map_SetColumnsList.put("MAIL", new TmplConfigDetail("MAIL", "电子邮件", "1", false));
-		Map_SetColumnsList.put("IF_TRAINING", new TmplConfigDetail("IF_TRAINING", "是否培训", "1", false));
-		Map_SetColumnsList.put("TRAINING_METHOD", new TmplConfigDetail("TRAINING_METHOD", "培训方式", "1", false));
-		Map_SetColumnsList.put("TRAINING_TIME", new TmplConfigDetail("TRAINING_TIME", "培训时间", "1", false));
-		Map_SetColumnsList.put("TRAINING_RECORD", new TmplConfigDetail("TRAINING_RECORD", "培训成绩", "1", false));
-		Map_SetColumnsList.put("CERTIFICATE_NUM", new TmplConfigDetail("CERTIFICATE_NUM", "证书编号", "1", false));
-		Map_SetColumnsList.put("UKEY_NUM", new TmplConfigDetail("UKEY_NUM", "UKey编号", "1", false));
-		Map_SetColumnsList.put("APPLY_DATE", new TmplConfigDetail("APPLY_DATE", "申请日期", "1", false));
-		Map_SetColumnsList.put("NOTE", new TmplConfigDetail("NOTE", "备注", "1", false));
-		Map_SetColumnsList.put("BILL_USERNAME", new TmplConfigDetail("BILL_USERNAME", "上报人姓名", "1", false));
-		Map_SetColumnsList.put("BILL_PHONE", new TmplConfigDetail("BILL_PHONE", "上报人手机号", "1", false));
+		Map_SetAddColumnsList.clear();//清空,重新添加防止导出时污染输出源
+		Map_SetAddColumnsList.put("BUSI_DATE", new TmplConfigDetail("BUSI_DATE", "录入时间", "1", false));
+		Map_SetAddColumnsList.put("STAFF_CODE", new TmplConfigDetail("STAFF_CODE", "员工编号", "1", false));
+		Map_SetAddColumnsList.put("STAFF_NAME", new TmplConfigDetail("STAFF_NAME", "员工姓名", "1", false));
+		Map_SetAddColumnsList.put("DEPART_CODE", new TmplConfigDetail("DEPART_CODE", "二级单位", "1", false));
+		Map_SetAddColumnsList.put("UNITS_DEPART", new TmplConfigDetail("UNITS_DEPART", "三级单位", "1", false));
+		Map_SetAddColumnsList.put("STAFF_POSITION", new TmplConfigDetail("STAFF_POSITION", "职务", "1", false));
+		Map_SetAddColumnsList.put("STAFF_JOB", new TmplConfigDetail("STAFF_JOB", "岗位", "1", false));
+		Map_SetAddColumnsList.put("STAFF_MODULE", new TmplConfigDetail("STAFF_MODULE", "模块", "1", false));
+		Map_SetAddColumnsList.put("PHONE", new TmplConfigDetail("PHONE", "联络电话", "1", false));
+		Map_SetAddColumnsList.put("MAIL", new TmplConfigDetail("MAIL", "电子邮件", "1", false));
+		Map_SetAddColumnsList.put("IF_TRAINING", new TmplConfigDetail("IF_TRAINING", "是否培训", "1", false));
+		Map_SetAddColumnsList.put("TRAINING_METHOD", new TmplConfigDetail("TRAINING_METHOD", "培训方式", "1", false));
+		Map_SetAddColumnsList.put("TRAINING_TIME", new TmplConfigDetail("TRAINING_TIME", "培训时间", "1", false));
+		Map_SetAddColumnsList.put("TRAINING_RECORD", new TmplConfigDetail("TRAINING_RECORD", "培训成绩", "1", false));
+		Map_SetAddColumnsList.put("CERTIFICATE_NUM", new TmplConfigDetail("CERTIFICATE_NUM", "证书编号", "1", false));
+		Map_SetAddColumnsList.put("UKEY_NUM", new TmplConfigDetail("UKEY_NUM", "UKey编号", "1", false));
+		Map_SetAddColumnsList.put("APPLY_DATE", new TmplConfigDetail("APPLY_DATE", "申请日期", "1", false));
+		Map_SetAddColumnsList.put("NOTE", new TmplConfigDetail("NOTE", "备注", "1", false));
+		Map_SetAddColumnsList.put("BILL_USERNAME", new TmplConfigDetail("BILL_USERNAME", "上报人姓名", "1", false));
+		Map_SetAddColumnsList.put("BILL_PHONE", new TmplConfigDetail("BILL_PHONE", "上报人手机号", "1", false));
 		return mv;
 	}
 	
@@ -315,24 +337,24 @@ public class ERPController extends BaseController {
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		
 		//***********************************************************
-		Map_SetColumnsList.clear();
-		Map_SetColumnsList.put("BUSI_DATE", new TmplConfigDetail("BUSI_DATE", "录入时间", "1", false));
-		Map_SetColumnsList.put("STAFF_CODE", new TmplConfigDetail("STAFF_CODE", "员工编号", "1", false));
-		Map_SetColumnsList.put("STAFF_NAME", new TmplConfigDetail("STAFF_NAME", "员工姓名", "1", false));
-		Map_SetColumnsList.put("DEPART_CODE", new TmplConfigDetail("DEPART_CODE", "二级单位", "1", false));
-		Map_SetColumnsList.put("UNITS_DEPART", new TmplConfigDetail("UNITS_DEPART", "三级单位", "1", false));
-		Map_SetColumnsList.put("STAFF_POSITION", new TmplConfigDetail("STAFF_POSITION", "职务", "1", false));
-		Map_SetColumnsList.put("STAFF_JOB", new TmplConfigDetail("STAFF_JOB", "岗位", "1", false));
-		Map_SetColumnsList.put("STAFF_MODULE", new TmplConfigDetail("STAFF_MODULE", "模块", "1", false));
-		Map_SetColumnsList.put("PHONE", new TmplConfigDetail("PHONE", "联络电话", "1", false));
-		Map_SetColumnsList.put("MAIL", new TmplConfigDetail("MAIL", "电子邮件", "1", false));
-		Map_SetColumnsList.put("APPLY_DATE", new TmplConfigDetail("APPLY_DATE", "申请日期", "1", false));
-		Map_SetColumnsList.put("CANCEL_DATE", new TmplConfigDetail("CANCEL_DATE", "撤销日期", "1", false));
-		Map_SetColumnsList.put("APPLY_TEMP_REASON", new TmplConfigDetail("APPLY_TEMP_REASON", "申请临时原因", "1", false));
-		Map_SetColumnsList.put("UKEY_NUM", new TmplConfigDetail("UKEY_NUM", "UKey编号", "1", false));
-		Map_SetColumnsList.put("NOTE", new TmplConfigDetail("NOTE", "备注", "1", false));
-		Map_SetColumnsList.put("BILL_USERNAME", new TmplConfigDetail("BILL_USERNAME", "上报人姓名", "1", false));
-		Map_SetColumnsList.put("BILL_PHONE", new TmplConfigDetail("BILL_PHONE", "上报人手机号", "1", false));
+		Map_SetAddColumnsList.clear();
+		Map_SetAddColumnsList.put("BUSI_DATE", new TmplConfigDetail("BUSI_DATE", "录入时间", "1", false));
+		Map_SetAddColumnsList.put("STAFF_CODE", new TmplConfigDetail("STAFF_CODE", "员工编号", "1", false));
+		Map_SetAddColumnsList.put("STAFF_NAME", new TmplConfigDetail("STAFF_NAME", "员工姓名", "1", false));
+		Map_SetAddColumnsList.put("DEPART_CODE", new TmplConfigDetail("DEPART_CODE", "二级单位", "1", false));
+		Map_SetAddColumnsList.put("UNITS_DEPART", new TmplConfigDetail("UNITS_DEPART", "三级单位", "1", false));
+		Map_SetAddColumnsList.put("STAFF_POSITION", new TmplConfigDetail("STAFF_POSITION", "职务", "1", false));
+		Map_SetAddColumnsList.put("STAFF_JOB", new TmplConfigDetail("STAFF_JOB", "岗位", "1", false));
+		Map_SetAddColumnsList.put("STAFF_MODULE", new TmplConfigDetail("STAFF_MODULE", "模块", "1", false));
+		Map_SetAddColumnsList.put("PHONE", new TmplConfigDetail("PHONE", "联络电话", "1", false));
+		Map_SetAddColumnsList.put("MAIL", new TmplConfigDetail("MAIL", "电子邮件", "1", false));
+		Map_SetAddColumnsList.put("APPLY_DATE", new TmplConfigDetail("APPLY_DATE", "申请日期", "1", false));
+		Map_SetAddColumnsList.put("CANCEL_DATE", new TmplConfigDetail("CANCEL_DATE", "撤销日期", "1", false));
+		Map_SetAddColumnsList.put("APPLY_TEMP_REASON", new TmplConfigDetail("APPLY_TEMP_REASON", "申请临时原因", "1", false));
+		Map_SetAddColumnsList.put("UKEY_NUM", new TmplConfigDetail("UKEY_NUM", "UKey编号", "1", false));
+		Map_SetAddColumnsList.put("NOTE", new TmplConfigDetail("NOTE", "备注", "1", false));
+		Map_SetAddColumnsList.put("BILL_USERNAME", new TmplConfigDetail("BILL_USERNAME", "上报人姓名", "1", false));
+		Map_SetAddColumnsList.put("BILL_PHONE", new TmplConfigDetail("BILL_PHONE", "上报人手机号", "1", false));
 		return mv;
 	}
 	
@@ -485,6 +507,7 @@ public class ERPController extends BaseController {
 			}
 		      page.setPd(pd);
 				varOList = erpofficialacctapplicationService.exportListAdd(page);
+				return export(varOList, "", Map_SetAddColumnsList);	
 				
 		}else{
 			pd.put("APPLY_TYPE1", ""); 
@@ -499,8 +522,9 @@ public class ERPController extends BaseController {
 			}
 			page.setPd(pd);
 			varOList = erpofficialacctapplicationService.exportListDel(page);
+			return export(varOList, "", Map_SetDelColumnsList);	
 		}
-		return export(varOList, "", Map_SetColumnsList);	
+	
 	}
 	
 	/**
@@ -517,7 +541,7 @@ public class ERPController extends BaseController {
 		pd.put("BUSI_DATE", pd.get("busiDate"));
 		page.setPd(pd);
 		List<PageData> varOList = erptempacctapplicationService.exportList(page);
-		return export(varOList, "", Map_SetColumnsList);
+		return export(varOList, "", Map_SetAddColumnsList);
 	}
 	
 	/**
@@ -534,18 +558,18 @@ public class ERPController extends BaseController {
 		pd.put("BUSI_DATE", pd.get("busiDate"));
 		page.setPd(pd);
 		List<PageData> varOList = erpdelacctapplicationService.exportList(page);
-		return export(varOList, "", Map_SetColumnsList);
+		return export(varOList, "", Map_SetAddColumnsList);
 	}
 	
 	private ModelAndView export(List<PageData> varOList, String ExcelName,
-			Map<String, TmplConfigDetail> map_SetColumnsList) throws Exception {
+			Map<String, TmplConfigDetail> Map_SetAddColumnsList) throws Exception {
 		ModelAndView mv = new ModelAndView();
 		Map<String, Object> dataMap = new LinkedHashMap<String, Object>();
 		dataMap.put("filename", ExcelName);
 		List<String> titles = new ArrayList<String>();
 		List<PageData> varList = new ArrayList<PageData>();
-		if (map_SetColumnsList != null && map_SetColumnsList.size() > 0) {
-			for (TmplConfigDetail col : map_SetColumnsList.values()) {
+		if (Map_SetAddColumnsList != null && Map_SetAddColumnsList.size() > 0) {
+			for (TmplConfigDetail col : Map_SetAddColumnsList.values()) {
 				if (col.getCOL_HIDE().equals("1")) {
 					titles.add(col.getCOL_NAME());
 				}
@@ -554,7 +578,7 @@ public class ERPController extends BaseController {
 				for (int i = 0; i < varOList.size(); i++) {
 					PageData vpd = new PageData();
 					int j = 1;
-					for (TmplConfigDetail col : map_SetColumnsList.values()) {
+					for (TmplConfigDetail col : Map_SetAddColumnsList.values()) {
 						if (col.getCOL_HIDE().equals("1")) {
 							Object getCellValue = varOList.get(i).get(col.getCOL_CODE().toUpperCase());
 							if(null == getCellValue){

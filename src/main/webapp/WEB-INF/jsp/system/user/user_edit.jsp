@@ -125,14 +125,25 @@
 											</td>
 										</tr>
 										<tr>
-											<td style="width:79px;text-align: right;padding-top: 13px;"></td>
-											<td style="width:79px;text-align: left;padding-top: 13px;">
-												<input name="USER_PROPERTY" id="USER_PROPERTY" type="checkbox" class="ace" readonly="readonly" />
-												
-											<span class="lbl">是否SAP账号</span>
+											<td style="width:79px;text-align: right;padding-top: 13px;">帐号类别:</td>
+<%-- 											<td><input type="text" name="USER_PROPERTY" id="USER_PROPERTY"  value="${pd.USER_PROPERTY }"  maxlength="32" placeholder="这里输入帐号类别" title="手机号" style="width:98%;" readonly /></td> --%>
+											<td>
+												<select name="USER_PROPERTY" title="帐号类别" disabled="disabled">
+												<option value="1" <c:if test="${pd.USER_PROPERTY == '1' }">selected</c:if> >SAP用户</option>
+												<option value="0" <c:if test="${pd.USER_PROPERTY == '0' }">selected</c:if> >非SAP用户</option>
+												<option value="0" <c:if test="${pd.USER_PROPERTY == null|| pd.USER_PROPERTY ==''}">selected</c:if> >未维护</option>
+												</select>
 											</td>
-	
 										</tr>
+<!-- 										<tr> -->
+<!-- 											<td style="width:79px;text-align: right;padding-top: 13px;"></td> -->
+<!-- 											<td style="width:79px;text-align: left;padding-top: 13px;"> -->
+<!-- 												<input name="USER_PROPERTY" id="USER_PROPERTY" type="checkbox" class="ace" readonly="readonly" /> -->
+												
+<!-- 											<span class="lbl">是否SAP账号</span> -->
+<!-- 											</td> -->
+	
+<!-- 										</tr> -->
 										<tr>
 											<td style="text-align: center;" colspan="10">
 												<a class="btn btn-mini btn-primary" onclick="save();">保存</a>
