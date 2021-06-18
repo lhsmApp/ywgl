@@ -45,10 +45,21 @@
 												<td style="width:79px;text-align: right;padding-top: 13px;">角色:</td>
 												<td id="juese">
 												<select class="chosen-select form-control" name="ROLE_ID" id="role_id" data-placeholder="请选择角色" style="vertical-align:top;" style="width:98%;" >
-												<option value=""></option>
-												<c:forEach items="${roleList}" var="role">
-													<option value="${role.ROLE_ID }" <c:if test="${role.ROLE_ID == pd.ROLE_ID }">selected</c:if>>${role.ROLE_NAME }</option>
-												</c:forEach>
+													<c:if test="${pd.ROLE_TYPE  == 'gly'}">
+														<option value=""></option>
+														<c:forEach items="${roleList}" var="role">
+															<option value="${role.ROLE_ID }" <c:if test="${role.ROLE_ID == pd.ROLE_ID }">selected</c:if>>${role.ROLE_NAME }</option>
+														</c:forEach>
+													</c:if>
+													<c:if test="${pd.ROLE_TYPE  == 'ejdwedit'}">	
+														<option value=""></option>
+														<c:forEach items="${roleList}" var="role">
+															<option value="${role.ROLE_ID }" <c:if test="${role.ROLE_ID == pd.ROLE_ID }">selected</c:if>>${role.ROLE_NAME }</option>
+														</c:forEach>
+													</c:if>
+														<c:if test="${pd.ROLE_TYPE  == 'ejdwadd'}">					
+															<option value="a8bcf49238da4d13a445d162a361be7a" <c:if test="${role.ROLE_ID == 'a8bcf49238da4d13a445d162a361be7a' }">selected</c:if>>ERP普通用户（临时）</option>
+													</c:if>
 												</select>
 												</td>
 											</tr>

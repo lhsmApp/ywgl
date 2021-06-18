@@ -28,7 +28,8 @@
 		BILL_USER,
 		USER_DEPART,
 		BILL_DATE,
-		IF_CREATE_FROM
+		IF_CREATE_FROM,
+		APPLY_TYPE
 	</sql>
 	
 	<!-- 字段值 -->
@@ -52,7 +53,8 @@
 		#{BILL_USER},
 		#{USER_DEPART},
 		#{BILL_DATE},
-		#{IF_CREATE_FROM}
+		#{IF_CREATE_FROM},
+		#{APPLY_TYPE}
 	</sql>
 	
 	<!-- 新增-->

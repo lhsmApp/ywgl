@@ -1,5 +1,6 @@
 package com.fh.controller.dataReporting.erptempacctapplication;
 
+import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -163,7 +164,57 @@ public class ERPTempAcctApplicationController extends BaseController {
 		
 		return mv;
 	}
-	
+	/**生成/撤销临时用户延期申请
+	 * @param out
+	 * @throws Exception 
+	 */
+	@RequestMapping(value="/savedelay")
+	public ModelAndView savedelay(PrintWriter out) throws Exception{
+		logBefore(logger, Jurisdiction.getUsername()+"删除user");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		if(!pd.containsKey("END_DATE")){
+			pd.put("END_DATE", "");
+		}
+		erptempacctapplicationService.editDelayData(pd);
+		mv.addObject("msg","success");
+		mv.setViewName("save_result");
+		return mv;
+	}
+
+	 /**去修改页面
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/goEdit")
+	public ModelAndView goEdit()throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		//pd=userService.findByUserNum(pd);
+		mv.addObject("pd",pd);//传入上级所有信息
+		mv.setViewName("dataReporting/erpaccountdelay/erpaccountdelay_edit");
+		mv.addObject("msg", "edit");
+		return mv;
+	}	
+	 /**查询延期申请单
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/viewApply")
+	public ModelAndView viewApply()throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		//pd = erptempacctapplicationService.findById(pd);	//根据ID读取
+		//JSONArray json = JSONArray.fromObject(pd); 
+		mv.setViewName("dataReporting/erpaccountcancle/erpaccountcanclePrintPage");
+		mv.addObject("pd", pd);
+		mv.addObject("billCode", pd.get("BILL_CODE"));
+		
+		return mv;
+	}
 	/**保存与修改合并类
 	 * @param
 	 * @throws Exception

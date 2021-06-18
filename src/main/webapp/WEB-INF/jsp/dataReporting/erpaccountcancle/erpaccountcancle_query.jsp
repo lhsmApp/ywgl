@@ -75,7 +75,7 @@
 									<th class="center">单位</th>
 <!-- 									<th class="center">部门</th> -->
 									<th class="center">手机号</th>
-									<th class="center">是否SAP账号</th>
+<!-- 									<th class="center">是否SAP账号</th> -->
 									<!-- <th class="center"><i class="ace-icon fa fa-envelope-o"></i>邮箱</th> -->
 <!-- 									<th class="center"><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>最近登录</th> -->
 <!-- 									<th class="center">上次登录IP</th> -->
@@ -105,18 +105,18 @@
 											<td class="center">${user.UNIT_NAME }</td>
 <%-- 											<td class="center">${user.DEPARTMENT_NAME }</td> --%>
 											<td class="center">${user.PHONE }</td>
-											<td class="center">
-											<c:if test="${user.USER_PROPERTY == '0' }"><span>否</span></c:if>
-												<c:if test="${user.USER_PROPERTY == '1' }"><span >是</span></c:if>
-											</td>
+<!-- 											<td class="center"> -->
+<%-- 											<c:if test="${user.USER_PROPERTY == '0' }"><span>否</span></c:if> --%>
+<%-- 												<c:if test="${user.USER_PROPERTY == '1' }"><span >是</span></c:if> --%>
+<!-- 											</td> -->
 <%-- 											<td class="center">${user.BZ }</td> --%>
 											<td style="width: 60px;" class="center">
 												<c:if test="${user.IF_CREATE_FROM == '0' }"><span>否</span></c:if>
 												<c:if test="${user.IF_CREATE_FROM == '1' }"><span>是</span></c:if>
 											</td>
 											<td style="width: 60px;" class="center">
-												<c:if test="${user.CONFIRM_STATE == '1' }"><span>创建</span></c:if>
-												<c:if test="${user.CONFIRM_STATE == '2' }"><span>退回 </span></c:if>
+												<c:if test="${user.CONFIRM_STATE == '2' }"><span>创建</span></c:if>
+												<c:if test="${user.CONFIRM_STATE == '4' }"><span>退回 </span></c:if>
 												<c:if test="${user.CONFIRM_STATE == '3' }"><span>确认 </span></c:if>
 											</td>
 											<td class="center">
@@ -127,7 +127,7 @@
 													<a class="btn btn-xs btn-primary" onclick="create('${user.NAME }','${user.USERNAME }','${user.IF_CREATE_FROM }');">
 														生成
 													</a>
-													<a class="btn btn-xs btn-danger" onclick="cancel('${user.NAME }','${user.USERNAME }','${user.IF_CREATE_FROM }');">
+													<a class="btn btn-xs btn-danger" onclick="cancel('${user.NAME }','${user.USERNAME }','${user.IF_CREATE_FROM }','${user.CONFIRM_STATE }');">
 														撤销
 													</a>
 												</div>
@@ -188,7 +188,7 @@ function searchs(){
 }
 
 //撤销删除申请
-function cancel(name,userName,ifCreat){
+function cancel(name,userName,ifCreat,confirm){
 	if(ifCreat!=1){
 		bootbox.dialog({
 			message: "<span class='bigger-110'>帐号"+userName+"还未生成删除申请！</span>",
@@ -197,7 +197,14 @@ function cancel(name,userName,ifCreat){
 		});
 		return;
 	}
-
+	if(confirm=='3'){
+		bootbox.dialog({
+			message: "<span class='bigger-110'>帐号"+userName+"删除申请已确认，不能撤销！</span>",
+			buttons: 			
+			{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+		});
+		return;
+	}
 	bootbox.confirm("确定要撤销员工编号：["+userName+"]姓名为：["+name+"]的ERP账号删除申请吗？", function(result) {
 		if(result) {
 			var url = "<%=basePath%>erpdelacctapplication/cancelDel.do?STAFF_CODE="+userName;

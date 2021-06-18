@@ -41,7 +41,7 @@
 						<div class="col-xs-12">
 						
 						<!-- 检索  -->
-						<form action="user/listUsers.do" method="post" name="userForm" id="userForm">
+						<form action="erptempacctapplication/listUsers.do" method="post" name="userForm" id="userForm">
 						<input name="ZDEPARTMENT_ID" id="ZDEPARTMENT_ID" type="hidden" value="${pd.ZDEPARTMENT_ID }" />
 						<input name="DEPARTMENT_ID" id="DEPARTMENT_ID" type="hidden" value="${pd.DEPARTMENT_ID }" />
 						<table style="margin-top:5px;">
@@ -53,7 +53,9 @@
 										<i class="ace-icon fa fa-search nav-search-icon"></i>
 									</span>
 									</div>
-								</td>							
+								</td>	
+								<td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
+												
 							</tr>
 						</table>
 					
@@ -76,6 +78,7 @@
 									<th class="center">UKEY编号</th>
 									<th class="center">申请日期</th>
 									<th class="center">撤销日期</th>
+									<th class="center">单据状态</th>
 									<th class="center">操作</th>
 								</tr>
 							</thead>
@@ -103,17 +106,20 @@
 											<td class="center">${user.UKEY_NUM }</td>
 											<td class="center">${user.APPLY_DATE }</td>
 											<td class="center">${user.CANCEL_DATE }</td>
+											<td style="width: 60px;" class="center">
+												<c:if test="${user.IF_CREATE_FROM == '1' }"><span>已生成</span></c:if>
+												<c:if test="${user.IF_CREATE_FROM == '0' ||user.IF_CREATE_FROM==null}"><span>未生成 </span></c:if>
+											</td>
 											<td class="center">
 												<div class="hidden-sm hidden-xs btn-group">
-												<a class="btn btn-xs btn-success" title="编辑" onclick="view('${user.USERNAME}');">
-														查看<br>延期申请
+<%-- 												<a class="btn btn-xs btn-success" title="编辑" onclick="view('${user.USERNAME}');"> --%>
+<!-- 														查看 -->
+<!-- 													</a> -->
+													<a class="btn btn-xs btn-primary" onclick="create('${user.STAFF_NAME }','${user.STAFF_CODE }','${user.IF_CREATE_FROM }','${user.DEPART_CODE }');">
+														生成
 													</a>
-													<a class="btn btn-xs btn-primary" onclick="create('${user.NAME }','${user.USERNAME }');">
-														生成<br>延期申请
-													</a>
-													<a class="btn btn-xs btn-danger" onclick="cancel('${user.NAME }','${user.USERNAME }');">
-
-														撤销<br>延期申请
+													<a class="btn btn-xs btn-danger" onclick="cancel('${user.STAFF_NAME }','${user.STAFF_CODE }','${user.IF_CREATE_FROM }','${user.CONFIRM_STATE }');">
+														撤销
 													</a>
 												</div>
 												<div class="hidden-md hidden-lg">
@@ -197,24 +203,65 @@ function searchs(){
 	$("#userForm").submit();
 }
 
-//撤销删除申请
-function cancel(name,userName){
-	bootbox.confirm("确定要撤销员工编号：["+userName+"]姓名为：["+name+"]的ERP账号删除申请吗？", function(result) {
+// //撤销删除申请
+// function cancel(name,userName){
+// 	bootbox.confirm("确定要撤销员工编号：["+userName+"]姓名为：["+name+"]的ERP账号删除申请吗？", function(result) {
+// 		if(result) {
+<%-- 			var url = "<%=basePath%>erptempacctapplication/cancelDel.do?STAFF_CODE="+userName; --%>
+// 			$.get(url,function(data){
+// 				nextPage(${page.currentPage});
+// 			});
+// 		};
+// 	});
+// }
+//撤销延期申请
+function cancel(name,userName,ifCreat,confirm){
+	if(ifCreat!=1){
+		bootbox.dialog({
+			message: "<span class='bigger-110'>帐号"+userName+"还未生成延期申请！</span>",
+			buttons: 			
+			{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+		});
+		return;
+	}
+// 	if(confirm=='3'){
+// 		bootbox.dialog({
+// 			message: "<span class='bigger-110'>帐号"+userName+"延期申请已确认，不能撤销！</span>",
+// 			buttons: 			
+// 			{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+// 		});
+// 		return;
+// 	}
+	bootbox.confirm("确定要撤销员工编号：["+userName+"]姓名为：["+name+"]的ERP账号延期申请吗？", function(result) {
 		if(result) {
-			var url = "<%=basePath%>erpdelacctapplication/cancelDel.do?STAFF_CODE="+userName;
+			var url = "<%=basePath%>erptempacctapplication/savedelay.do?STAFF_CODE="+userName+"&IF_CREATE_FROM=0";
 			$.get(url,function(data){
-				nextPage(${page.currentPage});
+				//nextPage(${page.currentPage});
+				window.location.href='<%=basePath%>erptempacctapplication/listUsers.do';
+		bootbox.dialog({
+			message: "<span class='bigger-110'>帐号"+userName+"延期申请撤销成功！</span>",
+			buttons: 			
+			{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+		});
 			});
 		};
 	});
 }
 //打印
-function view(userName){
+function view(userName,ifCreat){
+	if(ifCreat!=1){
+		bootbox.dialog({
+			message: "<span class='bigger-110'>帐号"+userName+"还未生成延期申请！</span>",
+			buttons: 			
+			{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+		});
+		return;
+	}
 	top.jzts();
 	 var diag = new top.Dialog();
 	 diag.Drag=true;
-	 diag.Title ="ERP帐号删除申请";
-	 diag.URL = '<%=basePath%>erpdelacctapplication/viewApply.do?STAFF_CODE='+userName; 
+	 diag.Title ="ERP帐号延期申请";
+	 diag.URL = '<%=basePath%>erptempacctapplication/viewApply.do?STAFF_CODE='+userName; 
 	 diag.Width = 800;
 	 diag.Height = 350;
 	 diag.Modal = true;				//有无遮罩窗口
@@ -222,39 +269,39 @@ function view(userName){
     diag.ShowMinButton = true;		//最小化按钮 
 	 diag.show();
 }
-//生成删除申请
-function create(name,userName){
-	top.jzts();
-	var bgName=$("#BG_NAME").val();//变更名称
-	var bgReason=$("#BG_REASON").val();//变更原因
-	var unitCode=$("#UNIT_CODE").val();//单位
-	$.ajax({
-		type: "POST",
-		url: '<%=basePath%>changeerpxtbg/save.do',
-		data:{USER_EMAIL:uesrEmail,USER_TEL:uesrTel,BG_NR:bgnr},
-    	dataType:'json',
-		cache: false,
-		success: function(response){
-			if(response.code==0){
-				$(top.hangge());//关闭加载状态
-				bootbox.dialog({
-					message: "<span class='bigger-110'>保存成功</span>",
-				});		
-			}else{
-				$(top.hangge());//关闭加载状态
-				bootbox.dialog({
-					message: "<span class='bigger-110'>保存失败</span>",
-				});		
-			}
-		},
-    	error: function(response) {
-    		var msgObj=JSON.parse(response.responseText);
-    		$(top.hangge());//关闭加载状态
-    		bootbox.dialog({
-				message: "<span class='bigger-110'>保存失败"+msgObj.message+"</span>",
-			});		
-    	}
-	});
+//生成延期申请
+function create(name,userName,ifCreat,departCode){
+	if(ifCreat==1){
+		bootbox.dialog({
+			message: "<span class='bigger-110'>帐号"+userName+"已生成延期申请，不能重复生成！</span>",
+			buttons: 			
+			{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+		});
+		return;
+	}
+	 top.jzts();
+	 var diag = new top.Dialog();
+	 diag.Drag=true;
+	 diag.Title ="账号删延期";
+	 diag.URL = '<%=basePath%>erptempacctapplication/goEdit.do?USERNAME='+userName+'&UNIT_NAME='+departCode+'&NAME='+name+'&IF_CREATE_FROM=1';
+	 diag.Width = 750;
+	 diag.Height = 400;
+	 diag.Modal = true;				//有无遮罩窗口
+	 diag. ShowMaxButton = true;	//最大化按钮
+     diag.ShowMinButton = true;		//最小化按钮 
+	 diag.CancelEvent = function(){ //关闭事件
+		 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
+			// nextPage(${page.currentPage});
+			bootbox.dialog({
+							message: "<span class='bigger-110'>帐号"+userName+"生成延期申请成功！</span>",
+							buttons: 			
+							{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+						});
+		}
+			window.location.href='<%=basePath%>erptempacctapplication/listUsers.do'
+		diag.close();
+	 };
+	 diag.show();
 }
 
 $(function() {

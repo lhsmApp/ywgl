@@ -140,12 +140,11 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 			pageData.put("PHONE",listTransferData.get(i++).trim());
 			pageData.put("MAIL",listTransferData.get(i++).trim());
 
-			pageData.put("CERTIFICATE_NUM",listTransferData.get(i++).trim());
-			pageData.put("UKEY_NUM",listTransferData.get(i++).trim());
-			pageData.put("APPLY_DATE",listTransferData.get(i++).trim());
+//			pageData.put("CERTIFICATE_NUM",listTransferData.get(i++).trim());
+//			pageData.put("UKEY_NUM",listTransferData.get(i++).trim());
+//			pageData.put("APPLY_DATE",listTransferData.get(i++).trim());
 			pageData.put("APPLY_DATE",DateUtils.getCurrentTime(DateFormatUtils.DATE_NOFUll_FORMAT));
 			pageData.put("NOTE",listTransferData.get(i++).trim());
-			pageData.put("APPLY_TYPE","1");//申请类别为新增正式账号
 			String account_type = listTransferData.get(i).trim();//获取账号类别
 			//判断用户是否存在
 			pageData.put("USERNAME", pageData.get("STAFF_CODE"));
@@ -189,6 +188,7 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 				//根据有没有证书（有证书）或者职级（为处级）确定为正式账号，否则为临时账号
 				if((null!=trainPd.get("CERTIFICATE_NUM")&&!"".equals(trainPd.get("CERTIFICATE_NUM")))||pageData.getString("POSITION_LEVEL").equals("处级")){
 					pageData.put("ACCOUNT_SIGN",1);//正式账号标记
+					pageData.put("APPLY_TYPE","1");//申请类别为新增正式账号
 					if(null != staffId && !"".equals(staffId)) {//如果有ID则进行修改
 						//当修改员工编号或职级等信息后，用户账号性质可能发生变化，判断是否不一致
 						if(account_type.equals(pageData.get("ACCOUNT_SIGN").toString())){//一致
@@ -200,7 +200,8 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 						erpofficialacctapplicationService.save(pageData);
 					}
 				}else{//没有证书且为非处级，账号性质应为临时账号
-					pageData.put("ACCOUNT_SIGN",2);//临时账号标记				 					
+					pageData.put("ACCOUNT_SIGN",2);//临时账号标记
+					pageData.put("APPLY_TYPE","3");//申请类别为新增临时账号
 					if(null != staffId && !"".equals(staffId)) {//如果有ID则进行修改
 						if(account_type.equals(pageData.get("ACCOUNT_SIGN").toString())){//一致
 							erptempacctapplicationService.edit(pageData);
@@ -218,6 +219,7 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 				pageData.put("TRAINING_RECORD",0);//考试分数
 				if(pageData.getString("POSITION_LEVEL").equals("处级")){				
 					pageData.put("ACCOUNT_SIGN",1);//正式账号标记
+					pageData.put("APPLY_TYPE","1");//申请类别为新增正式账号
 					if(null != staffId && !"".equals(staffId)) {//如果有ID则进行修改
 						//当修改员工编号或职级等信息后，用户账号性质可能发生变化，判断是否不一致
 						if(account_type.equals(pageData.get("ACCOUNT_SIGN").toString())){//一致
@@ -230,6 +232,7 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 					}
 				}else{
 					pageData.put("ACCOUNT_SIGN",2);//临时账号标记
+					pageData.put("APPLY_TYPE","3");//申请类别为新增临时账号
 					if(null != staffId && !"".equals(staffId)) {//如果有ID则进行修改
 						if(account_type.equals(pageData.get("ACCOUNT_SIGN").toString())){//一致
 							erptempacctapplicationService.edit(pageData);
@@ -242,7 +245,7 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 				}
 			}
 				
-		}
+		} 
 		commonBase.setCode(0);
 		return commonBase;
 	}
@@ -283,7 +286,6 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 		pd.put("DEPART_CODE",user.getUNIT_NAME());
 		pd.put("USER_DEPART",user.getUNIT_CODE());
 		pd.put("mandatory", mandatory);
-		page.setPd(pd);
 		PageData pageData = grcpersonService.findSysDeptTime(data);
 		if(null != pageData && pageData.size()>0) {
 			pd.putAll(pageData);
@@ -295,6 +297,7 @@ public class ERPOfficialAcctApplicationController extends BaseController {
 		}else{
 			pd.put("ROLE_TYPE", "gly");//角色类型为管理员
 		}
+		page.setPd(pd);
 		List<PageData> listBusiDate = DateUtil.getMonthList("BUSI_DATE", date);
 		List<PageData>	varList = erpofficialacctapplicationService.list(page);	//列出ERPOfficialAcctApplication列表
 		mv.setViewName("dataReporting/erpofficialacctapplication/erpofficialacctapplication_list");

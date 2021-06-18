@@ -18,6 +18,12 @@ public interface ERPTempAcctApplicationManager{
 	 */
 	public void save(PageData pd)throws Exception;
 	
+	/**生成/撤销延期单据
+	 * @param pd
+	 * @throws Exception
+	 */
+	public void editDelayData(PageData pd)throws Exception;
+	
 	/**修改
 	 * @param pd
 	 * @throws Exception

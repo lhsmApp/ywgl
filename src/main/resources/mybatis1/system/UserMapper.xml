@@ -277,6 +277,8 @@
 			<include refid="tableName"></include>
 		where 
 			USERNAME = #{USERNAME}
+			and
+			STATUS='1'
 		<if test="USER_ID != null and USER_ID != ''">
 			and USER_ID != #{USER_ID} 
 		</if>
@@ -296,6 +298,8 @@
 		from tb_train_student
 		where 
 			STUDENT_CODE = #{USERNAME}
+			and
+			STATUS='1'
 	</select>
 	
 	<!-- 存入IP -->
@@ -315,6 +319,8 @@
 		<include refid="tableName"></include>
 		where 
 		ROLE_ID = #{ROLE_ID}
+		and
+			STATUS='1'
 	</select>
 	
 	<!-- 用户列表 -->
@@ -592,11 +598,22 @@
 	
 	<!-- 删除用户 -->
 	<delete id="deleteU" parameterType="pd" flushCache="false">
-		delete from <include refid="tableName"></include>
-		where 
-			USER_ID = #{USER_ID}
-		and 
-				USER_ID != '1'
+		<choose>
+		    <when test="SIGN != null and SIGN != ''">
+		      	update <include refid="tableName"></include>
+				 set 
+					STATUS = #{STATUS}
+				where 
+						USER_ID = #{USER_ID}
+		    </when>
+		    <otherwise>
+		       delete from <include refid="tableName"></include>
+				where 
+					USER_ID = #{USER_ID}
+				and 
+						USER_ID != '1'
+		    </otherwise>
+	</choose>
 	</delete>
 	
 	<!-- 批量删除用户 -->

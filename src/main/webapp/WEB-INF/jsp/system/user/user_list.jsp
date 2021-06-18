@@ -119,8 +119,9 @@
 							<c:choose>
 								<c:when test="${not empty userList}">
 									<c:forEach items="${userList}" var="user" varStatus="vs">
-												
+													<input type="hidden" id="ROLE_ID" name="ROLE_ID" value="${user.ROLE_ID}"/>	
 										<tr>
+									
 											<td class='center' style="width: 30px;">
 												<c:if test="${user.USERNAME != 'admin'}"><label><input type='checkbox' name='ids' value="${user.USER_ID }" id="${user.EMAIL }" alt="${user.PHONE }" title="${user.USERNAME }" class="ace"/><span class="lbl"></span></label></c:if>
 												<c:if test="${user.USERNAME == 'admin'}"><label><input type='checkbox' disabled="disabled" class="ace" /><span class="lbl"></span></label></c:if>
@@ -152,7 +153,7 @@
 														<i class="ace-icon fa fa-pencil-square-o bigger-120" title="编辑"></i>
 													</a>
 													<c:if test="${user.USER_PROPERTY  != 1}">
-														<a class="btn btn-xs btn-danger" onclick="delUser('${user.USER_ID }','${user.USERNAME }');">
+														<a class="btn btn-xs btn-danger" onclick="delUser('${user.USER_ID }','${user.USERNAME }','${user.ROLE_ID}');">
 															<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
 														</a>
 													</c:if>
@@ -176,7 +177,7 @@
 																</a>
 															</li>
 															<li>
-																<a istyle="cursor:pointer;" onclick="delUser('${user.USER_ID }','${user.USERNAME }');" class="tooltip-error" data-rel="tooltip" title="删除">
+																<a style="cursor:pointer;" onclick="delUser('${user.USER_ID }','${user.USERNAME }','${user.ROLE_ID}');" class="tooltip-error" data-rel="tooltip" title="删除">
 																	<span class="red">
 																		<i class="ace-icon fa fa-trash-o bigger-120"></i>
 																	</span>
@@ -259,11 +260,11 @@ function searchs(){
 }
 
 //删除
-function delUser(userId,msg){
+function delUser(userId,msg,roleId){
 	bootbox.confirm("确定要删除["+msg+"]吗?", function(result) {
 		if(result) {
 			top.jzts();
-			var url = "<%=basePath%>user/deleteU.do?USER_ID="+userId+"&tm="+new Date().getTime();
+			var url = "<%=basePath%>user/deleteU.do?USER_ID="+userId+"&ROLE_ID="+roleId+"&tm="+new Date().getTime();
 			$.get(url,function(data){
 				nextPage(${page.currentPage});
 			});

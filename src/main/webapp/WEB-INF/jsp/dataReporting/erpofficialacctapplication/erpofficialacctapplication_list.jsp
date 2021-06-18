@@ -94,7 +94,7 @@
 										<c:if test="${pd.confirmState==1 }">
 										<a class="btn btn-white btn-info btn-bold" onclick="report('确定要上报当前数据吗?')"><i class="ace-icon fa fa-check-square-o bigger-110"></i>批量上报</a>
 										</c:if>
-										<c:if test="${pd.confirmState==2 }">
+										<c:if test="${pd.confirmState==4 }">
 										<a class="btn btn-white btn-info btn-bold" onclick="backReport('确定要撤回上报吗?');" title="批量驳回" ><i class="ace-icon fa fa-exclamation-triangle red bigger-110"></i>撤销上报</a>
 										</c:if>
 										<c:if test="${pd.confirmState==1 }">
@@ -129,7 +129,7 @@
 										<th style="width:210px; text-align: center;padding-left: 2px;padding-right:2px;">培训成绩</th>
 										<th style="width:210px; text-align: center;padding-left: 2px;padding-right:2px;">证书编号</th>
 										<th style="width:210px; text-align: center;padding-left: 2px;padding-right:2px;">UKey编号</th>
-										<th style="width:210px; text-align: center;padding-left: 2px;padding-right:2px;">申请日期</th>
+<!-- 										<th style="width:210px; text-align: center;padding-left: 2px;padding-right:2px;">申请日期</th> -->
 										<th style="width:210px; text-align: center;">备注</th>
 										<th style="width:210px; text-align: center;">帐号类别</th>
 										<th style="width:210px; text-align: center;">审批状态</th>
@@ -182,7 +182,7 @@
 												<th><input type="text" name="TRAINING_RECORD" id="TRAINING_RECORD" readonly="readonly" value="${var.TRAINING_RECORD}" maxlength="30" title="培训成绩" style="width:100%;"/></th>
 												<th><input type="text" name="CERTIFICATE_NUM" id="CERTIFICATE_NUM" readonly="readonly" value="${var.CERTIFICATE_NUM}" maxlength="30" title="证书编号" style="width:100%;"/></th>
 												<th><input type="text" name="UKEY_NUM" id="UKEY_NUM" readonly="readonly" value="${var.UKEY_NUM}" maxlength="30" title="UKey编号" style="width:100%;"/></th>
-												<th><input type="text" name="APPLY_DATE" id="APPLY_DATE" readonly="readonly" value="${var.APPLY_DATE}" maxlength="30" title="申请日期" style="width:100%;"/></th>
+<%-- 												<th><input type="text" name="APPLY_DATE" id="APPLY_DATE" readonly="readonly" value="${var.APPLY_DATE}" maxlength="30" title="申请日期" style="width:100%;"/></th> --%>
 												<th><input type="text" name="NOTE" id="NOTE" readonly="readonly" value="${var.NOTE}" maxlength="30" title="备注" style="width:100%;"/></th>
 												<th class="center">
 													<input type="hidden" id="ACCOUNT_SIGN" name="ACCOUNT_SIGN" value="${var.ACCOUNT_SIGN}"/>
@@ -268,9 +268,9 @@
 						<th><input type="text" name="TRAINING_METHOD" id="TRAINING_METHOD" value="" maxlength="30"  readonly="readonly" title="培训方式" style="width:100%;"/></th>
 						<th><input type="text" name="TRAINING_TIME" id="TRAINING_TIME" value="" maxlength="30"  readonly="readonly" title="培训时间" style="width:100%;"/></th>
 						<th><input type="text" name="TRAINING_RECORD" id="TRAINING_RECORD" value="0" maxlength="30"  readonly="readonly" title="培训成绩" style="width:100%;"/></th>
-						<th><input type="text" name="CERTIFICATE_NUM" id="CERTIFICATE_NUM" value="" maxlength="30" title="证书编号" style="width:100%;"/></th>
-						<th><input type="text" name="UKEY_NUM" id="UKEY_NUM" value="" maxlength="30" title="UKey编号" style="width:100%;"/></th>
-						<th><input type="text" name="APPLY_DATE" id="APPLY_DATE" value="" maxlength="30" title="申请日期" style="width:100%;"/></th>
+						<th><input type="text" name="CERTIFICATE_NUM" id="CERTIFICATE_NUM" value="" maxlength="30"  readonly="readonly" title="证书编号" style="width:100%;"/></th>
+						<th><input type="text" name="UKEY_NUM" id="UKEY_NUM" value="" maxlength="30"  readonly="readonly" title="UKey编号" style="width:100%;"/></th>
+<!-- 						<th><input type="text" name="APPLY_DATE" id="APPLY_DATE" value="" maxlength="30" title="申请日期" style="width:100%;"/></th> -->
 						<th><input type="text" name="NOTE" id="NOTE" value="" maxlength="30" title="备注" style="width:100%;"/></th>
 						<th class="center">
 									<input type="hidden" id="ACCOUNT_SIGN" name="ACCOUNT_SIGN" value="${var.ACCOUNT_SIGN}"/>
@@ -372,9 +372,9 @@
 // 	        "培训方式":"TRAINING_METHOD",
 // 	        "培训时间":"TRAINING_TIME",
 // 	        "培训成绩":"TRAINING_RECORD",
-	        "证书编号":"CERTIFICATE_NUM",
-	        "UKey编号":"UKEY_NUM",
-	        "申请日期":"APPLY_DATE",
+// 	        "证书编号":"CERTIFICATE_NUM",
+// 	        "UKey编号":"UKEY_NUM",
+// 	        "申请日期":"APPLY_DATE",
 	        "备注":"NOTE"
 	    },
 	    fieldMandatory = {
@@ -393,9 +393,9 @@
 //             "TRAINING_METHOD":{isMust:false,valiType:''},
 //             "TRAINING_TIME":{isMust:false,valiType:''},
 //             "TRAINING_RECORD":{isMust:false,valiType:''},
-            "CERTIFICATE_NUM":{isMust:false,valiType:''},
-            "UKEY_NUM":{isMust:false,valiType:''},
-            "APPLY_DATE":{isMust:false,valiType:''},
+//             "CERTIFICATE_NUM":{isMust:false,valiType:''},
+//             "UKEY_NUM":{isMust:false,valiType:''},
+//             "APPLY_DATE":{isMust:false,valiType:''},
             "NOTE":{isMust:false,valiType:''},
             "ACCOUNT_SIGN":{isMust:false,valiType:''}
             
@@ -551,7 +551,7 @@
 				dataType:'json',
 				cache: false,
 				success: function(response){
-					//debugger;
+					console.log(response);
 					if(response.code==0){
 						$(top.hangge());//关闭加载状态
 						history.go(0); //刷新页面

@@ -149,11 +149,12 @@ public class ERPDelAcctApplicationController extends BaseController {
 		pd1.put("STAFF_NAME",pd.getString("NAME"));//员工姓名
 		pd1.put("USER_DEPART",pd.getString("UNIT_CODE"));//用户所属单位编码
 		pd1.put("DEPART_CODE",pd.getString("UNIT_CODE"));//单位编码
-		pd1.put("CONFIRM_STATE","1");//删除申请状态
+		pd1.put("CONFIRM_STATE","2");//删除申请状态，2为上报.删除单据创建即上报
 		pd1.put("IF_CREATE_FROM","1");//是否生成删除表单
 		pd1.put("BILL_USER",user.getNAME());//创建用户
 		pd1.put("BILL_DATE",DateUtils.getCurrentTime(DateFormatUtils.DATE_FORMAT1));//创建日期
 		pd1.put("STATE","1");//表单状态
+		pd1.put("APPLY_TYPE","2");//表单类型为账号删除
 		pd1.put("APPLY_DATE",DateUtils.getCurrentTime(DateFormatUtils.DATE_FORMAT1));//申请日期
 		pd1.put("BUSI_DATE",DateUtils.getCurrentTime(DateFormatUtils.DATE_MONTH_FORMAT));//业务期间
 		erpdelacctapplicationService.save(pd1);

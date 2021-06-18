@@ -552,6 +552,9 @@
 	                 #{item}
 			</foreach>
 		</if>
+		<if test="pd.arrayDATA_IDS1 == null or pd.arrayDATA_IDS1 == ''">
+			and ID = null			 
+		</if>
 		union
 				select
 			t0.ID,t0.STAFF_CODE,t0.STAFF_NAME,t0.APPLY_TYPE,t0.APPLY_DATE,t0.DEPART_CODE,t0.STAFF_MODULE,	
@@ -588,8 +591,11 @@
 	                 #{item}
 			</foreach>
 		</if>
+		<if test="pd.arrayDATA_IDS2 == null or pd.arrayDATA_IDS2 == ''">
+			and ID = null			 
+		</if>
 		order by
-			CONFIRM_STATE ASC
+			APPLY_DATE DESC
 	</select>
 	<!-- 导出列表 -->
 	<select id="exportListDel" parameterType="Page" resultType="pd">

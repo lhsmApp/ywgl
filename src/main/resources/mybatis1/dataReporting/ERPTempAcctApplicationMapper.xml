@@ -36,7 +36,9 @@
 		TRAINING_RECORD,	
 		CERTIFICATE_NUM,
 		POSITION_LEVEL,
-		APPLY_TYPE
+		APPLY_TYPE,
+		IF_CREATE_FROM,
+		END_DATE
 	</sql>
 	
 	<!-- 字段值 -->
@@ -68,7 +70,9 @@
 		#{TRAINING_RECORD},	
 		#{CERTIFICATE_NUM},	
 		#{POSITION_LEVEL},
-		#{APPLY_TYPE}
+		#{APPLY_TYPE},
+		#{IF_CREATE_FROM},
+	    #{END_DATE}
 	</sql>
 	
 	<!-- 新增-->
@@ -81,6 +85,16 @@
 			<include refid="FieldValue"></include>
 		)
 	</insert>
+	<!-- 修改 -->
+	<update id="editDelayData" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			IF_CREATE_FROM = #{IF_CREATE_FROM},
+			END_DATE = #{END_DATE}
+		where 
+		STAFF_CODE = #{STAFF_CODE}
+	</update>
 	
 	<!-- 修改 -->
 	<update id="edit" parameterType="pd">
@@ -107,7 +121,8 @@
 			TRAINING_METHOD = #{TRAINING_METHOD},
 			TRAINING_TIME = #{TRAINING_TIME},
 			TRAINING_RECORD = #{TRAINING_RECORD},
-			CERTIFICATE_NUM = #{CERTIFICATE_NUM}
+			CERTIFICATE_NUM = #{CERTIFICATE_NUM},
+			IF_CREATE_FROM = #{IF_CREATE_FROM}
 		where 
 			ID = #{ID}
 	</update>
@@ -139,7 +154,8 @@
 			t0.TRAINING_TIME,	
 			t0.TRAINING_RECORD,	
 			t0.CERTIFICATE_NUM,	
-			t0.POSITION_LEVEL
+			t0.POSITION_LEVEL,
+			t0.IF_CREATE_FROM
 		from 
 		<include refid="tableName"></include> t0
 		left join `sys_user` t1 on t1.USER_ID =t0.BILL_USER
@@ -218,6 +234,7 @@
 			t0.UKEY_NUM,	
 			t0.NOTE,
 			t0.CONFIRM_STATE,
+			t0.IF_CREATE_FROM,
 			t1.NAME BILL_USERNAME,
 			t1.PHONE BILL_PHONE
 		from 

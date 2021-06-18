@@ -27,7 +27,13 @@ public class ERPTempAcctApplicationService implements ERPTempAcctApplicationMana
 	public void save(PageData pd)throws Exception{
 		dao.save("ERPTempAcctApplicationMapper.save", pd);
 	}
-	
+	/**生成/撤销延期单据
+	 * @param pd
+	 * @throws Exception
+	 */
+	public void editDelayData(PageData pd)throws Exception{
+		dao.save("ERPTempAcctApplicationMapper.editDelayData", pd);
+	}
 	/**修改
 	 * @param pd
 	 * @throws Exception

@@ -98,8 +98,9 @@ public class ERPController extends BaseController {
 		List<PageData>	varList = erpofficialacctapplicationService.listAllForm(page);	//列出ERPOfficialAcctApplication列表
 		
 		List<PageData> zdepartmentPdList = new ArrayList<PageData>();
-		JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0", zdepartmentPdList));
-		mv.addObject("zTreeNodes", (null == arr ? "" : arr.toString()));
+//		JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartmentToSelect("0", zdepartmentPdList));
+		mv.addObject("itemUnitList", DictsUtil.getDepartmentSelectTreeSourceList(departmentService));// 获取单位名称
+//		mv.addObject("zTreeNodes", (null == arr ? "" : arr.toString()));
 		mv.setViewName("dataReporting/erp/erpapproval");
 		mv.addObject("listBusiDate",listBusiDate);
 		mv.addObject("varList", varList);
@@ -505,7 +506,7 @@ public class ERPController extends BaseController {
 			    	  pd.put("arrayDATA_IDS2", arrayDATA_IDS2);	
 			      }
 			}
-		      page.setPd(pd);
+		        page.setPd(pd);
 				varOList = erpofficialacctapplicationService.exportListAdd(page);
 				return export(varOList, "", Map_SetAddColumnsList);	
 				

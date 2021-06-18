@@ -56,17 +56,11 @@
 										</div>
 									</td>
 									<td style="vertical-align:top;padding-left:5px;">
-<!-- 									 	<span class="pull-left" style="margin-right: 5px;"> -->
-<!-- 												<div class="selectTree" id="selectTree" multiMode="false" allSelectable="false" noGroup="false"></div> -->
-<!-- 											    <input type="hidden" id="SelectedDepartCode" name="SelectedDepartCode"/> -->
-<!-- 											     <input type="hidden" id="name" name="name"/> -->
-<!-- 											</span> -->
-										<select class="form-control" name="SelectedDepartCode" id="SelectedDepartCode" title="所属单位 ">
-									<option value="">--请选择单位--</option>
-									<c:forEach items="${itemUnitList}" var="itemUnit">
-										<option value="${itemUnit.id }" <c:if test="${itemUnit.id == pd.DEPARTMENT }">selected</c:if>>${itemUnit.name }</option>
-									</c:forEach>
-								</select>
+									 	<span class="pull-left" style="margin-right: 5px;">
+												<div class="selectTree" id="selectTree" multiMode="false" allSelectable="false" noGroup="false"></div>
+											    <input type="hidden" id="SelectedDepartCode" name="SelectedDepartCode"/>
+											     <input type="hidden" id="name" name="name"/>
+											</span>
 									</td>
 									<td>
 										<select class="form-control" id="confirmState" name="confirmState" style="width:150px;" onchange="tosearch()">
@@ -91,7 +85,8 @@
 									</td>
 								</tr>
 							</table>
-								<table id="simple-table" class="mtable table table-bordered"style="margin-top:20px; width: 100%;">	
+							<div style="width:100%;overflow: auto;min-height: 500px;">
+							<table id="simple-table" class="mtable table table-bordered" style="margin-top:10px; width:2015px;">
 								<thead>
 									<tr>
 										<th class="center" style="width:35px; padding-left: 5px;padding-right:5px;">
@@ -111,13 +106,10 @@
 										<th style="width:110px;  text-align: center;padding-left: 12px;padding-right:12px;">备注</th>
 										<th style="width:110px;  text-align: center;padding-left: 12px;padding-right:12px;">审批状态</th>
 									</tr>
-								</thead>											
-								<tbody id="copyTable" >
-									<!-- 开始循环 -->	
-									<c:choose>
-										<c:when test="${not empty varList}">
-											<c:forEach items="${varList}" var="var" varStatus="vs">	
-								
+								</thead>
+								<tbody id="copyTable">
+								<!-- 开始循环 -->	
+										<c:forEach items="${varList}" var="var" varStatus="vs">
 											<tr>
 												<th class='center'>
 													<label class="pos-rel"><input type='checkbox' name='ids' value="${var.ID}&${var.ACCOUNT_SIGN}" class="ace" /><span class="lbl"></span></label>
@@ -154,23 +146,17 @@
 													<c:if test="${var.CONFIRM_STATE == 3}"><span class="label label-success arrowed">已审批</span></c:if>
 												</th>
 											</tr>
-									</c:forEach>																		
-								</c:when>
-								<c:otherwise>
-									<tr class="main_info">
-										<td colspan="100" class="center" >没有相关数据</td>
-									</tr>
-								</c:otherwise>
-							</c:choose>
-							</tbody>
-						</table>
-						<div class="page-header position-relative">
-						<table style="width:100%;">
-							<tr>
-								<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
-							</tr>
-						</table>
+										</c:forEach>
+								</tbody>
+							</table>
 							</div>
+								<div class="position-relative page-header pull-right">
+									<table style="width:100%;">
+										<tr>
+											<td style="vertical-align:top;"><div class="pagination">${page.pageStr}</div></td>
+										</tr>
+									</table>
+								</div>
 						</form>
 					</div>
 				</div>
@@ -362,7 +348,7 @@
 							type: "POST",
 							url: url,
 <%-- 							url: '<%=basePath%>erp/oaaReport.do?tm='+new Date().getTime(), --%>
-					    	data: {DATA_IDS:str,"CONFIRM_STATE":"4"},
+					    	data: {DATA_IDS:str,"CONFIRM_STATE":"2"},
 							dataType:'json',
 							cache: false,
 							success: function(response){

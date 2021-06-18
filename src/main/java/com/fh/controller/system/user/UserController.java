@@ -94,6 +94,7 @@ public class UserController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
+		pd.put("ROLE_ID_CHOICE", pd.getString("ROLE_ID"));
 		String keywords = pd.getString("keywords");				//关键词检索条件
 		if(null != keywords && !"".equals(keywords)){
 			pd.put("keywords", keywords.trim());
@@ -196,6 +197,12 @@ public class UserController extends BaseController {
 		logBefore(logger, Jurisdiction.getUsername()+"删除user");
 		PageData pd = new PageData();
 		pd = this.getPageData();
+		if(pd.getString("ROLE_ID").equals("a8bcf49238da4d13a445d162a361be7a")){
+			pd.put("STATUS",'0');
+			pd.put("SIGN","UPDATE");
+		}else{
+			pd.put("SIGN","");
+		}
 		userService.deleteU(pd);
 		FHLOG.save(Jurisdiction.getUsername(), "删除系统用户："+pd);
 		out.write("success");
@@ -222,6 +229,15 @@ public class UserController extends BaseController {
 		pd.put("ADD_QX", mapRole.get("adds"));
 		
 		List<Role> roleList = roleService.listAllRolesByCurrentID(pd);//列出所有系统用户角色
+		String userRole=user.getRole().getROLE_ID();//获取用户角色
+		pd.put("KEY_CODE", "ejdwxtglyjs");//获取配置表中二级单位系统管理员角色
+		String userRoldId = sysconfigService.getSysConfigByKey(pd);
+		if(userRole.equals(userRoldId)){
+			pd.put("ROLE_TYPE", "ejdwadd");//角色类型为二级单位
+		}else{
+			pd.put("ROLE_TYPE", "gly");//角色类型为管理员
+		}
+
 		mv.setViewName("system/user/user_edit");
 		
 		mv.addObject("msg", "saveU");
@@ -440,6 +456,16 @@ public class UserController extends BaseController {
 		pd.put("DEPARTMENT_CODE", pd.getString("DEPARTMENT_ID"));
 		PageData pdDepartResult=departmentService.findByBianma(pd);
 		//pd.put("DEPARTMENT_ID", pdDepartResult.getString("DEPARTMENT_ID")); //根据编码读取ID
+		User user = (User) Jurisdiction.getSession().getAttribute(Const.SESSION_USERROL);
+		String userRole=user.getRole().getROLE_ID();//获取用户角色
+		pd.put("KEY_CODE", "ejdwxtglyjs");//获取配置表中二级单位系统管理员角色
+		String userRoldId = sysconfigService.getSysConfigByKey(pd);
+		if(userRole.equals(userRoldId)){
+			pd.put("ROLE_TYPE", "ejdwedit");//角色类型为二级单位
+		}else{
+			pd.put("ROLE_TYPE", "gly");//角色类型为管理员
+		}
+
 		mv.setViewName("system/user/user_edit");
 		if(pdDepartResult!=null)
 			mv.addObject("depname", pdDepartResult.getString("NAME"));
@@ -784,8 +810,11 @@ public class UserController extends BaseController {
 			pd.put("STATUS", "0");					//状态
 			pd.put("SKIN", "default");				//默认皮肤
 			pd.put("ROLE_ID", "1");
-			List<Role> roleList = roleService.listAllRolesByPId(pd);//列出所有系统用户角色
-			pd.put("ROLE_ID", roleList.get(0).getROLE_ID());		//设置角色ID为随便第一个
+			//List<Role> roleList = roleService.listAllRolesByPId(pd);//列出所有系统用户角色
+			//pd.put("ROLE_ID", roleList.get(0).getROLE_ID());		//设置角色ID为随便第一个
+			pd.put("KEY_CODE", "PTYHROLEID");
+			String roleId=sysconfigService.getSysConfigByKey(pd);//导入的用户角色默认为ERP普通用户
+			pd.put("ROLE_ID", roleId);	
 			/**
 			 * var0 :编号
 			 * var1 :姓名
@@ -796,30 +825,36 @@ public class UserController extends BaseController {
 			for(int i=0;i<listPd.size();i++){		
 				//pd.put("USER_ID", this.get32UUID());										//ID
 				pd.put("USER_PROPERTY", "1");												//导入的均为SAP用户
-				pd.put("NAME", listPd.get(i).getString("var12"));							//姓名
-				
-				String USERNAME = GetPinyin.getPingYin(listPd.get(i).getString("var9"));	//根据姓名汉字生成全拼
-				pd.put("USERNAME", USERNAME);	
+				pd.put("NAME", listPd.get(i).getString("var1"));	
+				pd.put("UNIT_CODE", listPd.get(i).getString("var2"));						//单位
+				String USERNAME = listPd.get(i).getString("var0");   
+				pd.put("USERNAME", USERNAME);	//员工编号
 				if(userService.findByUsername(pd) != null){									//判断用户名是否重复
-					USERNAME = GetPinyin.getPingYin(listPd.get(i).getString("var1"))+Tools.getRandomNum();
-					pd.put("USERNAME", USERNAME);
+					continue;
 				}
-				pd.put("BZ", listPd.get(i).getString("var4"));								//备注
-				if(Tools.checkEmail(listPd.get(i).getString("var3"))){						//邮箱格式不对就跳过
-					pd.put("EMAIL", listPd.get(i).getString("var3"));						
+				
+//				String USERNAME = GetPinyin.getPingYin(listPd.get(i).getString("var0"));	//根据姓名汉字生成全拼
+//				pd.put("USERNAME", USERNAME);	
+//				if(userService.findByUsername(pd) != null){									//判断用户名是否重复
+//					USERNAME = GetPinyin.getPingYin(listPd.get(i).getString("var1"))+Tools.getRandomNum();
+//					pd.put("USERNAME", USERNAME);
+//				}
+				pd.put("BZ", listPd.get(i).getString(""));								//备注
+				if(Tools.checkEmail(listPd.get(i).getString("var4"))){						//邮箱格式不对就跳过
+					pd.put("EMAIL", listPd.get(i).getString("var4"));						
 					if(userService.findByUE(pd) != null){									//邮箱已存在就跳过
 						continue;
 					}
 				}else{
 					continue;
 				}
-				pd.put("NUMBER", listPd.get(i).getString("var0"));							//编号已存在就跳过
-				pd.put("PHONE", listPd.get(i).getString("var2"));							//手机号
+				pd.put("PHONE", listPd.get(i).getString("var5"));							//手机号
 				
-				pd.put("PASSWORD", new SimpleHash("SHA-1", USERNAME, "erp123").toString());	//默认密码123
+				pd.put("PASSWORD", new SimpleHash("SHA-1", USERNAME, "erp123").toString());	//默认密码erp123
 				if(userService.findByUN(pd) != null){
 					continue;
 				}
+				pd.put("STATUS", "1");//用户状态
 				userService.saveU(pd);
 			}
 			/*存入数据库操作======================================*/
